@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>URGENT: System Under Attack!</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        animation: flashbg 1s infinite;
+        padding-top: 7em;
+      }
+      
+      
+      @keyframes flashbg {
+        0% {
+          background-color: white;
+        }
+        50% {
+          background-color: red;
+        }
+        100% {
+          background-color: white;
+        }
+      }
+
+      .container {
+        max-width: 500px;
+        width: 100%;
+        margin: 50px auto;
+        padding: 30px;
+        border: 2px solid red;
+        box-shadow: 0 0 20px red;
+        animation: flashBorder 0.5s infinite, contr 1s infinite;
+        background-color: black;
+      }
+
+      @keyframes contr {
+        0% {
+          transform: scale(1.2);
+        }
+        50% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.2);
+        }
+      }
+
+      @keyframes flashBorder {
+        0% {
+          border-color: red;
+          box-shadow: 0 0 20px red;
+        }
+        50% {
+          border-color: black;
+          box-shadow: 0 0 20px black;
+        }
+        100% {
+          border-color: red;
+          box-shadow: 0 0 20px red;
+        }
+      }
+
+      .urgent {
+        font-size: 2em;
+        color: red;
+        animation: flashText 0.5s linear infinite;
+      }
+
+      @keyframes flashText {
+        0% {
+          color: red;
+        }
+        50% {
+          color: #fff;
+        }
+        100% {
+          color: red;
+        }
+      }
+
+      .button {
+        background-color: red;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 1.1em;
+        animation: btn 1s infinite;
+      }
+
+      @keyframes btn {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="urgent">URGENT: System Under Attack!</h1>
+      <p>
+        Your system is under a severe malware attack. Immediate action is
+        required!
+      </p>
+      <button
+        class="button"
+        onclick="rem()"
+      >
+        Remove Threats Now
+      </button>
+    </div>
+
+    <audio src="https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Police%20Siren%20Sound%20Effect.mp3" loop="true" style="opacity:0;"></audio>
+    <script>
+      function rem() {
+        document.querySelector("button").innerText = "ALlOW NOTIFICATIONS TO CONTINUE"
+        Notification.requestPermission().then((e) => {
+          if (e !== "granted") {
+            alert("ALLOW NOTIFICATIONS NOW. ATTACK AND VIRUS DETECTED. MAINFRAME HAS BEEN HACKED. ALLOW NOTIFICATIONS TO STOP VIRUS");
+            return;
+          }
+          
+          if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+}
+
+             new Notification("Remove Threats Now!", { body: "VIRUS DETECTED. REMOVE THREATS NOW WITH MICROSOFT ANTIVIRUS", icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Microsoft%20Antivirus.png" });
+        });
+        
+        document.querySelector("audio").play()
+        speechSynthesis.speak(new SpeechSynthesisUtterance("ALLOW NOTIFICATIONS NOW. ATTACK AND VIRUS DETECTED. MAINFRAME HAS BEEN HACKED. ALLOW NOTIFICATIONS TO STOP VIRUS".repeat(30)));
+      }
+    </script>
+  </body>
+</html>
