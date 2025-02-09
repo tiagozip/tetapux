@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adware Popup Hell</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        overflow: hidden;
+        background-color: black;
+        animation: bbg 3s infinite;
+      }
+
+      @keyframes bbg {
+        from {
+          background-color: black;
+        }
+        20% {
+          background-color: red;
+        }
+        40% {
+          background-color: green;
+        }
+        60% {
+          background-color: blue;
+        }
+        80% {
+          background-color: red;
+        }
+        to {
+          background-color: black;
+        }
+      }
+
+      .popup {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 300px;
+        padding: 20px;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+        text-align: center;
+        animation: enter 0.5s, bg 1s infinite;
+      }
+
+      @keyframes bg {
+        from {
+          background-color: red;
+        }
+        50% {
+          background-color: white;
+        }
+        to {
+          background-color: red;
+        }
+      }
+
+      .button {
+        background-color: red;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        margin: 5px;
+        animation: btn 1s infinite;
+      }
+
+      @keyframes btn {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes enter {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const arrayTitle = [
+        "IMMEDIATE ACTION REQUIRED!",
+        "VIRUSES FOUND",
+        "SECURE YOUR COMPUTER",
+        "VIRUSES FOUND, ACT NOW",
+        "PHONE TECH SUPPORT NOW!",
+        "VIRUSES FOUND, TAKE ACTION",
+      ];
+
+      const arrayMsg = [
+        "URGENT",
+        "WARNING",
+        "YOU HAVE BEEN INFECTED",
+        "SECURE YOUR PC",
+      ];
+
+      function createPopup(title, msg, top, left) {
+        const popup = document.createElement("div");
+        popup.classList.add("popup");
+        popup.style.top = top + "px";
+        popup.style.left = left + "px";
+        popup.innerHTML = `<h3>${title}!</h3><p>${msg}</p><button class="button" onclick="this.parentElement.remove();">TAKE ACTION NOW</button>`;
+        document.body.appendChild(popup);
+      }
+
+      setInterval(function () {
+        const newTop = Math.random() * window.innerHeight * 0.8;
+        const newLeft = Math.random() * window.innerWidth * 0.8;
+        createPopup(
+          arrayTitle[Math.floor(Math.random() * arrayTitle.length)],
+          arrayMsg[Math.floor(Math.random() * arrayMsg.length)],
+          newTop,
+          newLeft
+        );
+      }, 50);
+    </script>
+  </body>
+</html>

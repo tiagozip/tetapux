@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Make Your Phone Happy NOW.</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        animation: flashbg 1s infinite;
+        padding-top: 7em;
+      }
+      
+      
+      @keyframes flashbg {
+        0% {
+          background-color: white;
+        }
+        50% {
+          background-color: #189E4D;
+        }
+        100% {
+          background-color: white;
+        }
+      }
+
+      .container {
+        max-width: 500px;
+        width: 100%;
+        margin: 50px auto;
+        padding: 30px;
+        border: 2px solid #189E4D;
+        box-shadow: 0 0 20px #189E4D;
+        animation: flashBorder 0.5s infinite, contr 1s infinite;
+        background-color: black;
+      }
+
+      @keyframes contr {
+        0% {
+          transform: scale(1.2);
+        }
+        50% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.2);
+        }
+      }
+
+      @keyframes flashBorder {
+        0% {
+          border-color: #189E4D;
+          box-shadow: 0 0 20px #189E4D;
+        }
+        50% {
+          border-color: black;
+          box-shadow: 0 0 20px black;
+        }
+        100% {
+          border-color: #189E4D;
+          box-shadow: 0 0 20px #189E4D;
+        }
+      }
+
+      .urgent {
+        font-size: 2em;
+        color: #189E4D;
+        animation: flashText 0.5s linear infinite;
+      }
+
+      @keyframes flashText {
+        0% {
+          color: #189E4D;
+        }
+        50% {
+          color: #fff;
+        }
+        100% {
+          color: #189E4D;
+        }
+      }
+
+      .button {
+        background-color: #189E4D;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 1.1em;
+        animation: btn 1s infinite;
+      }
+
+      @keyframes btn {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.5);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Image%20128x128.webp">
+      <h1 class="urgent">Make. Phone. Happy. NOW.</h1>
+      <p>
+        You need to make your phone happy now. Immediate action is
+        required!
+      </p>
+      <button
+        class="button"
+        onclick="rem()"
+      >
+        OK. I'LL MAKE MY PHONE HAPPY
+      </button>
+    </div>
+
+    <audio src="https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Police%20Siren%20Sound%20Effect.mp3" loop="true" style="opacity:0;"></audio>
+    <script>
+      function rem() {
+        document.querySelector("button").innerText = "ALlOW HAPPY NOTIFICATIONS TO CONTINUE"
+        Notification.requestPermission().then((e) => {
+          if (e !== "granted") {
+            alert("MAKE YOUR PHONE HAPPY AND ALLOW NOTIFICATIONS NOW. ALLOW NOTIFICATIONS TO STOP VIRUS");
+            return;
+          }
+          
+          if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+}
+
+             new Notification("Make phone happy.", { body: "MAKE YOUR PHONE HAPPY AND ALLOW NOTIFICATIONS NOW.", icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/OpuaYT.webp" });
+        });
+        
+        document.querySelector("audio").play()
+        speechSynthesis.speak(new SpeechSynthesisUtterance("MAKE YOUR PHONE HAPPY AND ALLOW NOTIFICATIONS NOW. ".repeat(60)));
+      }
+    </script>
+  </body>
+</html>

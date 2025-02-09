@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DOWNLOAD MORE RAM NOW!!! (It's FREE!)</title>
+    <style>
+      body {
+        font-family: Arial;
+        background-color: red;
+        color: #ff00ff;
+        text-align: center;
+        padding-top: 2em;
+        animation: rotateHue 5s linear infinite;
+      }
+
+      @keyframes rotateHue {
+        0% {
+          filter: hue-rotate(0deg);
+        }
+        100% {
+          filter: hue-rotate(360deg);
+        }
+      }
+
+      .container {
+        max-width: 600px;
+        width: 90%;
+        margin: 20px auto;
+        padding: 20px;
+        border: 5px dashed #000;
+        background-color: #ffff00;
+        font-size: 1.2em;
+        animation: enterPage 2s;
+      }
+
+      @keyframes enterPage {
+        0% {
+          opacity: 0;
+        }
+        100% { opacity: 1; }
+      }
+
+      h1 {
+        font-size: 3em;
+        text-shadow: 3px 3px 5px #000;
+        animation: wiggle 0.3s infinite;
+      }
+
+      @keyframes wiggle {
+        0% {
+          transform: rotate(1deg);
+        }
+        50% {
+          transform: rotate(-1deg);
+        }
+        100% {
+          transform: rotate(1deg);
+        }
+      }
+
+      img {
+        width: 150px;
+        margin-bottom: 10px;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .button {
+        background-color: #00ff00;
+        color: #000;
+        padding: 15px 30px;
+        border: 3px dotted #ff0000;
+        cursor: pointer;
+        margin: 10px;
+        font-size: 1.5em;
+        font-weight: bold;
+        text-shadow: 2px 2px 3px #fff;
+        animation: jump 0.5s infinite;
+      }
+
+      @keyframes jump {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      p {
+        font-size: 1.3em;
+        margin-bottom: 20px;
+        text-align: left;
+        text-indent: 20px;
+      }
+
+      #ram-counter {
+        font-size: 2em;
+        font-weight: bolder;
+        color: #ff0000;
+        text-shadow: 1px 1px #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>SPEED UP COMPUTER NOW WITH FREE RAM DOWNLOAD</h1>
+      <img
+        src="https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Corsair%20Dominator%20Platinum%20RGB%20RAM.jpg"
+        alt="RAM Image"
+      />
+      <p>
+        Is your computer running SLOW? Do you need MORE POWER for GAMING? You
+        came to the RIGHT PLACE! We have the BEST FREE RAM available! Just click
+        the button below and watch your computer go VROOOOOOOM!
+      </p>
+
+      <p>Current Available RAM: <span id="ram-counter">16 GB</span></p>
+
+      <button class="button" onclick="downloadRam()">
+        DOWNLOAD FREE RAM NOW!!!
+      </button>
+
+      <audio
+        id="downloadSound"
+        src="https://www.myinstants.com/media/sounds/windows-xp-error.mp3"
+        preload="auto"
+      ></audio>
+    </div>
+
+    <script>
+      let ramCounter = 16;
+      let downloading = false;
+
+      function downloadRam() {
+        if (downloading) {
+          alert("Chill, yo! One download at a time!");
+          return;
+        }
+        downloading = true;
+
+        document.getElementById("downloadSound").play();
+        
+        setInterval(function () {
+          document.getElementById("downloadSound").play();
+        }, 100)
+
+        let progress = 0;
+        const ramInterval = setInterval(() => {
+          progress += 10;
+          document.getElementById("ram-counter").innerText =
+            ramCounter + progress / 1000 + " GB (Downloading...)";
+
+          if (progress >= 100) {
+            ramCounter += 1;
+            document.getElementById("ram-counter").innerText =
+              ramCounter + " GB (Download Complete!)";
+            clearInterval(ramInterval);
+            downloading = false;
+
+            setTimeout(function () {
+              document.getElementById("ram-counter").innerText =
+                ramCounter + " GB";
+            }, 2000);
+          }
+        }, 100);
+      }
+    </script>
+  </body>
+</html>
