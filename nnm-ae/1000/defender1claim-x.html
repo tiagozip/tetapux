@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirecting...</title>
+  <script>
+    window.onload = () => {
+      fetch('websites.txt') // Fetch the text file
+        .then(response => response.text()) // Read the text content
+        .then(data => {
+          const websites = data.split('\n'); // Split the text into an array of URLs
+          const randomIndex = Math.floor(Math.random() * websites.length);
+          const randomURL = websites[randomIndex];
+          window.location.href = randomURL; // Redirect to the random URL
+        })
+        .catch(error => {
+          console.error('Error fetching websites:', error);
+          // Handle the error, maybe redirect to a default website
+          window.location.href = 'https://www.google.com/';
+        });
+    };
+  </script>
+</head>
+<body>
+  <p>.</p>
+</body>
+</html>

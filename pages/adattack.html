@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adware Popup Hell</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        overflow: hidden;
+        background-color: black;
+        animation: bbg 5s infinite; /* Increased speed */
+      }
+
+      @keyframes bbg {
+        0% {
+          background-color: black;
+        }
+        10% {
+          background-color: red;
+        }
+        20% {
+          background-color: green;
+        }
+        30% {
+          background-color: blue;
+        }
+        40% {
+          background-color: yellow;
+        }
+        50% {
+          background-color: magenta;
+        }
+        60% {
+          background-color: cyan;
+        }
+        70% {
+          background-color: orange;
+        }
+        80% {
+          background-color: purple;
+        }
+        90% {
+          background-color: white;
+        }
+        100% {
+          background-color: black;
+        }
+      }
+
+      .popup {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 250px; /* Slightly smaller */
+        padding: 15px; /* Slightly less padding */
+        color: white;
+        border: 2px dashed #fff; /* More aggressive border */
+        box-shadow: 0 6px 12px rgba(255, 0, 0, 0.5); /* Red glow */
+        z-index: 2;
+        text-align: center;
+        animation: enter 1s, rotate 2s infinite alternate; /* Faster enter, continuous rotation */
+      }
+
+      .button {
+        background-color: black;
+        color: white;
+        padding: 8px 16px;
+        border: 2px solid white;
+        cursor: pointer;
+        margin: 3px;
+        animation: btn 0.7s infinite alternate, glitch 1s infinite; /* Faster button, adds glitch effect */
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      @keyframes btn {
+        0% {
+          transform: scale(1);
+          box-shadow: none;
+        }
+        100% {
+          transform: scale(1.2);
+          box-shadow: 0 0 10px white;
+        }
+      }
+
+      @keyframes enter {
+        0% {
+          transform: scale(0) rotate(60deg);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
+
+      @keyframes glitch {
+        0% {
+          text-shadow: -2px -2px 0 red, 2px 2px 0 cyan;
+        }
+        25% {
+          text-shadow: 2px -2px 0 magenta, -2px 2px 0 yellow;
+        }
+        50% {
+          text-shadow: -2px 2px 0 blue, 2px -2px 0 green;
+        }
+        75% {
+          text-shadow: 2px 2px 0 white, -2px -2px 0 black;
+        }
+        100% {
+          text-shadow: -2px -2px 0 red, 2px 2px 0 cyan;
+        }
+      }
+
+      h3 {
+        animation: shake 0.5s infinite;
+        font-size: 1.2em;
+        text-shadow: 2px 2px 4px black;
+      }
+
+      @keyframes shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        70% { transform: translate(3px, 1px) rotate(-1deg); }
+        80% { transform: translate(-1px, -1px) rotate(1deg); }
+        90% { transform: translate(1px, 2px) rotate(0deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const ads = [{"name":"Apple","slogan":"Think Different.","color_hex":"#000000","url":"www.apple.com"},{"name":"Microsoft","slogan":"Be What's Next.","color_hex":"#0078D4","url":"www.microsoft.com"},{"name":"Amazon","slogan":"Work Hard. Have Fun. Make History.","color_hex":"#FF9900","url":"www.amazon.com"},{"name":"Google","slogan":"Don't be evil.","color_hex":"#4285F4","url":"www.google.com"},{"name":"Tesla","slogan":"Accelerating the world's transition to sustainable energy.","color_hex":"#CC0000","url":"www.tesla.com"},{"name":"Facebook","slogan":"It's quick and easy.","color_hex":"#3B5998","url":"www.facebook.com"},{"name":"Walmart","slogan":"Save money. Live better.","color_hex":"#007DC6","url":"www.walmart.com"},{"name":"Berkshire Hathaway","slogan":"Value Investing for the Long Term.","color_hex":"#FFFFFF","url":"www.berkshirehathaway.com"},{"name":"Johnson & Johnson","slogan":"Caring for the world, one person at a time.","color_hex":"#E60000","url":"www.jnj.com"},{"name":"JPMorgan Chase","slogan":"Good banking is good citizenship.","color_hex":"#003DA5","url":"www.jpmorganchase.com"},{"name":"Visa","slogan":"Everywhere you want to be.","color_hex":"#1A1F71","url":"www.visa.com"},{"name":"UnitedHealth Group","slogan":"Helping people live healthier lives.","color_hex":"#007DBA","url":"www.unitedhealthgroup.com"},{"name":"ExxonMobil","slogan":"Taking on the world's toughest energy challenges.","color_hex":"#0071BC","url":"www.exxonmobil.com"},{"name":"Samsung","slogan":"Do What You Can't.","color_hex":"#1428A0","url":"www.samsung.com"},{"name":"Toyota","slogan":"Let's Go Places.","color_hex":"#EB0029","url":"www.toyota.com"},{"name":"Verizon","slogan":"The Network America Relies On.","color_hex":"#EF0000","url":"www.verizon.com"},{"name":"Chevron","slogan":"Human Energy.","color_hex":"#003171","url":"www.chevron.com"},{"name":"Costco","slogan":"Quality Products, Affordable Prices.","color_hex":"#005CA3","url":"www.costco.com"},{"name":"Home Depot","slogan":"How Doers Get More Done.","color_hex":"#F26522","url":"www.homedepot.com"},{"name":"AT&T","slogan":"Rethink Possible.","color_hex":"#0077C8","url":"www.att.com"},{"name":"Bank of America","slogan":"Life's better when we're connected.","color_hex":"#003A70","url":"www.bankofamerica.com"},{"name":"Wells Fargo","slogan":"Together we'll go far.","color_hex":"#A6001A","url":"www.wellsfargo.com"},{"name":"Procter & Gamble","slogan":"Touching lives, improving life.","color_hex":"#264383","url":"www.pg.com"},{"name":"Nestlé","slogan":"Good Food, Good Life.","color_hex":"#00A34A","url":"www.nestle.com"},{"name":"Cisco","slogan":"The Bridge to Possible.","color_hex":"#1BA0D7","url":"www.cisco.com"},{"name":"PepsiCo","slogan":"More smiles with every sip and every bite.","color_hex":"#E62A23","url":"www.pepsico.com"},{"name":"Comcast","slogan":"Innovation starts here.","color_hex":"#29ABE2","url":"www.comcast.com"},{"name":"Nike","slogan":"Just Do It.","color_hex":"#000000","url":"www.nike.com"},{"name":"McDonald's","slogan":"I'm lovin' it.","color_hex":"#FFC72C","url":"www.mcdonalds.com"},{"name":"Starbucks","slogan":"Inspiring and nurturing the human spirit – one person, one cup and one neighborhood at a time.","color_hex":"#00704A","url":"www.starbucks.com"},{"name":"IBM","slogan":"Let's put smart to work.","color_hex":"#006699","url":"www.ibm.com"},{"name":"Intel","slogan":"Intel. Innovation in computing.","color_hex":"#0071C5","url":"www.intel.com"},{"name":"Walt Disney","slogan":"The Happiest Place on Earth.","color_hex":"#4D298F","url":"www.disney.com"},{"name":"Coca-Cola","slogan":"Taste the Feeling.","color_hex":"#F00000","url":"www.coca-colacompany.com"},{"name":"Netflix","slogan":"See What's Next.","color_hex":"#E50914","url":"www.netflix.com"},{"name":"Adobe","slogan":"Creativity for All.","color_hex":"#FF0000","url":"www.adobe.com"},{"name":"Salesforce","slogan":"Success Cloud.","color_hex":"#00A1E0","url":"www.salesforce.com"},{"name":"Accenture","slogan":"Let there be change.","color_hex":"#1155CC","url":"www.accenture.com"},{"name":"Oracle","slogan":"Powering the World's Economies.","color_hex":"#F80000","url":"www.oracle.com"},{"name":"SAP","slogan":"Run better.","color_hex":"#0099CC","url":"www.sap.com"},{"name":"Taiwan Semiconductor Manufacturing","slogan":"Driving Innovation. Enabling a Smarter World.","color_hex":"#0077C8","url":"www.tsmc.com"},{"name":"ASML","slogan":"Innovating Lithography.","color_hex":"#0074BE","url":"www.asml.com"},{"name":"LVMH","slogan":"The Future of Tradition.","color_hex":"#946B2D","url":"www.lvmh.com"},{"name":"Novo Nordisk","slogan":"Driving Change to Defeat Diabetes and Other Serious Chronic Diseases.","color_hex":"#007079","url":"www.novonordisk.com"},{"name":"Roche","slogan":"Doing now what patients need next.","color_hex":"#2A5699","url":"www.roche.com"},{"name":"Novartis","slogan":"Reimagining Medicine to Improve and Extend People’s Lives.","color_hex":"#FF6600","url":"www.novartis.com"},{"name":"Merck & Co.","slogan":"Inventing for Life.","color_hex":"#0079C2","url":"www.merck.com"},{"name":"AstraZeneca","slogan":"Science. Delivered.","color_hex":"#002B5B","url":"www.astrazeneca.com"},{"name":"Shell","slogan":"Powering Progress Together.","color_hex":"#FF0000","url":"www.shell.com"},{"name":"TotalEnergies","slogan":"Committed to Better Energy.","color_hex":"#00A9B5","url":"www.totalenergies.com"},{"name":"BP","slogan":"Energy for Today. And Tomorrow.","color_hex":"#00794B","url":"www.bp.com"},{"name":"Siemens","slogan":"Ingenuity for life.","color_hex":"#00A0DF","url":"www.siemens.com"},{"name":"Allianz","slogan":"Confidence in tomorrow.","color_hex":"#0038A8","url":"www.allianz.com"},{"name":"Volkswagen","slogan":"Driven by Technology.","color_hex":"#003D7F","url":"www.volkswagen.com"},{"name":"BMW","slogan":"The Ultimate Driving Machine.","color_hex":"#0064B4","url":"www.bmw.com"},{"name":"Mercedes-Benz","slogan":"The best or nothing.","color_hex":"#002E63","url":"www.mercedes-benz.com"},{"name":"Louis Vuitton","slogan":"For the Journey.","color_hex":"#B4975A","url":"www.louisvuitton.com"},{"name":"Hermès","slogan":"A world in motion.","color_hex":"#E03E36","url":"www.hermes.com"},{"name":"Chanel","slogan":"In order to be irreplaceable one must always be different.","color_hex":"#000000","url":"www.chanel.com"},{"name":"Dior","slogan":"Dare to Dream.","color_hex":"#A7886C","url":"www.dior.com"},{"name":"L'Oréal","slogan":"Because You're Worth It.","color_hex":"#005293","url":"www.loreal.com"},{"name":"Unilever","slogan":"Making Sustainable Living Commonplace.","color_hex":"#00A699","url":"www.unilever.com"},{"name":"Puma","slogan":"Forever Faster.","color_hex":"#E7291A","url":"www.puma.com"},{"name":"Adidas","slogan":"Impossible is nothing.","color_hex":"#000000","url":"www.adidas.com"},{"name":"Zara","slogan":"Design for the times.","color_hex":"#221F1F","url":"www.zara.com"},{"name":"H&M","slogan":"Fashion and quality at the best price in a sustainable way.","color_hex":"#BB1D30","url":"www.hm.com"},{"name":"Ikea","slogan":"The Wonderful Everyday.","color_hex":"#0058A3","url":"www.ikea.com"},{"name":"Lego","slogan":"Only the best is good enough.","color_hex":"#F2CD00","url":"www.lego.com"},{"name":"Nintendo","slogan":"Smile, you're playing Nintendo!","color_hex":"#E60012","url":"www.nintendo.com"},{"name":"Sony","slogan":"Make. Believe.","color_hex":"#003791","url":"www.sony.com"},{"name":"Panasonic","slogan":"Ideas for life.","color_hex":"#002FA7","url":"www.panasonic.com"},{"name":"Canon","slogan":"Delighting You Always.","color_hex":"#BA0C2F","url":"www.canon.com"},{"name":"LG","slogan":"Life's Good.","color_hex":"#A90046","url":"www.lg.com"},{"name":"Philips","slogan":"Innovation and you.","color_hex":"#005CA6","url":"www.philips.com"},{"name":"Hyundai","slogan":"Progress for Humanity.","color_hex":"#002C5F","url":"www.hyundai.com"},{"name":"Ford","slogan":"Go Further.","color_hex":"#2D3E50","url":"www.ford.com"},{"name":"General Motors","slogan":"Everybody in.","color_hex":"#00315B","url":"www.gm.com"},{"name":"Honda","slogan":"The Power of Dreams.","color_hex":"#E30613","url":"www.honda.com"},{"name":"FedEx","slogan":"The World On Time.","color_hex":"#4D148C","url":"www.fedex.com"},{"name":"UPS","slogan":"Moving Forward by Delivering What Matters.","color_hex":"#351C15","url":"www.ups.com"},{"name":"DHL","slogan":"Excellence. Simply Delivered.","color_hex":"#FFCC00","url":"www.dhl.com"},{"name":"Delta Air Lines","slogan":"Keep Climbing.","color_hex":"#003A70","url":"www.delta.com"},{"name":"United Airlines","slogan":"Good Leads The Way.","color_hex":"#334856","url":"www.united.com"},{"name":"American Airlines","slogan":"You Are Why We Fly.","color_hex":"#0039A6","url":"www.aa.com"},{"name":"Boeing","slogan":"Innovate. Connect. Inspire.","color_hex":"#0039A6","url":"www.boeing.com"},{"name":"Lockheed Martin","slogan":"Your Mission is Ours.","color_hex":"#0054A6","url":"www.lockheedmartin.com"},{"name":"Northrop Grumman","slogan":"Defining Possible.","color_hex":"#004282","url":"www.northropgrumman.com"},{"name":"Raytheon Technologies","slogan":"Innovate. Connect. Protect.","color_hex":"#0074B7","url":"www.rtx.com"},{"name":"General Electric","slogan":"Imagination at work.","color_hex":"#0072B2","url":"www.ge.com"},{"name":"3M","slogan":"Science. Applied to Life.","color_hex":"#FF0000","url":"www.3m.com"},{"name":"Honeywell","slogan":"The Future Is What We Make It.","color_hex":"#1D2E5B","url":"www.honeywell.com"},{"name":"Caterpillar","slogan":"Built for it.","color_hex":"#FFB82D","url":"www.caterpillar.com"},{"name":"Deere & Company","slogan":"Nothing Runs Like a Deere.","color_hex":"#234A2E","url":"www.deere.com"},{"name":"Paccar","slogan":"Quality. Innovation. Value.","color_hex":"#293E84","url":"www.paccar.com"},{"name":"Goldman Sachs","slogan":"Ideas, Delivered.","color_hex":"#004B7A","url":"www.goldmansachs.com"},{"name":"Morgan Stanley","slogan":"Capital Creates Change.","color_hex":"#008080","url":"www.morganstanley.com"},{ "name": "Raid Shadow Legends", "slogan": "Download Now!", "color_hex": "#6C3483", "url": "raidshadowlegends.com" },{"name":"BlackRock","slogan":"Invested in the future.","color_hex":"#000000","url":"www.blackrock.com"},{"name":"Mastercard","slogan":"Start Something Priceless.","color_hex":"#FF6B00","url":"www.mastercard.com"},{"name":"PayPal","slogan":"The New Money.","color_hex":"#003087","url":"www.paypal.com"},{"name":"Citigroup","slogan":"Let's Get It Done.","color_hex":"#26ADE4","url":"www.citigroup.com"},{"name":"Pfizer","slogan":"Science That Cares.","color_hex":"#0093D0","url":"www.pfizer.com"},{"name":"Johnson Controls","slogan":"Creating a more comfortable, safe and sustainable world.","color_hex":"#0078D4","url":"www.johnsoncontrols.com"}];
+
+      
+      function createPopup(corp, top, left) {
+        const popup = document.createElement("div");
+        popup.classList.add("popup");
+        popup.style.top = top + "px";
+        popup.style.left = left + "px";
+        popup.style.backgroundColor = corp.color_hex;
+        popup.innerHTML = `<h3>${corp.slogan}</h3><p>${corp.name}</p><button class="button" onclick="window.open('https://${corp.url}')">${corp.url}</button>`;
+
+        document.body.appendChild(popup);
+      }
+
+      setInterval(function () {
+        const newTop = Math.random() * window.innerHeight * 0.8;
+        const newLeft = Math.random() * window.innerWidth * 0.8;
+        const corp = ads[Math.floor(Math.random() * ads.length)];
+
+        createPopup(corp, newTop, newLeft);
+      }, 20);
+
+      document.addEventListener('contextmenu', event => event.preventDefault());
+
+      function autoScroll() {
+        window.scrollBy(0, 2);
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+          // Reached end of page
+          window.scrollTo(0, 0);
+        }
+      }
+
+      setInterval(autoScroll, 20);
+    </script>
+  </body>
+</html>
