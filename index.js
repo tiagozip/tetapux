@@ -9,6 +9,14 @@ Bun.serve({
             path = '/index.html';
         };
 
+        if (path === "/collect-phone") {
+            const phone = url.searchParams.get("phone");
+            await fs.appendFile(import.meta.dirname + "/.data/phone.txt", phone.trim() + "\n");
+            return new Response("OK", {
+                headers: { 'Content-Type': 'text/plain' },
+            });
+        }
+
         if (!path.includes(".")) {
             return new Response(`<ul>${(await fs.readdir(import.meta.dirname + path)).map((e) => {
                 return `<li><a href="${path + (path.endsWith("/") ? "" : "/") + e}">${e}</a></li>`;
