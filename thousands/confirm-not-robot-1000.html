@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake CAPTCHA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+
+        .fkrc-container {
+            font-family: 'Source Sans Pro', sans-serif;
+            position: relative;
+        }
+
+        .fkrc-m-p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .fkrc-block {
+            display: block;
+        }
+
+        .fkrc-line-normal {
+            line-height: normal;
+        }
+
+        .fkrc-checkbox-window {
+            height: 74px;
+            width: 300px;
+            background-color: #f9f9f9;
+            border-radius: 3px;
+            border: 1px solid #d3d3d3;
+        }
+
+        .fkrc-checkbox-container {
+            width: 28px;
+            height: 28px;
+        }
+
+        .fkrc-checkbox {
+            position: relative;
+            background-color: #fff;
+            border-radius: 2px;
+            height: 100%;
+            width: 100%;
+            border: 2px solid #c1c1c1;
+            margin: 21px 0 0 12px;
+            outline: none;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: width 500ms, height 500ms, border-radius 500ms, margin-top 500ms, margin-left 500ms, opacity 700ms;
+            cursor: pointer;
+        }
+
+        .fkrc-checkbox:hover {
+            border: 2px solid #b2b2b2;
+        }
+
+        .fkrc-im-not-a-robot {
+            position: relative;
+            left: 52px;
+            bottom: 2px;
+            font-size: 15px;
+            color: #282727;
+        }
+
+        .fkrc-captcha-logo {
+            position: relative;
+            left: 246px;
+            bottom: 40px;
+            width: 33px;
+            height: 33px;
+            vertical-align: baseline;
+        }
+
+        .fkrc-checkbox-desc {
+            color: #555555;
+            position: relative;
+            font-size: 10px;
+            text-align: center;
+            bottom: 41px;
+            left: 112px;
+        }
+
+        .fkrc-spinner {
+            visibility: hidden;
+            position: relative;
+            height: 28px;
+            width: 28px;
+            bottom: 90px;
+            left: 12px;
+            opacity: 0;
+            transition: opacity 400ms;
+        }
+
+        .fkrc-verifywin-window {
+            opacity: 0;
+            position: absolute;
+            visibility: hidden;
+            display: none;
+            margin: auto;
+            width: 310px;
+            background-color: #fff;
+            border: 1px solid #cecece;
+            -webkit-box-shadow: 5px 6px 7px -3px rgba(0,0,0,0.12);
+            box-shadow: 5px 6px 7px -3px rgba(0,0,0,0.12);
+            transition: opacity 400ms;
+            z-index: 1;
+        }
+
+        .fkrc-verifywin-window-arrow {
+            opacity: 0;
+            position: absolute;
+            visibility: hidden;
+            transition: opacity 200ms;
+            width: 10px;
+            height: 23px;
+            z-index: 2;
+        }
+
+        .fkrc-verifywin-container {
+            padding: 8px;
+        }
+
+        .fkrc-verifywin-header {
+            background-color: #5a89e1;
+            padding: 16px 16px 24px 16px;
+            color: #fff;
+        }
+
+        .fkrc-verifywin-header-text-small {
+            font-size: 14px;
+            line-height: normal;
+        }
+
+        .fkrc-verifywin-header-text-medium {
+            font-size: 16px;
+        }
+
+        .fkrc-verifywin-header-text-big {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .fkrc-verifywin-main {
+            padding: 5px;
+        }
+
+        .fkrc-verifywin-footer {
+            border-top: 1px solid #cecece;
+            padding: 10px 7px 10px 7px;
+            color: #737373;
+            display: grid;
+            grid-template-columns: auto 102px;
+            font-size: 13px;
+        }
+
+        .fkrc-verifywin-footer-left {
+            padding: 5px;
+        }
+
+        .fkrc-verifywin-verify-button {
+            text-transform: uppercase;
+            background-color: #5a89e2;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            padding: 12px 0 12px 0;
+            text-decoration: none;
+            font-weight: 600;
+            height: min-content;
+            border-radius: 3px;
+            font-size: 14px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .fkrc-verifywin-verify-button:hover {
+            background-color: #4a78d1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fake captcha start -->
+    <div class="fkrc-container fkrc-m-p">
+        <!-- Captcha checkbox widget -->
+        <div id="fkrc-checkbox-window" class="fkrc-checkbox-window fkrc-m-p fkrc-block">
+            <div class="fkrc-checkbox-container fkrc-m-p">
+                <button type="button" id="fkrc-checkbox" class="fkrc-checkbox fkrc-m-p fkrc-line-normal"></button>
+            </div>
+            <p class="fkrc-im-not-a-robot fkrc-m-p fkrc-line-normal">I'm not a robot</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/768px-RecaptchaLogo.svg.png" 
+                 class="fkrc-captcha-logo fkrc-line-normal" alt="">
+            <p class="fkrc-checkbox-desc fkrc-m-p fkrc-line-normal">CAPTCHA</p>
+            <p class="fkrc-checkbox-desc fkrc-m-p fkrc-line-normal">Privacy - Terms</p>
+            <img src="https://raw.githubusercontent.com/75a/fake-captcha/refs/heads/main/images/captcha_spinner.gif" 
+                 class="fkrc-spinner fkrc-m-p fkrc-line-normal" alt="" id="fkrc-spinner">
+        </div>
+
+        <!-- Captcha checkbox verification window -->
+        <div id="fkrc-verifywin-window" class="fkrc-verifywin-window">
+            <div class="fkrc-verifywin-container">
+                <header class="fkrc-verifywin-header">
+                    <span class="fkrc-verifywin-header-text-medium fkrc-m-p fkrc-block">Verify that you're not a robot</span>
+                </header>
+                <main class="fkrc-verifywin-main">
+                    Click "Verify" to prove that you're not a robot<br>
+                </main>
+            </div>
+            <footer class="fkrc-verifywin-container fkrc-verifywin-footer">
+                <div class="fkrc-verifywin-footer-left">
+                    Press the verify button to proceed.
+                </div>
+                <button type="button" class="fkrc-verifywin-verify-button fkrc-block" id="fkrc-verifywin-verify-button">Verify</button>
+            </footer>
+        </div>
+        <img src="https://raw.githubusercontent.com/75a/fake-captcha/refs/heads/main/images/captcha_arrow.svg" 
+             alt="" class="fkrc-verifywin-window-arrow" id="fkrc-verifywin-window-arrow"/>
+    </div>
+    <!-- Fake captcha end -->
+
+    <script>
+        function verifyCaptcha() {
+            window.location.href = "../pages/happyphone.html";
+        }
+
+        let checkboxWindow = document.getElementById("fkrc-checkbox-window");
+        let checkboxBtn = document.getElementById("fkrc-checkbox");
+        let checkboxBtnSpinner = document.getElementById("fkrc-spinner");
+        let verifyWindow = document.getElementById("fkrc-verifywin-window");
+        let verifyWindowArrow = document.getElementById("fkrc-verifywin-window-arrow");
+        let verifyBtn = document.getElementById("fkrc-verifywin-verify-button");
+
+        function addCaptchaListeners() {
+            if (checkboxBtn && verifyBtn) {
+                document.addEventListener("click", function(event) {
+                    if (!event.composedPath().includes(verifyWindow) && isVerifyWindowVisible()) {
+                        closeVerifyWindow();
+                    }
+                });
+                verifyBtn.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    verifyBtn.disabled = true;
+                    verifyCaptcha();
+                });
+                checkboxBtn.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    checkboxBtn.disabled = true;
+                    runClickedCheckboxEffects();
+                });
+            }
+        }
+        addCaptchaListeners();
+
+        function runClickedCheckboxEffects() {
+            hideCaptchaCheckbox();
+            setTimeout(function() {
+                showCaptchaLoading();
+            }, 500)
+            setTimeout(function() {
+                showVerifyWindow();
+            }, 1500)
+            // Removed the hideCaptchaLoading() from here
+        }
+
+        function showCaptchaCheckbox() {
+            checkboxBtn.style.width = "100%";
+            checkboxBtn.style.height = "100%";
+            checkboxBtn.style.borderRadius = "2px";
+            checkboxBtn.style.margin = "21px 0 0 12px";
+            checkboxBtn.style.opacity = "1";
+        }
+
+        function hideCaptchaCheckbox() {
+            checkboxBtn.style.width = "4px";
+            checkboxBtn.style.height = "4px";
+            checkboxBtn.style.borderRadius = "50%";
+            checkboxBtn.style.marginLeft = "25px";
+            checkboxBtn.style.marginTop = "33px";
+            checkboxBtn.style.opacity = "0";
+        }
+
+        function showCaptchaLoading() {
+            checkboxBtnSpinner.style.visibility = "visible";
+            checkboxBtnSpinner.style.opacity = "1";
+        }
+
+        function hideCaptchaLoading() {
+            checkboxBtnSpinner.style.visibility = "hidden";
+            checkboxBtnSpinner.style.opacity = "0";
+        }
+
+        function showVerifyWindow() {
+            verifyWindow.style.display = "block";
+            verifyWindow.style.visibility = "visible";
+            verifyWindow.style.opacity = "1";
+            verifyWindow.style.top = checkboxWindow.offsetTop - 80 + "px";
+            verifyWindow.style.left = checkboxWindow.offsetLeft + 54 + "px";
+
+            if (verifyWindow.offsetTop < 5) {
+                verifyWindow.style.top = "5px";
+            }
+
+            if (verifyWindow.offsetLeft + verifyWindow.offsetWidth > window.innerWidth - 10) {
+                verifyWindow.style.left = checkboxWindow.offsetLeft - 8 + "px";
+            } else {
+                verifyWindowArrow.style.top = checkboxWindow.offsetTop + 24 + "px";
+                verifyWindowArrow.style.left = checkboxWindow.offsetLeft + 45 + "px";
+                verifyWindowArrow.style.visibility = "visible";
+                verifyWindowArrow.style.opacity = "1";
+            }
+        }
+
+        function closeVerifyWindow() {
+            verifyWindow.style.display = "none";
+            verifyWindow.style.visibility = "hidden";
+            verifyWindow.style.opacity = "0";
+
+            verifyWindowArrow.style.visibility = "hidden";
+            verifyWindowArrow.style.opacity = "0";
+
+            showCaptchaCheckbox();
+            hideCaptchaLoading(); // The spinner only hides when the verification is complete
+            checkboxBtn.disabled = false;
+            verifyBtn.disabled = false;
+        }
+
+        function isVerifyWindowVisible() {
+            return verifyWindow.style.display !== "none" && verifyWindow.style.display !== "";
+        }
+    </script>
+</body>
+</html>

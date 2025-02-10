@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Your Device May Be Infected!</title>
+    <style>
+        @keyframes progressPulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes threatAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scanComplete {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes buttonPress {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(0.98);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-image: url("https://i.ibb.co/HLRmP2xB/Red-Windows-Background.jpg");
+            background-size: cover;
+            background-position: center right;
+            user-select: none;
+        }
+
+        #scan-container {
+            background-color: white;
+            border-radius: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            width: 700px;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            overflow: auto;
+            transform-origin: top;
+            height: 600px;
+            transition: opacity 0.2s;
+        }
+
+        #scan-container.minimized {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        #scan-container.maximized {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+
+        .window-header {
+            background-color: #1f1f1f;
+            padding: 0;
+            height: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            cursor: move;
+        }
+
+        .window-header:active {
+            cursor: grabbing;
+        }
+
+        .window-title {
+            font-size: 12px;
+            color: #ffffff;
+            margin-left: 12px;
+            font-weight: 400;
+        }
+
+        .window-controls {
+            display: flex;
+            height: 100%;
+        }
+
+        .window-button {
+            width: 46px;
+            height: 100%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .window-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .window-button.close:hover {
+            background-color: #e81123;
+        }
+
+        .window-button::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            display: block;
+            transition: transform 0.2s;
+        }
+
+        .window-button:active::before {
+            transform: scale(0.9);
+        }
+
+        .minimize::before {
+            border-bottom: 1px solid #fff;
+        }
+
+        .maximize::before {
+            border: 1px solid #fff;
+        }
+
+        .close::before {
+            content: "×";
+            color: #fff;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .window-content {
+            padding: 24px;
+            transition: padding 0.3s;
+        }
+
+        .maximized .window-content {
+            padding: 32px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .header img {
+            width: 120px;
+            height: auto;
+            transition: width 0.3s;
+        }
+
+        .maximized .header img {
+            width: 150px;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: red;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 0px;
+            display: block;
+            animation: bigfont .2s infinite;
+        }
+
+        @keyframes bigfont {
+            to {
+                color: black;
+            }
+        }
+
+        .maximized .header h2 {
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 400;
+            margin-top: 5px;
+            text-align: center;
+            transition: font-size 0.3s;
+        }
+
+        .window-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #secure-btn {
+            padding: 12px 24px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transform: scale(1.1);
+            animation: scale 1s infinite;
+        }
+
+        .free {
+            text-align: center;
+        }
+
+        .virus {
+            background-color: #ff000045;
+            padding: 10px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin-top: 0px;
+            color: #7c0000;
+            animation: virus 2s infinite, enter .5s;
+            margin-bottom: 3px;
+        }
+
+@keyframes enter {
+    0% {
+        transform: scale(0)
+    }
+
+    80% {
+        transform: scale(1.2)
+    }
+    100% {
+        transform: scale(1)
+    }
+}
+
+        @keyframes virus {
+            0% {
+                background-color: red;
+                color: white;
+            }
+
+            50% {
+                background-color: #ff000045;
+                color: #7c0000;
+            }
+
+            100% {
+                background-color: red;
+                color: white;
+            }
+        }
+
+        @keyframes scale {
+            0% {
+                transform: scale(1.1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        .muchvirus {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: red;
+            display: block;
+            transition: transform .1s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="scan-container">
+        <div class="window-header">
+            <div class="window-title">Windows Defender Security</div>
+            <div class="window-controls">
+                <button class="window-button maximize"></button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Microsoft_Defender_2020_Fluent_Design_icon.png"
+                    alt="McAfee Logo" />
+                <h2>Your Device Has Been Infected!</h2>
+                <p>Windows Defender has detected a Malware virus in your computer. Secure your device now to avoid
+                    getting infected.</p>
+            </div>
+
+            <button id="secure-btn">Secure Your Computer Now</button>
+            <p class="free">100% SAFE AND FREE DOWNLOAD</p>
+
+
+            <p class="muchvirus"><span>3</span> VIRUSES FOUND</p>
+            <div class="virus" style="display:none">
+                RANSOMWARE.WANNACRY_TROJANv181.31.525 [CRITICAL]
+            </div>
+            <div class="virus" style="display:none">
+                TROJAN.SSSTEAL3RBNK13719037 [WARNING]
+            </div>
+            <div class="virus" style="display:none">
+                DESTRUCTIVE/918156295.WTRJK [CRITICAL]
+            </div>
+            <div class="virus" style="display:none">
+                DNST3L4R_DNGR5v91827682641,3u [100 DANGER]
+            </div>
+            <div class="virus" style="display:none">
+                SPYWARE.KEYLOGGERVX_420.1337 [SEVERE]
+            </div>
+            <div class="virus" style="display:none">
+                TROJAN.Z3RO-D4Y_EXPLO1T [CRITICAL]
+            </div>
+            <div class="virus" style="display:none">
+                WORM.SELFREPLIC8TR_9981 [HIGH]
+            </div>
+            <div class="virus" style="display:none">
+                MALWARE.R00T-K1T_X3220 [DANGER]
+            </div>
+            <div class="virus" style="display:none">
+                RANSOM.LOCKY-XV_9090 [CRITICAL]
+            </div>
+            <div class="virus" style="display:none">
+                VIRUS.MEMZ_PAYLOAD_A23 [SEVERE]
+            </div>
+            <div class="virus" style="display:none">
+                TROJAN.BACKDOOR_LIMBO.521 [WARNING]
+            </div>
+            <div class="virus" style="display:none">
+                ADWARE.INTRUSIV3_POPRUSHv22.9 [LOW]
+            </div>
+            <div class="virus" style="display:none">
+                WORM.AUTOEXEC.B00TY_77 [HIGH]
+            </div>
+            <div class="virus" style="display:none">
+                SPYWARE.SNOOPRAT_0081 [DANGER]
+            </div>
+            <div class="virus" style="display:none">
+                DNSTUNNEL.S4MPH1SH [CRITICAL]
+            </div>
+            <div class="virus" style="display:none">
+                CRYPTOJACK.CPU_ABUSERv666 [EXTREME]
+            </div>
+            <div class="virus" style="display:none">
+                TROJAN.SOCIALENGR_WRM32 [WARNING]
+            </div>
+            <div class="virus" style="display:none">
+                DESTRUCTIVE.WIPEOUT_404 [FATAL]
+            </div>
+            <div class="virus" style="display:none">
+                BOTNET.ZOMBIE_PUPPET_1307 [HIGH]
+            </div>
+            <div class="virus" style="display:none">
+                MALWARE.DLLINJECT_R3V [DANGER]
+            </div>
+            <div class="virus" style="display:none">
+                ADWARE.REDIRECTION_F4RM [LOW]
+            </div>
+            <div class="virus" style="display:none">
+                EXPLOIT.JS_PWNDOORv1.3 [WARNING]
+            </div>
+            <div class="virus" style="display:none">
+                TROJAN.REVERSE_SHELL-XPT [CRITICAL]
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById("scan-container");
+
+        [...document.querySelectorAll(".virus")].forEach((virus, i) => {
+            setTimeout(function () {
+                virus.style.display = "block";
+                document.querySelector(".muchvirus span").textContent = i + 1;
+                document.querySelector(".muchvirus").style.transform = "scale(1.1)"
+                setTimeout(function () {
+                    document.querySelector(".muchvirus").style.transform = "scale(1)";
+                }, 200)
+            }, i * 350);
+        });
+
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        container.addEventListener("mousedown", dragStart);
+        document.addEventListener("mousemove", drag);
+        document.addEventListener("mouseup", dragEnd);
+
+        function dragStart(e) {
+            if (
+                e.target.closest(".window-header") &&
+                !e.target.closest(".window-controls")
+            ) {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+                isDragging = true;
+            }
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                container.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        }
+
+        function dragEnd() {
+            isDragging = false;
+        }
+
+
+        document
+            .querySelector(".maximize")
+            .addEventListener("click", function () {
+                if (container.classList.contains("maximized")) {
+                    container.classList.remove("maximized");
+                    container.style.width = "700px";
+                    container.style.height = "600px";
+                    container.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+                } else {
+                    container.classList.add("maximized");
+                    xOffset = 0;
+                    yOffset = 0;
+                    container.style.width = "100vw";
+                    container.style.height = "100vh";
+                    container.style.transform = "translate(0, 0)";
+                }
+            });
+
+        // Keep window within viewport bounds
+        function constrainToViewport() {
+            const rect = container.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            if (rect.left < 0) xOffset = 0;
+            if (rect.top < 0) yOffset = 0;
+            if (rect.right > viewportWidth) xOffset = viewportWidth - rect.width;
+            if (rect.bottom > viewportHeight)
+                yOffset = viewportHeight - rect.height;
+
+            container.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+        }
+
+        container.addEventListener("mousedown", () => {
+            document.querySelectorAll("#scan-container").forEach((win) => {
+                win.style.zIndex = "1";
+            });
+            container.style.zIndex = "2";
+        });
+
+        window.addEventListener("resize", () => {
+            if (container.classList.contains("maximized")) {
+                container.style.width = "100vw";
+                container.style.height = "100vh";
+            }
+            constrainToViewport();
+        });
+
+        container
+            .querySelector(".window-header")
+            .addEventListener("dblclick", (e) => {
+                if (!e.target.closest(".window-controls")) {
+                    document.querySelector(".maximize").click();
+                }
+            });
+
+        container.addEventListener("touchstart", (e) => {
+            if (
+                e.target.closest(".window-header") &&
+                !e.target.closest(".window-controls")
+            ) {
+                const touch = e.touches[0];
+                initialX = touch.clientX - xOffset;
+                initialY = touch.clientY - yOffset;
+                isDragging = true;
+            }
+        });
+
+        container.addEventListener("touchmove", (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                currentX = touch.clientX - initialX;
+                currentY = touch.clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                container.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            }
+        });
+
+        container.addEventListener("touchend", () => {
+            isDragging = false;
+        });
+
+        function snapToEdge() {
+            const threshold = 20;
+            const rect = container.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            if (rect.left < threshold) xOffset = 0;
+            if (rect.top < threshold) yOffset = 0;
+            if (viewportWidth - rect.right < threshold)
+                xOffset = viewportWidth - rect.width;
+            if (viewportHeight - rect.bottom < threshold)
+                yOffset = viewportHeight - rect.height;
+
+            container.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+        }
+
+        const originalDragEnd = dragEnd;
+        dragEnd = function () {
+            originalDragEnd();
+            snapToEdge();
+        };
+    </script>
+</body>
+
+</html>
