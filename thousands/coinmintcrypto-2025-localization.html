@@ -26,19 +26,42 @@
             backdrop-filter: blur(10px);
             max-width: 400px;
             width: 100%;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
         h1 {
             margin-bottom: 20px;
             color: #ffffff;
             font-size: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         label {
             display: block;
             margin-bottom: 5px;
             color: #ffffff;
             font-size: 1rem;
+            animation: slideIn 1s ease-in-out;
         }
-        input[type="text"], input[type="email"], input[type="tel"], select {
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        input[type="text"], input[type="email"], input[type="tel"] {
             width: calc(100% - 22px);
             padding: 12px;
             margin: 10px 0;
@@ -48,12 +71,67 @@
             background: rgba(255, 255, 255, 0.2);
             color: white;
             transition: all 0.3s ease;
+            animation: pulse 3s infinite;
         }
-        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus {
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            }
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
             outline: none;
             background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
+
+        /* Custom Dropdown Styles */
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .dropdown-selected {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dropdown-selected:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .dropdown-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        .dropdown-options.open {
+            display: block;
+        }
+        .dropdown-option {
+            padding: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dropdown-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Button Styles */
         .button-container {
             margin-top: 20px;
         }
@@ -66,11 +144,21 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
         }
         .button-container button:hover {
             background: linear-gradient(135deg, #ff7e00, #ffbf00);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
+
         /* Loading Animation */
         .loading {
             display: none;
@@ -170,21 +258,41 @@
     <p>Enter your details to participate in our airdrop.</p>
     <label for="name">Full Name</label>
     <input type="text" id="name" placeholder="Full Name">
+
+    <!-- Custom Dropdown -->
     <label for="platform">Platform</label>
-    <select id="platform">
-        <option value="telegram">Telegram</option>
-        <option value="discord">Discord</option>
-        <option value="twitter">Twitter</option>
-    </select>
+    <div class="dropdown-container">
+        <div class="dropdown-selected" onclick="toggleDropdown()">Select Platform</div>
+        <div class="dropdown-options" id="dropdown-options">
+            <div class="dropdown-option" onclick="selectOption('Telegram')">Telegram</div>
+            <div class="dropdown-option" onclick="selectOption('Messenger')">Messenger</div>
+            <div class="dropdown-option" onclick="selectOption('WhatsApp')">WhatsApp</div>
+            <div class="dropdown-option" onclick="selectOption('WeChat')">WeChat</div>
+            <div class="dropdown-option" onclick="selectOption('Discord')">Discord</div>
+            <div class="dropdown-option" onclick="selectOption('Teamspeak')">Teamspeak</div>
+            <div class="dropdown-option" onclick="selectOption('Twitter Direct Messages')">Twitter Direct Messages</div>
+            <div class="dropdown-option" onclick="selectOption('Viber')">Viber</div>
+            <div class="dropdown-option" onclick="selectOption('Zalo')">Zalo</div>
+            <div class="dropdown-option" onclick="selectOption('QQ')">QQ</div>
+            <div class="dropdown-option" onclick="selectOption('Snapchat')">Snapchat</div>
+            <div class="dropdown-option" onclick="selectOption('Signal')">Signal</div>
+            <div class="dropdown-option" onclick="selectOption('LINE')">LINE</div>
+            <div class="dropdown-option" onclick="selectOption('Slack')">Slack</div>
+            <div class="dropdown-option" onclick="selectOption('KakaoTalk')">KakaoTalk</div>
+        </div>
+    </div>
+
     <label for="username">Username</label>
     <input type="text" id="username" placeholder="Your Username">
     <label for="phone">Phone Number</label>
     <input type="tel" id="phone" placeholder="Phone Number">
     <label for="email">Email Address</label>
     <input type="email" id="email" placeholder="Email Address">
+
     <div class="button-container">
         <button onclick="startLoading()">Participate</button>
     </div>
+
     <!-- Cube Spinner -->
     <div id="loading" class="loading">
         <div class="spinner-container">
@@ -202,15 +310,29 @@
         </div>
     </div>
 </div>
+
 <script>
+    let selectedPlatform = '';
+
+    function toggleDropdown() {
+        const options = document.getElementById('dropdown-options');
+        options.classList.toggle('open');
+    }
+
+    function selectOption(platform) {
+        const selected = document.querySelector('.dropdown-selected');
+        selected.textContent = platform;
+        selectedPlatform = platform;
+        document.getElementById('dropdown-options').classList.remove('open');
+    }
+
     function startLoading() {
         const name = document.getElementById('name').value;
-        const platform = document.getElementById('platform').value;
         const username = document.getElementById('username').value;
         const phone = document.getElementById('phone').value;
         const email = document.getElementById('email').value;
 
-        if (!name || !platform || !username || !phone || !email) {
+        if (!name || !selectedPlatform || !username || !phone || !email) {
             alert("Please fill out all fields.");
             return;
         }
