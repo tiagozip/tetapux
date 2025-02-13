@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congratulations!</title>
+    <style>
+        * {
+            font-family: Roboto, Arial, Helvetica, sans-serif
+        }
+
+        body {
+            max-width: 600px;
+            margin: 2em auto;
+            line-height: 1.5;
+        }
+
+        .top {
+            background-color: #E82C2A;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            margin-bottom: 1em;
+        }
+
+        .boxes {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .boxes button {
+            width: 130px;
+            height: 130px;
+            cursor: pointer;
+            background-color: transparent;
+            background-image: url("https://i.postimg.cc/Y0WTdV1k/Image-from-Google-Search.jpg");
+            border: none;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: all .2s;
+        }
+
+        .boxes button:hover {
+            transform: scale(1.2)
+        }
+
+        canvas#tsparticles {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            pointer-events: none;
+        }
+
+        img {
+            width: 300px;
+            border-radius: 20px;
+            margin: 0px auto;
+            max-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top">Congratulations!</div>
+    <p>Dear user,<br>Congratulations! You're our millionth visitor and have been randomly selected to enter this survey.
+        It only takes a minute and you may win a prize: <b>iPhone 16 Pro Max</b>.</p> <img
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F149426355.v2.pressablecdn.com%2Fwp-content%2Fuploads%2F2023%2F10%2Fiphone-15-6c.jpg&f=1&nofb=1&ipt=6cc1a2ca1073ab54fdbb7484a22946d5ab7fbdebc8957e77dbe0d3c592867616&ipo=images">
+
+    <p>You only have <b><span id="countdown">2:30</span></b> left to participate and win this fabulous prize!</p>
+    <p>To start, click on the correct box! Tries left: <span id="tries">5</span></p>
+
+    <div class="boxes">
+        <button></button>
+        <button></button>
+        <button></button>
+    </div>
+    <div class="boxes">
+        <button></button>
+        <button></button>
+        <button></button>
+    </div>
+    <div class="boxes">
+        <button></button>
+        <button></button>
+        <button></button>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+<script>
+    const jsConfetti = new JSConfetti();
+
+    let i = 0;
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelector("#tries").innerText = 4 - i;
+            if (i === 4) {
+                jsConfetti.addConfetti();
+                button.style.backgroundImage = 'url("https://upload.wikimedia.org/wikipedia/commons/a/ac/Approve_icon.svg")';
+                button.style.pointerEvents = "none";
+                button.style.transform = "scale(0.8)";
+                setTimeout(function () {
+                    button.style.backgroundImage = 'url("https://upload.wikimedia.org/wikipedia/commons/9/92/Loading_icon_cropped.gif")';
+                }, 2000);
+                setTimeout(function () {
+
+                    location.href = "/pages/raffle-2.html"
+                }, 3000)
+                return;
+            }
+            i++;
+            button.style.backgroundImage = 'url("https://i.postimg.cc/nhT17k6L/Cross-Icon-SVG.png")';
+            button.style.pointerEvents = "none";
+            button.style.transform = "scale(0.8)";
+        });
+    });
+
+    let timeLeft = 150;
+
+    function updateCountdown() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        document.getElementById("countdown").innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        document.getElementById("countdown").style.color = "red";
+        setTimeout(function () {
+            document.getElementById("countdown").style.color = "black";
+        }, 500)
+
+        if (timeLeft > 0) {
+            timeLeft--;
+            setTimeout(updateCountdown, 1000);
+        } else {
+            document.querySelector(".top").innerText = "Time's up!";
+            document.querySelectorAll('button').forEach(button => {
+                button.style.pointerEvents = "none";
+                button.style.opacity = ".4"
+            });
+
+        }
+    }
+
+    updateCountdown();
+</script>
+</script>
+
+</html>
