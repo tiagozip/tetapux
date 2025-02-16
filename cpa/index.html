@@ -18,6 +18,8 @@
                 Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
             margin: 6em auto;
             max-width: 450px;
+            background-color: #060404;
+            color: white;
         }
 
         h1 {
@@ -35,7 +37,7 @@
             font-size: 20px;
             max-width: 350px;
             margin: 0 auto;
-            margin-bottom: 2.5em;
+            margin-bottom: 1.5em;
             text-align: center;
             line-height: 1.3;
         }
@@ -51,37 +53,22 @@
             text-align: center;
             vertical-align: middle;
             padding: 12px 24px;
-            border: 1px solid #a12727;
             border-radius: 8px;
             background: #ff4a4a;
-            background: -webkit-gradient(linear, left top, left bottom, from(#ff4a4a), to(#992727));
-            background: -moz-linear-gradient(top, #ff4a4a, #992727);
-            background: linear-gradient(to bottom, #ff4a4a, #992727);
-            -webkit-box-shadow: #ff5959 0px 0px 40px 0px;
-            -moz-box-shadow: #ff5959 0px 0px 40px 0px;
-            box-shadow: #ff5959 0px 0px 40px 0px;
-            text-shadow: #591717 1px 1px 1px;
-            font: normal normal bold 20px arial;
             color: #ffffff;
             text-decoration: none;
             margin: 0px auto;
+            font-family: inherit;
+            transition: transform .2s;
+            font-weight: 500;
+            font-size: 16px;
         }
 
-        .button:hover,
-        .button:focus {
-            background: #ff5959;
-            background: -webkit-gradient(linear, left top, left bottom, from(#ff5959), to(#b62f2f));
-            background: -moz-linear-gradient(top, #ff5959, #b62f2f);
-            background: linear-gradient(to bottom, #ff5959, #b62f2f);
-            color: #ffffff;
-            text-decoration: none;
+        .button:hover {
+            transform: scale(1.05)
         }
-
         .button:active {
-            background: #982727;
-            background: -webkit-gradient(linear, left top, left bottom, from(#982727), to(#982727));
-            background: -moz-linear-gradient(top, #982727, #982727);
-            background: linear-gradient(to bottom, #982727, #982727);
+            transform: scale(.95)
         }
     </style>
 </head>
@@ -90,8 +77,8 @@
     <h1>Teta<b>cpa</b></h1>
     <p class="desc">Make Tetapux randomly redirect users to your forms, for free.</p>
     <div class="center">
-    <a class="button" href="#">Get started now!</a>
-    </div> 
+        <a class="button" href="#">Get started now!</a>
+    </div>
 </body>
 
 </html>
