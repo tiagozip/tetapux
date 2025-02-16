@@ -1,33 +1,46 @@
-import fs from 'fs/promises'
+import fs from 'fs/promises';
+import path from 'path';
+
 Bun.serve({
     port: 3000,
+    fetch: async (req) => {
+        try {
+            const url = new URL(req.url);
+            let filePath = url.pathname;
 
-    fetch: async function (req) {
-        const url = new URL(req.url);
-        let path = url.pathname;
-        if (path === '/') {
-            path = '/index.html';
-        };
+            filePath = path.normalize(filePath);
+            if (filePath.startsWith('..') || path.isAbsolute(filePath)) {
+                return new Response('Forbidden', { status: 403 });
+            }
 
-        if (path === "/collect-phone") {
-            const phone = url.searchParams.get("phone");
-            await fs.appendFile(import.meta.dirname + "/.data/phone.txt", phone.trim() + "\n");
-            return new Response("OK", {
-                headers: { 'Content-Type': 'text/plain' },
+            if (filePath === '/') {
+                filePath = '/index.html';
+            }
+
+            if (filePath === "/collect-phone") {
+                const phone = url.searchParams.get("phone");
+                if (phone && /^\d+$/.test(phone.trim())) {
+                    await fs.appendFile(path.join(import.meta.dirname, ".data/phone.txt"), phone.trim() + "\n");
+                    return new Response("OK", { headers: { 'Content-Type': 'text/plain' } });
+                } else {
+                    return new Response("Invalid phone number", { status: 400 });
+                }
+            }
+
+            if (!filePath.includes(".")) {
+                const directoryPath = path.join(import.meta.dirname, filePath);
+                const files = await fs.readdir(directoryPath);
+                const listItems = files.map(file => `<li><a href="${filePath}${filePath.endsWith('/') ? '' : '/'}${file}">${file}</a></li>`);
+                return new Response(`<ul>${listItems.join('')}</ul>`, { headers: { 'Content-Type': 'text/html' } });
+            }
+
+            const file = Bun.file(path.join(import.meta.dirname, filePath));
+            return new Response(await file.arrayBuffer(), {
+                headers: { 'Content-Type': file.type || 'application/octet-stream' },
             });
-        }
 
-        if (!path.includes(".")) {
-            return new Response(`<ul>${(await fs.readdir(import.meta.dirname + path)).map((e) => {
-                return `<li><a href="${path + (path.endsWith("/") ? "" : "/") + e}">${e}</a></li>`;
-            })}</ul>`, {
-                headers: { 'Content-Type': 'text/html' },
-            });
+        } catch (error) {
+            return new Response('Internal Server Error', { status: 500 });
         }
-
-        const file = Bun.file(import.meta.dirname + path);
-        return new Response(await file.bytes(), {
-            headers: { 'Content-Type': file.type || 'application/octet-stream' },
-        });
     },
 });
