@@ -14,7 +14,7 @@ Bun.serve({
 
       if (path === "/collect-phone") {
         const phone = url.searchParams.get("phone");
-        
+
         if (!phone) {
             return new Response("Phone number is required", { status: 400, headers: { 'Content-Type': 'text/plain' } });
         }
@@ -27,13 +27,13 @@ Bun.serve({
           await fs.appendFile(import.meta.dirname + "/.data/phone.txt", phone.trim() + "\n");
           return new Response("OK", { headers: { 'Content-Type': 'text/plain' } });
         } catch (error) {
-            console.error("Error writing to file:", error); // Log the error
             return new Response("Failed to save phone number", { status: 500, headers: { 'Content-Type': 'text/plain' } });
         }
       }
 
       if (!path.includes(".")) {
         const safePath = import.meta.dirname + path;
+        
         if (!safePath.startsWith(import.meta.dirname)) {
           return new Response("Forbidden", { status: 403, headers: { 'Content-Type': 'text/plain' } });
         }
@@ -76,7 +76,6 @@ Bun.serve({
     }
   },
    error(error) {
-        console.error("Server error:", error);
         return new Response("Internal Server Error\n" + error.toString(), { status: 500 });
     },
 });
