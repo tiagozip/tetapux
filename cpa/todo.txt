@@ -1,0 +1,3 @@
+* list of topics and ads for each topics
+* publisher declares webpage topics, we select ad closest to those topics + randomness
+* advertiser must also embed widget in their webpage
