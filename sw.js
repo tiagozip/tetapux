@@ -39,6 +39,18 @@ function showRandomNotification() {
       actionUrls: {
         scan: "../pages/happyphone.html"
       }
+    },
+    {
+      title: "McAfee Subscription Expired",
+      body: "Your McAfee subscription has expired. Renew now to protect your device.",
+      icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/McAfee.png",
+      url: "../nnm-ae/1000/gb20-aderror.html",
+      actions: [
+        { action: "renew", title: "🔒 Renew Now" }
+      ],
+      actionUrls: {
+        renew: "../nnm-ae/1000/gb20-aderror.html"
+      }
     }
   ];
 
