@@ -62,16 +62,19 @@
     .cpa img {
       width: 100px;
     }
+
     .cpa h4 {
       margin: 0px;
       font-size: 15px;
       font-weight: 500;
     }
+
     .cpa p {
       font-size: 13px;
       margin: 0px;
       margin-top: 3px;
     }
+
     .cpa a {
       font-size: 13px;
       color: #05AAFC;
@@ -79,25 +82,42 @@
       display: block;
       width: fit-content;
     }
+
+    .search {
+      width: 100%;
+      padding: 12px 20px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background-color: rgba(0, 0, 0, 0.03);
+      caret-color: #05AAFC;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      font: inherit;
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+");
+      background-position: 12px 50%;
+      background-repeat: no-repeat;
+      background-size: 18px;
+      padding-left: 38px;
+    }
+    .search:focus {
+      outline: none;
+    }
   </style>
 </head>
 
 <body>
   <h1>Tetapux</h1>
+
+  <input type="text" class="search" placeholder="Search...">
   <div class="cpa">
     <div class="text">
-    <h4>Try Tetapux's free CPA</h4>
-
-    <p>Make Tetapux randomly redirect users to your forms, for free</p>
-    <a href="/cpa/index.html">Try now</a>
-  </div>
+      <h4>Try Tetapux's free CPA</h4>
+      <p>Make Tetapux randomly redirect users to your forms, for free</p>
+      <a href="/cpa/index.html">Try now</a>
+    </div>
     <img src="/cpa/logo.svg" alt="TetaCPA logo">
   </div>
-  <p style="margin-top: 40px">
-    Note: Tetapux May include flashing lights, sounds and rapidly moving elements. 
-    This website is 100% a joke.
-  </p>
-  <div class="pages">
+
+  <div class="pages" id="linksContainer">
     <a href="/pages/underattack.html">Under attack</a>
     <a href="/pages/popups.html">Fake popups</a>
     <a href="/nnm-ae/1000/gb20-aderror.html">Fake McAfee Security Scan</a>
@@ -119,7 +139,28 @@
     <a href="/thousands/coinmintcrypto-2025-localization.html">Crypto coin mint</a>
     <a href="/red/filedownload.html">Your File is Ready to Download</a>
     <a href="/red/live-tv.html">Premium IPTV</a>
+    <a href="/nnm-ae/1000/windows-defender-iax.html">Free Windows Defender Pro</a>
   </div>
+
+  <p style="margin-top: 40px">
+    Note: Tetapux May include flashing lights, sounds and rapidly moving elements.
+    This website is 100% a joke.
+  </p>
+
+  <script>
+    document.querySelector('.search').addEventListener('input', function () {
+      const input = document.querySelector('.search').value.toLowerCase();
+      const links = document.querySelectorAll('.pages a');
+      links.forEach(link => {
+        const text = link.textContent.toLowerCase();
+        link.style.display = text.includes(input) ? '' : 'none';
+      });
+
+      document.querySelector('.cpa').style.display = input ? 'none' : 'flex';
+    });
+
+    document.querySelector('.search').focus();
+  </script>
 </body>
 
 </html>
