@@ -3,11 +3,21 @@
     <head>
         <title>Your File Is Ready!</title>
         <style>
-            body {
-                display: grid;
-                place-items: center;
-                min-height: 100vh;
-                margin: 0;
+            .center-container {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                align-items: center;
+            }
+            .center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
             #fileisready {
                 color: rgba(0, 120, 0, 1);
@@ -68,7 +78,9 @@
         </style>
     </head>
     <body>
-        <h1 class="center" id="fileisready">Your File is ready!</h1>
-        <a class="button center" href="#">Download</a>
+        <div class="center-container">
+            <h1 id="fileisready">Your File is ready!</h1>
+            <a class="button" href="../nnm-ae/1000/gb20-aderror.html">Download</a>
+        </div>
     </body>
 </html>
