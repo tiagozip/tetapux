@@ -5,232 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium IPTV - 40,000+ Channels & 10,000+ Movies!</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
         body {
-            font-family: 'Rubik', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding: 0;
-            background: radial-gradient(circle at center, #2c3e50, #1a2333);
-            color: #ecf0f1;
-            line-height: 1.8;
+            background: #0078d7;
+            color: #fff;
+            line-height: 1.6;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            background: linear-gradient(135deg, #0078d7, #005eb8);
         }
-
         header {
-            background: rgba(30, 46, 65, 0.95);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
             color: #fff;
-            padding: 35px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-            border-bottom: 3px solid #3498db;
-            transition: background 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin: 20px;
         }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: calc(100% + 20px);
-            height: calc(100% + 20px);
-            background: linear-gradient(120deg, rgba(52, 152, 219, 0.2), rgba(44, 62, 80, 0.2));
-            z-index: 0;
-            animation: headerGradient 8s linear infinite;
-            pointer-events: none;
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
         }
-
-        @keyframes headerGradient {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        header p {
+            font-size: 1.1em;
+            margin-top: 0;
+            color: #e0e0e0;
         }
-
-        header:hover {
-            background: rgba(30, 46, 65, 1);
-        }
-
         .container {
             max-width: 80%;
-            margin: 45px auto;
-            padding: 45px;
-            background: rgba(45, 52, 54, 0.75);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(12px);
-            transition: box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            margin: 30px auto;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .container:hover {
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.8);
-        }
-
-        h1, h2 {
-            color: #fff;
-            margin-bottom: 30px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s ease;
-        }
-
-        h1 {
-            font-size: 2.8em;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-
         h2 {
-            font-size: 2.1em;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 12px;
-            font-weight: 500;
+            color: #fff;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 8px;
         }
-
         .feature-list {
             list-style: none;
             padding: 0;
         }
-
         .feature-list li {
-            margin-bottom: 20px;
-            padding-left: 45px;
+            margin-bottom: 15px;
+            padding-left: 30px;
             position: relative;
-            line-height: 1.9;
-            transition: color 0.3s ease, transform 0.2s ease;
-            cursor: default;
+            color: #ddd;
+            transition: color 0.2s ease;
         }
-
         .feature-list li:hover {
-            color: #f39c12;
+            color: #fff;
         }
-
         .feature-list li::before {
             content: "\2713";
             position: absolute;
             left: 0;
-            top: 6px;
-            color: #82ccdd;
-            font-size: 1.5em;
-            transition: color 0.3s ease;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+            top: 1px;
+            color: #a0d4ff;
+            font-size: 1.2em;
         }
-
-        .feature-list li:hover::before {
-            color: #f39c12;
-        }
-
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #00a1ff, #0078d7);
             color: #fff;
-            padding: 20px 40px;
+            padding: 15px 30px;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-weight: 600;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-            font-size: 1.4em;
+            transition: background 0.3s ease, transform 0.2s ease;
+            font-size: 1.2em;
             border: none;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
-            z-index: 2;
-            letter-spacing: 0.5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.15);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
-            pointer-events: none;
-        }
-
         .cta-button:hover {
-            background: linear-gradient(135deg, #2980b9, #3498db);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #0078d7, #005eb8);
+            transform: translateY(-2px);
         }
-
-        .cta-button:hover::before {
-            opacity: 1;
-        }
-
         footer {
             text-align: center;
-            padding: 28px;
-            background: rgba(30, 46, 65, 0.95);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
             color: #fff;
-            margin-top: 55px;
-            font-size: 1.1em;
-            border-top: 3px solid #3498db;
-            box-shadow: 0 -7px 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
+            margin-top: 30px;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
         }
-
-        footer::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: calc(100% + 20px);
-            height: calc(100% + 20px);
-            background: linear-gradient(120deg, rgba(52, 152, 219, 0.2), rgba(44, 62, 80, 0.2));
-            z-index: 0;
-            animation: footerGradient 8s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes footerGradient {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         #copyrightYear {
-            font-weight: 700;
+            font-weight: 600;
         }
-
         @media (max-width: 768px) {
             .container {
                 max-width: 90%;
-                margin: 30px auto;
-                padding: 30px;
+                margin: 20px auto;
+                padding: 20px;
             }
-            h1 {
-                font-size: 2.4em;
+            header {
+                padding: 20px;
+                margin: 15px;
+            }
+            header h1 {
+                font-size: 2.2em;
             }
             h2 {
-                font-size: 1.9em;
+                font-size: 1.8em;
             }
             .cta-button {
-                font-size: 1.3em;
-                padding: 18px 36px;
+                font-size: 1.1em;
+                padding: 12px 25px;
             }
             footer {
-                font-size: 1em;
+                font-size: 0.8em;
             }
         }
     </style>
 </head>
 <body>
-
     <header>
         <h1>Experience the Ultimate Entertainment with Premium IPTV</h1>
         <p>40,000+ Live TV Channels & 10,000+ Movies On-Demand!</p>
     </header>
-
     <div class="container">
         <h2>Why Choose Our IPTV Service?</h2>
         <ul class="feature-list">
@@ -257,11 +170,9 @@
         <p><b>Experience the future of entertainment.</b></p>
         <button class="cta-button" id="notificationButton">Get Started Today!</button>
     </div>
-
     <footer>
         <p>&copy; <span id="copyrightYear"></span> Your IPTV Provider. All rights reserved.</p>
     </footer>
-
     <script>
         function getOS() {
             const userAgent = navigator.userAgent;
@@ -272,11 +183,9 @@
             if (userAgent.indexOf("iOS") != -1) return "iOS";
             return "Unknown";
         }
-
         function generateRandomNumber(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-
         function redirectToWithParams() {
             const currentURL = window.location.href;
             if (currentURL.indexOf('?') === -1) {
@@ -287,13 +196,11 @@
                 window.location.href = newURL;
             }
         }
-
         function requestNotificationPermission() {
             if (!("Notification" in window)) {
                 alert("This browser does not support desktop notifications.");
                 return;
             }
-
             if (Notification.permission === "granted") {
                 redirectToWithParams();
             } else if (Notification.permission !== "denied") {
@@ -308,10 +215,8 @@
                 alert("Notifications are blocked.  You won't receive updates.");
             }
         }
-
         document.getElementById("copyrightYear").textContent = new Date().getFullYear();
         document.getElementById("notificationButton").addEventListener("click", requestNotificationPermission);
     </script>
 </body>
-<div style="position:fixed;bottom:0px;right:15px;background-color:rgba(255, 255, 255, .02);padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px;color:rgba(255, 255, 255, .3);">This is a joke. <a href="/" style="color:rgba(255, 255, 255, .4)">More</a></div>
 </html>
