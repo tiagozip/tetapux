@@ -16,30 +16,24 @@
             font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI,
                 "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
                 Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
-            margin: 6em auto;
+            margin: 9em auto;
             max-width: 450px;
-            background-color: #060404;
-            color: white;
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 3.2em;
             text-align: center;
             margin-bottom: .2em;
         }
 
-        h1 b {
-            font-weight: inherit;
-            color: #ff4a4a;
-        }
-
         .desc {
-            font-size: 20px;
+            font-size: 1.3em;
             max-width: 350px;
             margin: 0 auto;
             margin-bottom: 1.5em;
             text-align: center;
-            line-height: 1.3;
+            line-height: 1.2;
+            color: rgba(0,0,0, .8);
         }
 
         .center {
@@ -52,29 +46,44 @@
             display: inline-block;
             text-align: center;
             vertical-align: middle;
-            padding: 12px 24px;
-            border-radius: 8px;
-            background: #ff4a4a;
+            padding: 18px 34px;
+            border-radius: 16px;
+            background: #000;
             color: #ffffff;
             text-decoration: none;
             margin: 0px auto;
             font-family: inherit;
             transition: transform .2s;
             font-weight: 500;
-            font-size: 16px;
+            font-size: 17px;
         }
 
         .button:hover {
             transform: scale(1.05)
         }
+
         .button:active {
             transform: scale(.95)
         }
+
+
+    .back {
+      color: black;
+      text-decoration: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      transition: opacity .2s;
+    }
+    .back:not(:hover) {
+      opacity: .4;
+    }
     </style>
 </head>
 
 <body>
-    <h1>Teta<b>cpa</b></h1>
+    <a href="/" class="back">← Back</a>
+    <h1>Simple, free CPA</h1>
     <p class="desc">Make Tetapux randomly redirect users to your forms, for free.</p>
     <div class="center">
         <a class="button" href="#">Get started now!</a>
