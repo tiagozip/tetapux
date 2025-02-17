@@ -13,140 +13,79 @@
     }
 
     body {
-      font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI,
-        "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
-        Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
+      font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", "Geist Sans", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, Helvetica, "Apple Color Emoji", Arial, "Segoe UI Emoji", "Segoe UI Symbol";
       margin: 4em auto;
-      max-width: 750px;
-      background-color: #F7F7F8;
-    }
-
-    header {
-      margin: 0px auto;
       max-width: 550px;
+      background-color: #121212;
+      padding: 0 1em;
+      color: white;
+      line-height: 1.5;
     }
 
     h1 {
-      font-size: 2.8em;
-      text-align: center;
-      margin-bottom: .2em;
+      font-size: 1.8em;
+      margin-bottom: 0.2em;
     }
 
-    .desc {
-      font-size: 1.3em;
-      max-width: 350px;
-      margin: 0 auto;
-      margin-bottom: 1.5em;
-      text-align: center;
-      line-height: 1.2;
-      color: rgba(0, 0, 0, .8);
+    p {
+      color: hsl(0deg 0% 98%);
     }
 
     .back {
-      color: black;
+      color: white;
       text-decoration: none;
       position: fixed;
       top: 20px;
       left: 20px;
-      transition: opacity .2s;
+      transition: opacity 0.2s;
     }
 
     .back:not(:hover) {
-      opacity: .4;
+      opacity: 0.4;
     }
 
-    .columns {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-top: 3em;
+    code:not(pre code) {
+      color: hsl(0deg 0% 98%);
+      font-weight: 400;
+      font-size: .875em;
+      padding: .2rem .4rem;
+      background-color: hsl(0deg 0% 12.9%);
+      border: 1px solid hsl(0deg 0% 16.1%);
+      border-radius: .5rem;
     }
 
-    .columns .column {
-      flex: 1 1 300px;
-      background-color: white;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, .05), 0 4px 6px rgba(34, 42, 53, .04), 0 24px 68px rgba(47, 48, 55, .05), 0 2px 3px rgba(0, 0, 0, .04);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .columns h3 {
-      font-size: 1.3rem;
-      line-height: 1.25rem;
-      margin-bottom: .5em;
-      margin-top: 0px;
-    }
-
-    .columns ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-    }
-
-    .columns li {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 1em;
-
-    }
-    .columns li::before {
-        content: url("data:image/svg+xml,%3Csvg%20fill%3D%22none%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill%3D%22currentColor%22%20fill-rule%3D%22evenodd%22%20d%3D%22M16%208A8%208%200%20110%208a8%208%200%200116%200m-4.191-1.75a.75.75%200%2000-1.118-1L7.025%209.347%205.33%207.275a.75.75%200%2000-1.16.95l2.25%202.75A.75.75%200%20007.559%2011l4.25-4.75%22%20clip-rule%3D%22evenodd%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E");
-        width: 16px;
-        height: 16px;
-        margin-right: 12px;
-        flex-shrink: 0;
-        display: inline-block;
-    }
-
-
-
-    .columns a {
-      display: inline-block;
-      text-align: center;
-      vertical-align: middle;
-      padding: 16px 30px;
-      border-radius: 14px;
-      background: #000;
-      color: #ffffff;
-      text-decoration: none;
-      margin: 0px auto;
-      font-family: inherit;
-      transition: transform .2s;
-      font-weight: 500;
-      font-size: 16px;
+    pre code {
+      color: #3ECF8E;
+      padding: 1rem;
+      background-color: hsl(0deg 0% 12.9%);
+      border: 1px solid hsl(0deg 0% 16.1%);
+      border-radius: .5rem;
       width: 100%;
-      margin-top: auto;
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 20px;
+
+    text-wrap: auto;
     }
 
-    .columns a:hover {
-      transform: scale(1.03)
+    pre code span {
+      color: #ededed;
     }
 
-    .columns a:active {
-      transform: scale(.98)
-    }
-    @media (max-width: 768px) {
-        body {
-            margin: 2em;
-        }
-
-        .columns .column {
-            padding: 20px;
-        }
-        .columns{
-          padding: 0 10px;
-        }
+    pre code span.eq {
+      color: #a0a0a0;
     }
   </style>
 </head>
 
 <body>
   <a href="/cpa/index.html" class="back">← Back</a>
-  <header>
+  <main>
     <h1>For publishers</h1>
-  </header>
+    <p>In order to make Tetapux as easy to add as possible, you'll just need to import the Tetapux Ads library:</p>
+    <pre><code><span>&lt;</span>script src<span class="eq">=</span>"https://tetapux.vercel.app/aw.js"<span>&gt;&lt;</span>/iframe<span>&gt;</span></code></pre>
+    <p>Then, you can use the <code>&lt;tetapux-ad&gt;&lt;/tetapux-ad&gt;</code> custom component.</p>
+  </main>
 </body>
 
 </html>
