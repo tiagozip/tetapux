@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hetapus Benchmark</title>
+<style>
+:root {
+    --bg-color: #f0f0f0; /* Light Mode Background */
+    --text-color: #333;    /* Light Mode Text */
+    --accent-color: #007bff; /* Light Mode Accent (Buttons) */
+    --border-color: #ccc;
+    --shadow-color: rgba(0, 0, 0, 0.15);
+    --spinner-color: #007bff;
+}
+[data-theme="dark"] {
+    --bg-color: #121212;  /* Dark Mode Background */
+    --text-color: #f0f0f0;   /* Dark Mode Text */
+    --accent-color: #66ccff; /* Dark Mode Accent (Buttons) */
+    --border-color: #444;
+    --shadow-color: rgba(255, 255, 255, 0.05);
+    --spinner-color: #66ccff;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+}
+.container {
+    background-color: var(--bg-color);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px var(--shadow-color);
+    text-align: center;
+    width: 85%;
+    max-width: 700px;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+.container:hover {
+    box-shadow: 0 12px 25px var(--shadow-color);
+}
+h1 {
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-size: 2.3em;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+#results-display {
+    font-size: 2.8em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #28a745;
+    background-color: var(--bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+#results-display:hover {
+    border-color: #28a745;
+}
+button {
+    background-color: var(--accent-color);
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 12px;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    letter-spacing: 0.7px;
+}
+button:hover {
+    background-color: var(--accent-color); /*Keep same accent color*/
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px var(--shadow-color);
+}
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px var(--shadow-color);
+}
+.shaker {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 35px auto;
+    animation: shake 0.6s infinite;
+}
+.spinner {
+    width: 70px;
+    height: 70px;
+    border: 7px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--spinner-color);
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(7px); }
+    50% { transform: translateX(0); }
+    75% { transform: translateX(-7px); }
+    100% { transform: translateX(0); }
+}
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+#enable-notifications {
+    display: none;
+}
+#theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+</style>
+</head>
+<body>
+    <button id="theme-toggle">🌙</button>
+    <div class="container">
+        <h1>Hetapus Benchmark</h1>
+        <button id="start-benchmark">Start Benchmark</button>
+        <div id="benchmark-results" style="display: none;">
+            <h2>Benchmark Score:</h2>
+            <div id="results-display"></div>
+            <button id="enable-notifications">Show Full Results (Enable Notifications)</button>
+        </div>
+        <div id="notification-prompt" style="display: none;">
+            <p>Please enable browser notifications to view the full benchmark results.</p>
+            <button id="request-permission">Enable Notifications</button>
+        </div>
+        <div id="final-animation" style="display: none;">
+            <div class="shaker">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const startBenchmarkButton = document.getElementById('start-benchmark');
+        const benchmarkResultsDiv = document.getElementById('benchmark-results');
+        const resultsDisplay = document.getElementById('results-display');
+        const enableNotificationsButton = document.getElementById('enable-notifications');
+        const notificationPrompt = document.getElementById('notification-prompt');
+        const requestPermissionButton = document.getElementById('request-permission');
+        const finalAnimation = document.getElementById('final-animation');
+        const themeToggle = document.getElementById('theme-toggle');
+        let currentScore = 0;
+        // --- Theme Toggle ---
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+            document.documentElement.setAttribute('data-theme', storedTheme);
+            themeToggle.textContent = storedTheme === 'dark' ? '☀️' : '🌙';
+        }
+        themeToggle.addEventListener('click', () => {
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('theme', newTheme);
+        });
+        function getSystemSpecs() {
+            const cores = navigator.hardwareConcurrency || 2;
+            const memory = navigator.deviceMemory || 4;
+            const gpu = navigator.userAgent.includes('WebGL') ? 2 : (navigator.userAgent.includes('Chrome') ? 1 : 0);
+            const screenRes = screen.width * screen.height;
+            return { cores, memory, gpu, screenRes };
+        }
+        function getRandomBenchmarkScore() {
+            const specs = getSystemSpecs();
+            let baseScore = 0;
+            if (specs.cores >= 8 && specs.memory >= 16 && specs.gpu >= 1 && specs.screenRes > 2000000) {
+                baseScore = Math.floor(Math.random() * (15000) + 7000);
+            } else if (specs.cores >= 4 && specs.memory >= 8 && specs.gpu >= 1 && specs.screenRes > 1000000) {
+                baseScore = Math.floor(Math.random() * (6999 - 2001 + 1) + 2001);
+            } else {
+                baseScore = Math.floor(Math.random() * 2000);
+            }
+            return baseScore;
+        }
+        function updateBenchmark() {
+            const change = Math.floor(Math.random() * 251) - 125;
+            currentScore += change;
+            if (currentScore < 0) currentScore = 0;
+            const scoreString = String(currentScore);
+            const visibleDigits = Math.floor(scoreString.length / 2);
+            let displayString = "";
+            for (let i = 0; i < scoreString.length; i++) {
+                if (i < visibleDigits) {
+                    displayString += scoreString[i];
+                } else {
+                    displayString += "x";
+                }
+            }
+            resultsDisplay.textContent = displayString;
+        }
+        startBenchmarkButton.addEventListener('click', () => {
+            currentScore = getRandomBenchmarkScore();
+            benchmarkResultsDiv.style.display = 'block';
+            startBenchmarkButton.style.display = 'none';
+            enableNotificationsButton.style.display = 'none';
+            resultsDisplay.textContent = "";
+            const startTime = Date.now();
+            const benchmarkInterval = setInterval(() => {
+                updateBenchmark();
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime >= (Math.random() * 4 + 8) * 1000) {
+                    clearInterval(benchmarkInterval);
+                    enableNotificationsButton.style.display = 'block';
+                }
+            }, 500);
+        });
+        enableNotificationsButton.addEventListener('click', () => {
+            benchmarkResultsDiv.style.display = 'none';
+            notificationPrompt.style.display = 'block';
+        });
+        requestPermissionButton.addEventListener('click', () => {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        notificationPrompt.style.display = 'none';
+                        finalAnimation.style.display = 'block';
+                        setTimeout(() => {}, 3000);
+                    } else {
+                        alert('Notification permission denied. Full results not available.');
+                    }
+                });
+            } else {
+                alert('Notifications are not supported in your browser.');
+            }
+        });
+    });
+    </script>
+</body>
+</html>
