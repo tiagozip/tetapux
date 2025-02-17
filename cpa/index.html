@@ -86,18 +86,19 @@
     }
 
     .columns li {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 1em;
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1em;
 
     }
+
     .columns li::before {
-        content: url("data:image/svg+xml,%3Csvg%20fill%3D%22none%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill%3D%22currentColor%22%20fill-rule%3D%22evenodd%22%20d%3D%22M16%208A8%208%200%20110%208a8%208%200%200116%200m-4.191-1.75a.75.75%200%2000-1.118-1L7.025%209.347%205.33%207.275a.75.75%200%2000-1.16.95l2.25%202.75A.75.75%200%20007.559%2011l4.25-4.75%22%20clip-rule%3D%22evenodd%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E");
-        width: 16px;
-        height: 16px;
-        margin-right: 12px;
-        flex-shrink: 0;
-        display: inline-block;
+      content: url("data:image/svg+xml,%3Csvg%20fill%3D%22none%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill%3D%22currentColor%22%20fill-rule%3D%22evenodd%22%20d%3D%22M16%208A8%208%200%20110%208a8%208%200%200116%200m-4.191-1.75a.75.75%200%2000-1.118-1L7.025%209.347%205.33%207.275a.75.75%200%2000-1.16.95l2.25%202.75A.75.75%200%20007.559%2011l4.25-4.75%22%20clip-rule%3D%22evenodd%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E");
+      width: 16px;
+      height: 16px;
+      margin-right: 12px;
+      flex-shrink: 0;
+      display: inline-block;
     }
 
 
@@ -127,17 +128,24 @@
     .columns a:active {
       transform: scale(.98)
     }
-    @media (max-width: 768px) {
-        body {
-            margin: 2em;
-        }
 
-        .columns .column {
-            padding: 20px;
-        }
-        .columns{
-          padding: 0 10px;
-        }
+    @media (max-width: 768px) {
+      body {
+        margin: .8em;
+      }
+
+      .columns .column {
+        padding: 20px;
+      }
+
+      .columns {
+        padding: 0 10px;
+      }
+
+      header h1 {
+        font-size: 1.8em;
+        margin-top: 2em;
+      }
     }
   </style>
 </head>
@@ -163,7 +171,7 @@
         <li>No tracking</li>
       </ul>
       <a href="/cpa/advertisers.html">Publish an ad</a>
-      </div>
+    </div>
     <div class="column">
       <h3>For publishers</h3>
       <ul>
@@ -175,7 +183,7 @@
         <li>Non-intrusive ads</li>
         <li>Beautiful widget</li>
       </ul>
-      <a href="/cpa/publishers.html">Add ads to your website</a>
+      <a href="/cpa/publishers.html">Integration docs</a>
 
     </div>
   </div>
