@@ -1,2 +1,2 @@
 # tetapux
-Tetapux
+Tetapux.
