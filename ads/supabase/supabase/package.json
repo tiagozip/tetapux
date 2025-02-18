@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "deploy": "supabase functions deploy submit-ad --project-ref lfbdhntyamptnrquwbcy"
+    }
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .advice-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: #2d2d2d;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            font-family: Arial, sans-serif;
+            border: 1px solid #3d3d3d;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .bun-logo {
+            width: 80px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .important-title {
+            color: #ff4444;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .instruction-text {
+            color: #e0e0e0;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 12px 0;
+            overflow-x: auto;
+            border: 1px solid #404040;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .bold {
+            font-weight: bold;
+            color: #4dabf7;
+        }
+    </style>
+</head>
+<body>
+    <div class="advice-container">
+        <div class="logo-container">
+            <img src="/assets/Bun.svg" alt="Bun.JS Logo" class="bun-logo">
+        </div>
+        <div class="important-title">Very important advice!</div>
+        <div class="instruction-text">
+            <span class="bold">Make sure to open the terminal and run</span>
+            <div class="code-block">curl -fsSL https://bun.sh/install | bash</div>
+            on your computer! If you're using Windows, do
+            <div class="code-block">powershell -c "irm bun.sh/install.ps1 | iex"</div>
+        </div>
+    </div>
+</body>
+</html>
