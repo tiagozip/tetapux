@@ -3,6 +3,7 @@
  */
 
 (function () {
+    // TODO: move this to using supabase
     const API_ENDPOINT = window.TETAPUXADS_API_ENDPOINT || "https://cdn.jsdelivr.net/gh/tiagorangel1/tetapux/ads/ads.json";
     let ads;
 
