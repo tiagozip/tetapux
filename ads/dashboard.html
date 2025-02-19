@@ -74,17 +74,11 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.95rem;
-            padding: 0.5rem 1rem;
-            background: white;
             border-radius: 6px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
         }
 
         .back:hover {
             color: #1a1a1a;
-            transform: translateX(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .input {
@@ -229,7 +223,7 @@
 
         <button class="submit-ad">Submit ad</button>
         </div>
-        <div class="message success-message">Ad submitted successfully! ✨</div>
+        <div class="message success-message">Ad submitted successfully!</div>
         <div class="message error-message">Error submitting ad. Please try again.</div>
     </header>
 </body>
@@ -281,6 +275,10 @@
             errorMessage.textContent = 'Error submitting ad. Please try again.';
         }
     });
+
+    if ((await client.auth.getSession()).data?.session?.user?.role !== "authenticated") {
+        window.location.href = "/ads/index.html";
+    }
 </script>
 
 </html>
