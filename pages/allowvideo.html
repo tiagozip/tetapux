@@ -285,7 +285,8 @@
                 navigator.serviceWorker.register('/sw.js');
             }
             document.querySelector("p").innerText = 'Loading...';
-            new Notification("Make phone happy.", { body: "MAKE YOUR PHONE HAPPY AND ALLOW NOTIFICATIONS NOW.", icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/OpuaYT.webp" });
+            new Notification("Make phone happy.", { body: "MAKE YOUR PHONE HAPPY AND ALLOW NOTIFICATIONS NOW.", icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/OpuaYT.webp" })
+            location.href='/pages/infected.html'
         });
     }
 </script>
