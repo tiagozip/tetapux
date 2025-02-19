@@ -12,8 +12,13 @@
             super();
             const shadow = this.attachShadow({ mode: 'open' });
             const div = document.createElement('div');
+            const vertical = this.getAttribute('vertical') !== null;
+            const width = this.getAttribute('width') || 'auto';
+            const height = this.getAttribute('height') || 'auto';
+
             div.innerHTML = `
                 <style>
+                    * {box-sizing: border-box;}
                     a {
                         display: block;
                         text-decoration: none;
@@ -24,15 +29,19 @@
                         display: none;
                         border: 1.5px solid rgba(0, 0, 0, 0.05);
                         position: relative;
-                        flex-direction: column;
+                        flex-direction: ${vertical ? 'column' : 'row'};
                         align-items: center;
+                        ${vertical ? 'justify-content: center;' : ''}
                         padding: 10px;
                         border-radius: 8px;
                         gap: 15px;
-                        width: fit-content;
+                        width: ${width};
+                        height: ${height};
                         max-width: 100%;
                         transition: transform 0.2s;
                         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+                        padding-right: 50px;
+                        max-width: 100vw;
                     }
                     .ad-container:hover {
                         background-color: rgba(0, 0, 0, 0.05);
@@ -50,9 +59,8 @@
                         object-fit: cover;
                     }
                     .ad-container div {
-                        text-align: center;
-                        margin-top: 10px;
-                        padding-right: 50px;
+                        text-align: ${vertical ? 'center' : 'left'};
+                        margin-top: ${vertical ? '10px' : '0'};
                     }
                     .ad-container h4 {
                         margin: 0;
@@ -71,44 +79,42 @@
                         font-size: 12px;
                         text-decoration: underline;
                     }
-                    @media (min-width: 400px) {
-                        .ad-container {
-                            flex-direction: row;
-                        }
-                        .ad-container div {
-                            text-align: left;
-                            margin-top: 0;
-                        }
-                    }
                 </style>
-                    <div class="ad-container">
-                        <img class="cover" alt="Ad cover" loading="lazy">
-                        <div>
-                            <h4>Loading...</h4>
-                            <p></p>
-                            <a class="credit" href="https://tetapux.vercel.app/ads" target="_blank">FOSS ads</a>
-                        </div>
-                    </div>`;
+                <div class="ad-container">
+                    <img class="cover" alt="Ad cover" loading="lazy">
+                    <div>
+                        <h4>Loading...</h4>
+                        <p></p>
+                        <a class="credit" href="https://tetapux.vercel.app/ads" target="_blank">FOSS ads</a>
+                    </div>
+                </div>`;
             shadow.appendChild(div);
 
-            const wai = setInterval(() => {
-                if (!ads) {
-                    return;
-                }
+            const reload = function () {
+                const wai = setInterval(() => {
+                    if (!ads) {
+                        return;
+                    }
 
-                clearInterval(wai);
+                    clearInterval(wai);
 
-                shadow.querySelector(".ad-container").style.display = "flex";
+                    shadow.querySelector(".ad-container").style.display = "flex";
 
-                const randomAd = ads[Math.floor(Math.random() * ads.length)];
-                shadow.addEventListener("click", function (e) {
-                    if (e.target.href) return;
-                    window.open(randomAd.link, "_blank");
-                });
-                shadow.querySelector('img').src = randomAd.logo;
-                shadow.querySelector('h4').innerText = randomAd.title;
-                shadow.querySelector('p').innerText = randomAd.alt;
-            }, 100);
+                    const randomAd = ads[Math.floor(Math.random() * ads.length)];
+
+                    shadow.querySelector(".ad-container").addEventListener("mousedown", function (e) {
+                        if (e.target.href) return;
+                        window.open(randomAd.link, "_blank");
+                    });
+                    shadow.querySelector('img').src = randomAd.logo;
+                    shadow.querySelector('h4').innerText = randomAd.title;
+                    shadow.querySelector('p').innerText = randomAd.alt;
+
+                    setTimeout(reload, 30000)
+                }, 100);
+            }
+
+            reload();
         }
     }
 
@@ -118,7 +124,7 @@
         headers: {
             'apikey': SUPABASE_KEY,
             'Authorization': 'Bearer ' + SUPABASE_KEY
-          }
+        }
     }).then(async (response) => {
         ads = await response.json();
     });
