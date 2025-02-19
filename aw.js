@@ -104,7 +104,7 @@
                     shadow.querySelector(".ad-container").style.display = "flex";
 
                     const randomAd = ads[Math.floor(Math.random() * ads.length)];
-                    let currentAdUrl = randomAd.link;
+                    currentAdUrl = randomAd.link;
 
                     shadow.querySelector(".ad-container").addEventListener("click", function (e) {
                         if (e.target.href) return;
