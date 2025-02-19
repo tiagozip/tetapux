@@ -17,6 +17,7 @@
             const height = this.getAttribute('height') || 'auto';
 
             div.innerHTML = `
+                ${this.getAttribute("inject") || ""}
                 <style>
                     * {box-sizing: border-box;}
                     a {
