@@ -57,7 +57,6 @@
                         width: 80px;
                         height: 80px;
                         border-radius: 8px;
-                        object-fit: cover;
                     }
                     .ad-container div {
                         text-align: ${vertical ? 'center' : 'left'};
