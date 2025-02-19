@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
   })).json();
 
   if (!cfOutcome.success) {
-    return new Response(JSON.stringify({ ok: false, error: "Invalid turnstile key" }), { headers });
+    return new Response(JSON.stringify({ ok: false, error: `Invalid turnstile key. ${JSON.stringify(cfOutcome)}` }), { headers });
   }
 
   const created_by = (await supabaseClient.auth.getUser(token)).data.user?.id;
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ ok: false, error: "Logo URL must start with http:// or https://" }), { headers });
   }
 
-  const { error } = await supabaseClient.from("ads").insert({ title, alt, link, logo, created_by });
+  const { error } = await supabaseClient.from("ads").insert({ title, alt, link, logo, created_by, published: false });
   if (error) {
     return new Response(JSON.stringify({ ok: false, error: error.message }), { headers });
   }
