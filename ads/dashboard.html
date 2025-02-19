@@ -10,6 +10,8 @@
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -23,137 +25,175 @@
                 Ubuntu,
                 Cantarell,
                 Noto Sans,
-                sans-serif,
-                Helvetica,
-                Apple Color Emoji,
-                Arial,
-                Segoe UI Emoji,
-                Segoe UI Symbol;
-            margin: 4em auto;
-            max-width: 750px;
+                sans-serif;
+            margin: 0;
             background-color: #f7f7f8;
+            color: #1a1a1a;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
         }
 
         header {
-            margin: 0px auto;
+            width: 100%;
             max-width: 550px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
         }
 
         h1 {
-            font-size: 2.8em;
+            font-size: 2.4rem;
+            font-weight: 700;
             text-align: center;
-            margin-bottom: 0.2em;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
         }
 
         .desc {
-            font-size: 1.3em;
+            font-size: 1.1rem;
             max-width: 350px;
-            margin: 0 auto;
-            margin-bottom: 1.5em;
+            margin: 0 auto 2rem;
             text-align: center;
-            line-height: 1.2;
-            color: rgba(0, 0, 0, 0.8);
+            line-height: 1.5;
+            color: #666;
         }
 
         .back {
-            color: black;
+            color: #666;
             text-decoration: none;
             position: fixed;
-            top: 20px;
-            left: 20px;
-            transition: opacity 0.2s;
-        }
-
-        .back:not(:hover) {
-            opacity: 0.4;
-        }
-
-        .columns {
+            top: 24px;
+            left: 24px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 3em;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
         }
 
-        .columns .column {
-            flex: 1 1 300px;
-            background-color: white;
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow:
-                0 1px 1px rgba(0, 0, 0, 0.05),
-                0 4px 6px rgba(34, 42, 53, 0.04),
-                0 24px 68px rgba(47, 48, 55, 0.05),
-                0 2px 3px rgba(0, 0, 0, 0.04);
-            display: flex;
-            flex-direction: column;
+        .back:hover {
+            color: #1a1a1a;
+            transform: translateX(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .columns h3 {
-            font-size: 1.3rem;
-            line-height: 1.25rem;
-            margin-bottom: 0.5em;
-            margin-top: 0px;
+        .input {
+            margin-bottom: 1.5rem;
         }
 
-        .columns ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 20px;
-        }
-
-        .columns li {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1em;
-        }
-
-        .columns li::before {
-            content: url("data:image/svg+xml,%3Csvg%20fill%3D%22none%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20fill%3D%22currentColor%22%20fill-rule%3D%22evenodd%22%20d%3D%22M16%208A8%208%200%20110%208a8%208%200%200116%200m-4.191-1.75a.75.75%200%2000-1.118-1L7.025%209.347%205.33%207.275a.75.75%200%2000-1.16.95l2.25%202.75A.75.75%200%20007.559%2011l4.25-4.75%22%20clip-rule%3D%22evenodd%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E");
-            width: 16px;
-            height: 16px;
-            margin-right: 12px;
-            flex-shrink: 0;
-            display: inline-block;
-        }
-
-        .columns a {
-            display: inline-block;
-            text-align: center;
-            vertical-align: middle;
-            padding: 16px 30px;
-            border-radius: 14px;
-            background: #000;
-            color: #ffffff;
-            text-decoration: none;
-            margin: 0px auto;
-            font-family: inherit;
-            transition: transform 0.2s;
+        .input label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            font-size: 16px;
+            color: #4a4a4a;
+        }
+
+        .input input {
             width: 100%;
-            margin-top: auto;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #fafafa;
         }
 
-        .columns a:hover {
-            transform: scale(1.03);
+        .input input:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .columns a:active {
-            transform: scale(0.98);
+        .submit-ad {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-ad:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .submit-ad:active {
+            transform: translateY(0);
+        }
+
+        .cf-turnstile {
+            margin: 1.5rem 0;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background-color: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .error-message {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .form-content.hidden {
+            display: none;
         }
 
         @media (max-width: 768px) {
             body {
-                margin: 2em;
+                padding: 1rem;
             }
 
-            .columns .column {
-                padding: 20px;
+            header {
+                padding: 1.5rem;
+                margin-top: 3rem;
             }
 
-            .columns {
-                padding: 0 10px;
+            h1 {
+                font-size: 2rem;
+            }
+
+            .back {
+                top: 16px;
+                left: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1.25rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
             }
         }
     </style>
@@ -162,35 +202,35 @@
 <body>
     <a href="/ads/index.html" class="back">← Back</a>
     <header>
-        <h1>Dashboard</h1>
+        <h1>Submit an ad</h1>
 
-        <p>Create ad form:</p>
-
-        <!-- { title, alt, link, logo, turnstile_token } -->
-
-        <div class="input">
+        <div class="form-content">
+            <div class="input">
             <label for="title">Title</label>
             <input type="text" id="title" name="title" required>
         </div>
 
-        </div>
         <div class="input">
             <label for="alt">Tagline</label>
             <input type="text" id="alt" name="alt" required>
         </div>
+
         <div class="input">
             <label for="link">Link</label>
             <input type="url" id="link" name="link" required>
         </div>
+
         <div class="input">
             <label for="logo">Logo/Image URL</label>
             <input type="url" id="logo" name="logo" required>
         </div>
-        <div class="input">
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9WKAN5V3O4c1Uo">
-            </div>
 
-            <button class="submit-ad">Submit ad</button>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9WKAN5V3O4c1Uo"></div>
+
+        <button class="submit-ad">Submit ad</button>
+        </div>
+        <div class="message success-message">Ad submitted successfully! ✨</div>
+        <div class="message error-message">Error submitting ad. Please try again.</div>
     </header>
 </body>
 
@@ -202,7 +242,15 @@
         `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo`,
     );
 
-    console.log(client);
+    const formContent = document.querySelector('.form-content');
+    const successMessage = document.querySelector('.success-message');
+    const errorMessage = document.querySelector('.error-message');
+    
+    const showMessage = (type) => {
+        formContent.classList.add('hidden');
+        successMessage.style.display = type === 'success' ? 'block' : 'none';
+        errorMessage.style.display = type === 'error' ? 'block' : 'none';
+    };
 
     document.querySelector(".submit-ad").addEventListener("click", async () => {
         const title = document.querySelector("#title").value;
@@ -213,20 +261,25 @@
         const turnstile_token = turnstile.getResponse();
 
         if (turnstile.isExpired() || !turnstile_token) {
-            console.error("Please solve the CAPTCHA");
+            showMessage('error');
+            errorMessage.textContent = 'Please solve the CAPTCHA first.';
             return;
         }
 
-        const { data, error } = await client.functions.invoke('submit-ad', {
-            body: { title, alt, link, logo, turnstile_token },
-        })
+        try {
+            const { data, error } = await client.functions.invoke('submit-ad', {
+                body: { title, alt, link, logo, turnstile_token },
+            });
 
-        if (error || !data.ok) {
-            console.error(error || data.error);
-            return;
+            if (error || !data.ok) {
+                throw new Error(error || data.error);
+            }
+
+            showMessage('success');
+        } catch (err) {
+            showMessage('error');
+            errorMessage.textContent = 'Error submitting ad. Please try again.';
         }
-
-        console.log(data);
     });
 </script>
 
