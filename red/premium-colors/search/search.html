@@ -51,60 +51,53 @@
             margin-bottom: 1.5em;
         }
 
-        .search-bar {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto 20px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 12px 20px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 16px;
-            /* Increased gap between input and button */
-            overflow-x: auto;
-            transition: box-shadow 0.2s;
-        }
-
+		.search-bar {
+			position: relative;
+			max-width: 800px;
+			margin: 0 auto 20px;
+			background: var(--bg);
+			border: 1px solid var(--border);
+			border-radius: 24px;
+			padding: 8px 16px; /* Reduced vertical padding */
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 12px; /* Moderate spacing between elements */
+			overflow-x: auto;
+			transition: box-shadow 0.2s;
+		}
         .search-bar:focus-within {
             border-color: var(--primary);
         }
 
-        #search-input {
-            font-size: 18px;
-            background: transparent;
-            border: none;
-            color: inherit;
-            padding: 12px;
-            outline: none;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: visible;
-            user-select: text;
-            cursor: text;
-            height: 48px;
-            min-width: 150px;
-            /* Ensures minimum input width */
-            transition: width 0.2s;
-        }
+		#search-input {
+			padding: 0.7em 0.9em; /* Relative padding ensures balance with font size */
+			font-size: 16px; /* Slightly reduced font size for better proportion */
+			background: transparent;
+			border: none;
+			color: inherit;
+			outline: none;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: visible;
+			user-select: text;
+			cursor: text;
+			transition: width 0.2s;
+		}
 
         #search-input::placeholder {
             color: #888;
             opacity: 0.7;
         }
 
-        .search-button {
-            padding: 12px 24px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 16px;
-            transition: background 0.2s, transform 0.2s;
-            height: 48px;
-            white-space: nowrap;
-        }
+		.search-button {
+			padding: 0.7em 1.2em; /* Proportional button padding */
+			background: var(--primary);
+			color: white;
+			border: none;
+			cursor: pointer;
+			border-radius: 12px;
+			transition: background 0.2s, transform 0.2s;
+		}
 
         .search-button:hover {
             background: var(--secondary);
