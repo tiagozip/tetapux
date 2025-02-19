@@ -20,7 +20,8 @@
                         color: inherit;
                     }
                     .ad-container {
-                        display: flex;
+                        cursor: pointer;
+                        display: none;
                         border: 1.5px solid rgba(0, 0, 0, 0.05);
                         position: relative;
                         flex-direction: column;
@@ -80,7 +81,6 @@
                         }
                     }
                 </style>
-                <a target="_blank" href="#" rel="nofollow noopener">
                     <div class="ad-container">
                         <img class="cover" alt="Ad cover" loading="lazy">
                         <div>
@@ -88,8 +88,7 @@
                             <p></p>
                             <a class="credit" href="https://tetapux.vercel.app/ads" target="_blank">FOSS ads</a>
                         </div>
-                    </div>
-                </a>`;
+                    </div>`;
             shadow.appendChild(div);
 
             const wai = setInterval(() => {
@@ -99,8 +98,13 @@
 
                 clearInterval(wai);
 
+                shadow.querySelector(".ad-container").style.display = "flex";
+
                 const randomAd = ads[Math.floor(Math.random() * ads.length)];
-                shadow.querySelector('a').href = randomAd.link;
+                shadow.addEventListener("click", function (e) {
+                    if (e.target.href) return;
+                    window.open(randomAd.link, "_blank");
+                });
                 shadow.querySelector('img').src = randomAd.logo;
                 shadow.querySelector('h4').innerText = randomAd.title;
                 shadow.querySelector('p').innerText = randomAd.alt;
