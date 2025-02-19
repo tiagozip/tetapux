@@ -92,6 +92,11 @@
             color: #4a4a4a;
         }
 
+        .input label::after {
+            content: "*";
+            color: #ff0000;
+        }
+
         .input input {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -269,7 +274,7 @@
 
         if (turnstile.isExpired() || !turnstile_token) {
             showMessage('error');
-            errorMessage.textContent = 'Please solve the CAPTCHA first.';
+            errorMessage.innerText = 'Please solve the CAPTCHA first.';
             return;
         }
 
@@ -282,7 +287,7 @@
 
         if (error || !data.ok) {
             showMessage('error');
-            errorMessage.textContent = `Error submitting ad: ${error.error}`;
+            errorMessage.innerText = data.error;
             return;
         }
 

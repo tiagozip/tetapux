@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ ok: false, error: "Missing required fields" }), { headers });
   }
 
-  if (title.length > 100 || alt.length > 100 || link.length > 100 || logo.length > 100) {
+  if (title.length > 100 || alt.length > 100 || link.length > 1000 || logo.length > 1000) {
     return new Response(JSON.stringify({ ok: false, error: "Fields too long" }), { headers });
   }
 
