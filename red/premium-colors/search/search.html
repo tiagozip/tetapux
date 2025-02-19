@@ -6,213 +6,236 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HetaSearch</title>
     <style>
-        :root {
-            --primary: #0d47a1;
-            --secondary: #0e82ea;
-            --text: #212121;
-            --bg: #fff;
-            --shadow: 0 0 0.25rem rgba(0, 0, 0, 0.08), 0 0.125rem 0.3rem rgba(0, 0, 0, 0.05);
-            --border: #e8eaed;
-            --transition: 0.35s ease-in-out;
-            --corner: 0.625rem;
-            --gap: 1.25rem;
-        }
+		:root {
+			--primary: #0d47a1;
+			--secondary: #0e82ea;
+			--text: #212121;
+			--bg: #fff;
+			--shadow: 0 0 0.25rem rgba(0, 0, 0, 0.08), 0 0.125rem 0.3rem rgba(0, 0, 0, 0.05);
+			--border: #e8eaed;
+			--transition: 0.35s ease-in-out;
+			--corner: 0.625rem;
+			--gap: 1.25rem;
+			--scrollbar-thumb: rgba(117, 117, 117, 0.4);
+			--scrollbar-thumb-hover: rgba(117, 117, 117, 0.6);
+		}
 
-        body.dark {
-            --text: #fff;
-            --bg: #121212;
-            --shadow: 0 0.0625rem 0.375rem rgba(0, 0, 0, 0.12), 0 0.375rem 0.625rem rgba(0, 0, 0, 0.08);
-            --border: #333436;
-            --primary: #1c64d1;
-            --secondary: #448fff;
-        }
+		body.dark {
+			--text: #fff;
+			--bg: #121212;
+			--shadow: 0 0.0625rem 0.375rem rgba(0, 0, 0, 0.12), 0 0.375rem 0.625rem rgba(0, 0, 0, 0.08);
+			--border: #333436;
+			--primary: #1c64d1;
+			--secondary: #448fff;
+		}
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            transition: background var(--transition), color var(--transition);
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-        }
+		body {
+			font-family: 'Segoe UI', Arial, sans-serif;
+			margin: 0;
+			background: var(--bg);
+			color: var(--text);
+			transition: background var(--transition), color var(--transition);
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+		}
 
-        .container {
-            max-width: 80rem;
-            width: 90%;
-            padding: 0 1rem;
-            display: grid;
-            gap: var(--gap);
-        }
+		.container {
+			max-width: 80rem;
+			width: 90%;
+			padding: 0 1rem;
+			display: grid;
+			gap: var(--gap);
+		}
 
-        .header {
-            text-align: center;
-            margin-bottom: 1.5em;
-        }
+		.header {
+			text-align: center;
+			margin-bottom: 1.5em;
+		}
 
 		.search-bar {
 			position: relative;
-			max-width: 800px;
+			max-width: 700px;
 			margin: 0 auto 20px;
 			background: var(--bg);
 			border: 1px solid var(--border);
 			border-radius: 24px;
-			padding: 8px 16px;
+			padding: 10px 16px;
 			display: flex;
 			align-items: center;
 			gap: 12px;
-			overflow: hidden;
 			transition: box-shadow 0.2s;
 		}
 
-        .search-bar:focus-within {
-            border-color: var(--primary);
-        }
+		.search-bar:focus-within {
+			border-color: var(--primary);
+		}
 
 		#search-input {
 			flex: 1;
-			min-width: 100px;
-			max-width: 100%;
+			min-width: 150px;
 			font-size: 16px;
-			line-height: 1.3;
-			box-sizing: border-box;
 			background: transparent;
 			border: none;
 			color: inherit;
-			padding: 6px 8px;
+			padding: 8px 12px;
 			outline: none;
 			white-space: nowrap;
 			overflow-x: auto;
 			overflow-y: hidden;
-			text-overflow: ellipsis;
+			box-sizing: border-box;
 			user-select: text;
 			cursor: text;
-			transition: width 0.2s;
+			height: 40px;
+			margin: 0;
 		}
 
-        #search-input::placeholder {
-            color: #888;
-            opacity: 0.7;
-        }
+		#search-input::placeholder {
+			color: #888;
+			opacity: 0.7;
+		}
+
+		#search-input::-webkit-scrollbar {
+			width: 0.375rem;
+			height: 0.375rem;
+		}
+
+		#search-input::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		#search-input::-webkit-scrollbar-thumb {
+			background: var(--scrollbar-thumb);
+			border-radius: 0.25rem;
+		}
+
+		#search-input::-webkit-scrollbar-thumb:hover {
+			background: var(--scrollbar-thumb-hover);
+		}
+
+		#search-input {
+			scrollbar-width: thin;
+			scrollbar-color: var(--scrollbar-thumb) transparent;
+		}
 
 		.search-button {
-			padding: 6px 12px;
+			padding: 10px 20px;
 			background: var(--primary);
 			color: white;
 			border: none;
 			cursor: pointer;
 			border-radius: 12px;
 			transition: background 0.2s;
+			height: 40px;
 		}
 
-        .search-button:hover {
-            background: var(--secondary);
-            transform: translateY(-0.0625rem);
-        }
+		.search-button:hover {
+			background: var(--secondary);
+			transform: translateY(-0.0625rem);
+		}
 
-        .results {
-            max-width: 800px;
-            width: 100%;
-            margin: 1.5em auto;
-            background: var(--bg);
-            border-radius: var(--corner);
-            padding: 1.25rem;
-            box-shadow: var(--shadow);
-            transition: transform var(--transition);
-        }
+		.results {
+			max-width: 800px;
+			width: 100%;
+			margin: 1.5em auto;
+			background: var(--bg);
+			border-radius: var(--corner);
+			padding: 1.25rem;
+			box-shadow: var(--shadow);
+			transition: transform var(--transition);
+		}
 
-        .results:hover {
-            transform: translateY(-0.0625rem);
-        }
+		.results:hover {
+			transform: translateY(-0.0625rem);
+		}
 
-        .result {
-            padding: 1.125rem;
-            border-bottom: 1px solid var(--border);
-            transition: background-color var(--transition);
-        }
+		.result {
+			padding: 1.125rem;
+			border-bottom: 1px solid var(--border);
+			transition: background-color var(--transition);
+		}
 
-        .result:hover {
-            background: rgba(13, 71, 161, 0.05);
-        }
+		.result:hover {
+			background: rgba(13, 71, 161, 0.05);
+		}
 
-        .result a {
-            color: var(--primary);
-            font-size: 1.125rem;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 0.625rem;
-            transition: color var(--transition);
-        }
+		.result a {
+			color: var(--primary);
+			font-size: 1.125rem;
+			text-decoration: none;
+			display: block;
+			margin-bottom: 0.625rem;
+			transition: color var(--transition);
+		}
 
-        .result a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
+		.result a:hover {
+			color: var(--secondary);
+			text-decoration: underline;
+		}
 
-        .url {
-            font-size: 0.875rem;
-            color: #808080;
-            margin-top: 0.5rem;
-            word-break: break-all;
-        }
+		.url {
+			font-size: 0.875rem;
+			color: #808080;
+			margin-top: 0.5rem;
+			word-break: break-all;
+		}
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.875rem;
-            margin-top: 1.25rem;
-        }
+		.pagination {
+			display: flex;
+			justify-content: center;
+			gap: 0.875rem;
+			margin-top: 1.25rem;
+		}
 
-        .page-button {
-            padding: 0.625rem 1.25rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            color: inherit;
-            transition: background-color var(--transition), color var(--transition);
-        }
+		.page-button {
+			padding: 0.625rem 1.25rem;
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			cursor: pointer;
+			color: inherit;
+			transition: background-color var(--transition), color var(--transition);
+		}
 
-        .page-button.active,
-        .page-button:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+		.page-button.active,
+		.page-button:hover {
+			background: var(--primary);
+			color: white;
+			border-color: var(--primary);
+		}
 
-        #dark-mode-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.625rem 1.25rem;
-            background: var(--primary);
-            color: white;
-            border-radius: 1.125rem;
-            cursor: pointer;
-            transition: background var(--transition), transform var(--transition);
-            font-weight: 500;
-        }
+		#dark-mode-toggle {
+			position: fixed;
+			top: 1rem;
+			right: 1rem;
+			padding: 0.625rem 1.25rem;
+			background: var(--primary);
+			color: white;
+			border-radius: 1.125rem;
+			cursor: pointer;
+			transition: background var(--transition), transform var(--transition);
+			font-weight: 500;
+		}
 
-        #dark-mode-toggle:hover {
-            background: var(--secondary);
-            transform: translateY(-0.0625rem);
-        }
+		#dark-mode-toggle:hover {
+			background: var(--secondary);
+			transform: translateY(-0.0625rem);
+		}
 
-        @media (max-width: 600px) {
-            .search-bar {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
+		@media (max-width: 600px) {
+			.search-bar {
+				grid-template-columns: 1fr;
+				gap: 10px;
+			}
 
-            #search-input {
-                min-width: 100px;
-            }
+			#search-input {
+				min-width: 100px;
+			}
 
-            .search-button {
-                padding: 10px 16px;
-                font-size: 14px;
-            }
-        }
+			.search-button {
+				padding: 10px 16px;
+				font-size: 14px;
+			}
+		}
     </style>
 </head>
 
