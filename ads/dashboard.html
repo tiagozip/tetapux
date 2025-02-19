@@ -104,32 +104,37 @@
 
         .input input:focus {
             outline: none;
-            border-color: #2563eb;
+            border-color: #000000;
             background: white;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .submit-ad {
             width: 100%;
-            padding: 0.875rem 1.5rem;
-            background: #2563eb;
-            color: white;
+            padding: 16px 30px;
+            border-radius: 14px;
+            background: #000;
+            color: #ffffff;
             border: none;
-            border-radius: 6px;
+            font-family: inherit;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease;
             margin-top: 1rem;
         }
 
         .submit-ad:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
+            transform: scale(1.02);
         }
 
         .submit-ad:active {
-            transform: translateY(0);
+            transform: scale(0.98);
+        }
+
+        .submit-ad[disabled] {
+            pointer-events: none;
+            opacity: 0.3;
         }
 
         .cf-turnstile {
@@ -200,28 +205,28 @@
 
         <div class="form-content">
             <div class="input">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title" required>
-        </div>
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
 
-        <div class="input">
-            <label for="alt">Tagline</label>
-            <input type="text" id="alt" name="alt" required>
-        </div>
+            <div class="input">
+                <label for="alt">Tagline</label>
+                <input type="text" id="alt" name="alt" required>
+            </div>
 
-        <div class="input">
-            <label for="link">Link</label>
-            <input type="url" id="link" name="link" required>
-        </div>
+            <div class="input">
+                <label for="link">Link</label>
+                <input type="url" id="link" name="link" required>
+            </div>
 
-        <div class="input">
-            <label for="logo">Logo/Image URL</label>
-            <input type="url" id="logo" name="logo" required>
-        </div>
+            <div class="input">
+                <label for="logo">Logo/Image URL</label>
+                <input type="url" id="logo" name="logo" required>
+            </div>
 
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9WKAN5V3O4c1Uo"></div>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9WKAN5V3O4c1Uo"></div>
 
-        <button class="submit-ad">Submit ad</button>
+            <button class="submit-ad">Submit ad</button>
         </div>
         <div class="message success-message">Ad submitted successfully!</div>
         <div class="message error-message">Error submitting ad. Please try again.</div>
@@ -231,17 +236,25 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-    const client = supabase.createClient(
+    const sbClient = supabase.createClient(
         "https://lfbdhntyamptnrquwbcy.supabase.co",
         `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo`,
     );
 
+    (async () => {
+        if ((await sbClient.auth.getSession()).data?.session?.user?.role !== "authenticated") {
+            window.location.href = "/ads/index.html";
+        }
+    })();
+
     const formContent = document.querySelector('.form-content');
     const successMessage = document.querySelector('.success-message');
     const errorMessage = document.querySelector('.error-message');
-    
+
     const showMessage = (type) => {
-        formContent.classList.add('hidden');
+        if (type !== "error") {
+            formContent.classList.add('hidden');
+        }
         successMessage.style.display = type === 'success' ? 'block' : 'none';
         errorMessage.style.display = type === 'error' ? 'block' : 'none';
     };
@@ -260,25 +273,21 @@
             return;
         }
 
-        try {
-            const { data, error } = await client.functions.invoke('submit-ad', {
-                body: { title, alt, link, logo, turnstile_token },
-            });
+        document.querySelector(".submit-ad").disabled = true;
+        const { data, error } = await sbClient.functions.invoke('submit-ad', {
+            body: { title, alt, link, logo, turnstile_token },
+        });
+        document.querySelector(".submit-ad").disabled = false;
+        turnstile.reset();
 
-            if (error || !data.ok) {
-                throw new Error(error || data.error);
-            }
-
-            showMessage('success');
-        } catch (err) {
+        if (error || !data.ok) {
             showMessage('error');
-            errorMessage.textContent = 'Error submitting ad. Please try again.';
+            errorMessage.textContent = `Error submitting ad: ${error.error}`;
+            return;
         }
-    });
 
-    if ((await client.auth.getSession()).data?.session?.user?.role !== "authenticated") {
-        window.location.href = "/ads/index.html";
-    }
+        showMessage('success');
+    });
 </script>
 
 </html>

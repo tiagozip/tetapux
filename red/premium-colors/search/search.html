@@ -1,363 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HetaSearch</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.light {
-            background-color: #fff;
-            color: #000;
-        }
-        body.dark {
-            background-color: #1a1a1a;
-            color: #e8eaed;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .header h1 {
-            font-size: 40px;
-            color: #4285f4;
-            margin-bottom: 25px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .search-bar {
-            position: relative;
-            display: flex;
-            width: 100%;
-            max-width: 700px;
-            margin-bottom: 30px;
-        }
-        #search-input {
-            flex-grow: 1;
-            padding: 12px 16px;
-            border: 1px solid #dfe1e5;
-            border-radius: 24px 0 0 24px;
-            outline: none;
-            font-size: 16px;
-            background: inherit;
-            color: inherit;
-            box-shadow: 0 1px 6px rgba(32,33,36,0.1);
-        }
-        #search-input:focus {
-            border-color: #4285f4;
-            box-shadow: 0 1px 6px rgba(66,133,244,0.3);
-        }
-        #search-button {
-            padding: 12px 24px;
-            border: 1px solid #dfe1e5;
-            border-left: none;
-            border-radius: 0 24px 24px 0;
-            background-color: #f8f9fa;
-            cursor: pointer;
-            color: #5f6368;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-        #search-button:hover {
-            background-color: #e8eaed;
-        }
-        .dark #search-button {
-            background-color: #303134;
-            border-color: #303134;
-            color: #e8eaed;
-        }
-        .dark #search-button:hover {
-            background-color: #3c4043;
-        }
-        #suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: #fff;
-            border: 1px solid #dfe1e5;
-            border-radius: 0 0 12px 12px;
-            max-height: 250px;
-            overflow-y: auto;
-            display: none;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .dark #suggestions {
-            background: #2d2d2d;
-            border-color: #2d2d2d;
-        }
-        .suggestion {
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .suggestion:hover {
-            background-color: #f1f3f4;
-        }
-        .dark .suggestion:hover {
-            background-color: #3c4043;
-        }
-        .results {
-            width: 100%;
-            max-width: 800px;
-            position: relative;
-            padding: 20px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .dark .results {
-            background: rgba(40,40,40,0.9);
-        }
-        .result {
-            margin-bottom: 25px;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .dark .result {
-            border-bottom: 1px solid #444;
-        }
-        .result:last-child {
-            border-bottom: none;
-        }
-        .result a {
-            text-decoration: none;
-            color: #1a0dab;
-            font-size: 20px;
-            font-weight: 500;
-        }
-        .dark .result a {
-            color: #8ab4f8;
-        }
-        .result a:hover {
-            text-decoration: underline;
-        }
-        .result p {
-            color: #545454;
-            font-size: 14px;
-            margin: 5px 0;
-        }
-        .dark .result p {
-            color: #bdc1c6;
-        }
-        .result .url {
-            color: #006621;
-            font-size: 13px;
-        }
-        .dark .result .url {
-            color: #93c47d;
-        }
-        #dark-mode-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            background-color: #f8f9fa;
-            color: #5f6368;
-            transition: background-color 0.2s;
-        }
-        #dark-mode-toggle:hover {
-            background-color: #e8eaed;
-        }
-        .dark #dark-mode-toggle {
-            background-color: #303134;
-            color: #e8eaed;
-        }
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .filter-btn {
-            padding: 8px 16px;
-            border: 1px solid #dfe1e5;
-            border-radius: 20px;
-            background: none;
-            cursor: pointer;
-            color: #5f6368;
-        }
-        .filter-btn.active {
-            background-color: #4285f4;
-            color: #fff;
-            border-color: #4285f4;
-        }
-        .dark .filter-btn {
-            border-color: #444;
-            color: #e8eaed;
-        }
-        .dark .filter-btn.active {
-            background-color: #4285f4;
-            border-color: #4285f4;
-        }
-        mark {
-            background-color: #ffff99;
-            color: #000;
-            padding: 0 2px;
-        }
-        .dark mark {
-            background-color: #ffd700;
-            color: #000;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HetaSearch</title>
+	<style>
+		:root, body.light {
+			--primary: #0d47a1;
+			--text: #212121;
+			--bg: #faf9f7;
+			--shadow: 0 0 4px rgba(0,0,0,0.1);
+			--border: #e8eaed;
+		}
+
+		body.dark, body.dark * {
+			--primary: #0d47a1;
+			--text: #e8eaed;
+			--bg: #1a1a1a;
+			--shadow: 0 0 8px rgba(0,0,0,0.4);
+			--border: #353535;
+		}
+
+		body {
+			font-family: 'Arial', sans-serif;
+			margin: 0;
+			background: var(--bg);
+			color: var(--text);
+			transition: background 0.3s, color 0.3s;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 20px;
+			flex: 1;
+		}
+
+		.header {
+			margin-bottom: 30px;
+			text-align: center;
+		}
+
+		.search-bar {
+			position: relative;
+			max-width: 600px;
+			margin: 0 auto 20px;
+			background: var(--bg);
+			border: 1px solid var(--border);
+			border-radius: 24px;
+			overflow: hidden;
+			box-shadow: var(--shadow);
+			transform: translateY(-1px);
+			transition: box-shadow 0.2s;
+		}
+
+		.search-bar:focus-within {
+			box-shadow: var(--shadow), 0 4px 6px rgba(0,0,0,0.2);
+		}
+
+		#search-input {
+			width: calc(100% - 50px);
+			padding: 12px 16px;
+			border: 0;
+			background: transparent;
+			color: inherit;
+			font-size: 16px;
+			outline: none;
+		}
+
+		#search-button {
+			position: absolute;
+			right: 0;
+			top: 0;
+			height: 100%;
+			padding: 0 24px;
+			background: var(--primary);
+			color: white;
+			border: 0;
+			cursor: pointer;
+			font-size: 14px;
+			font-weight: 500;
+			border-radius: 0 24px 24px 0;
+			transition: background 0.2s;
+		}
+
+		#search-button:hover {
+			background: #1e88e5;
+		}
+
+		.results {
+			max-width: 800px;
+			margin: 20px auto;
+			background: var(--bg);
+			border-radius: 12px;
+			padding: 20px;
+			box-shadow: var(--shadow);
+			transform: translateY(2px);
+			transition: transform 0.3s;
+		}
+
+		.results:hover {
+			transform: translateY(0);
+		}
+
+		.result {
+			padding: 15px;
+			border-bottom: 1px solid var(--border);
+			transition: background-color 0.3s;
+		}
+
+		.result:hover {
+			background: rgba(13, 71, 161, 0.05);
+		}
+
+		.result a {
+			color: var(--primary);
+			font-size: 18px;
+			text-decoration: none;
+			transition: color 0.2s;
+		}
+
+		.result a:hover {
+			color: #1e88e5;
+			text-decoration: underline;
+		}
+
+		.result p {
+			color: var(--text);
+			font-size: 14px;
+			margin: 8px 0;
+			line-height: 1.6;
+		}
+
+		.url {
+			font-size: 13px;
+			color: #808080;
+			margin-top: 4px;
+			word-break: break-all;
+		}
+
+		.pagination {
+			display: flex;
+			justify-content: center;
+			gap: 12px;
+			margin-top: 20px;
+		}
+
+		.page-button {
+			padding: 8px 12px;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			cursor: pointer;
+			transition: background-color 0.2s, color 0.2s;
+			color: inherit;
+		}
+
+		.page-button.active,
+		.page-button:hover {
+			background: var(--primary);
+			color: white;
+			border-color: var(--primary);
+		}
+
+		mark {
+			background: var(--primary);
+			color: white;
+			padding: 0 2px;
+			border-radius: 2px;
+			font-weight: bold;
+		}
+
+		#dark-mode-toggle {
+			position: fixed;
+			top: 15px;
+			right: 15px;
+			padding: 8px 16px;
+			background: var(--primary);
+			color: white;
+			border: none;
+			border-radius: 20px;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+
+		#dark-mode-toggle:hover {
+			background: #1e88e5;
+		}
+
+		@media (max-width: 600px) {
+			.search-bar { max-width: 95%; }
+			.results { padding: 12px; }
+			.page-button { padding: 6px 8px; }
+		}
+	</style>
 </head>
-<body class="light">
-    <div class="container">
-        <div class="header">
-            <h1>HetaSearch</h1>
-        </div>
-        <form id="search-form" class="search-bar">
-            <input type="text" id="search-input" placeholder="Search the web...">
-            <button type="submit" id="search-button">Search</button>
-            <div id="suggestions"></div>
-        </form>
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="title">Title</button>
-            <button class="filter-btn" data-filter="content">Content</button>
-        </div>
-        <div class="results" id="results"></div>
-    </div>
-    <button id="dark-mode-toggle">Toggle Dark Mode</button>
-    <script>
-        const pages = [
-            { title: "HetaSearch Home", content: "Welcome to the next-generation search engine.", url: "https://hetasearch.com/home" },
-            { title: "Technology News", content: "Latest updates in the tech world.", url: "https://example.com/tech-news" },
-            { title: "About HetaSearch", content: "Learn about our advanced search technology.", url: "https://hetasearch.com/about" },
-            { title: "Programming Tips", content: "Boost your coding skills with these tips.", url: "https://example.com/programming" },
-            { title: "AI Research", content: "Explore cutting-edge AI innovations.", url: "https://example.com/ai-research" }
-        ];
+<body class="dark">
+	<div class="container">
+		<div class="header">
+			<h1>HetaSearch</h1>
+		</div>
+		<div class="search-bar">
+			<input type="text" id="search-input" placeholder="Search...">
+			<button id="search-button">Search</button>
+		</div>
+		<div class="results" id="results"></div>
+		<div class="pagination" id="pagination"></div>
+	</div>
+	<button id="dark-mode-toggle">Toggle Theme</button>
+	<script>
+		const pages = [
+			{ title: "HetaSearch Cloud Platform", content: "Next-gen cloud solutions for developers.", url: "https://hetasearch.com/cloud " },
+			{ title: "Data Science Solutions", content: "AI-driven analytics for business growth.", url: "https://example.com/data-science " },
+			{ title: "HetaSearch Labs", content: "Research in quantum computing and ML.", url: "https://hetasearch.com/labs " },
+			{ title: "Cybersecurity Insights", content: "Protect your digital assets with HetaSec.", url: "https://example.com/cybersecurity " },
+			{ title: "DevOps Automation", content: "CI/CD pipelines & cloud integration.", url: "https://example.com/devops " }
+		];
 
-        pages.forEach(page => {
-            page.titleLower = page.title.toLowerCase();
-            page.contentLower = page.content.toLowerCase();
-        });
+		const searchInput = document.getElementById('search-input');
+		const resultsDiv = document.getElementById('results');
+		const darkModeToggle = document.getElementById('dark-mode-toggle');
+		const paginationDiv = document.getElementById('pagination');
 
-        const searchInput = document.getElementById('search-input');
-        const searchForm = document.getElementById('search-form');
-        const resultsDiv = document.getElementById('results');
-        const suggestionsDiv = document.getElementById('suggestions');
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        let debounceTimer;
-        let currentFilter = 'all';
+		let currentPage = 1;
+		const resultsPerPage = 15;
 
-        searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            performSearch(searchInput.value);
-        });
+		function init() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const pageParam = urlParams.get('page');
+			const queryParam = urlParams.get('q');
+			if (pageParam) currentPage = parseInt(pageParam);
+			if (queryParam) searchInput.value = decodeURIComponent(queryParam);
+			performSearch(searchInput.value);
+		}
 
-        searchInput.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(showSuggestions, 50);
-        });
+		function performSearch(query) {
+			if (!query.trim()) {
+				resultsDiv.innerHTML = '';
+				paginationDiv.innerHTML = '';
+				return;
+			}
 
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                navigateSuggestions(e.key === 'ArrowDown' ? 1 : -1);
-            }
-        });
+			const filtered = pages.filter(page => {
+				return page.title.toLowerCase().includes(query.toLowerCase()) ||
+					page.content.toLowerCase().includes(query.toLowerCase());
+			});
 
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            document.body.classList.toggle('light');
-            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-        });
+			const sorted = filtered.sort((a, b) => {
+				const aScore = (a.title.toLowerCase().indexOf(query.toLowerCase()) === 0 ? 3 : 0) +
+					(a.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0) +
+					(a.content.toLowerCase().includes(query.toLowerCase()) ? 1 : 0);
+				const bScore = (b.title.toLowerCase().indexOf(query.toLowerCase()) === 0 ? 3 : 0) +
+					(b.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0) +
+					(b.content.toLowerCase().includes(query.toLowerCase()) ? 1 : 0);
+				return bScore - aScore;
+			});
 
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                if (searchInput.value) performSearch(searchInput.value);
-            });
-        });
+			displayPageResults(sorted);
+			updatePagination(sorted.length);
+		}
 
-        window.addEventListener('popstate', (event) => {
-            const query = event.state ? event.state.query : '';
-            searchInput.value = query;
-            performSearch(query);
-        });
+		function displayPageResults(results) {
+			const totalPages = Math.ceil(results.length / resultsPerPage);
+			if (currentPage > totalPages) currentPage = totalPages;
 
-        function performSearch(query) {
-            const queryLower = query.toLowerCase();
-            const queryWords = queryLower.split(/\s+/).filter(word => word.length > 0);
-            const results = pages.filter(page => {
-                if (currentFilter === 'title') return page.titleLower.includes(queryLower);
-                if (currentFilter === 'content') return page.contentLower.includes(queryLower);
-                return page.titleLower.includes(queryLower) || page.contentLower.includes(queryLower);
-            });
-            resultsDiv.innerHTML = results.length > 0 ? results.map(page => `
-                <div class="result">
-                    <a href="${page.url}" target="_blank">${highlightText(page.title, queryWords)}</a>
-                    <div class="url">${page.url}</div>
-                    <p>${highlightText(page.content, queryWords)}</p>
-                </div>
-            `).join('') : '<p>No results found for your query.</p>';
-            updateURL(query);
-            suggestionsDiv.style.display = 'none';
-        }
+			const start = (currentPage - 1) * resultsPerPage;
+			const end = start + resultsPerPage;
+			const currentResults = results.slice(start, end);
 
-        function showSuggestions() {
-            const queryLower = searchInput.value.toLowerCase();
-            if (!queryLower) {
-                suggestionsDiv.style.display = 'none';
-                return;
-            }
-            const suggestions = pages.filter(page => page.titleLower.includes(queryLower)).map(page => page.title);
-            suggestionsDiv.innerHTML = suggestions.length > 0 ? suggestions.map(title => `
-                <div class="suggestion" onclick="searchInput.value='${title}';performSearch('${title}')">${title}</div>
-            `).join('') : '<div class="suggestion">No suggestions available</div>';
-            suggestionsDiv.style.display = 'block';
-        }
+			resultsDiv.innerHTML = currentResults.map(page => `
+				<div class="result">
+					<a href="${page.url}" target="_blank">${highlightText(page.title, searchInput.value.toLowerCase())}</a>
+					<div class="url">${page.url}</div>
+					<p>${highlightText(page.content, searchInput.value.toLowerCase())}</p>
+				</div>
+			`).join('');
+		}
 
-        function navigateSuggestions(direction) {
-            const suggestions = suggestionsDiv.querySelectorAll('.suggestion');
-            if (!suggestions.length) return;
-            const active = suggestionsDiv.querySelector('.suggestion:hover') || suggestions[0];
-            let index = Array.from(suggestions).indexOf(active);
-            index = (index + direction + suggestions.length) % suggestions.length;
-            suggestions[index].scrollIntoView({ block: 'nearest' });
-            searchInput.value = suggestions[index].textContent;
-        }
+		function updatePagination(totalResults) {
+			const totalPages = Math.ceil(totalResults / resultsPerPage);
+			const pageButtons = [];
 
-        function updateURL(query) {
-            const url = new URL(window.location);
-            url.searchParams.set('q', query);
-            history.pushState({ query }, '', url);
-        }
+			if (totalPages === 0) return;
 
-        function highlightText(text, words) {
-            if (!words.length) return text;
-            let highlighted = text;
-            words.forEach(word => {
-                const regex = new RegExp(word, 'gi');
-                highlighted = highlighted.replace(regex, match => `<mark>${match}</mark>`);
-            });
-            return highlighted;
-        }
+			paginationDiv.innerHTML = '';
 
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.body.classList.add('dark');
-            document.body.classList.remove('light');
-        }
+			// Previous button
+			let prevButton = document.createElement('div');
+			prevButton.className = 'page-button' + (currentPage === 1 ? ' disabled' : '');
+			prevButton.textContent = 'Previous';
+			prevButton.disabled = currentPage === 1;
+			prevButton.addEventListener('click', () => {
+				if (currentPage > 1) currentPage--;
+				performSearch(searchInput.value);
+			});
+			paginationDiv.appendChild(prevButton);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialQuery = urlParams.get('q') || '';
-        searchInput.value = initialQuery;
-        if (initialQuery) performSearch(initialQuery);
-    </script>
+			// Page numbers
+			for (let i = 1; i <= totalPages; i++) {
+				const btn = document.createElement('div');
+				btn.className = 'page-button' + (i === currentPage ? ' active' : '');
+				btn.textContent = i;
+				btn.onclick = () => {
+					currentPage = i;
+					performSearch(searchInput.value);
+				};
+				paginationDiv.appendChild(btn);
+			}
+
+			// Next button
+			let nextButton = document.createElement('div');
+			nextButton.className = 'page-button' + (currentPage === totalPages ? ' disabled' : '');
+			nextButton.textContent = 'Next';
+			nextButton.disabled = currentPage === totalPages;
+			nextButton.addEventListener('click', () => {
+				if (currentPage < totalPages) currentPage++;
+				performSearch(searchInput.value);
+			});
+			paginationDiv.appendChild(nextButton);
+
+			// updateURL параметр query и текущая страница
+
+            // real
+		}
+
+		function highlightText(text, query) {
+			if (!query) return text;
+			const regex = new RegExp(query, 'gi');
+			return text.replace(regex, match => `<mark>${match}</mark>`);
+		}
+
+		document.getElementById('search-button').addEventListener('click', () => {
+			const query = searchInput.value.trim();
+			currentPage = 1;
+			updateURL(query);
+			performSearch(query);
+		});
+
+		searchInput.addEventListener('input', (e) => {
+			const query = e.target.value.trim();
+			if (!query) {
+				resultsDiv.innerHTML = '';
+				paginationDiv.innerHTML = '';
+			} else {
+				currentPage = 1;
+				performSearch(query);
+			}
+		});
+
+		darkModeToggle.addEventListener('click', () => {
+			document.body.classList.toggle('dark');
+			document.body.classList.toggle('light');
+			localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+			performSearch(searchInput.value);
+		});
+
+		function updateURL(query) {
+			const params = new URLSearchParams();
+			if (query) params.set('q', query);
+			if (currentPage > 1) params.set('page', currentPage);
+			history.pushState(null, '', `?${params.toString()}`);
+		}
+
+		window.addEventListener('popstate', (e) => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const pageParam = urlParams.get('page');
+			const queryParam = urlParams.get('q');
+			currentPage = pageParam ? parseInt(pageParam) : 1;
+			searchInput.value = queryParam || '';
+			performSearch(searchInput.value);
+		});
+
+		const savedTheme = localStorage.getItem('theme');
+		if (savedTheme) {
+			document.body.classList.add(savedTheme);
+			document.body.classList.toggle('dark', savedTheme === 'dark');
+			document.body.classList.toggle('light', savedTheme === 'light');
+		}
+
+		init();
+	</script>
 </body>
 </html>
