@@ -26,6 +26,7 @@
                         color: inherit;
                     }
                     .ad-container {
+                        user-select: none
                         cursor: pointer;
                         display: none;
                         border: 1.5px solid rgba(0, 0, 0, 0.05);
