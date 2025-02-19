@@ -1,210 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>HetaSearch</title>
-	<style>
-		:root {
-		--primary: #0d47a1;
-		--secondary: #0e82ea;
-		--text: #212121;
-		--bg: #fff;
-		--shadow: 0 0 0.25rem rgba(0,0,0,0.08), 0 0.125rem 0.3rem rgba(0,0,0,0.05);
-		--border: #e8eaed;
-		--transition: 0.35s ease-in-out;
-		--corner: 0.625rem;
-		--gap: 1.25rem;
-		}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HetaSearch</title>
+    <style>
+        :root {
+            --primary: #0d47a1;
+            --secondary: #0e82ea;
+            --text: #212121;
+            --bg: #fff;
+            --shadow: 0 0 0.25rem rgba(0, 0, 0, 0.08), 0 0.125rem 0.3rem rgba(0, 0, 0, 0.05);
+            --border: #e8eaed;
+            --transition: 0.35s ease-in-out;
+            --corner: 0.625rem;
+            --gap: 1.25rem;
+        }
 
-		body.dark {
-		--text: #fff;
-		--bg: #121212;
-		--shadow: 0 0.0625rem 0.375rem rgba(0,0,0,0.12), 0 0.375rem 0.625rem rgba(0,0,0,0.08);
-		--border: #333436;
-		--primary: #1c64d1;
-		--secondary: #448fff;
-		}
+        body.dark {
+            --text: #fff;
+            --bg: #121212;
+            --shadow: 0 0.0625rem 0.375rem rgba(0, 0, 0, 0.12), 0 0.375rem 0.625rem rgba(0, 0, 0, 0.08);
+            --border: #333436;
+            --primary: #1c64d1;
+            --secondary: #448fff;
+        }
 
-		body {
-		font-family: 'Segoe UI', Arial, sans-serif;
-		margin: 0;
-		background: var(--bg);
-		color: var(--text);
-		transition: background var(--transition), color var(--transition);
-		min-height: 100vh;
-		display: grid;
-		place-items: center;
-		}
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            transition: background var(--transition), color var(--transition);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+        }
 
-		.container {
-		max-width: 80rem;
-		width: 90%;
-		padding: 0 1rem;
-		display: grid;
-		gap: var(--gap);
-		}
+        .container {
+            max-width: 80rem;
+            width: 90%;
+            padding: 0 1rem;
+            display: grid;
+            gap: var(--gap);
+        }
 
-		.header {
-		text-align: center;
-		margin-bottom: 1.5em;
-		}
+        .header {
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
 
-		.search-bar {
-		position: relative;
-		max-width: 800px;
-		width: 100%;
-		margin: 0 auto;
-		background: var(--bg);
-		border: 1px solid var(--border);
-		border-radius: var(--corner);
-		padding: 0.625rem 1rem;
-		display: grid;
-		grid-template-columns: 1fr auto;
-		align-items: center;
-		overflow: hidden;
-		gap: 0.8rem;
-		transition: box-shadow var(--transition), border-color var(--transition);
-		}
+        .search-bar {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 12px 20px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            /* Increased gap between input and button */
+            overflow-x: auto;
+            transition: box-shadow 0.2s;
+        }
 
-		.search-bar:focus-within {
-		border-color: var(--primary);
-		}
+        .search-bar:focus-within {
+            border-color: var(--primary);
+        }
 
-		#search-input {
-		flex: 1;
-		min-width: 50px;
-		font-size: 1rem;
-		background: transparent;
-		border: none;
-		color: inherit;
-		padding: 0.625rem;
-		outline: none;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: visible;
-		user-select: text;
-		cursor: text;
-		transition: width var(--transition);
-		height: 2.25rem;
-		margin: 0;
-		}
+        #search-input {
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            color: inherit;
+            padding: 12px;
+            outline: none;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: visible;
+            user-select: text;
+            cursor: text;
+            height: 48px;
+            min-width: 150px;
+            /* Ensures minimum input width */
+            transition: width 0.2s;
+        }
 
-		#search-input::placeholder {
-		color: #888;
-		opacity: 0.7;
-		}
+        #search-input::placeholder {
+            color: #888;
+            opacity: 0.7;
+        }
 
-		.search-button {
-		padding: 0.625rem 1.25rem;
-		background: var(--primary);
-		color: white;
-		border: none;
-		cursor: pointer;
-		border-radius: var(--corner);
-		transition: background var(--transition), transform var(--transition);
-		}
+        .search-button {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: background 0.2s, transform 0.2s;
+            height: 48px;
+            white-space: nowrap;
+        }
 
-		.search-button:hover {
-		background: var(--secondary);
-		transform: translateY(-0.0625rem);
-		}
+        .search-button:hover {
+            background: var(--secondary);
+            transform: translateY(-0.0625rem);
+        }
 
-		.results {
-		max-width: 800px;
-		width: 100%;
-		margin: 1.5em auto;
-		background: var(--bg);
-		border-radius: var(--corner);
-		padding: 1.25rem;
-		box-shadow: var(--shadow);
-		transition: transform var(--transition);
-		}
+        .results {
+            max-width: 800px;
+            width: 100%;
+            margin: 1.5em auto;
+            background: var(--bg);
+            border-radius: var(--corner);
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: transform var(--transition);
+        }
 
-		.results:hover {
-		transform: translateY(-0.0625rem);
-		}
+        .results:hover {
+            transform: translateY(-0.0625rem);
+        }
 
-		.result {
-		padding: 1.125rem;
-		border-bottom: 1px solid var(--border);
-		transition: background-color var(--transition);
-		}
+        .result {
+            padding: 1.125rem;
+            border-bottom: 1px solid var(--border);
+            transition: background-color var(--transition);
+        }
 
-		.result:hover {
-		background: rgba(13, 71, 161, 0.05);
-		}
+        .result:hover {
+            background: rgba(13, 71, 161, 0.05);
+        }
 
-		.result a {
-		color: var(--primary);
-		font-size: 1.125rem;
-		text-decoration: none;
-		display: block;
-		margin-bottom: 0.625rem;
-		transition: color var(--transition);
-		}
+        .result a {
+            color: var(--primary);
+            font-size: 1.125rem;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.625rem;
+            transition: color var(--transition);
+        }
 
-		.result a:hover {
-		color: var(--secondary);
-		text-decoration: underline;
-		}
+        .result a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
 
-		.url {
-		font-size: 0.875rem;
-		color: #808080;
-		margin-top: 0.5rem;
-		word-break: break-all;
-		}
+        .url {
+            font-size: 0.875rem;
+            color: #808080;
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
 
-		.pagination {
-		display: flex;
-		justify-content: center;
-		gap: 0.875rem;
-		margin-top: 1.25rem;
-		}
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.875rem;
+            margin-top: 1.25rem;
+        }
 
-		.page-button {
-		padding: 0.625rem 1.25rem;
-		border: 1px solid var(--border);
-		border-radius: 6px;
-		cursor: pointer;
-		color: inherit;
-		transition: background-color var(--transition), color var(--transition);
-		}
+        .page-button {
+            padding: 0.625rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            color: inherit;
+            transition: background-color var(--transition), color var(--transition);
+        }
 
-		.page-button.active,
-		.page-button:hover {
-		background: var(--primary);
-		color: white;
-		border-color: var(--primary);
-		}
+        .page-button.active,
+        .page-button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
 
-		#dark-mode-toggle {
-		position: fixed;
-		top: 1rem;
-		right: 1rem;
-		padding: 0.625rem 1.25rem;
-		background: var(--primary);
-		color: white;
-		border-radius: 1.125rem;
-		cursor: pointer;
-		transition: background var(--transition), transform var(--transition);
-		font-weight: 500;
-		}
+        #dark-mode-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.625rem 1.25rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 1.125rem;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition);
+            font-weight: 500;
+        }
 
-		#dark-mode-toggle:hover {
-		background: var(--secondary);
-		transform: translateY(-0.0625rem);
-		}
+        #dark-mode-toggle:hover {
+            background: var(--secondary);
+            transform: translateY(-0.0625rem);
+        }
 
-		@media (max-width: 600px) {
-		.search-bar { max-width: 100%; padding: 0.5rem 0.875rem; }
-		.search-button { padding: 0.5rem 0.875rem; }
-		.results { padding: 0.875rem; }
-		.page-button { padding: 0.5rem 0.875rem; }
-		}
-	</style>
+        @media (max-width: 600px) {
+            .search-bar {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            #search-input {
+                min-width: 100px;
+            }
+
+            .search-button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
+
 <body class="dark">
     <div class="container">
         <div class="header">
@@ -218,207 +229,208 @@
         <div class="pagination" id="pagination"></div>
     </div>
     <button id="dark-mode-toggle">Toggle Theme</button>
-	<script>
-		const pages = [
-			{ title: "Happy Phone", content: "You should make your phone happy now.", url: "/pages/happyphone.html" }
-		];
+    <script>
+        const pages = [
+            { title: "Happy Phone", content: "You should make your phone happy now.", url: "/pages/happyphone.html" }
+        ];
 
-		const searchInput = document.getElementById('search-input');
-		const searchButton = document.querySelector('.search-button');
-		const resultsDiv = document.getElementById('results');
-		const paginationDiv = document.getElementById('pagination');
-		const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.querySelector('.search-button');
+        const resultsDiv = document.getElementById('results');
+        const paginationDiv = document.getElementById('pagination');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-		let currentPage = 1;
-		const resultsPerPage = 15;
+        let currentPage = 1;
+        const resultsPerPage = 15;
 
-		// Placeholder handling for contenteditable
-		const initialPlaceholder = 'Search...';
-		function updatePlaceholder(shouldShow) {
-			if (shouldShow) {
-				searchInput.textContent = initialPlaceholder;
-				searchInput.style.color = 'var(--secondary-text)';
-			} else {
-				searchInput.textContent = '';
-				searchInput.style.color = 'inherit';
-			}
-		}
-		updatePlaceholder(true);
-		searchInput.addEventListener('focus', () => {
-			if (searchInput.textContent === initialPlaceholder) updatePlaceholder(false);
-		});
-		searchInput.addEventListener('blur', () => {
-			if (searchInput.textContent.trim() === '') updatePlaceholder(true);
-		});
+        // Placeholder handling for contenteditable
+        const initialPlaceholder = 'Search...';
+        function updatePlaceholder(shouldShow) {
+            if (shouldShow) {
+                searchInput.textContent = initialPlaceholder;
+                searchInput.style.color = 'var(--secondary-text)';
+            } else {
+                searchInput.textContent = '';
+                searchInput.style.color = 'inherit';
+            }
+        }
+        updatePlaceholder(true);
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.textContent === initialPlaceholder) updatePlaceholder(false);
+        });
+        searchInput.addEventListener('blur', () => {
+            if (searchInput.textContent.trim() === '') updatePlaceholder(true);
+        });
 
-		// Auto-resize search input
-		const dummyDiv = document.createElement('div');
-		dummyDiv.style.visibility = 'hidden';
-		dummyDiv.style.position = 'absolute';
-		dummyDiv.style.fontFamily = 'Arial, sans-serif';
-		dummyDiv.style.fontSize = '16px';
-		dummyDiv.style.whiteSpace = 'nowrap';
-		document.body.appendChild(dummyDiv);
+        // Auto-resize search input
+        const dummyDiv = document.createElement('div');
+        dummyDiv.style.visibility = 'hidden';
+        dummyDiv.style.position = 'absolute';
+        dummyDiv.style.fontFamily = 'Arial, sans-serif';
+        dummyDiv.style.fontSize = '16px';
+        dummyDiv.style.whiteSpace = 'nowrap';
+        document.body.appendChild(dummyDiv);
 
-		function resizeSearchInput() {
-			const text = searchInput.textContent.replace(/\s/g, ' ');
-			dummyDiv.textContent = text + ' ';
-			const width = dummyDiv.offsetWidth + 32;
-			searchInput.style.width = `${Math.min(width, 700)}px`;
-		}
+        function resizeSearchInput() {
+            const text = searchInput.textContent.replace(/\s/g, ' ');
+            dummyDiv.textContent = text + ' ';
+            const width = dummyDiv.offsetWidth + 32;
+            searchInput.style.width = `${Math.min(width, 700)}px`;
+        }
 
-		searchInput.addEventListener('input', resizeSearchInput);
-		searchInput.addEventListener('focus', resizeSearchInput);
+        searchInput.addEventListener('input', resizeSearchInput);
+        searchInput.addEventListener('focus', resizeSearchInput);
 
-		function init() {
-			const urlParams = new URLSearchParams(window.location.search);
-			const pageParam = urlParams.get('page');
-			const queryParam = urlParams.get('q');
-			if (pageParam) currentPage = parseInt(pageParam);
-			if (queryParam) {
-				currentPage = 1;
-				searchInput.textContent = decodeURIComponent(queryParam);
-				updatePlaceholder(false);
-				resizeSearchInput();
-			}
-			performSearch(searchInput.textContent.trim());
-		}
+        function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageParam = urlParams.get('page');
+            const queryParam = urlParams.get('q');
+            if (pageParam) currentPage = parseInt(pageParam);
+            if (queryParam) {
+                currentPage = 1;
+                searchInput.textContent = decodeURIComponent(queryParam);
+                updatePlaceholder(false);
+                resizeSearchInput();
+            }
+            performSearch(searchInput.textContent.trim());
+        }
 
-		function performSearch(query) {
-			if (!query.trim()) {
-				resultsDiv.innerHTML = '';
-				paginationDiv.innerHTML = '';
-				return;
-			}
+        function performSearch(query) {
+            if (!query.trim()) {
+                resultsDiv.innerHTML = '';
+                paginationDiv.innerHTML = '';
+                return;
+            }
 
-			const filtered = pages.filter(page => {
-				return page.title.toLowerCase().includes(query.toLowerCase()) ||
-					page.content.toLowerCase().includes(query.toLowerCase());
-			});
+            const filtered = pages.filter(page => {
+                return page.title.toLowerCase().includes(query.toLowerCase()) ||
+                    page.content.toLowerCase().includes(query.toLowerCase());
+            });
 
-			const sorted = filtered.sort((a, b) => {
-				const aScore = (a.title.toLowerCase().indexOf(query.toLowerCase()) === 0 ? 3 : 0) +
-					(a.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0) +
-					(a.content.toLowerCase().includes(query.toLowerCase()) ? 1 : 0);
-				const bScore = (b.title.toLowerCase().indexOf(query.toLowerCase()) === 0 ? 3 : 0) +
-					(b.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0) +
-					(b.content.toLowerCase().includes(query.toLowerCase()) ? 1 : 0);
-				return bScore - aScore;
-			});
+            const sorted = filtered.sort((a, b) => {
+                const aScore = (a.title.toLowerCase().indexOf(query.toLowerCase()) === 0 ? 3 : 0) +
+                    (a.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0) +
+                    (a.content.toLowerCase().includes(query.toLowerCase()) ? 1 : 0);
+                const bScore = (b.title.toLowerCase().indexOf(query.toLowerCase()) === 0 ? 3 : 0) +
+                    (b.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0) +
+                    (b.content.toLowerCase().includes(query.toLowerCase()) ? 1 : 0);
+                return bScore - aScore;
+            });
 
-			displayPageResults(sorted);
-			updatePagination(sorted.length);
-		}
+            displayPageResults(sorted);
+            updatePagination(sorted.length);
+        }
 
-		function displayPageResults(results) {
-			const totalPages = Math.ceil(results.length / resultsPerPage);
-			if (currentPage > totalPages) currentPage = totalPages;
+        function displayPageResults(results) {
+            const totalPages = Math.ceil(results.length / resultsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages;
 
-			const start = (currentPage - 1) * resultsPerPage;
-			const end = start + resultsPerPage;
-			const currentResults = results.slice(start, end);
+            const start = (currentPage - 1) * resultsPerPage;
+            const end = start + resultsPerPage;
+            const currentResults = results.slice(start, end);
 
-			resultsDiv.innerHTML = currentResults.map(page => `
+            resultsDiv.innerHTML = currentResults.map(page => `
 				<div class="result">
 					<a href="${page.url}" target="_blank">${page.title}</a>
 					<div class="url">${page.url}</div>
 					<p>${page.content}</p>
 				</div>
 			`).join('');
-		}
+        }
 
-		function updatePagination(totalResults) {
-			const totalPages = Math.ceil(totalResults / resultsPerPage);
-			paginationDiv.innerHTML = '';
+        function updatePagination(totalResults) {
+            const totalPages = Math.ceil(totalResults / resultsPerPage);
+            paginationDiv.innerHTML = '';
 
-			if (totalPages === 0) return;
+            if (totalPages === 0) return;
 
-			// Previous button
-			let prevButton = document.createElement('div');
-			prevButton.className = 'page-button' + (currentPage === 1 ? ' disabled' : '');
-			prevButton.textContent = 'Previous';
-			prevButton.onclick = () => {
-				if (currentPage > 1) currentPage--;
-				performSearch(searchInput.textContent.trim());
-			};
-			paginationDiv.appendChild(prevButton);
+            // Previous button
+            let prevButton = document.createElement('div');
+            prevButton.className = 'page-button' + (currentPage === 1 ? ' disabled' : '');
+            prevButton.textContent = 'Previous';
+            prevButton.onclick = () => {
+                if (currentPage > 1) currentPage--;
+                performSearch(searchInput.textContent.trim());
+            };
+            paginationDiv.appendChild(prevButton);
 
-			// Page numbers
-			for (let i = 1; i <= totalPages; i++) {
-				const btn = document.createElement('div');
-				btn.className = 'page-button' + (i === currentPage ? ' active' : '');
-				btn.textContent = i;
-				btn.onclick = () => {
-					currentPage = i;
-					performSearch(searchInput.textContent.trim());
-				};
-				paginationDiv.appendChild(btn);
-			}
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'page-button' + (i === currentPage ? ' active' : '');
+                btn.textContent = i;
+                btn.onclick = () => {
+                    currentPage = i;
+                    performSearch(searchInput.textContent.trim());
+                };
+                paginationDiv.appendChild(btn);
+            }
 
-			// Next button
-			let nextButton = document.createElement('div');
-			nextButton.className = 'page-button' + (currentPage === totalPages ? ' disabled' : '');
-			nextButton.textContent = 'Next';
-			nextButton.onclick = () => {
-				if (currentPage < totalPages) currentPage++;
-				performSearch(searchInput.textContent.trim());
-			};
-			paginationDiv.appendChild(nextButton);
-		}
+            // Next button
+            let nextButton = document.createElement('div');
+            nextButton.className = 'page-button' + (currentPage === totalPages ? ' disabled' : '');
+            nextButton.textContent = 'Next';
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) currentPage++;
+                performSearch(searchInput.textContent.trim());
+            };
+            paginationDiv.appendChild(nextButton);
+        }
 
-		searchButton.addEventListener('click', () => {
-			const query = searchInput.textContent.trim();
-			currentPage = 1;
-			history.pushState(null, '', `?q=${encodeURIComponent(query)}&page=${currentPage}`);
-			performSearch(query);
-		});
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.textContent.trim();
+            currentPage = 1;
+            history.pushState(null, '', `?q=${encodeURIComponent(query)}&page=${currentPage}`);
+            performSearch(query);
+        });
 
-		// Handle enter key
-		searchInput.addEventListener('keydown', (e) => {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				searchButton.click();
-			}
-		});
+        // Handle enter key
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchButton.click();
+            }
+        });
 
-		// Theme toggle
-		darkModeToggle.addEventListener('click', () => {
-			document.body.classList.toggle('dark');
-			document.body.classList.toggle('light');
-			localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-			performSearch(searchInput.textContent.trim());
-		});
+        // Theme toggle
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+            performSearch(searchInput.textContent.trim());
+        });
 
-		function updateURL(query, page) {
-			const params = new URLSearchParams();
-			if (query) params.set('q', query);
-			if (page) params.set('page', page);
-			history.pushState(null, '', `?${params.toString()}`);
-		}
+        function updateURL(query, page) {
+            const params = new URLSearchParams();
+            if (query) params.set('q', query);
+            if (page) params.set('page', page);
+            history.pushState(null, '', `?${params.toString()}`);
+        }
 
-		window.addEventListener('popstate', (e) => {
-			const urlParams = new URLSearchParams(window.location.search);
-			const pageParam = urlParams.get('page');
-			const queryParam = urlParams.get('q');
-			currentPage = pageParam ? parseInt(pageParam) : 1;
-			searchInput.textContent = queryParam || '';
-			if (queryParam) {
-				updatePlaceholder(false);
-				resizeSearchInput();
-			} else {
-				updatePlaceholder(true);
-			}
-			performSearch(queryParam || '');
-		});
+        window.addEventListener('popstate', (e) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageParam = urlParams.get('page');
+            const queryParam = urlParams.get('q');
+            currentPage = pageParam ? parseInt(pageParam) : 1;
+            searchInput.textContent = queryParam || '';
+            if (queryParam) {
+                updatePlaceholder(false);
+                resizeSearchInput();
+            } else {
+                updatePlaceholder(true);
+            }
+            performSearch(queryParam || '');
+        });
 
-		const savedTheme = localStorage.getItem('theme');
-		if (savedTheme) {
-			document.body.classList.add(savedTheme);
-			document.body.classList.toggle('dark', savedTheme === 'dark');
-			document.body.classList.toggle('light', savedTheme === 'light');
-		}
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.body.classList.add(savedTheme);
+            document.body.classList.toggle('dark', savedTheme === 'dark');
+            document.body.classList.toggle('light', savedTheme === 'light');
+        }
 
-		init();
-	</script>
+        init();
+    </script>
 </body>
+
 </html>
