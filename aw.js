@@ -4,7 +4,7 @@
 
 (function () {
     const SUPABASE_PROJECT_URL = window.TETAPUXADS_SUPABASE_PROJECT_URL || "https://lfbdhntyamptnrquwbcy.supabase.co";
-    const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo";
+    const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo"; // dont let the cursor be stuck, check discord
     let ads;
 
     class TetapuxAds extends HTMLElement {
@@ -25,7 +25,7 @@
                         text-decoration: none;
                         color: inherit;
                     }
-                    .ad-container {
+                    .a-container {
                         user-select: none
                         cursor: pointer;
                         display: none;
@@ -45,30 +45,30 @@
                         padding-right: 50px;
                         max-width: 100vw;
                     }
-                    .ad-container:hover {
+                    .a-container:hover {
                         background-color: rgba(0, 0, 0, 0.05);
                     }
-                    .ad-container:active {
+                    .a-container:active {
                         transform: scale(0.99);
                     }
-                    .ad-container:focus, .ad-container:active {
+                    .a-container:focus, .a-container:active {
                         outline: 2px solid black;
                     }
-                    .ad-container img {
+                    .a-container img {
                         width: 80px;
                         height: 80px;
                         border-radius: 8px;
                     }
-                    .ad-container div {
+                    .a-container div {
                         text-align: ${vertical ? 'center' : 'left'};
                         margin-top: ${vertical ? '10px' : '0'};
                     }
-                    .ad-container h4 {
+                    .a-container h4 {
                         margin: 0;
                         margin-bottom: 5px;
                         font-weight: 600;
                     }
-                    .ad-container p {
+                    .a-container p {
                         margin: 0;
                         font-size: .95rem;
                     }
@@ -81,7 +81,7 @@
                         text-decoration: underline;
                     }
                 </style>
-                <div class="ad-container">
+                <div class="a-container">
                     <img class="cover" alt="Ad cover" loading="lazy">
                     <div>
                         <h4>Loading...</h4>
@@ -101,12 +101,12 @@
 
                     clearInterval(wai);
 
-                    shadow.querySelector(".ad-container").style.display = "flex";
+                    shadow.querySelector(".a-container").style.display = "flex";
 
                     const randomAd = ads[Math.floor(Math.random() * ads.length)];
                     currentAdUrl = randomAd.link;
 
-                    shadow.querySelector(".ad-container").addEventListener("click", function (e) {
+                    shadow.querySelector(".a-container").addEventListener("click", function (e) {
                         if (e.target.href) return;
                         window.open(currentAdUrl, "_blank");
                     });
