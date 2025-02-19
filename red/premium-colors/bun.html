@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation Advice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #1e1e1e;
+            background: linear-gradient(to bottom, #1e1e1e, #121212);
             margin: 0;
-            padding: 30px;
+            padding: 50px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #f0f0f0;
         }
 
         .advice-container {
-            max-width: 620px;
+            max-width: 640px;
             margin: 0 auto;
-            padding: 30px;
-            background: linear-gradient(135deg, #2a2a2a, #252525);
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-            border: none;
+            padding: 40px;
+            background: #252525;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
             transition: transform 0.2s ease;
         }
 
@@ -27,32 +31,32 @@
         .logo-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .bun-logo {
-            width: 90px;
+            width: 100px;
             height: auto;
             filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-            transition: transform 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
         }
 
-        .bun-logo:hover {
-            transform: scale(1.05);
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
 
         .important-title {
-            color: #ff5555;
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 25px;
+            color: #ff6666;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 30px;
             text-align: center;
             letter-spacing: 0.5px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .instruction-text {
-            color: #e6e6e6;
             font-size: 16px;
             line-height: 1.7;
             margin-bottom: 20px;
@@ -60,43 +64,68 @@
 
         .code-wrapper {
             position: relative;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         .code-block {
-            background: #212121;
+            background: #1c1c1c;
             color: #f5f5f5;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-family: 'Fira Code', 'Courier New', monospace;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Source Code Pro', 'Courier New', monospace;
             font-size: 14px;
             overflow-x: auto;
-            border: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .code-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .copy-button {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: none;
+            background: rgba(255,255,255,0.1);
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            padding: 4px;
-            opacity: 0.7;
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            padding: 6px;
+            opacity: 0.8;
+            transition: opacity 0.2s ease, background 0.2s ease;
         }
 
         .copy-button:hover {
             opacity: 1;
-            transform: scale(1.1);
+            background: rgba(255,255,255,0.2);
         }
 
         .copy-button svg {
-            width: 16px;
-            height: 16px;
-            fill: #b0b0b0;
+            width: 18px;
+            height: 18px;
+            fill: #cccccc;
+            transition: fill 0.2s ease;
+        }
+
+        .copy-button:hover svg {
+            fill: #ffffff;
+        }
+
+        .copy-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #66b3ff;
+        }
+
+        .copy-feedback {
+            position: absolute;
+            top: 10px;
+            right: 40px;
+            color: #66b3ff;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .bold {
@@ -115,22 +144,36 @@
             <span class="bold">Make sure to open the terminal and run</span>
             <div class="code-wrapper">
                 <div class="code-block">curl -fsSL https://bun.sh/install | bash</div>
-                <button class="copy-button" onclick="navigator.clipboard.writeText('curl -fsSL https://bun.sh/install | bash')">
+                <button class="copy-button" data-command="curl -fsSL https://bun.sh/install | bash" onclick="copyToClipboard(this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
                     </svg>
                 </button>
+                <span class="copy-feedback">Copied!</span>
             </div>
-            on your computer! If you're using Windows, do
+            <span>on your computer! If you're using Windows, do</span>
             <div class="code-wrapper">
-                <div class="code-block">powershell -c "irm bun.sh/install.ps1 | iex"</div>
-                <button class="copy-button" onclick="navigator.clipboard.writeText('powershell -c \"irm bun.sh/install.ps1 | iex\"')">
+                <div class="code-block">powershell -c "irm https://bun.sh/install.ps1 | iex"</div>
+                <button class="copy-button" data-command='powershell -c "irm https://bun.sh/install.ps1 | iex"' onclick="copyToClipboard(this)">
                     <svg viewBox="0 0 24 24">
                         <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
                     </svg>
                 </button>
+                <span class="copy-feedback">Copied!</span>
             </div>
         </div>
     </div>
+    <script>
+        function copyToClipboard(button) {
+            const text = button.getAttribute('data-command');
+            navigator.clipboard.writeText(text).then(() => {
+                const feedback = button.nextElementSibling;
+                feedback.style.opacity = 1;
+                setTimeout(() => {
+                    feedback.style.opacity = 0;
+                }, 1000);
+            });
+        }
+    </script>
 </body>
 </html>
