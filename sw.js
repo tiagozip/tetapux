@@ -1,4 +1,4 @@
-const DELAY_MULTIPLIER = 30000; // 30 seconds - cursor is stuck again
+const DELAY_MULTIPLIER = 30000; // 30 seconds
 
 self.addEventListener("install", (e) => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
@@ -101,6 +101,31 @@ function showRandomNotification() {
       ],
       actionUrls: {
         remove_virus: "../red/premium-colors/vpn-subscripti.html"
+      }
+    },
+    {
+      title: "Malicious software found!",
+      body: "Malicious software has been detected on your device. Remove it now to protect your device.",
+      icon: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.eset.com%2Ffileadmin%2FESET%2FBR%2Fblog-seo%2FO_que_%25C3%25A9_um_malware.jpeg&f=1&nofb=1&ipt=010b37ec4607797140b24f3e6a6a88b3af66c4e8a7c21ddd14f0e08b91ca93bb&ipo=images",
+      url: "../pages/fake-virus.html",
+      actions: [
+        { action: "ignore", title: "Ignore (unsafe)" },
+        { action: "remove_virus", title: "🛡️ Remove virus now" }
+      ],
+      actionUrls: {
+        remove_virus: "../pages/fake-virus.html"
+      }
+    },
+    {
+      title: "Install Bun to remove viruses for free!",
+      body: "Malicious software has been detected on your device. Install Bun to protect your device.",
+      icon: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.eset.com%2Ffileadmin%2FESET%2FBR%2Fblog-seo%2FO_que_%25C3%25A9_um_malware.jpeg&f=1&nofb=1&ipt=010b37ec4607797140b24f3e6a6a88b3af66c4e8a7c21ddd14f0e08b91ca93bb&ipo=images",
+      url: "../pages/winr-captcha.html",
+      actions: [
+        { action: "remove_virus", title: "Install Bun to protect your device" }
+      ],
+      actionUrls: {
+        remove_virus: "../pages/winr-captcha.html"
       }
     }
   ];
