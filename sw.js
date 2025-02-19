@@ -1,4 +1,4 @@
-const DELAY_MULTIPLIER = 30000; // 30 seconds
+const DELAY_MULTIPLIER = 30000; // 30 seconds - cursor is stuck again
 
 self.addEventListener("install", (e) => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
