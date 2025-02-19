@@ -3,8 +3,8 @@
  */
 
 (function () {
-    // TODO: move this to using supabase
-    const API_ENDPOINT = window.TETAPUXADS_API_ENDPOINT || "https://cdn.jsdelivr.net/gh/tiagorangel1/tetapux/ads/ads.json";
+    const SUPABASE_PROJECT_URL = window.TETAPUXADS_SUPABASE_PROJECT_URL || "https://lfbdhntyamptnrquwbcy.supabase.co";
+    const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo";
     let ads;
 
     class TetapuxAds extends HTMLElement {
@@ -100,8 +100,8 @@
                 clearInterval(wai);
 
                 const randomAd = ads[Math.floor(Math.random() * ads.length)];
-                shadow.querySelector('a').href = randomAd.url;
-                shadow.querySelector('img').src = randomAd.img;
+                shadow.querySelector('a').href = randomAd.link;
+                shadow.querySelector('img').src = randomAd.logo;
                 shadow.querySelector('h4').innerText = randomAd.title;
                 shadow.querySelector('p').innerText = randomAd.alt;
             }, 100);
@@ -110,7 +110,12 @@
 
     customElements.define('tetapux-ads', TetapuxAds);
 
-    fetch(API_ENDPOINT).then(async (response) => {
+    fetch(`${SUPABASE_PROJECT_URL}/rest/v1/ads?select=*&published=eq.true`, {
+        headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          }
+    }).then(async (response) => {
         ads = await response.json();
     });
 })();

@@ -8,14 +8,14 @@
 		:root, body.light {
 			--primary: #0d47a1;
 			--text: #212121;
-			--bg: #faf9f7;
+			--bg: white;
 			--shadow: 0 0 4px rgba(0,0,0,0.1);
 			--border: #e8eaed;
 		}
 
 		body.dark, body.dark * {
 			--primary: #0d47a1;
-			--text: #e8eaed;
+			--text: white;
 			--bg: #1a1a1a;
 			--shadow: 0 0 8px rgba(0,0,0,0.4);
 			--border: #353535;
@@ -46,14 +46,16 @@
 
 		.search-bar {
 			position: relative;
-			max-width: 600px;
+			max-width: 700px;
 			margin: 0 auto 20px;
 			background: var(--bg);
 			border: 1px solid var(--border);
 			border-radius: 24px;
-			overflow: hidden;
-			box-shadow: var(--shadow);
-			transform: translateY(-1px);
+			padding: 8px 16px;
+			display: flex;
+			align-items: center;
+			overflow-x: auto;
+			gap: 10px;
 			transition: box-shadow 0.2s;
 		}
 
@@ -62,32 +64,41 @@
 		}
 
 		#search-input {
-			width: calc(100% - 50px);
-			padding: 12px 16px;
-			border: 0;
-			background: transparent;
-			color: inherit;
+			flex: 1;
+			min-width: 50px;
+			max-width: 1000px;
 			font-size: 16px;
+			background: transparent;
+			border: none;
+			color: inherit;
+			padding: 8px;
 			outline: none;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: visible;
+			user-select: text;
+			cursor: text;
+			transition: width 0.2s;
+			height: 32px;
+			margin: 0;
 		}
 
-		#search-button {
-			position: absolute;
-			right: 0;
-			top: 0;
-			height: 100%;
-			padding: 0 24px;
+		#search-input::placeholder {
+			color: var(--secondary-text, #888);
+			opacity: 0.7;
+		}
+
+		.search-button {
+			padding: 8px 16px;
 			background: var(--primary);
 			color: white;
-			border: 0;
+			border: none;
 			cursor: pointer;
-			font-size: 14px;
-			font-weight: 500;
-			border-radius: 0 24px 24px 0;
+			border-radius: 12px;
 			transition: background 0.2s;
 		}
 
-		#search-button:hover {
+		.search-button:hover {
 			background: #1e88e5;
 		}
 
@@ -120,6 +131,8 @@
 			color: var(--primary);
 			font-size: 18px;
 			text-decoration: none;
+			display: block;
+			margin-bottom: 4px;
 			transition: color 0.2s;
 		}
 
@@ -131,12 +144,13 @@
 		.result p {
 			color: var(--text);
 			font-size: 14px;
-			margin: 8px 0;
+			margin: 4px 0;
 			line-height: 1.6;
+			opacity: 0.9;
 		}
 
 		.url {
-			font-size: 13px;
+			font-size: 12px;
 			color: #808080;
 			margin-top: 4px;
 			word-break: break-all;
@@ -150,12 +164,12 @@
 		}
 
 		.page-button {
-			padding: 8px 12px;
+			padding: 6px 12px;
 			border: 1px solid var(--border);
 			border-radius: 4px;
 			cursor: pointer;
-			transition: background-color 0.2s, color 0.2s;
 			color: inherit;
+			transition: background-color 0.2s, color 0.2s;
 		}
 
 		.page-button.active,
@@ -165,35 +179,31 @@
 			border-color: var(--primary);
 		}
 
-		mark {
-			background: var(--primary);
-			color: white;
-			padding: 0 2px;
-			border-radius: 2px;
-			font-weight: bold;
-		}
-
 		#dark-mode-toggle {
 			position: fixed;
 			top: 15px;
 			right: 15px;
-			padding: 8px 16px;
+			padding: 6px 12px;
 			background: var(--primary);
 			color: white;
 			border: none;
 			border-radius: 20px;
 			cursor: pointer;
 			transition: background 0.2s;
+			opacity: 0.9;
+			font-weight: 500;
 		}
 
 		#dark-mode-toggle:hover {
 			background: #1e88e5;
+			opacity: 1;
 		}
 
 		@media (max-width: 600px) {
-			.search-bar { max-width: 95%; }
+			.search-bar { max-width: 95%; padding: 4px 12px; }
+			.search-button { padding: 4px 10px; }
 			.results { padding: 12px; }
-			.page-button { padding: 6px 8px; }
+			.page-button { padding: 4px 8px; }
 		}
 	</style>
 </head>
@@ -203,8 +213,8 @@
 			<h1>HetaSearch</h1>
 		</div>
 		<div class="search-bar">
-			<input type="text" id="search-input" placeholder="Search...">
-			<button id="search-button">Search</button>
+			<div contenteditable="true" id="search-input" placeholder="Search..."></div>
+			<button class="search-button">Search</button>
 		</div>
 		<div class="results" id="results"></div>
 		<div class="pagination" id="pagination"></div>
@@ -212,28 +222,68 @@
 	<button id="dark-mode-toggle">Toggle Theme</button>
 	<script>
 		const pages = [
-			{ title: "HetaSearch Cloud Platform", content: "Next-gen cloud solutions for developers.", url: "https://hetasearch.com/cloud " },
-			{ title: "Data Science Solutions", content: "AI-driven analytics for business growth.", url: "https://example.com/data-science " },
-			{ title: "HetaSearch Labs", content: "Research in quantum computing and ML.", url: "https://hetasearch.com/labs " },
-			{ title: "Cybersecurity Insights", content: "Protect your digital assets with HetaSec.", url: "https://example.com/cybersecurity " },
-			{ title: "DevOps Automation", content: "CI/CD pipelines & cloud integration.", url: "https://example.com/devops " }
+			{ title: "Happy Phone", content: "You should make your phone happy now.", url: "/pages/happyphone.html" }
 		];
 
 		const searchInput = document.getElementById('search-input');
+		const searchButton = document.querySelector('.search-button');
 		const resultsDiv = document.getElementById('results');
-		const darkModeToggle = document.getElementById('dark-mode-toggle');
 		const paginationDiv = document.getElementById('pagination');
+		const darkModeToggle = document.getElementById('dark-mode-toggle');
 
 		let currentPage = 1;
 		const resultsPerPage = 15;
+
+		// Placeholder handling for contenteditable
+		const initialPlaceholder = 'Search...';
+		function updatePlaceholder(shouldShow) {
+			if (shouldShow) {
+				searchInput.textContent = initialPlaceholder;
+				searchInput.style.color = 'var(--secondary-text)';
+			} else {
+				searchInput.textContent = '';
+				searchInput.style.color = 'inherit';
+			}
+		}
+		updatePlaceholder(true);
+		searchInput.addEventListener('focus', () => {
+			if (searchInput.textContent === initialPlaceholder) updatePlaceholder(false);
+		});
+		searchInput.addEventListener('blur', () => {
+			if (searchInput.textContent.trim() === '') updatePlaceholder(true);
+		});
+
+		// Auto-resize search input
+		const dummyDiv = document.createElement('div');
+		dummyDiv.style.visibility = 'hidden';
+		dummyDiv.style.position = 'absolute';
+		dummyDiv.style.fontFamily = 'Arial, sans-serif';
+		dummyDiv.style.fontSize = '16px';
+		dummyDiv.style.whiteSpace = 'nowrap';
+		document.body.appendChild(dummyDiv);
+
+		function resizeSearchInput() {
+			const text = searchInput.textContent.replace(/\s/g, ' ');
+			dummyDiv.textContent = text + ' ';
+			const width = dummyDiv.offsetWidth + 32;
+			searchInput.style.width = `${Math.min(width, 700)}px`;
+		}
+
+		searchInput.addEventListener('input', resizeSearchInput);
+		searchInput.addEventListener('focus', resizeSearchInput);
 
 		function init() {
 			const urlParams = new URLSearchParams(window.location.search);
 			const pageParam = urlParams.get('page');
 			const queryParam = urlParams.get('q');
 			if (pageParam) currentPage = parseInt(pageParam);
-			if (queryParam) searchInput.value = decodeURIComponent(queryParam);
-			performSearch(searchInput.value);
+			if (queryParam) {
+				currentPage = 1;
+				searchInput.textContent = decodeURIComponent(queryParam);
+				updatePlaceholder(false);
+				resizeSearchInput();
+			}
+			performSearch(searchInput.textContent.trim());
 		}
 
 		function performSearch(query) {
@@ -272,30 +322,27 @@
 
 			resultsDiv.innerHTML = currentResults.map(page => `
 				<div class="result">
-					<a href="${page.url}" target="_blank">${highlightText(page.title, searchInput.value.toLowerCase())}</a>
+					<a href="${page.url}" target="_blank">${page.title}</a>
 					<div class="url">${page.url}</div>
-					<p>${highlightText(page.content, searchInput.value.toLowerCase())}</p>
+					<p>${page.content}</p>
 				</div>
 			`).join('');
 		}
 
 		function updatePagination(totalResults) {
 			const totalPages = Math.ceil(totalResults / resultsPerPage);
-			const pageButtons = [];
+			paginationDiv.innerHTML = '';
 
 			if (totalPages === 0) return;
-
-			paginationDiv.innerHTML = '';
 
 			// Previous button
 			let prevButton = document.createElement('div');
 			prevButton.className = 'page-button' + (currentPage === 1 ? ' disabled' : '');
 			prevButton.textContent = 'Previous';
-			prevButton.disabled = currentPage === 1;
-			prevButton.addEventListener('click', () => {
+			prevButton.onclick = () => {
 				if (currentPage > 1) currentPage--;
-				performSearch(searchInput.value);
-			});
+				performSearch(searchInput.textContent.trim());
+			};
 			paginationDiv.appendChild(prevButton);
 
 			// Page numbers
@@ -305,7 +352,7 @@
 				btn.textContent = i;
 				btn.onclick = () => {
 					currentPage = i;
-					performSearch(searchInput.value);
+					performSearch(searchInput.textContent.trim());
 				};
 				paginationDiv.appendChild(btn);
 			}
@@ -314,53 +361,40 @@
 			let nextButton = document.createElement('div');
 			nextButton.className = 'page-button' + (currentPage === totalPages ? ' disabled' : '');
 			nextButton.textContent = 'Next';
-			nextButton.disabled = currentPage === totalPages;
-			nextButton.addEventListener('click', () => {
+			nextButton.onclick = () => {
 				if (currentPage < totalPages) currentPage++;
-				performSearch(searchInput.value);
-			});
+				performSearch(searchInput.textContent.trim());
+			};
 			paginationDiv.appendChild(nextButton);
-
-			// updateURL параметр query и текущая страница
-
-            // real
 		}
 
-		function highlightText(text, query) {
-			if (!query) return text;
-			const regex = new RegExp(query, 'gi');
-			return text.replace(regex, match => `<mark>${match}</mark>`);
-		}
-
-		document.getElementById('search-button').addEventListener('click', () => {
-			const query = searchInput.value.trim();
+		searchButton.addEventListener('click', () => {
+			const query = searchInput.textContent.trim();
 			currentPage = 1;
-			updateURL(query);
+			history.pushState(null, '', `?q=${encodeURIComponent(query)}&page=${currentPage}`);
 			performSearch(query);
 		});
 
-		searchInput.addEventListener('input', (e) => {
-			const query = e.target.value.trim();
-			if (!query) {
-				resultsDiv.innerHTML = '';
-				paginationDiv.innerHTML = '';
-			} else {
-				currentPage = 1;
-				performSearch(query);
+		// Handle enter key
+		searchInput.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				searchButton.click();
 			}
 		});
 
+		// Theme toggle
 		darkModeToggle.addEventListener('click', () => {
 			document.body.classList.toggle('dark');
 			document.body.classList.toggle('light');
 			localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-			performSearch(searchInput.value);
+			performSearch(searchInput.textContent.trim());
 		});
 
-		function updateURL(query) {
+		function updateURL(query, page) {
 			const params = new URLSearchParams();
 			if (query) params.set('q', query);
-			if (currentPage > 1) params.set('page', currentPage);
+			if (page) params.set('page', page);
 			history.pushState(null, '', `?${params.toString()}`);
 		}
 
@@ -369,8 +403,14 @@
 			const pageParam = urlParams.get('page');
 			const queryParam = urlParams.get('q');
 			currentPage = pageParam ? parseInt(pageParam) : 1;
-			searchInput.value = queryParam || '';
-			performSearch(searchInput.value);
+			searchInput.textContent = queryParam || '';
+			if (queryParam) {
+				updatePlaceholder(false);
+				resizeSearchInput();
+			} else {
+				updatePlaceholder(true);
+			}
+			performSearch(queryParam || '');
 		});
 
 		const savedTheme = localStorage.getItem('theme');
