@@ -91,6 +91,8 @@
                 </div>`;
             shadow.appendChild(div);
 
+            let currentAdUrl = null;
+
             const reload = function () {
                 const wai = setInterval(() => {
                     if (!ads) {
@@ -102,10 +104,11 @@
                     shadow.querySelector(".ad-container").style.display = "flex";
 
                     const randomAd = ads[Math.floor(Math.random() * ads.length)];
+                    let currentAdUrl = randomAd.link;
 
                     shadow.querySelector(".ad-container").addEventListener("click", function (e) {
                         if (e.target.href) return;
-                        window.open(randomAd.link, "_blank");
+                        window.open(currentAdUrl, "_blank");
                     });
                     shadow.querySelector('img').src = randomAd.logo;
                     shadow.querySelector('h4').innerText = randomAd.title;
