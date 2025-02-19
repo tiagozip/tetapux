@@ -1,3 +1,5 @@
+const DELAY_MULTIPLIER = 60000; // 60 seconds
+
 self.addEventListener("install", (e) => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
 
@@ -104,7 +106,7 @@ function showRandomNotification() {
   ];
 
   const randomNotif = notifications[Math.floor(Math.random() * notifications.length)];
-  const delay = Math.random() * 8800 + 1200;
+  const delay = Math.random() * DELAY_MULTIPLIER + 2000;
 
   self.registration.showNotification(randomNotif.title, {
     body: randomNotif.body,
@@ -119,4 +121,4 @@ function showRandomNotification() {
   setTimeout(showRandomNotification, delay);
 }
 
-setTimeout(showRandomNotification, Math.random() * 8800 + 1200);
+setTimeout(showRandomNotification, Math.random() * DELAY_MULTIPLIER + 2000);
