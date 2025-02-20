@@ -4,7 +4,7 @@
 
 (function () {
     const SUPABASE_PROJECT_URL = window.TETAPUXADS_SUPABASE_PROJECT_URL || "https://lfbdhntyamptnrquwbcy.supabase.co";
-    const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo"; // dont let the cursor be stuck, check discord
+    const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo";
     let ads;
 
     class TetapuxAds extends HTMLElement {
@@ -35,7 +35,7 @@
                         align-items: center;
                         ${vertical ? 'justify-content: center;' : ''}
                         padding: 10px;
-                        border-radius: 8px;
+                        border-radius: 12px;
                         gap: 15px;
                         width: ${width};
                         height: ${height};
