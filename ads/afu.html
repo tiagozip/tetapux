@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>afu.php</title>
+</head>
+
+<body>
+    <script>
+        const SUPABASE_PROJECT_URL = window.TETAPUXADS_SUPABASE_PROJECT_URL || "https://lfbdhntyamptnrquwbcy.supabase.co";
+        const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo";
+
+        fetch(`${SUPABASE_PROJECT_URL}/rest/v1/ads?select=*&published=eq.true`, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY
+            }
+        }).then(async (response) => {
+            const ads = await response.json();
+
+            const ad = ads[Math.floor(Math.random() * ads.length)];
+            console.log(ad);
+            window.location.href = ad.link;
+        });
+    </script>
+</body>
+
+</html>
