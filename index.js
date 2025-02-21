@@ -31,30 +31,6 @@ Bun.serve({
         }
       }
 
-      /* if (!path.includes(".")) {
-        const safePath = import.meta.dirname + path;
-        
-        if (!safePath.startsWith(import.meta.dirname)) {
-          return new Response("Forbidden", { status: 403, headers: { 'Content-Type': 'text/plain' } });
-        }
-          try {
-            const entries = await fs.readdir(safePath, { withFileTypes: true });
-            const htmlListItems = entries.map((entry) => {
-              const entryPath = path + (path.endsWith("/") ? "" : "/") + entry.name;
-              const isDir = entry.isDirectory();
-              const linkText = entry.name + (isDir ? "/" : "");
-              return `<li><a href="${entryPath}">${linkText}</a></li>`;
-            }).join("");
-
-            return new Response(`<ul>${htmlListItems}</ul>`, { headers: { 'Content-Type': 'text/html' } });
-          } catch (error) {
-            if (error.code === 'ENOENT') {
-              return new Response("Not Found", { status: 404, headers: { 'Content-Type': 'text/plain' } });
-            }
-             return new Response("Failed to read directory", { status: 500, headers: { 'Content-Type': 'text/plain' } });
-          }
-      } */
-
       if (!path.includes(".")) {
         const rootDir = import.meta.dirname;
         const requestedPath = path.endsWith('/') ? path.slice(0, -1) : path;
