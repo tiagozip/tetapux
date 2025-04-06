@@ -1,181 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Empty OK</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <title>Empty OK</title>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+      body {
+        font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI,
+          "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
+          Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
+        margin: 6em auto;
+        max-width: 450px;
+      }
 
-    body {
-      font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI,
-        "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
-        Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
-      margin: 6em auto;
-      max-width: 450px;
-    }
+      .pages {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-    .pages {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+      h1 {
+        text-align: center;
+      }
 
-    h1 {
-      text-align: center;
-    }
+      .pages h2 {
+        font-size: 16px;
+        margin: 0px;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        color: rgb(25, 26, 27);
+        font-weight: 600;
+      }
 
-    .pages a {
-      color: black;
-      width: 100%;
-      padding: 12px 20px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      background-color: rgba(0, 0, 0, 0.03);
-      border-radius: 12px;
-      transition: all 0.15s;
-      text-decoration: none;
-    }
+      .pages a {
+        color: black;
+        width: 100%;
+        padding: 12px 20px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 12px;
+        transition: all 0.15s;
+        text-decoration: none;
+      }
 
-    .pages a:hover {
-      background-color: rgba(0, 0, 0, 0.09);
-      transform: scale(1.05);
-    }
+      .pages a:hover {
+        background-color: rgba(0, 0, 0, 0.09);
+        transform: scale(1.05);
+      }
 
-    .cpa {
-      color: black;
-      width: 100%;
-      padding: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      background-color: rgba(0, 0, 0, 0.03);
-      border-radius: 12px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 30px;
-    }
+      .cpa {
+        color: black;
+        width: 100%;
+        padding: 16px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
 
-    .cpa img {
-      width: 100px;
-    }
+      .cpa img {
+        width: 100px;
+      }
 
-    .cpa h4 {
-      margin: 0px;
-      font-size: 15px;
-      font-weight: 500;
-    }
+      .cpa h4 {
+        margin: 0px;
+        font-size: 15px;
+        font-weight: 500;
+      }
 
-    .cpa p {
-      font-size: 13px;
-      margin: 0px;
-      margin-top: 3px;
-    }
+      .cpa p {
+        font-size: 13px;
+        margin: 0px;
+        margin-top: 3px;
+      }
 
-    .cpa a {
-      font-size: 13px;
-      color: black;
-      margin-top: 8px;
-      display: block;
-      width: fit-content;
-    }
+      .cpa a {
+        font-size: 13px;
+        color: black;
+        margin-top: 8px;
+        display: block;
+        width: fit-content;
+      }
 
-    .search {
-      width: 100%;
-      padding: 12px 20px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      background-color: rgba(0, 0, 0, 0.03);
-      border-radius: 12px;
-      margin-bottom: 10px;
-      font: inherit;
-      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+");
-      background-position: 12px 50%;
-      background-repeat: no-repeat;
-      background-size: 18px;
-      padding-left: 38px;
-    }
+      .search {
+        width: 100%;
+        padding: 12px 20px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 12px;
+        margin-bottom: 10px;
+        font: inherit;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+");
+        background-position: 12px 50%;
+        background-repeat: no-repeat;
+        background-size: 18px;
+        padding-left: 38px;
+      }
 
-    .search:focus {
-      outline: none;
-    }
-  </style>
-</head>
+      .search:focus {
+        outline: none;
+      }
+    </style>
+  </head>
 
-<body>
-  <h1>Tetapux</h1>
+  <body>
+    <h1>Tetapux</h1>
 
-  <input type="text" class="search" placeholder="Search...">
-  <div class="cpa">
-    <div class="text">
-      <h4>Try Tetapux's free ad network</h4>
-      <p>Simple, free ad network for FOSS projects</p>
-      <a href="/ads/index.html">Try now for free →</a>
+    <input type="text" class="search" placeholder="Search..." />
+    <div class="cpa">
+      <div class="text">
+        <h4>Try Tetapux's free ad network</h4>
+        <p>Simple, free ad network for FOSS projects</p>
+        <a href="/ads/index.html">Try now for free →</a>
+      </div>
     </div>
-  </div>
 
-  <div class="pages" id="linksContainer">
-    <a href="/pages/underattack.html">Under attack</a>
-    <a href="/pages/popups.html">Fake popups</a>
-    <a href="/nnm-ae/1000/gb20-aderror.html">Fake McAfee Security Scan</a>
-    <a href="/pages/happyphone.html">Make phone happy</a>
-    <a href="/pages/adattack.html">A Lot Of Ads</a>
-    <a href="/pages/apkmod.html">Google Wallet APK mod</a>
-    <a href="/pages/filenow.html">Dowload File Now Free</a>
-    <a href="/pages/robhack.html">Roblox Executer Mod APK</a>
-    <a href="/pages/freeram.html">Download Free RAM</a>
-    <a href="/pages/disconitro.html">Free Discord Nitro</a>
-    <a href="/pages/infected.html">Your device has been infected</a>
-    <a href="/thousands/download-file.html">Download file with phone</a>
-    <a href="/thousands/confirm-not-robot-1000.html">Fake CAPTCHA</a>
-    <a href="/thousands/pvdgy-pangv1n.html">Lil Pudgy</a>
-    <a href="/pages/human.html">Human Verification</a>
-    <a href="/pages/allowvideo.html">Press "Allow" to watch video</a>
-    <a href="/pages/infiniredirect.html">Infinite redirects</a>
-    <a href="/pages/raffle.html">Free iPhone 16</a>
-    <a href="/thousands/coinmintcrypto-2025-localization.html">Crypto coin mint</a>
-    <a href="/red/filedownload.html">Your File is Ready to Download</a>
-    <a href="/pages/update-chrome.html">Update Chrome</a>
-    <a href="/pages/update-chrome2.html">Update Chrome 2</a>
-    <a href="/red/live-tv.html">Premium IPTV</a>
-    <a href="/nnm-ae/1000/windows-defender-iax.html">Free Windows Defender Pro</a>
-    <a href="/red/freestoragedownload-id192.html">Free storage guide</a>
-    <a href="/red/nitro-raffle.html">Discord Nitro Raffle</a>
-    <a href="/pages/makeithappy.html">Will you make your phone happy?</a>
-    <a href="/pages/access-content.html">Incredible VR content</a>
-    <a href="/pages/winr-captcha.html">Fake Win+R CAPTCHA (bun install)</a>
-    <a href="/red/premium-colors/bun.html">Bun - Many Such Cases</a>
-    <a href="/red/premium-colors/vpn-subscripti.html">UltraV VPN</a>
-    <a href="/pages/fake-virus.html">Windows Defender virus</a>
-    <a href="/red/premium-colors/search/search.html">HetaSearch</a>
-    <a href="/red/premium-colors/adblock.html">Adblock Download</a>
-    <a href="/pages/facebook.html">Facebook login</a>
-    <a href="/pages/updchrome.html">Update chrome</a>
-    <a href="/heta/heta-challenge.html">Fake cloudflare captcha</a>
-  </div>
+    <div class="pages">
+      <h2>Fake CAPTCHAS</h2>
+      <a href="/pages/winr-captcha.html">Basic fake Run Dialog reCAPTCHA</a>
+      <a href="/heta/heta-challenge.html">Fake Run Dialog Turnstile CAPTCHA</a>
+      <a href="/heta/gemini-refake.html">Better Run Dialog reCAPTCHA</a>
+      <a href="/thousands/confirm-not-robot-1000.html"
+        >Simple reCAPTCHA clone</a
+      >
+      <a href="/pages/human.html">Notifications prompt trick CAPTCHA</a>
 
-  <tetapux-ads width="100%" style="margin-top:20px;display:block;"></tetapux-ads>
+      <h2>Scareware</h2>
+      <a href="/pages/underattack.html">Under attack</a>
+      <a href="/nnm-ae/1000/gb20-aderror.html">Fake McAfee Security Scan</a>
+      <a href="/pages/infected.html">Your device has been infected</a>
+      <a href="/pages/popups.html">Fake virus popups</a>
+      <a href="/pages/fake-virus.html">Windows Defender virus</a>
 
-  <p style="text-align:center;margin-top:30px;"><a href="/about.html" style="color:black;font-size:13px">About</a></p>
+      <h2>Ads</h2>
+      <a href="/pages/adattack.html"
+        >Brand ads with tagline (flashing lights)</a
+      >
 
-  <script>
-    document.querySelector('.search').addEventListener('input', function () {
-      const input = document.querySelector('.search').value.toLowerCase();
-      const links = document.querySelectorAll('.pages a');
-      links.forEach(link => {
-        const text = link.textContent.toLowerCase();
-        link.style.display = text.includes(input) ? '' : 'none';
+      <h2>Phishing</h2>
+      <a href="/pages/facebook.html">Facebook login</a>
+      <a href="/pages/disconitro.html">Free Discord Nitro</a>
+      <a href="/thousands/pvdgy-pangv1n.html">Lil Pudgy</a>
+
+      <h2>Promoting malware</h2>
+      <a href="/pages/apkmod.html">Google Wallet APK mod</a>
+      <a href="/pages/filenow.html">Dowload File Now Free</a>
+      <a href="/pages/robhack.html">Roblox Executer Mod APK</a>
+      <a href="/pages/freeram.html">Download Free RAM</a>
+      <a href="/pages/update-chrome.html">Update Chrome</a>
+      <a href="/pages/update-chrome2.html">Update Chrome 2</a>
+      <a href="/pages/updchrome.html">Update chrome 3</a>
+
+      <h2>Fake giveaways</h2>
+      <a href="/pages/raffle.html">Free iPhone 16</a>
+      <a href="/red/nitro-raffle.html">Discord Nitro Raffle</a>
+
+      <h2>Other</h2>
+      <a href="/pages/happyphone.html">Make phone happy</a>
+      <a href="/thousands/download-file.html">Download file with phone</a>
+      <a href="/pages/allowvideo.html">Press "Allow" to watch video</a>
+      <a href="/thousands/coinmintcrypto-2025-localization.html"
+        >Crypto coin mint</a
+      >
+      <a href="/red/live-tv.html">Premium IPTV</a>
+      <a href="/nnm-ae/1000/windows-defender-iax.html"
+        >Free Windows Defender Pro</a
+      >
+      <a href="/red/freestoragedownload-id192.html">Free storage guide</a>
+      <a href="/pages/makeithappy.html">Will you make your phone happy?</a>
+      <a href="/pages/access-content.html">Incredible VR content</a>
+      <a href="/red/premium-colors/bun.html">Bun - Many Such Cases</a>
+      <a href="/red/premium-colors/vpn-subscripti.html">UltraV VPN</a>
+      <a href="/red/premium-colors/search/search.html">HetaSearch</a>
+      <a href="/red/premium-colors/adblock.html">Adblock Download</a>
+    </div>
+
+    <tetapux-ads
+      width="100%"
+      style="margin-top: 20px; display: block"
+    ></tetapux-ads>
+
+    <p style="text-align: center; margin-top: 30px">
+      <a href="/about.html" style="color: black; font-size: 13px">About</a>
+    </p>
+
+    <script>
+      document.querySelector(".search").addEventListener("input", function () {
+        const input = document.querySelector(".search").value.toLowerCase();
+        const links = document.querySelectorAll(".pages a");
+        links.forEach((link) => {
+          const text = link.textContent.toLowerCase();
+          link.style.display = text.includes(input) ? "" : "none";
+        });
+
+        document.querySelectorAll(".pages h2").forEach((h2) => {
+          h2.style.display = input ? "none" : "";
+        });
+
+        document.querySelector(".cpa").style.display = input ? "none" : "flex";
       });
 
-      document.querySelector('.cpa').style.display = input ? 'none' : 'flex';
-    });
-
-    document.querySelector('.search').focus();
-  </script>
-  <script src="/aw.js" async></script>
-
-</body>
-
+      document.querySelector(".search").focus();
+    </script>
+    <script src="/aw.js" async></script>
+  </body>
 </html>

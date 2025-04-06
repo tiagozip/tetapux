@@ -3,20 +3,24 @@
  */
 
 (function () {
-    const SUPABASE_PROJECT_URL = window.TETAPUXADS_SUPABASE_PROJECT_URL || "https://lfbdhntyamptnrquwbcy.supabase.co";
-    const SUPABASE_KEY = window.TETAPUX_SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo";
-    let ads;
+  const SUPABASE_PROJECT_URL =
+    window.TETAPUXADS_SUPABASE_PROJECT_URL ||
+    "https://lfbdhntyamptnrquwbcy.supabase.co";
+  const SUPABASE_KEY =
+    window.TETAPUX_SUPABASE_KEY ||
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo";
+  let ads;
 
-    class TetapuxAds extends HTMLElement {
-        constructor() {
-            super();
-            const shadow = this.attachShadow({ mode: 'open' });
-            const div = document.createElement('div');
-            const vertical = this.getAttribute('vertical') !== null;
-            const width = this.getAttribute('width') || 'auto';
-            const height = this.getAttribute('height') || 'auto';
+  class TetapuxAds extends HTMLElement {
+    constructor() {
+      super();
+      const shadow = this.attachShadow({ mode: "open" });
+      const div = document.createElement("div");
+      const vertical = this.getAttribute("vertical") !== null;
+      const width = this.getAttribute("width") || "auto";
+      const height = this.getAttribute("height") || "auto";
 
-            div.innerHTML = `
+      div.innerHTML = `
                 ${this.getAttribute("inject") || ""}
                 <style>
                     * {box-sizing: border-box;}
@@ -31,9 +35,9 @@
                         display: none;
                         border: 1.5px solid rgba(0, 0, 0, 0.05);
                         position: relative;
-                        flex-direction: ${vertical ? 'column' : 'row'};
+                        flex-direction: ${vertical ? "column" : "row"};
                         align-items: center;
-                        ${vertical ? 'justify-content: center;' : ''}
+                        ${vertical ? "justify-content: center;" : ""}
                         padding: 10px;
                         border-radius: 12px;
                         gap: 15px;
@@ -60,8 +64,8 @@
                         border-radius: 8px;
                     }
                     .a-container div {
-                        text-align: ${vertical ? 'center' : 'left'};
-                        margin-top: ${vertical ? '10px' : '0'};
+                        text-align: ${vertical ? "center" : "left"};
+                        margin-top: ${vertical ? "10px" : "0"};
                     }
                     .a-container h4 {
                         margin: 0;
@@ -89,47 +93,49 @@
                         <a class="credit" href="https://tetapux.vercel.app/ads" target="_blank">FOSS ads</a>
                     </div>
                 </div>`;
-            shadow.appendChild(div);
+      shadow.appendChild(div);
 
-            let currentAdUrl = null;
+      let currentAdUrl = null;
 
-            const reload = function () {
-                const wai = setInterval(() => {
-                    if (!ads) {
-                        return;
-                    }
+      const reload = function () {
+        const wai = setInterval(() => {
+          if (!ads) {
+            return;
+          }
 
-                    clearInterval(wai);
+          clearInterval(wai);
 
-                    shadow.querySelector(".a-container").style.display = "flex";
+          shadow.querySelector(".a-container").style.display = "flex";
 
-                    const randomAd = ads[Math.floor(Math.random() * ads.length)];
-                    currentAdUrl = randomAd.link;
+          const randomAd = ads[Math.floor(Math.random() * ads.length)];
+          currentAdUrl = randomAd.link;
 
-                    shadow.querySelector(".a-container").addEventListener("click", function (e) {
-                        if (e.target.href) return;
-                        window.open(currentAdUrl, "_blank");
-                    });
-                    shadow.querySelector('img').src = randomAd.logo;
-                    shadow.querySelector('h4').innerText = randomAd.title;
-                    shadow.querySelector('p').innerText = randomAd.alt;
+          shadow
+            .querySelector(".a-container")
+            .addEventListener("click", function (e) {
+              if (e.target.href) return;
+              window.open(currentAdUrl, "_blank");
+            });
+          shadow.querySelector("img").src = randomAd.logo;
+          shadow.querySelector("h4").innerText = randomAd.title;
+          shadow.querySelector("p").innerText = randomAd.alt;
 
-                    setTimeout(reload, 30000)
-                }, 100);
-            }
+          setTimeout(reload, 30000);
+        }, 100);
+      };
 
-            reload();
-        }
+      reload();
     }
+  }
 
-    customElements.define('tetapux-ads', TetapuxAds);
+  customElements.define("tetapux-ads", TetapuxAds);
 
-    fetch(`${SUPABASE_PROJECT_URL}/rest/v1/ads?select=*&published=eq.true`, {
-        headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-        }
-    }).then(async (response) => {
-        ads = await response.json();
-    });
+  fetch(`${SUPABASE_PROJECT_URL}/rest/v1/ads?select=*&published=eq.true`, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + SUPABASE_KEY,
+    },
+  }).then(async (response) => {
+    ads = await response.json();
+  });
 })();
