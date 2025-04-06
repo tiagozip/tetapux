@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Screen</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #loading-screen {
+            display: grid;
+            grid-template-columns: repeat(3, 50px);
+            grid-gap: 5px;
+        }
+        .cube {
+            width: 50px;
+            height: 50px;
+            animation: resize 1.5s linear infinite;
+        }
+        .cube:not(:first-child) {
+            animation-delay: 0.2s;
+        }
+        @keyframes resize {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(0.5);
+            }
+        }
+
+        #verification-page {
+            display: none;
+            text-align: center;
+        }
+        #verification-page h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        #verification-page a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        #verification-page a:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="verification-page">
+        <h1>Click Here to Verify that your phone is Happy</h1>
+        <a href="#">Click Here</a>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('verification-page').style.display = 'block';
+        }, 3500);
+        
+        document.querySelectorAll('.cube').forEach(cube => {
+            cube.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+        });
+    </script>
+</body>
+</html>
