@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>X Content Appeal</title>
+    <!-- Favicon using inline SVG -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 1227%22 fill=%22white%22><path d=%22M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.31H892.476L569.165 687.854V687.828Z%22/></svg>"
+    />
+
+    <style>
+      /* General Styles */
+      body {
+        background-color: #000000;
+        color: #e7e9ea;
+        font-family: "TwitterChirp", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.5;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      a {
+        color: #1d9bf0;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      button {
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      svg {
+        vertical-align: middle; /* Better alignment */
+        fill: currentColor; /* Inherit color by default */
+      }
+
+      /* Main Page Content Styles */
+      .main-page-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px 20px 20px;
+        box-sizing: border-box;
+        text-align: center;
+        position: relative;
+      }
+
+      .page-header {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        display: flex;
+        align-items: center;
+        color: #e7e9ea;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      .header-logo {
+        width: 28px;
+        height: 28px;
+        /* fill set via specific class or parent color */
+        margin-right: 8px;
+      }
+
+      .content-appeal {
+        max-width: 600px;
+        margin-top: 40px;
+      }
+
+      .content-appeal h1 {
+        font-size: 3.8rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 8px;
+        line-height: 1.1;
+      }
+
+      .content-appeal .subheading {
+        font-size: 1.1rem;
+        color: #71767b;
+        margin-bottom: 35px;
+        line-height: 1.3;
+      }
+
+      .action-button {
+        background-color: #eff3f4;
+        color: #0f1419;
+        border: none;
+        border-radius: 9999px;
+        padding: 10px 20px;
+        font-size: 15px;
+        font-weight: bold;
+        transition: background-color 0.2s ease; /* Keep subtle hover */
+        min-height: 36px;
+        min-width: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .action-button:hover {
+        background-color: #d7dbdc;
+      }
+
+      /* Footer Styles */
+      .page-footer {
+        width: 100%;
+        padding: 12px 16px;
+        box-sizing: border-box;
+        margin-top: 20px;
+      }
+
+      .page-footer nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px 12px;
+        margin-bottom: 8px;
+      }
+
+      .page-footer nav a,
+      .page-footer .copyright {
+        color: #71767b;
+        font-size: 13px;
+        line-height: 16px;
+      }
+      .page-footer nav a:hover {
+        text-decoration: underline;
+      }
+
+      .page-footer .copyright {
+        text-align: center;
+        display: block;
+        margin: 0;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(91, 112, 131, 0.4); /* Overlay color */
+        display: none; /* Hidden by default */
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        /* Removed transitions for instant show/hide */
+      }
+
+      .modal-overlay.visible {
+        display: flex; /* Show when visible class is added */
+      }
+
+      .modal-content {
+        background-color: #000000;
+        border-radius: 16px;
+        padding: 0;
+        width: 90%;
+        max-width: 600px;
+        min-height: 550px;
+        max-height: 90vh;
+        /* box-shadow removed */
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        overflow: hidden; /* Hide potential overflow, child will scroll */
+      }
+
+      .modal-top-bar {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        min-height: 53px;
+        box-sizing: border-box;
+        position: relative; /* Make it positioning context for close button */
+        flex-shrink: 0; /* Prevent shrinking */
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        padding: 8px;
+        margin: 0; /* Reset margin */
+        display: flex; /* Use flex for centering icon inside */
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+        position: absolute; /* Position relative to top-bar */
+        left: 8px; /* Position from left edge */
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%); /* Precise vertical centering */
+        color: #e7e9ea; /* Set icon color */
+      }
+
+      .close-button svg {
+        width: 20px;
+        height: 20px;
+        /* fill is inherited via 'color' on button */
+      }
+      .close-button:hover {
+        background-color: rgba(231, 233, 234, 0.1);
+      }
+
+      .modal-header {
+        flex-grow: 1;
+        text-align: center;
+        /* Logo centered by flex layout */
+        color: #e7e9ea; /* Set icon color */
+        padding: 0 40px; /* Add padding to prevent overlap with button */
+      }
+
+      .modal-logo {
+        width: 30px;
+        height: 30px;
+        display: inline-block; /* Allow centering */
+        /* fill is inherited via 'color' on parent */
+      }
+
+      .modal-body {
+        padding: 0 32px 32px 32px;
+        flex-grow: 1; /* Take remaining space */
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto; /* Allow body content to scroll if needed */
+      }
+
+      .modal-body h2 {
+        font-size: 23px;
+        font-weight: bold;
+        color: #e7e9ea;
+        margin-top: 12px;
+        margin-bottom: 20px;
+        text-align: left;
+        line-height: 28px;
+      }
+
+      #login-form {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* Push signup link down */
+      }
+
+      .input-group {
+        margin-bottom: 24px;
+        position: relative;
+      }
+
+      /* Floating Label Style */
+      .input-group label {
+        position: absolute;
+        top: 18px;
+        left: 8px;
+        color: #71767b;
+        font-size: 17px;
+        line-height: 20px;
+        pointer-events: none;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 22px 8px 6px 8px;
+        background-color: transparent;
+        border: 1px solid #38444d;
+        border-radius: 4px;
+        color: #e7e9ea;
+        font-size: 17px;
+        line-height: 20px;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease;
+        caret-color: #1d9bf0;
+      }
+
+      .input-group input:focus + label,
+      .input-group input:not(:placeholder-shown) + label {
+        top: 4px;
+        font-size: 13px;
+        line-height: 16px;
+        color: #1d9bf0;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: #1d9bf0;
+        box-shadow: 0 0 0 1px #1d9bf0; /* Keep focus glow */
+      }
+
+      .input-group input:not(:placeholder-shown):not(:focus) + label {
+        color: #71767b;
+      }
+      .input-group
+        input#email[value]:not(:placeholder-shown):not(:focus)
+        + label {
+        top: 4px;
+        font-size: 13px;
+        line-height: 16px;
+        color: #71767b;
+      }
+
+      .input-group input#email {
+        font-weight: normal;
+      }
+
+      .password-group {
+        position: relative;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+        color: #71767b; /* Set base color for icon */
+      }
+
+      .toggle-password svg {
+        width: 20px;
+        height: 20px;
+        /* fill is inherited via 'color' on button */
+      }
+      .toggle-password:hover {
+        background-color: rgba(29, 155, 240, 0.1);
+        color: #1d9bf0; /* Change icon color on hover */
+      }
+
+      .toggle-password .hidden {
+        display: none;
+      }
+
+      .forgot-password {
+        font-size: 15px;
+        line-height: 20px;
+        color: #1d9bf0;
+        margin-top: -12px;
+        margin-bottom: 24px;
+        display: inline-block;
+        text-align: left;
+      }
+
+      .login-button {
+        width: 100%;
+        padding: 0 32px;
+        min-height: 52px;
+        font-size: 17px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
+
+      .signup-link {
+        font-size: 15px;
+        line-height: 20px;
+        color: #71767b;
+        text-align: left;
+        margin-top: auto; /* Push to bottom */
+        padding-bottom: 16px;
+      }
+
+      .signup-link a {
+        color: #1d9bf0;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 680px) {
+        .modal-content {
+          width: 100%;
+          height: 100%;
+          max-height: 100%;
+          border-radius: 0;
+          min-height: 0;
+        }
+        .content-appeal h1 {
+          font-size: 2.5rem;
+        }
+        .page-footer nav {
+          justify-content: center;
+          padding: 0 10px;
+        }
+      }
+      @media (max-width: 400px) {
+        .content-appeal h1 {
+          font-size: 2rem;
+        }
+        .content-appeal .subheading {
+          font-size: 1rem;
+        }
+        .modal-body {
+          padding: 0 16px 16px 16px;
+        }
+        .modal-body h2 {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Appeal Page Content -->
+    <div class="main-page-container">
+      <header class="page-header">
+        <!-- X Logo SVG -->
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="header-logo">
+          <g>
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            ></path>
+          </g>
+        </svg>
+        <span>Support</span>
+      </header>
+
+      <main class="content-appeal">
+        <h1>X Content Appeal</h1>
+        <p class="subheading">
+          Appeal Copyright content reports from the X Support Team
+        </p>
+        <button id="submit-appeal-button" class="action-button">
+          Submit Appeal
+        </button>
+      </main>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+      <!-- Starts hidden -->
+      <div class="modal-content">
+        <div class="modal-top-bar">
+          <!-- Close Button SVG -->
+          <button
+            id="close-modal-button"
+            class="close-button"
+            aria-label="Close"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <g>
+                <path
+                  d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"
+                ></path>
+              </g>
+            </svg>
+          </button>
+          <div class="modal-header">
+            <!-- X Logo SVG -->
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="modal-logo">
+              <g>
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                ></path>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <h2>Enter your password</h2>
+
+          <form id="login-form">
+            <div class="input-group">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value=""
+                required
+              />
+              <label for="email">Email</label>
+            </div>
+            <div class="input-group password-group">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+              />
+              <label for="password">Password</label>
+              <button
+                type="button"
+                id="toggle-password"
+                class="toggle-password"
+                aria-label="Show password"
+              >
+                <!-- Eye Icon SVG -->
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="eye-icon">
+                  <g>
+                    <path
+                      d="M12 7c-2.48 0-4.75.99-6.49 2.64.47-.42.98-.79 1.52-1.11C8.46 7.16 10.16 6 12 6s3.54 1.16 4.97 2.53c.54.32 1.05.69 1.52 1.11C16.75 7.99 14.48 7 12 7zm0 10c-2.48 0-4.75-.99-6.49-2.64-.47.42-.98.79-1.52 1.11C5.54 16.84 7.84 18 12 18s6.46-1.16 7.97-2.53c-.54-.32-1.05-.69-1.52-1.11C16.75 16.01 14.48 17 12 17zm0-6.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5zM2.71 11.44C4.75 8.49 8.18 6.5 12 6.5s7.25 1.99 9.29 4.94c.31.46.31 1.04 0 1.5C19.25 15.91 15.82 18 12 18s-7.25-1.99-9.29-4.94c-.31-.46-.31-1.04 0-1.5z"
+                    ></path>
+                  </g>
+                </svg>
+                <!-- Eye Slash Icon SVG (initially hidden) -->
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  class="eye-slash-icon hidden"
+                >
+                  <g>
+                    <path
+                      d="M12 17c-2.48 0-4.75-.99-6.49-2.64-.47.42-.98.79-1.52 1.11C5.54 16.84 7.84 18 12 18s6.46-1.16 7.97-2.53c-.54-.32-1.05-.69-1.52-1.11C16.75 16.01 14.48 17 12 17zm0-11c-2.48 0-4.75.99-6.49 2.64.47-.42.98-.79 1.52-1.11C8.46 7.16 10.16 6 12 6s3.54 1.16 4.97 2.53c.54.32 1.05.69 1.52 1.11C16.75 7.99 14.48 7 12 7zm0 3.5c.09 0 .18.01.27.02l-3.77 3.77c-.01-.09-.02-.18-.02-.27 0-1.38 1.12-2.5 2.5-2.5zm4.73 1.23l-1.24 1.24c.09.43.15.88.15 1.34 0 1.38-1.12 2.5-2.5 2.5-.46 0-.91-.07-1.34-.15l-1.24 1.24C10.05 14.88 11 15.5 12 15.5c1.38 0 2.5-1.12 2.5-2.5 0-1-.62-1.95-1.5-2.34z M2.71 11.44C4.75 8.49 8.18 6.5 12 6.5c1.38 0 2.69.35 3.88.96l-1.5 1.5C13.6 8.59 12.84 8.3 12 8.3c-2.13 0-3.99 1.44-4.74 3.41l-1.97-1.97C4.12 10.16 3.06 10.78 2.71 11.44zm18.58.06c.34.66.96 1.28 2.12 2.12l-1.97 1.97C20.01 14.06 21.87 12.7 22.74 11.5c-.31-.46-.31-1.04 0-1.5z M3.53 2.11l1.41-1.41 18.38 18.38-1.41 1.41L3.53 2.11z"
+                    ></path>
+                  </g>
+                </svg>
+              </button>
+            </div>
+
+            <a href="#" class="forgot-password">Forgot password?</a>
+
+            <button type="submit" class="login-button action-button">
+              Log in
+            </button>
+          </form>
+
+          <p class="signup-link">
+            Don't have an account? <a href="#">Sign up</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <nav>
+        <a href="#">About</a>
+        <a href="#">Download the X app</a>
+        <a href="#">Grok</a>
+        <a href="#">Help Center</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Ads info</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Brand Resources</a>
+        <a href="#">Advertising</a>
+        <a href="#">Marketing</a>
+        <a href="#">X for Business</a>
+        <a href="#">Developers</a>
+        <a href="#">Directory</a>
+        <a href="#">Settings</a>
+      </nav>
+      <p class="copyright">© 2024 X Corp.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const submitAppealButton = document.getElementById(
+          "submit-appeal-button"
+        );
+        const loginModal = document.getElementById("login-modal");
+        const closeModalButton = document.getElementById("close-modal-button");
+        const loginForm = document.getElementById("login-form");
+        const passwordInput = document.getElementById("password");
+        const togglePasswordButton = document.getElementById("toggle-password");
+        const eyeIcon = togglePasswordButton.querySelector(".eye-icon");
+        const eyeSlashIcon =
+          togglePasswordButton.querySelector(".eye-slash-icon");
+        const emailInput = document.getElementById("email");
+
+        // --- Input Label Logic ---
+        const inputs = document.querySelectorAll(".input-group input");
+
+        function checkInput(input) {
+          if (input.value.trim() !== "" || input.placeholder?.trim() !== "") {
+            // Safely check placeholder
+            input.parentNode.classList.add("has-value");
+          } else {
+            input.parentNode.classList.remove("has-value");
+          }
+          if (
+            !input.hasAttribute("placeholder") ||
+            input.getAttribute("placeholder") === ""
+          ) {
+            input.setAttribute("placeholder", " ");
+          }
+        }
+
+        inputs.forEach((input) => {
+          checkInput(input); // Initial check
+          input.addEventListener("input", () => checkInput(input));
+          input.addEventListener("focus", () => {
+            if (
+              !input.hasAttribute("placeholder") ||
+              input.getAttribute("placeholder") === ""
+            ) {
+              input.setAttribute("placeholder", " ");
+            }
+          });
+          input.addEventListener("blur", () => {
+            if (input.id === "password" && input.value === "") {
+              input.value = "••••••••";
+              input.type = "password";
+              eyeIcon.classList.remove("hidden");
+              eyeSlashIcon.classList.add("hidden");
+              togglePasswordButton.setAttribute("aria-label", "Show password");
+            }
+            checkInput(input);
+          });
+        });
+
+        if (passwordInput) {
+          passwordInput.addEventListener("focus", () => {
+            if (passwordInput.value === "••••••••") {
+              passwordInput.value = "";
+            }
+            if (
+              passwordInput.type !== "password" &&
+              passwordInput.type !== "text"
+            ) {
+              passwordInput.type = "password";
+            }
+          });
+        }
+
+        // --- Modal Logic ---
+        function openModal() {
+          passwordInput.value = "••••••••";
+          passwordInput.type = "password";
+          eyeIcon.classList.remove("hidden");
+          eyeSlashIcon.classList.add("hidden");
+          togglePasswordButton.setAttribute("aria-label", "Show password");
+          checkInput(emailInput);
+          checkInput(passwordInput);
+          loginModal.classList.add("visible"); // Use class to show instantly
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+          loginModal.classList.remove("visible"); // Use class to hide instantly
+          document.body.style.overflow = "";
+
+          // No need for timeout as animations are removed
+          passwordInput.value = "••••••••"; // Reset for next open
+          passwordInput.type = "password";
+          eyeIcon.classList.remove("hidden");
+          eyeSlashIcon.classList.add("hidden");
+          togglePasswordButton.setAttribute("aria-label", "Show password");
+          checkInput(passwordInput);
+        }
+
+        if (submitAppealButton) {
+          submitAppealButton.addEventListener("click", openModal);
+        }
+
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", closeModal);
+        }
+
+        if (loginModal) {
+          loginModal.addEventListener("click", (event) => {
+            // Only close if the click is directly on the overlay background
+            if (event.target === loginModal) {
+              closeModal();
+            }
+          });
+        }
+
+        // --- Password Toggle Logic ---
+        if (togglePasswordButton && passwordInput) {
+          togglePasswordButton.addEventListener("click", () => {
+            if (passwordInput.value === "••••••••") {
+              passwordInput.value = "";
+            }
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            eyeIcon.classList.toggle("hidden", isPassword);
+            eyeSlashIcon.classList.toggle("hidden", !isPassword);
+            togglePasswordButton.setAttribute(
+              "aria-label",
+              isPassword ? "Hide password" : "Show password"
+            );
+            passwordInput.focus();
+          });
+        }
+
+        // --- Form Submission Logic ---
+        if (loginForm) {
+          loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const email = emailInput.value;
+            const password =
+              passwordInput.value === "••••••••" ? "" : passwordInput.value;
+            console.log("Login attempt:", { email, password });
+            alert(`Login attempt with Email: ${email}`);
+            closeModal();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
