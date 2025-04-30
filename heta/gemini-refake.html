@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Human Verification Task</title>
+    <title>Checking your browser…</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
@@ -35,21 +35,18 @@
       }
 
       .recaptcha-container {
-        width: 304px;
-        border: 1px solid #d3d3d3;
-        border-radius: 3px;
-        background-color: #f9f9f9;
+        width: 300px;
+        border: 1px solid #e0e0e0;
+        background-color: #fafafa;
         position: relative;
         overflow: hidden;
         transition: height 0.3s ease-in-out, background-color 0.3s ease-in-out;
         font-family: "Roboto", sans-serif;
       }
 
-      .recaptcha-container.initial {
-        height: 70px;
-      }
+      .recaptcha-container.initial,
       .recaptcha-container.loading {
-        height: 70px;
+        height: 65px;
       }
       .recaptcha-container.showing-steps {
         height: auto;
@@ -87,8 +84,8 @@
       .checkbox-visual {
         width: 24px;
         height: 24px;
-        border: 2px solid #c1c1c1;
-        border-radius: 2px;
+        border: 2px solid #6d6d6d;
+        border-radius: 3px;
         background-color: #fff;
         margin-right: 12px;
         display: flex;
@@ -314,7 +311,7 @@
           <label class="checkbox-area" for="robot-checkbox">
             <input type="checkbox" id="robot-checkbox" />
             <span class="checkbox-visual"></span>
-            <span class="checkbox-label">I'm not a robot</span>
+            <span class="checkbox-label">Verify you are human</span>
           </label>
           <div class="recaptcha-logo-area">
             <svg
