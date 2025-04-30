@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading...</title>
+    <style>
+      body {
+        padding: 0px;
+        margin: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        color: #333;
+        flex-direction: column;
+
+        --cap-font: system, -apple-system, "BlinkMacSystemFont",
+          ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI",
+          "Helvetica Neue", "Lucida Grande", "Ubuntu", "arial", sans-serif;
+        --cap-color: #212121;
+        --cap-background: #fdfdfd;
+        --cap-border-color: #dddddd8f;
+        --cap-border-radius: 14px;
+        --cap-checkbox-border: 1px solid #aaaaaad1;
+        --cap-checkbox-border-radius: 6px;
+        --cap-checkbox-background: #fafafa91;
+        --cap-widget-width: 240px;
+        --cap-widget-padding: 14px;
+        --cap-checkbox-size: 24px;
+        --cap-checkbox-margin: 2px;
+        --cap-transition-duration: 0.2s;
+        --cap-gap: 15px;
+        --cap-opacity-hover: 0.8;
+        --cap-hover-filter: brightness(97%);
+        --cap-active-scale: 0.98;
+        --cap-credits-font-size: 12px;
+        --cap-spinner-color: black;
+        --cap-spinner-background-color: #eee;
+        --cap-error-cross: url(
+          data:image/svg + xml,
+          %3Csvgxmlns="http://www.w3.org/2000/svg"width="96"height="96"viewBox="0 0 24 24"%3E%3Cpathfill="%23f55b50"d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 18a8 8 0 0 1-8-8a8 8 0 0 1 8-8a8 8 0 0 1 8 8a8 8 0 0 1-8 8"/%3E%3C/svg%3E
+        );
+        --cap-checkmark: url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cstyle%3E%40keyframes%20anim%7B0%25%7Bstroke-dashoffset%3A23.21320343017578px%7Dto%7Bstroke-dashoffset%3A0%7D%7D%3C%2Fstyle%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%2300a67d%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22m5%2012%205%205L20%207%22%20style%3D%22stroke-dashoffset%3A0%3Bstroke-dasharray%3A23.21320343017578px%3Banimation%3Aanim%20.5s%20ease%22%2F%3E%3C%2Fsvg%3E);
+        --cap-spinner-thickness: 5px;
+      }
+      body h1 {
+        font-size: 16px;
+        margin: 0;
+        padding: 0;
+        font-weight: 500;
+        margin-bottom: 18px;
+        margin-top: 5px;
+        text-align: center;
+      }
+
+      .spinny {
+        width: 30px;
+        height: 30px;
+        --cap-spinner-color: #F48121;
+        background: conic-gradient(
+          var(--cap-spinner-color) 0%,
+          var(--cap-spinner-color) 30%,
+          var(--cap-spinner-background-color) 50%,
+          var(--cap-spinner-background-color) 100%
+        ) !important;
+        animation: spin 0.4s infinite linear !important;
+      }
+    </style>
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101.4 33.5" style="width: 100px;margin-bottom:14px;">
+      <defs>
+        <style>
+          .a {
+            fill: #fff;
+          }
+
+          .b {
+            fill: #f48120;
+          }
+
+          .c {
+            fill: #faad3f;
+          }
+
+          .d {
+            fill: #404041;
+          }
+        </style>
+      </defs>
+      <path class="a" d="M94.7,10.6,89.1,9.3l-1-.4-25.7.2V21.5l32.3.1Z" />
+      <path
+        class="b"
+        d="M84.2,20.4a2.85546,2.85546,0,0,0-.3-2.6,3.09428,3.09428,0,0,0-2.1-1.1l-17.4-.2c-.1,0-.2-.1-.3-.1a.1875.1875,0,0,1,0-.3c.1-.2.2-.3.4-.3L82,15.6a6.29223,6.29223,0,0,0,5.1-3.8l1-2.6c0-.1.1-.2,0-.3A11.39646,11.39646,0,0,0,66.2,7.7a5.45941,5.45941,0,0,0-3.6-1A5.20936,5.20936,0,0,0,58,11.3a5.46262,5.46262,0,0,0,.1,1.8A7.30177,7.30177,0,0,0,51,20.4a4.102,4.102,0,0,0,.1,1.1.3193.3193,0,0,0,.3.3H83.5c.2,0,.4-.1.4-.3Z"
+      />
+      <path
+        class="c"
+        d="M89.7,9.2h-.5c-.1,0-.2.1-.3.2l-.7,2.4a2.85546,2.85546,0,0,0,.3,2.6,3.09428,3.09428,0,0,0,2.1,1.1l3.7.2c.1,0,.2.1.3.1a.1875.1875,0,0,1,0,.3c-.1.2-.2.3-.4.3l-3.8.2a6.29223,6.29223,0,0,0-5.1,3.8l-.2.9c-.1.1,0,.3.2.3H98.5a.26517.26517,0,0,0,.3-.3,10.87184,10.87184,0,0,0,.4-2.6,9.56045,9.56045,0,0,0-9.5-9.5"
+      />
+      <path
+        class="d"
+        d="M100.5,27.2a.9.9,0,1,1,.9-.9.89626.89626,0,0,1-.9.9m0-1.6a.7.7,0,1,0,.7.7.68354.68354,0,0,0-.7-.7m.4,1.2h-.2l-.2-.3h-.2v.3h-.2v-.9h.5a.26517.26517,0,0,1,.3.3c0,.1-.1.2-.2.3l.2.3Zm-.3-.5c.1,0,.1,0,.1-.1a.09794.09794,0,0,0-.1-.1h-.3v.3h.3Zm-89.7-.9h2.2v6h3.8v1.9h-6Zm8.3,3.9a4.10491,4.10491,0,0,1,4.3-4.1,4.02,4.02,0,0,1,4.2,4.1,4.10491,4.10491,0,0,1-4.3,4.1,4.07888,4.07888,0,0,1-4.2-4.1m6.3,0a2.05565,2.05565,0,0,0-2-2.2,2.1025,2.1025,0,0,0,0,4.2c1.2.2,2-.8,2-2m4.9.5V25.4h2.2v4.4c0,1.1.6,1.7,1.5,1.7a1.39926,1.39926,0,0,0,1.5-1.6V25.4h2.2v4.4c0,2.6-1.5,3.7-3.7,3.7-2.3-.1-3.7-1.2-3.7-3.7m10.7-4.4h3.1c2.8,0,4.5,1.6,4.5,3.9s-1.7,4-4.5,4h-3V25.4Zm3.1,5.9a2.00909,2.00909,0,1,0,0-4h-.9v4Zm7.6-5.9h6.3v1.9H54v1.3h3.7v1.8H54v2.9H51.8Zm9.4,0h2.2v6h3.8v1.9h-6Zm11.7-.1h2.2l3.4,8H76.1l-.6-1.4H72.4l-.6,1.4H69.5Zm2,4.9L74,28l-.9,2.2Zm6.4-4.8H85a3.41818,3.41818,0,0,1,2.6.9,2.62373,2.62373,0,0,1-.9,4.2l1.9,2.8H86.1l-1.6-2.4h-1v2.4H81.3Zm3.6,3.8c.7,0,1.2-.4,1.2-.9,0-.6-.5-.9-1.2-.9H83.5v1.9h1.4Zm6.5-3.8h6.4v1.8H93.6v1.2h3.8v1.8H93.6v1.2h4.3v1.9H91.4ZM6.1,30.3a1.97548,1.97548,0,0,1-1.8,1.2,2.1025,2.1025,0,0,1,0-4.2,2.0977,2.0977,0,0,1,1.9,1.3H8.5a4.13459,4.13459,0,0,0-4.2-3.3A4.1651,4.1651,0,0,0,0,29.4a4.07888,4.07888,0,0,0,4.2,4.1,4.31812,4.31812,0,0,0,4.2-3.2Z"
+      />
+    </svg>
+
+    <h1>Checking your browser…</h1>
+    <div class="spinny"></div>
+    <div class="captcha" role="button" tabindex="0" style="display: none">
+      <style>
+        .captcha {
+          background-color: var(--cap-background);
+          border: 1px solid var(--cap-border-color);
+          border-radius: var(--cap-border-radius);
+          width: var(--cap-widget-width);
+          display: flex;
+          align-items: center;
+          padding: var(--cap-widget-padding);
+          gap: var(--cap-gap);
+          cursor: pointer;
+          transition: filter var(--cap-transition-duration),
+            transform var(--cap-transition-duration);
+          position: relative;
+          -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+          overflow: hidden;
+          color: var(--cap-color);
+        }
+        .captcha:hover {
+          filter: var(--cap-hover-filter);
+        }
+        .captcha:not([disabled]):active {
+          transform: scale(var(--cap-active-scale));
+        }
+        .checkbox {
+          width: var(--cap-checkbox-size);
+          height: var(--cap-checkbox-size);
+          border: var(--cap-checkbox-border);
+          border-radius: var(--cap-checkbox-border-radius);
+          background-color: var(--cap-checkbox-background);
+          transition: opacity var(--cap-transition-duration);
+          margin-top: var(--cap-checkbox-margin);
+          margin-bottom: var(--cap-checkbox-margin);
+        }
+        .captcha * {
+          font-family: var(--cap-font);
+        }
+        .captcha p {
+          margin: 0;
+          font-weight: 500;
+          font-size: 15px;
+          user-select: none;
+          transition: opacity var(--cap-transition-duration);
+        }
+        .captcha[data-state="verifying"] .checkbox,
+        .spinny {
+          background: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transform: scale(1.1);
+          border: none;
+          border-radius: 50%;
+          background: conic-gradient(
+            var(--cap-spinner-color) 0%,
+            var(--cap-spinner-color) 30%,
+            var(--cap-spinner-background-color) 30%,
+            var(--cap-spinner-background-color) 100%
+          );
+          position: relative;
+          animation: spin 1s infinite linear;
+        }
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        .captcha[data-state="verifying"] .checkbox::after,
+        .spinny::after {
+          content: "";
+          background-color: var(--cap-background);
+          width: calc(100% - var(--cap-spinner-thickness));
+          height: calc(100% - var(--cap-spinner-thickness));
+          border-radius: 50%;
+          margin: calc(var(--cap-spinner-thickness) / 2);
+        }
+        .captcha[data-state="done"] .checkbox {
+          border: 1px solid transparent;
+          background-image: var(--cap-checkmark);
+          background-size: cover;
+        }
+        .captcha[data-state="error"] .checkbox {
+          border: 1px solid transparent;
+          background-image: var(--cap-error-cross);
+          background-size: cover;
+        }
+        .captcha[disabled] {
+          cursor: not-allowed;
+        }
+        .captcha[disabled][data-state="verifying"] {
+          cursor: progress;
+        }
+        .captcha[disabled][data-state="done"] {
+          cursor: default;
+        }
+        .captcha .credits {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          font-size: var(--cap-credits-font-size);
+          color: var(--cap-color);
+          opacity: var(--cap-opacity-hover);
+        }
+        .captcha .credits span {
+          display: none;
+          text-decoration: underline;
+        }
+        .captcha .credits:hover span {
+          display: inline-block;
+        }
+      </style>
+      <div class="checkbox"></div>
+      <p>I'm a human</p>
+      <a
+        href="https://cloudflare.com/"
+        class="credits"
+        target="_blank"
+        rel="follow noopener"
+        >Cloudflare</a
+      >
+    </div>
+  </body>
+  <script>
+    const widget = document.querySelector(".captcha");
+
+    widget.addEventListener("click", () => {
+      if (widget.dataset.state === "verifying") return;
+      widget.dataset.state = "verifying";
+      widget.setAttribute("disabled", true);
+
+      setTimeout(() => {
+        widget.innerHTML = `We were unable to confirm your humanity. Tap the checkbox to continue.`;
+      }, 2000);
+    });
+    setTimeout(() => {
+      document.querySelector("h1").innerHTML =
+        "We were unable to confirm you <br>are human. Tap the checkbox to <br>continue.";
+      widget.style.display = "flex";
+      document.querySelector(".spinny").remove();
+    }, 1000);
+  </script>
+</html>

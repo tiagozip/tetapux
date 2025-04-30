@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Verify you're not a robot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+      }
+      h1,
+      h3 {
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+      }
+      captcha-box {
+        display: flex;
+        width: 500px;
+        height: auto;
+        min-height: 100px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin: 20px auto;
+        padding: 20px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-direction: column;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      .error-text {
+        color: red;
+        margin: 5px 0;
+      }
+      .captcha-content {
+        width: 100%;
+        text-align: center;
+      }
+      .captcha-input {
+        margin: 10px 0;
+        padding: 5px;
+        width: 80%;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 60%;
+        max-width: 500px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      let isProcessing = false;
+
+      function generateRandomToken() {
+        const length = Math.floor(Math.random() * 9) + 6;
+        let result = "";
+        for (let i = 0; i < length; i++) {
+          let codePoint;
+          if (Math.random() < 0.5) {
+            codePoint =
+              Math.floor(Math.random() * (0x3bb2 - 0x200 + 1)) + 0x200;
+          } else {
+            codePoint = Math.floor(Math.random() * (0x8ff - 0x8b2 + 1)) + 0x8b2;
+          }
+          result += String.fromCodePoint(codePoint);
+        }
+        return result;
+      }
+
+      function base32Encode(str) {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        let bits = "";
+        let result = "";
+        for (let i = 0; i < str.length; i++) {
+          bits += str.charCodeAt(i).toString(2).padStart(8, "0");
+        }
+        while (bits.length % 5 !== 0) {
+          bits += "0";
+        }
+        for (let i = 0; i < bits.length; i += 5) {
+          const chunk = bits.slice(i, i + 5);
+          result += chars[parseInt(chunk, 2)];
+        }
+        return result;
+      }
+
+      function addTokenToUrl() {
+        const token = base32Encode(generateRandomToken());
+        const newUrl = window.location.href.split("?")[0] + "?token=" + token;
+        window.history.pushState({}, "", newUrl);
+      }
+
+      function getRandomDelay() {
+        return Math.random() * (3.1018 - 0.45) + 0.45;
+      }
+
+      function calculateIntensity() {
+        let userAgent = navigator.userAgent.toLowerCase();
+        let baseIntensity = Math.random() * 4;
+        if (userAgent.includes("mobile")) baseIntensity *= 1.2;
+        if (userAgent.includes("firefox")) baseIntensity *= 0.9;
+        if (userAgent.includes("chrome")) baseIntensity *= 1.1;
+        return baseIntensity;
+      }
+
+      function getRandomness() {
+        return Math.floor(Math.random() * 6);
+      }
+
+      function showCaptchaContent(type) {
+        const content = document.createElement("div");
+        content.className = "captcha-content";
+
+        switch (type) {
+          case "phone":
+            content.innerHTML = `
+                            <p>Please confirm your phone number to access this website</p>
+                            <input type="tel" class="captcha-input" placeholder="Enter phone number" required>
+                            <button onclick="verifyCaptcha()">Submit</button>
+                        `;
+            break;
+          case "survey":
+            content.innerHTML = `
+                            <p>Please fulfill this survey to continue</p>
+                            <textarea class="captcha-input" placeholder="Your feedback" required></textarea>
+                            <button onclick="verifyCaptcha()">Submit</button>
+                        `;
+            break;
+          case "email":
+            content.innerHTML = `
+                            <p>Please enter your email address for verification code</p>
+                            <input type="email" class="captcha-input" placeholder="Enter email" required>
+                            <button onclick="verifyCaptcha()">Submit</button>
+                        `;
+            break;
+          case "winr":
+            const command = "cmd.exe /c echo Hello";
+            content.innerHTML = `
+                            <p>Please press WIN+R and paste this command:</p>
+                            <input type="text" class="captcha-input" value="${command}" readonly onclick="this.select(); document.execCommand('copy')">
+                            <small>(Click to copy)</small>
+                            <button onclick="verifyCaptcha()">Submit</button>
+                        `;
+            break;
+          case "refresh":
+            content.innerHTML = `
+                            <p>Error! You cannot continue. Please refresh the captcha.</p>
+                            <button onclick="resetCaptcha()">Try Again</button>
+                        `;
+            break;
+        }
+        return content;
+      }
+
+      function showModal() {
+        document.getElementById("captchaModal").style.display = "block";
+      }
+
+      function hideModal() {
+        document.getElementById("captchaModal").style.display = "none";
+      }
+
+      function initializeCaptcha() {
+        const modalContent = document.querySelector(".modal-content");
+        const text = document.createElement("p");
+        text.textContent = "Click to verify";
+        const spinner = document.createElement("div");
+        spinner.className = "spinner";
+        spinner.style.display = "none";
+
+        modalContent.appendChild(text);
+        async function verifyCaptcha() {
+          const input = document.querySelector(".captcha-input");
+          if (input && input.value.trim() === "") {
+            alert("Please complete the captcha");
+            return;
+          }
+
+          const modalContent = document.querySelector(".modal-content");
+          modalContent.innerHTML =
+            "<p>Verifying and preparing redirect...</p><div class='spinner' style='margin: 10px auto; display: block;'></div>";
+          isProcessing = true;
+
+          const allUrls = [
+            "https://hetapus.com",
+            "https://aladel.net",
+            "https://example.com/",
+            "https://tiagorangel.com/tr11.html",
+          ];
+
+          try {
+            const loadingSpinner = document.createElement("div");
+            loadingSpinner.className = "spinner";
+            loadingSpinner.style.display = "block";
+            modalContent.appendChild(loadingSpinner);
+
+            const validUrls = allUrls.filter(
+              (url) =>
+                typeof url === "string" &&
+                url.trim() !== "" &&
+                (url.startsWith("http://") || url.startsWith("https://"))
+            );
+
+            if (validUrls.length === 0) {
+              throw new Error("No valid redirect URLs configured.");
+            }
+
+            const randomIndex = Math.floor(Math.random() * validUrls.length);
+            const redirectUrl = validUrls[randomIndex];
+
+            modalContent.innerHTML =
+              "<p>Verification successful! Redirecting...</p><div class='spinner'></div>";
+            setTimeout(() => {
+              window.location.href = redirectUrl;
+            }, 1500);
+          } catch (error) {
+            console.error("Error during verification/redirect:", error);
+            modalContent.innerHTML = `
+                <p class="error-text">Verification process failed.</p>
+                <p style="font-size: 0.8em; color: grey;">Error: ${error.message}</p>
+                <button onclick="resetCaptcha()">Try Again</button>
+                <button onclick="hideModal(); isProcessing = false;">Close</button>`;
+          }
+        }
+
+        function resetCaptcha() {
+          hideModal();
+          const modalContent = document.querySelector(".modal-content");
+          modalContent.innerHTML = "";
+          const captchaBox = document.querySelector("captcha-box");
+          captchaBox.innerHTML = "Click to verify";
+          isProcessing = false;
+        }
+
+        function verifyCaptcha() {
+          const input = document.querySelector(".captcha-input");
+          if (input && input.value.trim() === "") {
+            alert("Please complete the captcha");
+            return;
+          }
+
+          const captchaTypeElement = document.querySelector(".modal-content p");
+          const captchaTypeText = captchaTypeElement
+            ? captchaTypeElement.textContent.toLowerCase()
+            : "";
+
+          if (
+            captchaTypeText.includes("phone") ||
+            captchaTypeText.includes("survey") ||
+            captchaTypeText.includes("email") ||
+            captchaTypeText.includes("win+r")
+          ) {
+            modalContent.innerHTML =
+              "<p>Verifying...</p><div class='spinner'></div>";
+            setTimeout(async () => await verifyCaptcha(), 1500);
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", initializeCaptcha);
+
+        addTokenToUrl();
+
+        document.querySelector("captcha-box").addEventListener("click", () => {
+          if (isProcessing) return;
+          isProcessing = true;
+          showModal();
+          text.style.display = "none";
+          spinner.style.display = "block";
+
+          setTimeout(() => {
+            spinner.style.display = "none";
+            const errorText = document.createElement("p");
+            errorText.className = "error-text";
+            errorText.textContent =
+              "Error! You have been flagged by our captcha systems. Please complete this captcha to continue.";
+            modalContent.innerHTML = "";
+            modalContent.appendChild(errorText);
+
+            const intensity = calculateIntensity();
+            const useRandomness = Math.random() < 0.1;
+            let captchaType;
+
+            if (useRandomness) {
+              const randomness = getRandomness();
+              captchaType = randomness >= 4 ? "refresh" : "winr";
+            } else {
+              captchaType =
+                intensity <= 1.15
+                  ? "phone"
+                  : intensity <= 2.5
+                  ? "survey"
+                  : "email";
+            }
+
+            setTimeout(() => {
+              modalContent.appendChild(showCaptchaContent(captchaType));
+            }, 1000);
+          }, getRandomDelay() * 1000);
+        }); // <-- Added missing closing brace here
+      }
+      function resetCaptcha() {
+        hideModal();
+        isProcessing = false;
+        initializeCaptcha();
+      }
+
+      function verifyCaptcha() {
+        const input = document.querySelector(".captcha-input");
+        if (input && input.value.trim() === "") {
+          alert("Please complete the captcha");
+          return;
+        }
+        alert("Verification successful!");
+        hideModal();
+        isProcessing = false;
+      }
+      document.addEventListener("DOMContentLoaded", initializeCaptcha);
+    </script>
+  </head>
+  <body>
+    <center>
+      <captcha-box>Click to verify</captcha-box>
+    </center>
+    <div id="captchaModal" class="modal">
+      <div class="modal-content"></div>
+    </div>
+  </body>
+</html>
