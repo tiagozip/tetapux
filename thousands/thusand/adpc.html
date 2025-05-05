@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Tips for Faster Web Browsing!</title>
+    <style>
+        :root {
+            --ad-spawn-rate: 500ms; /* Initial time between automatic spawns */
+            --ad-z-base: 100;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll from off-screen ads */
+            min-height: 200vh; /* Ensure scrolling is possible */
+            position: relative; /* Needed for absolute positioning of ads */
+        }
+
+        #main-content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative; /* Keep content positioning context */
+            z-index: 1; /* Above initial body background */
+        }
+
+        h1 {
+            color: #1a0dab;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1em;
+        }
+
+        /* --- AD STYLES --- */
+        .ad-container {
+            position: fixed; /* Or absolute for some types */
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 5px;
+            overflow: hidden; /* Prevent content spilling */
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            opacity: 0;
+            transform: scale(0.5);
+            transform-origin: center center;
+            color: #000; /* Default ad text color */
+        }
+
+        .ad-container.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .ad-close {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 15px;
+            height: 15px;
+            background-color: #eee;
+            border: 1px solid #aaa;
+            color: #555;
+            font-size: 9px;
+            line-height: 13px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10; /* Above ad content */
+            font-weight: bold;
+            user-select: none;
+            transition: transform 0.1s ease;
+        }
+        .ad-close:hover {
+            background-color: #ddd;
+            color: #000;
+        }
+        .ad-close:active {
+           transform: scale(0.9);
+        }
+        /* Evil close button variations */
+        .ad-close.tiny { width: 8px; height: 8px; font-size: 5px; line-height: 6px;}
+        .ad-close.moving:hover { transform: translate(15px, -10px) rotate(90deg); } /* Move away on hover */
+        .ad-close.fake-graphic { background-color: transparent; border: none; pointer-events: none; color: rgba(0,0,0,0.5); }
+
+        .ad-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .ad-content img {
+            max-width: 90%;
+            max-height: 60%;
+            margin-bottom: 5px;
+        }
+        .ad-content strong {
+            color: #d93025; /* Red attention grabber */
+            font-size: 14px;
+        }
+        .ad-content small {
+            font-size: 9px;
+            color: #5f6368;
+            margin-top: 3px;
+        }
+        .ad-content button, .ad-content .fake-button {
+            background-color: #4285f4; /* Google Blue */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 11px;
+            border-radius: 3px;
+            margin-top: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .ad-content button:hover, .ad-content .fake-button:hover {
+            background-color: #3367d6;
+        }
+
+
+        /* --- Specific Ad Type Styles --- */
+        .ad-banner-top { top: 0; left: 50%; transform: translateX(-50%) scale(0.5); width: 728px; height: 90px; background-color: yellow; }
+        .ad-banner-side { top: 150px; width: 160px; height: 600px; background-color: lightblue; }
+        .ad-banner-side.left { left: 10px; }
+        .ad-banner-side.right { right: 10px; }
+
+        .ad-popup {
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 250px;
+            transform: translate(-50%, -50%) scale(0.5);
+            background-color: #fffacd; /* Light yellow */
+            border: 2px dashed red;
+        }
+
+        .ad-floating {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffcc00, #ff6600);
+            animation: floatPulse 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes floatPulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px #ffcc00; }
+            100% { transform: scale(1.1); box-shadow: 0 0 20px #ff6600; }
+        }
+
+        .ad-video-placeholder {
+            width: 320px;
+            height: 180px;
+            background-color: #222;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            border: 3px solid #555;
+        }
+        .ad-video-placeholder::before { /* Fake play icon */
+            content: '▶';
+            font-size: 40px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px black;
+        }
+        .ad-video-placeholder .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #f44336; /* Red spinner */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-top: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ad-notification {
+            bottom: 20px;
+            left: 20px;
+            width: 350px;
+            height: 80px;
+            background-color: #e9e9e9;
+            border: 1px solid #bdbdbd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            font-size: 13px;
+        }
+        .ad-notification .icon { font-size: 24px; margin-right: 10px; }
+        .ad-notification strong { font-size: 14px; color: #1e88e5; } /* Blue heading */
+
+        .ad-interstitial {
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            z-index: 1000 !important; /* Should be on top */
+            transform: scale(1); /* No initial scaling */
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
+        .ad-interstitial.visible { opacity: 1; }
+        .ad-interstitial h2 { font-size: 2.5em; color: #ff4444; margin-bottom: 20px; }
+        .ad-interstitial p { font-size: 1.2em; margin-bottom: 30px; }
+        .ad-interstitial .interstitial-close {
+             /* Style specifically for interstitial close button */
+            position: absolute; top: 20px; right: 20px;
+            font-size: 20px; background: rgba(255,255,255,0.2); border: 1px solid white; color: white;
+            width: 30px; height: 30px; line-height: 28px; border-radius: 50%;
+        }
+
+
+        #final-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0000AA; /* BSOD Blue */
+            color: #FFFFFF;
+            font-family: 'Courier New', Courier, monospace;
+            display: none; /* Hidden initially */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 99999;
+            padding: 5%;
+            font-size: 1.5vw; /* Responsive font size */
+            white-space: pre-wrap; /* Allow line breaks */
+            line-height: 1.4;
+        }
+         #final-overlay.visible {
+            display: flex;
+            animation: fadeInFinal 0.5s ease-in;
+         }
+        @keyframes fadeInFinal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+         #final-overlay span {
+            background-color: #FFFFFF;
+            color: #0000AA;
+            padding: 0.1em 0.3em;
+            margin: 0 0.2em;
+         }
+
+
+    </style>
+</head>
+<body>
+    <!-- Audio Elements (Hidden) -->
+    <audio id="audio-bing" src="https://cdn.freesound.org/previews/270/270331_4976890-lq.mp3" preload="auto"></audio>
+    <audio id="audio-cash" src="https://cdn.freesound.org/previews/516/516823_4976890-lq.mp3" preload="auto"></audio>
+    <audio id="audio-error" src="https://cdn.freesound.org/previews/179/179159_3377999-lq.mp3" preload="auto"></audio>
+    <!-- Add more sounds as needed -->
+
+    <div id="ad-space">
+        <!-- Ads will be injected here -->
+    </div>
+
+    <div id="main-content">
+        <h1>Top 10 Revolutionary Tips for Faster Web Browsing in 2025!</h1>
+        <p>Are you tired of sluggish web pages? Does waiting for sites to load feel like watching paint dry? Fear not! We've compiled the ultimate list of cutting-edge techniques guaranteed to supercharge your online experience. Read on to discover secrets the big tech companies DON'T want you to know!</p>
+
+        <h2>Tip 1: Optimize Your Cache Settings</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+
+        <h2>Tip 2: Use a Lightweight Browser Extension</h2>
+        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.</p>
+
+        <h2>Tip 3: Quantum Entanglement DNS Resolution (Advanced)</h2>
+        <p>Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. Ut LOREM volutpat. Nullam eu LOREM ipsum. Sed diam LOREM nonummy nibh euismod tincidunt ut LOREM laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim LOREM veniam, quis nostrud exerci LOREM tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo LOREM consequat.</p>
+
+        <!-- Add more fake tips -->
+        <h2>Tip 4: Harnessing Dark Matter Bandwidth</h2>
+        <p>Nunc LOREM viverra imperdiet enim. Fusce est. Vivamus LOREM a tellus. Pellentesque habitant LOREM morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy LOREM pede. Mauris et LOREM orci.</p>
+
+        <h2>Tip 5: Neural Network Pre-Fetching</h2>
+         <p>Aenean LOREM nec lorem. In porttitor. Donec LOREM laoreet nonummy augue. Suspendisse LOREM dui purus, scelerisque at, vulputate LOREM vitae, pretium LOREM mattis, nunc. Mauris LOREM eget neque at sem LOREM venenatis eleifend. Ut non LOREMummy.</p>
+
+    </div>
+
+    <div id="final-overlay">
+        <p>:-(</p>
+        <p>Your PC ran into an AD-POCALYPSE and needs to restart.</p>
+        <p>We're just collecting some ad revenue info, then we'll restart for you.</p>
+        <p><span id="progress-percent">0</span>% complete</p>
+        <br>
+        <p>If you'd like to know more, you can search online later for this error:<br>AD_OVERLOAD_FATAL_EXCEPTION</p>
+        <p>Stop code: 0xDEADBEEF (Sponsored by BuyStuffNow!)</p>
+    </div>
+
+
+    <script>
+        const adSpace = document.getElementById('ad-space');
+        const finalOverlay = document.getElementById('final-overlay');
+        const progressPercent = document.getElementById('progress-percent');
+        let adCounter = 0;
+        let currentZIndex = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ad-z-base'));
+        let maxAds = 70; // Set a limit before the "crash"
+        let spawnInterval = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--ad-spawn-rate'));
+        let spawnTimerId = null;
+
+        const sounds = {
+            bing: document.getElementById('audio-bing'),
+            cash: document.getElementById('audio-cash'),
+            error: document.getElementById('audio-error')
+        };
+
+        // --- AD TEMPLATES ---
+        const adTemplates = [
+            // Banner Top
+            () => `<div class="ad-container ad-banner-top" style="z-index: ${getZIndex()}; background-color: hsl(${Math.random() * 360}, 100%, 85%);">
+                      ${createCloseButton()}
+                      <div class="ad-content">
+                        <strong>MEGA DEALS! CLICK HERE!</strong> Don't Miss Out! Limited Time Offer!
+                        <small>Advertorial-${Math.random().toString(16).substring(2, 8)}</small>
+                      </div>
+                   </div>`,
+            // Banner Side Left
+             () => `<div class="ad-container ad-banner-side left" style="z-index: ${getZIndex()}; top: ${100 + Math.random() * 150}px; background-color: hsl(${Math.random() * 360}, 70%, 90%);">
+                      ${createCloseButton(['moving', 'tiny'])}
+                      <div class="ad-content">
+                         <img src="https://via.placeholder.com/140x400/FFA500/000000?text=Buy+Now!" alt="Fake Ad">
+                         Hot Singles In Your Area Want YOU!
+                      </div>
+                   </div>`,
+            // Banner Side Right
+            () => `<div class="ad-container ad-banner-side right" style="z-index: ${getZIndex()}; top: ${120 + Math.random() * 150}px; background-color: hsl(${Math.random() * 360}, 80%, 88%);">
+                       ${createCloseButton(['fake-graphic'])}
+                       <div class="ad-content">
+                         Download FREE RAM!
+                         <strong>100% LEGIT!</strong>
+                         <button onclick="spawnMoreAds(2); playSound('error');">Download</button>
+                      </div>
+                   </div>`,
+            // Popup
+            () => `<div class="ad-container ad-popup" style="z-index: ${getZIndex()}; top: ${20 + Math.random() * 60}%; left: ${20 + Math.random() * 60}%;">
+                       ${createCloseButton(['moving'])}
+                       <div class="ad-content">
+                         <img src="https://via.placeholder.com/100/00FF00/000000?text=You+WON!" alt="Fake Prize">
+                         <strong>CONGRATULATIONS!</strong>
+                         You are the ${adCounter + 1},000th visitor!
+                         <div class="fake-button" onclick="spawnMoreAds(3); playSound('cash');">Claim Prize!</div>
+                         <small>Ref: ${Date.now()}</small>
+                       </div>
+                    </div>`,
+             // Floating Ad
+            () => `<div class="ad-container ad-floating" style="z-index: ${getZIndex() + 50}; top: ${10 + Math.random() * 80}%; left: ${10 + Math.random() * 80}%;">
+                       ${createCloseButton(['tiny'])}
+                        <div class="ad-content" onclick="spawnMoreAds(1); playSound('bing');">
+                            CLICK<br>ME!
+                            <small>Instant Win!</small>
+                        </div>
+                     </div>`,
+            // Video Placeholder
+             () => `<div class="ad-container ad-video-placeholder" style="z-index: ${getZIndex()}; top: ${15 + Math.random() * 70}%; left: ${15 + Math.random() * 70}%;">
+                        ${createCloseButton(['moving'])}
+                        Click To Play VIRAL Video!
+                        <div class="loading-spinner"></div>
+                        <small>HD Available!</small>
+                      </div>`,
+             // Fake Notification
+            () => `<div class="ad-container ad-notification" style="z-index: ${getZIndex() + 10}; left: ${Math.random() > 0.5 ? 'auto' : '20px'}; right: ${Math.random() > 0.5 ? '20px' : 'auto'}; bottom: ${20 + Math.random() * 100}px;">
+                       ${createCloseButton([])}
+                        <span class="icon">${['⚠️', '🛡️', '🎁', '🔔'][Math.floor(Math.random()*4)]}</span>
+                        <div>
+                            <strong>System Alert!</strong><br>
+                            Potential ${['Threat', 'Prize', 'Update', 'Offer'][Math.floor(Math.random()*4)]} Detected. Click for details.
+                        </div>
+                     </div>`,
+             // Interstitial (Less frequent)
+             () => `<div class="ad-container ad-interstitial" style="z-index: ${getZIndex() + 200};">
+                        <button class="ad-close interstitial-close" onclick="closeAd(this.parentElement); spawnMoreAds(2);">X</button>
+                        <h2>WAIT! BEFORE YOU GO...</h2>
+                        <p>Get our EXCLUSIVE offer - 99% OFF!!!</p>
+                        <button onclick="spawnMoreAds(5); playSound('cash');">YES! I WANT IT!</button>
+                      </div>`
+        ];
+
+        // --- UTILITY FUNCTIONS ---
+        function getZIndex() {
+            currentZIndex++;
+            return currentZIndex;
+        }
+
+        function playSound(soundName) {
+            try {
+                if (sounds[soundName]) {
+                    sounds[soundName].currentTime = 0; // Rewind
+                    sounds[soundName].play().catch(e => { /* Ignore autoplay block errors */ });
+                }
+            } catch (e) {
+                console.warn("Audio play failed:", e);
+            }
+        }
+
+        function createCloseButton(evilClasses = []) {
+            let classes = 'ad-close ' + evilClasses.join(' ');
+             // Determine action: 70% spawn more, 30% just close (if not fake graphic)
+            let onclickAction = evilClasses.includes('fake-graphic')
+                ? ''
+                : (Math.random() < 0.7 ? `spawnMoreAds(1 + Math.floor(Math.random() * 2)); playSound('error'); closeAd(this.parentElement);` : `closeAd(this.parentElement);`);
+
+            return `<button class="${classes}" onclick="${onclickAction}">X</button>`;
+        }
+
+         function closeAd(adElement) {
+            if (adElement && adElement.classList.contains('ad-container')) {
+                adElement.classList.remove('visible');
+                // Optional: remove from DOM after transition
+                setTimeout(() => {
+                    adElement.remove();
+                }, 500);
+            }
+        }
+
+        function createAndShowAd() {
+            if (adCounter >= maxAds) {
+                triggerFinalOverlay();
+                return;
+            }
+
+            // Select random ad type (less frequent interstitial)
+            let adTypeIndex = Math.floor(Math.random() * adTemplates.length);
+            if (adTemplates[adTypeIndex]().includes('ad-interstitial') && Math.random() > 0.15) {
+                 adTypeIndex = Math.floor(Math.random() * (adTemplates.length -1) ); // Pick another non-interstitial
+            }
+
+            const adHTML = adTemplates[adTypeIndex]();
+            const adWrapper = document.createElement('div'); // Create a temp wrapper to parse HTML
+            adWrapper.innerHTML = adHTML;
+            const adElement = adWrapper.firstElementChild;
+
+            if (adElement) {
+                adSpace.appendChild(adElement);
+                // Need a slight delay for the transition to work properly
+                setTimeout(() => {
+                    adElement.classList.add('visible');
+                     playSound(['bing', 'cash'][Math.floor(Math.random()*2)]);
+                }, 50);
+                 adCounter++;
+
+                 // Make spawn rate faster over time
+                 spawnInterval = Math.max(200, spawnInterval * 0.97); // Decrease interval, minimum 200ms
+                 resetSpawnTimer(); // Reschedule next spawn
+            } else {
+                console.error("Failed to create ad element from template");
+            }
+
+             console.log(`Spawned ad #${adCounter}. Next spawn in ${spawnInterval.toFixed(0)}ms`);
+        }
+
+        function spawnMoreAds(count = 1) {
+            console.log(`Spawning ${count} extra ad(s) due to interaction!`);
+            for (let i = 0; i < count; i++) {
+                // Spawn immediately or with slight random delay
+                setTimeout(createAndShowAd, Math.random() * 150);
+            }
+        }
+
+
+        function resetSpawnTimer() {
+            if (spawnTimerId) {
+                clearTimeout(spawnTimerId);
+            }
+             if(adCounter < maxAds) {
+                spawnTimerId = setTimeout(createAndShowAd, spawnInterval);
+             }
+        }
+
+         function triggerFinalOverlay() {
+             console.log("Max ads reached! Triggering final overlay.");
+             if (spawnTimerId) clearTimeout(spawnTimerId);
+
+             // Optional: Remove all existing ads quickly
+              // adSpace.innerHTML = '';
+
+              playSound('error'); // Play a final error sound
+              finalOverlay.classList.add('visible');
+
+              // Fake progress bar
+             let progress = 0;
+             const intervalId = setInterval(() => {
+                 progress += Math.floor(Math.random() * 5) + 1;
+                 if (progress >= 100) {
+                     progress = 100;
+                     clearInterval(intervalId);
+                 }
+                 progressPercent.textContent = progress;
+             }, 200);
+         }
+
+
+        // --- EVENT LISTENERS ---
+        window.addEventListener('scroll', () => {
+            // Spawn an ad on scroll, but not too frequently
+             if (Math.random() < 0.05) { // 5% chance per scroll event chunk
+                 console.log("Spawn triggered by scroll");
+                 spawnMoreAds(1);
+             }
+        });
+
+        document.addEventListener('click', (event) => {
+             // If click wasn't on an ad's interactive element (button/link), spawn more ads
+             if (!event.target.closest('.ad-content button, .ad-content a, .ad-close, .ad-content .fake-button')) {
+                 // Don't trigger on clicks inside main content initially maybe? Or always trigger? Let's go with always for chaos.
+                 if (Math.random() < 0.35) { // 35% chance click spawns ads
+                    console.log("Spawn triggered by background click");
+                    spawnMoreAds(1 + Math.floor(Math.random() * 2));
+                 }
+             }
+        });
+
+        // Start the chaos!
+        console.log("Initializing Ad Vortex...");
+        resetSpawnTimer(); // Start the first timer
+        // Spawn a few initial ads quickly
+        setTimeout(() => spawnMoreAds(1), 300);
+        setTimeout(() => spawnMoreAds(1), 800);
+
+    </script>
+
+</body>
+</html>
