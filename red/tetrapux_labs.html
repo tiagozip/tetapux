@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TetraPux Labs - Q.E.S.D. Initiative v1.1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --tp-bg: #050810; /* Slightly darker */
+        --tp-primary: #00e0ff; /* Brighter cyan */
+        --tp-secondary: #ff00cc; /* Vivid magenta */
+        --tp-tertiary: #00ffaa; /* Bright mint green */
+        --tp-text: #e8f0ff;
+        --tp-text-dim: #a8b0d0;
+        --tp-border: rgba(0, 224, 255, 0.4);
+        --tp-glow: 0 0 6px var(--tp-primary), 0 0 12px var(--tp-primary),
+          0 0 18px var(--tp-primary);
+        --tp-glow-secondary: 0 0 6px var(--tp-secondary),
+          0 0 12px var(--tp-secondary);
+        --tp-glow-tertiary: 0 0 6px var(--tp-tertiary),
+          0 0 12px var(--tp-tertiary);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: var(--tp-primary) rgba(0, 0, 0, 0.5);
+      }
+      html::-webkit-scrollbar {
+        width: 8px;
+      }
+      html::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.5);
+      }
+      html::-webkit-scrollbar-thumb {
+        background-color: var(--tp-primary);
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.7);
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--tp-bg);
+        color: var(--tp-text);
+        display: flex; /* Still use flex for centering */
+        justify-content: center; /* Horizontal centering */
+        align-items: flex-start; /* Align container to top */
+        min-height: 100vh;
+        /* Removed overflow: hidden */
+        padding: 5vh 10px; /* Add padding top/bottom instead of align-items: center */
+        position: relative;
+      }
+
+      #particle-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Behind content */
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      /* Scanline Overlay */
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            rgba(18, 16, 16, 0) 50%,
+            rgba(0, 0, 0, 0.25) 50%
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.03),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.03)
+          );
+        background-size: 100% 3px, 5px 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.2;
+        animation: scanlineAnim 15s linear infinite;
+      }
+      @keyframes scanlineAnim {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 0 100vh;
+        } /* Adjust speed */
+      }
+
+      .giveaway-container {
+        background: rgba(10, 15, 30, 0.9);
+        border: 1px solid var(--tp-border);
+        border-radius: 12px;
+        padding: 35px 45px;
+        width: 90%;
+        max-width: 750px; /* Slightly wider */
+        z-index: 1;
+        position: relative;
+        box-shadow: 0 0 25px rgba(0, 224, 255, 0.25),
+          inset 0 0 20px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        /* Added subtle grid background */
+        background-image: linear-gradient(
+            rgba(0, 224, 255, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 224, 255, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px;
+        overflow: hidden; /* Keep for internal effects like progress bar shine */
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 35px;
+        border-bottom: 1px solid var(--tp-border);
+        padding-bottom: 25px;
+      }
+
+      header h1 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--tp-primary);
+        font-size: 2.8rem; /* Larger */
+        text-shadow: var(--tp-glow);
+        margin-bottom: 8px;
+        letter-spacing: 1.5px;
+        animation: headerPulse 3s infinite ease-in-out;
+      }
+      @keyframes headerPulse {
+        0%,
+        100% {
+          text-shadow: var(--tp-glow);
+          opacity: 1;
+        }
+        50% {
+          text-shadow: 0 0 8px var(--tp-primary), 0 0 16px var(--tp-primary),
+            0 0 24px var(--tp-primary);
+          opacity: 0.9;
+        }
+      }
+
+      header p {
+        color: var(--tp-text-dim);
+        font-size: 1.1rem;
+      }
+
+      .step {
+        display: none;
+        padding: 25px 0;
+        animation: stepFadeIn 0.6s ease-out;
+      }
+
+      .step.active {
+        display: block;
+      }
+
+      @keyframes stepFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      h2 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--tp-tertiary);
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 1.7rem;
+        text-shadow: var(--tp-glow-tertiary);
+      }
+
+      p,
+      li {
+        color: var(--tp-text);
+        line-height: 1.7; /* Increased line height */
+        margin-bottom: 18px;
+        font-size: 1.05rem; /* Slightly larger base text */
+      }
+
+      strong {
+        color: var(--tp-primary);
+        font-weight: 700;
+      }
+
+      code {
+        background-color: rgba(0, 224, 255, 0.15);
+        color: var(--tp-tertiary);
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.95em;
+        border: 1px solid rgba(0, 224, 255, 0.2);
+      }
+
+      button {
+        font-family: "Orbitron", sans-serif;
+        background: linear-gradient(
+          45deg,
+          var(--tp-primary),
+          var(--tp-secondary)
+        );
+        color: var(--tp-bg);
+        border: none;
+        padding: 14px 30px; /* Larger padding */
+        border-radius: 6px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 25px auto 0 auto;
+        min-width: 200px;
+        text-align: center;
+        position: relative; /* For pseudo-element glow */
+        overflow: hidden; /* Contain glow */
+        box-shadow: 0 0 12px rgba(0, 224, 255, 0.4),
+          0 0 12px rgba(255, 0, 204, 0.3);
+      }
+      button::before {
+        /* Hover glow effect */
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0) 70%
+        );
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+        opacity: 0;
+        z-index: 0;
+      }
+      button:hover::before:not(:disabled) {
+        width: 250%; /* Expand large */
+        height: 250%;
+        opacity: 1;
+      }
+      button span {
+        /* Ensure text is above glow */
+        position: relative;
+        z-index: 1;
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-2px); /* Slight lift */
+        box-shadow: 0 4px 18px rgba(0, 224, 255, 0.6),
+          0 4px 18px rgba(255, 0, 204, 0.5);
+      }
+
+      button:active:not(:disabled) {
+        transform: translateY(0px);
+        opacity: 0.95;
+      }
+
+      button:disabled {
+        background: linear-gradient(45deg, #556, #656); /* Darker gradient */
+        color: #99a;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .progress-container {
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--tp-border);
+        border-radius: 6px;
+        height: 24px; /* Slightly taller */
+        margin: 30px 0;
+        overflow: hidden;
+        position: relative;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--tp-secondary) 0%,
+          var(--tp-primary) 100%
+        );
+        transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother transition */
+        box-shadow: 0 0 8px var(--tp-primary), 0 0 8px var(--tp-secondary);
+      }
+      .progress-bar.flashing::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        animation: progressBarShine 1.2s infinite linear;
+        opacity: 0.8;
+      }
+      @keyframes progressBarShine {
+        0% {
+          transform: translateX(-100%) skewX(-20deg);
+        }
+        100% {
+          transform: translateX(100%) skewX(-20deg);
+        }
+      }
+
+      .status-log {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px dashed var(--tp-border);
+        border-radius: 6px;
+        height: 150px; /* Taller */
+        overflow-y: auto;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 0.9em;
+        margin-top: 25px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--tp-primary) rgba(0, 0, 0, 0.5);
+      }
+      /* Styles for scrollbar */
+      .status-log::-webkit-scrollbar {
+        width: 8px;
+      }
+      .status-log::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+      }
+      .status-log::-webkit-scrollbar-thumb {
+        background-color: var(--tp-primary);
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.7);
+      }
+
+      .status-log p {
+        margin-bottom: 6px;
+        line-height: 1.5;
+        word-break: break-word; /* Better word breaking */
+        transition: color 0.3s ease; /* Color transition */
+      }
+      .status-log .success {
+        color: var(--tp-tertiary);
+      }
+      .status-log .info {
+        color: var(--tp-text-dim);
+      }
+      .status-log .warning {
+        color: #ffd900;
+      }
+      .status-log .error {
+        color: #ff5555;
+      }
+      .status-log .highlight {
+        color: var(--tp-secondary);
+        font-weight: bold;
+        animation: pulseHighlight 1s infinite;
+      }
+
+      @keyframes pulseHighlight {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Glitch effect for text */
+      .glitch {
+        animation: glitchAnim 0.5s infinite alternate;
+        position: relative;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(
+          data-text
+        ); /* Use data-text attribute for glitched text */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent; /* Match background */
+        overflow: hidden;
+        clip: rect(0, 900px, 0, 0);
+      }
+      .glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 var(--tp-secondary);
+        animation: glitchAnimBefore 1s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 var(--tp-primary);
+        animation: glitchAnimAfter 1.5s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitchAnimBefore {
+        0% {
+          clip: rect(42px, 9999px, 44px, 0);
+        }
+        25% {
+          clip: rect(10px, 9999px, 99px, 0);
+        }
+        50% {
+          clip: rect(5px, 9999px, 85px, 0);
+        }
+        75% {
+          clip: rect(30px, 9999px, 10px, 0);
+        }
+        100% {
+          clip: rect(51px, 9999px, 35px, 0);
+        }
+      }
+      @keyframes glitchAnimAfter {
+        0% {
+          clip: rect(80px, 9999px, 90px, 0);
+        }
+        25% {
+          clip: rect(30px, 9999px, 5px, 0);
+        }
+        50% {
+          clip: rect(70px, 9999px, 75px, 0);
+        }
+        75% {
+          clip: rect(10px, 9999px, 60px, 0);
+        }
+        100% {
+          clip: rect(90px, 9999px, 40px, 0);
+        }
+      }
+
+      .calibration-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px; /* Increased gap */
+        margin: 30px auto;
+        max-width: 320px; /* Slightly larger */
+      }
+
+      .calibration-button {
+        aspect-ratio: 1 / 1;
+        background: rgba(0, 224, 255, 0.1);
+        border: 1px solid var(--tp-border);
+        color: var(--tp-primary);
+        font-size: 1.8rem; /* Larger font */
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Orbitron", sans-serif;
+        border-radius: 8px; /* Slightly more rounded */
+        position: relative;
+        overflow: hidden;
+        /* Animation properties */
+        opacity: 0;
+        transform: scale(0.5);
+        animation: gridButtonAppear 0.5s ease-out forwards;
+      }
+      /* Stagger the animation */
+      .calibration-button:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .calibration-button:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .calibration-button:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .calibration-button:nth-child(4) {
+        animation-delay: 0.25s;
+      }
+      .calibration-button:nth-child(5) {
+        animation-delay: 0.3s;
+      }
+      .calibration-button:nth-child(6) {
+        animation-delay: 0.35s;
+      }
+      .calibration-button:nth-child(7) {
+        animation-delay: 0.4s;
+      }
+      .calibration-button:nth-child(8) {
+        animation-delay: 0.45s;
+      }
+      .calibration-button:nth-child(9) {
+        animation-delay: 0.5s;
+      }
+
+      @keyframes gridButtonAppear {
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .calibration-button:hover:not(:disabled) {
+        background: rgba(0, 224, 255, 0.35);
+        box-shadow: var(--tp-glow);
+        transform: scale(1.05); /* Hover scale */
+      }
+      .calibration-button.active {
+        /* When sequence is shown */
+        background: var(--tp-primary);
+        color: var(--tp-bg);
+        box-shadow: var(--tp-glow);
+        animation: pulse 0.5s; /* Use existing pulse */
+      }
+      .calibration-button.correct {
+        background: var(--tp-tertiary);
+        color: var(--tp-bg);
+        box-shadow: var(--tp-glow-tertiary);
+        cursor: default;
+        animation: correctPulse 0.6s ease-out;
+        opacity: 1; /* Ensure full opacity */
+        transform: scale(1); /* Reset scale */
+      }
+      .calibration-button.error {
+        background: rgba(255, 85, 85, 0.7); /* Red for error */
+        border-color: #ff5555;
+        color: var(--tp-bg);
+        animation: shake 0.4s linear;
+      }
+
+      @keyframes correctPulse {
+        0% {
+          transform: scale(1);
+          box-shadow: none;
+        }
+        50% {
+          transform: scale(1.15);
+          box-shadow: var(--tp-glow-tertiary);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: none;
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-5px);
+        }
+        40%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
+
+      .calibration-button:disabled:not(.correct) {
+        /* Style specifically for disabled but not correct */
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: rgba(100, 100, 120, 0.2);
+        color: #889;
+        border-color: #556;
+        box-shadow: none;
+        transform: scale(0.95); /* Indicate disabled */
+      }
+
+      #result-message {
+        text-align: center;
+        padding: 35px 0;
+      }
+      #result-message h2 {
+        font-size: 2.2rem; /* Larger */
+        margin-bottom: 25px;
+      }
+      #result-message p {
+        font-size: 1.15rem; /* Larger */
+        max-width: 85%;
+        margin: 0 auto 25px auto;
+      }
+      .prize-graphic {
+        width: 180px; /* Larger */
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 224, 255, 0.8) 0%,
+          rgba(255, 0, 204, 0.7) 60%,
+          transparent 90%
+        );
+        border-radius: 50%;
+        margin: 30px auto;
+        box-shadow: 0 0 35px var(--tp-primary), 0 0 50px var(--tp-secondary),
+          inset 0 0 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Orbitron", sans-serif;
+        font-size: 3.5rem; /* Larger text */
+        color: #fff; /* White for contrast */
+        text-shadow: 0 0 5px var(--tp-bg), 0 0 10px var(--tp-bg);
+        animation: prizePulseSpin 4s infinite linear; /* Combined animation */
+        position: relative;
+      }
+      .prize-graphic::before,
+      .prize-graphic::after {
+        /* Inner rotating elements */
+        content: "";
+        position: absolute;
+        width: 110%;
+        height: 110%;
+        border-radius: 50%;
+        border: 2px solid;
+        opacity: 0.5;
+      }
+      .prize-graphic::before {
+        border-color: var(--tp-primary) transparent var(--tp-primary)
+          transparent;
+        animation: prizeSpin 2s infinite linear;
+      }
+      .prize-graphic::after {
+        border-color: transparent var(--tp-secondary) transparent
+          var(--tp-secondary);
+        animation: prizeSpin 3s infinite linear reverse;
+      }
+
+      @keyframes prizePulseSpin {
+        0% {
+          transform: scale(1) rotate(0deg);
+          box-shadow: 0 0 35px var(--tp-primary), 0 0 50px var(--tp-secondary),
+            inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        50% {
+          transform: scale(1.08) rotate(180deg);
+          box-shadow: 0 0 50px var(--tp-primary), 0 0 70px var(--tp-secondary),
+            inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        100% {
+          transform: scale(1) rotate(360deg);
+          box-shadow: 0 0 35px var(--tp-primary), 0 0 50px var(--tp-secondary),
+            inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+      }
+      @keyframes prizeSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .prize-graphic.fail {
+        /* Style for failed graphic */
+        background: radial-gradient(circle, #667 0%, #334 70%, transparent 90%);
+        box-shadow: 0 0 15px #556, inset 0 0 10px rgba(0, 0, 0, 0.7);
+        animation: none; /* Disable pulse/spin */
+        color: #aaa;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+      .prize-graphic.fail::before,
+      .prize-graphic.fail::after {
+        display: none; /* Hide rotating borders on fail */
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 35px;
+        font-size: 0.85em;
+        color: var(--tp-text-dim);
+        border-top: 1px solid var(--tp-border);
+        padding-top: 20px;
+      }
+      footer a {
+        color: var(--tp-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      footer a:hover {
+        text-decoration: none;
+        text-shadow: 0 0 8px var(--tp-primary);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="particle-container"></canvas>
+
+    <div class="giveaway-container">
+      <header>
+        <h1>TetraPux Labs</h1>
+        <p>Quantum Entanglement Storage Device Initiative</p>
+      </header>
+
+      <main>
+        <!-- Step 1: Introduction -->
+        <section id="step-1" class="step active">
+          <h2>Welcome, Pioneer!</h2>
+          <p>
+            You've been selected for a chance to win a revolutionary
+            <strong>Quantum Entangled Storage Device (QESD)</strong> prototype,
+            directly linked to the TetraPux HyperCore Network.
+          </p>
+          <p>
+            Experience truly instantaneous, limitless storage potential. To
+            ensure system compatibility and stabilize the entanglement field,
+            please proceed with the calibration sequence.
+          </p>
+          <button id="start-btn"><span>Begin Calibration</span></button>
+        </section>
+
+        <!-- Step 2: Calibration Grid -->
+        <section id="step-2" class="step">
+          <h2>Phase 1: Heuristic Alignment</h2>
+          <p>
+            Synchronize your local temporal field with the HyperCore. Activate
+            the nodes in the specified sequence to establish a stable quantum
+            pathway.
+          </p>
+          <p>Sequence: <strong id="sequence-display">Loading...</strong></p>
+          <div class="calibration-grid" id="calibration-grid">
+            <!-- Buttons will be generated by JS -->
+          </div>
+          <p
+            id="calibration-status"
+            style="
+              text-align: center;
+              color: var(--tp-secondary);
+              min-height: 1.6em;
+              font-weight: bold;
+            "
+          ></p>
+          <button id="calibration-next-btn" disabled>
+            <span>Proceed to Entanglement</span>
+          </button>
+        </section>
+
+        <!-- Step 3: Entanglement Process -->
+        <section id="step-3" class="step">
+          <h2>Phase 2: Entanglement Stabilization</h2>
+          <p>
+            Initiating quantum entanglement link with assigned QESD Unit
+            <code>TPX-Q-<span id="qesd-id">??????</span></code
+            >. Monitor the process closely. Field fluctuations are expected.
+          </p>
+          <div class="progress-container">
+            <div id="entanglement-progress" class="progress-bar"></div>
+          </div>
+          <div class="status-log" id="status-log">
+            <p class="info">[SYS] Initiating subspace handshake...</p>
+          </div>
+          <button id="entanglement-next-btn" style="display: none">
+            <span>Check Link Status</span>
+          </button>
+        </section>
+
+        <!-- Step 4: Result -->
+        <section id="step-4" class="step">
+          <div id="result-message">
+            <!-- Content dynamically added by JS -->
+          </div>
+          <button
+            id="claim-btn"
+            style="display: none"
+            onclick="location.href='/heta/gemini-refake.html'"
+          >
+            <span>Claim Your QESD Link!</span>
+          </button>
+          <button id="retry-btn" style="display: none">
+            <span>Retry Entanglement</span>
+          </button>
+        </section>
+      </main>
+
+      <footer>
+        TetraPux Labs QESD Initiative v1.1 Alpha |
+        <a
+          href="#"
+          onclick="alert('Terms: Participation implies consent to potential temporal displacement, paradoxical existence, and spontaneous data implosion. TetraPux is not liable for reality shifts, lost socks, or sudden cravings for pineapple pizza. Good luck!'); return false;"
+          >Terms & Conditions Apply</a
+        >
+      </footer>
+    </div>
+
+    <script>
+      // --- Particle Background ---
+      const canvas = document.getElementById("particle-container");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let particles = [];
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1; // Slightly larger base size
+          this.baseSize = this.size;
+          this.speedX = Math.random() * 0.6 - 0.3; // Slower base speed
+          this.speedY = Math.random() * 0.6 - 0.3;
+          this.color = `rgba(${
+            Math.random() > 0.5 ? "0, 224, 255," : "255, 0, 204,"
+          } ${Math.random() * 0.6 + 0.3})`;
+          this.trail = []; // Array to store trail positions
+          this.maxTrailLength = 5 + Math.random() * 10; // Variable trail length
+        }
+        update() {
+          // Add current position to trail
+          this.trail.push({
+            x: this.x,
+            y: this.y,
+            size: this.size,
+            opacity: 1,
+          });
+          // Limit trail length
+          if (this.trail.length > this.maxTrailLength) {
+            this.trail.shift(); // Remove oldest point
+          }
+
+          this.x += this.speedX;
+          this.y += this.speedY;
+
+          // Fade and shrink trail points
+          for (let i = 0; i < this.trail.length; i++) {
+            this.trail[i].opacity -= 1 / this.maxTrailLength;
+            this.trail[i].size *= 0.98; // Shrink trail points
+          }
+
+          // Boundary check (wrap around smoothly)
+          if (this.x < -this.size) this.x = canvas.width + this.size;
+          if (this.x > canvas.width + this.size) this.x = -this.size;
+          if (this.y < -this.size) this.y = canvas.height + this.size;
+          if (this.y > canvas.height + this.size) this.y = -this.size;
+        }
+        draw() {
+          // Draw trail
+          for (let i = this.trail.length - 1; i >= 0; i--) {
+            const point = this.trail[i];
+            if (point.opacity <= 0 || point.size <= 0.1) continue;
+            ctx.fillStyle = this.color.replace(
+              /[\d\.]+\)$/g,
+              `${point.opacity * 0.8})`
+            ); // Use particle color, adjust opacity
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Draw main particle
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function initParticles() {
+        particles = [];
+        const numberOfParticles = Math.min(
+          150,
+          (canvas.width * canvas.height) / 10000
+        ); // Adjust density, add max
+        for (let i = 0; i < numberOfParticles; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+
+          // Draw lines between nearby particles
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 100) {
+              // Max distance for lines
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(0, 224, 255, ${
+                1 - (distance / 100) * 0.8
+              })`; // Fading lines
+              ctx.lineWidth = 0.6;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+              ctx.closePath();
+            }
+          }
+        }
+
+        requestAnimationFrame(animateParticles);
+      }
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initParticles();
+      });
+
+      initParticles();
+      animateParticles();
+
+      // --- Giveaway Logic ---
+      const steps = document.querySelectorAll(".step");
+      const startBtn = document.getElementById("start-btn");
+      const calibrationGrid = document.getElementById("calibration-grid");
+      const sequenceDisplay = document.getElementById("sequence-display");
+      const calibrationStatus = document.getElementById("calibration-status");
+      const calibrationNextBtn = document.getElementById(
+        "calibration-next-btn"
+      );
+      const entanglementProgress = document.getElementById(
+        "entanglement-progress"
+      );
+      const statusLog = document.getElementById("status-log");
+      const qesdIdSpan = document.getElementById("qesd-id");
+      const entanglementNextBtn = document.getElementById(
+        "entanglement-next-btn"
+      );
+      const resultMessage = document.getElementById("result-message");
+      const claimBtn = document.getElementById("claim-btn");
+      const retryBtn = document.getElementById("retry-btn");
+
+      let currentStep = 1;
+      let targetSequence = [];
+      let userSequence = [];
+      let entanglementInterval;
+      let entanglementProgressValue = 0;
+      let statusLogCounter = 0;
+      let calibrationLocked = false; // Prevent clicks during reset/highlight
+
+      const technobabble = [
+        "Recalibrating phase conjugate mirrors...",
+        "Verifying temporal flux capacitor integrity...",
+        "Buffering hyperdimensional data stream...",
+        "Engaging subspace resonance field...",
+        "Compiling quantum foam heuristics...",
+        "Optimizing entanglement spin matrix...",
+        "Warning: Chroniton particle surge detected. Shield integrity at 88%.",
+        "Adjusting graviton emitter frequency...",
+        "Synchronizing Planck-scale oscillators...",
+        "Flushing negative energy conduit...",
+        "Info: Muon decay rate nominal.",
+        "Performing neutrino integrity check...",
+        "Error: Tachyonic feedback loop exceeding threshold! Attempting dampening field...",
+        "Rerouting power through auxiliary manifold...",
+        "Decompressing Zettabyte quantum archive... Sector 7G validated.",
+        "Highlight: Entanglement lock acquiring target signature...",
+        "Stabilizing wormhole aperture... Minor fluctuations detected.",
+        "Warning: Reality index deviating by 0.013%! Compensating...",
+        "Info: Positronic net sync achieved. Neural lattice stable.",
+        "Success: Coherence field established. Quantum tunneling initiated.",
+        "Calculating Heisenberg uncertainty factor...",
+        "Info: Background Hawking radiation levels stable.",
+        "Warning: Possible interference from parallel dimension XK-7.",
+        "Re-aligning dilithium crystal matrix...",
+        "Success: Entanglement signature confirmed.",
+        "Error: Unexpected quark degluonization event! System recovering...",
+        "Highlight: Final lock sequence initiated.",
+      ];
+
+      function showStep(stepNumber) {
+        steps.forEach((step) => step.classList.remove("active"));
+        const nextStep = document.getElementById(`step-${stepNumber}`);
+        if (nextStep) {
+          // Force reflow for animation restart
+          void nextStep.offsetWidth;
+          nextStep.classList.add("active");
+          currentStep = stepNumber;
+        }
+        // Scroll to top of container when step changes
+        document
+          .querySelector(".giveaway-container")
+          .closest("body").scrollTop = 0;
+        document.documentElement.scrollTop = 0; // For Firefox/IE
+      }
+
+      function addGlitchEffect(element, duration = 500) {
+        element.classList.add("glitch");
+        element.setAttribute("data-text", element.textContent); // Set data-text for CSS
+        setTimeout(() => {
+          element.classList.remove("glitch");
+          element.removeAttribute("data-text");
+        }, duration);
+      }
+
+      function logStatus(message, type = "info") {
+        const p = document.createElement("p");
+        p.className = type;
+        p.textContent = `[${new Date().toLocaleTimeString()}.${String(
+          Date.now()
+        ).slice(-3)}] ${message}`;
+        statusLog.appendChild(p);
+        statusLog.scrollTop = statusLog.scrollHeight; // Auto-scroll
+        statusLogCounter++;
+        if (statusLogCounter > 50) {
+          // Limit log size
+          const firstChild = statusLog.querySelector("p:first-child");
+          if (firstChild) statusLog.removeChild(firstChild);
+        }
+        // Add glitch effect occasionally to non-success messages
+        if (type !== "success" && Math.random() < 0.1) {
+          addGlitchEffect(p, 600);
+        }
+      }
+
+      // --- Step 1 Logic ---
+      startBtn.addEventListener("click", () => {
+        showStep(2);
+        setupCalibration();
+      });
+
+      // --- Step 2 Logic ---
+      function setupCalibration() {
+        targetSequence = [];
+        userSequence = [];
+        calibrationGrid.innerHTML = ""; // Clear previous buttons
+        calibrationStatus.textContent = "";
+        calibrationNextBtn.disabled = true;
+        calibrationLocked = true; // Lock during setup
+        const sequenceLength = 5;
+        const possibleNodes = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        // Generate sequence
+        for (let i = 0; i < sequenceLength; i++) {
+          let node;
+          do {
+            node =
+              possibleNodes[Math.floor(Math.random() * possibleNodes.length)];
+          } while (targetSequence.includes(node));
+          targetSequence.push(node);
+        }
+        sequenceDisplay.textContent = "•••••"; // Placeholder
+        // Add glitch effect while "loading" sequence
+        addGlitchEffect(sequenceDisplay, 800);
+
+        // Create grid buttons (do this first)
+        possibleNodes.forEach((num) => {
+          const button = document.createElement("button");
+          button.classList.add("calibration-button");
+          button.textContent = num;
+          button.dataset.value = num;
+          button.style.animationDelay = `${Math.random() * 0.5}s`; // Randomize entry slightly
+          button.addEventListener("click", handleCalibrationClick);
+          calibrationGrid.appendChild(button);
+        });
+
+        // Delay showing sequence and highlighting
+        setTimeout(() => {
+          sequenceDisplay.textContent = targetSequence.join(" → ");
+          // Briefly highlight the sequence
+          let highlightIndex = 0;
+          const highlightInterval = setInterval(() => {
+            // Remove previous highlight
+            if (highlightIndex > 0) {
+              const prevButton = calibrationGrid.querySelector(
+                `[data-value="${targetSequence[highlightIndex - 1]}"]`
+              );
+              if (prevButton) prevButton.classList.remove("active");
+            }
+            // Add current highlight
+            if (highlightIndex < targetSequence.length) {
+              const currentButton = calibrationGrid.querySelector(
+                `[data-value="${targetSequence[highlightIndex]}"]`
+              );
+              if (currentButton) currentButton.classList.add("active");
+              highlightIndex++;
+            } else {
+              clearInterval(highlightInterval);
+              // Remove final highlight after a short delay
+              setTimeout(() => {
+                const lastButton = calibrationGrid.querySelector(
+                  `[data-value="${targetSequence[targetSequence.length - 1]}"]`
+                );
+                if (lastButton) lastButton.classList.remove("active");
+                calibrationLocked = false; // Unlock after highlight
+              }, 400);
+            }
+          }, 700); // Slower highlight
+        }, 1000); // Wait for buttons to animate in + glitch effect
+      }
+
+      function handleCalibrationClick(event) {
+        if (calibrationLocked) return; // Ignore clicks if locked
+
+        const button = event.target;
+        const clickedValue = parseInt(button.dataset.value);
+
+        if (button.classList.contains("correct") || button.disabled) return;
+
+        calibrationLocked = true; // Lock during check
+        userSequence.push(clickedValue);
+        button.classList.add("active"); // Indicate click processing
+
+        // Check if the clicked button matches the expected sequence position
+        setTimeout(() => {
+          // Small delay for visual feedback
+          if (clickedValue === targetSequence[userSequence.length - 1]) {
+            calibrationStatus.textContent = "Sequence match detected...";
+            calibrationStatus.style.color = "var(--tp-tertiary)";
+            button.classList.remove("active");
+            button.classList.add("correct");
+            button.disabled = true; // Disable correct button
+
+            // Check for completion
+            if (userSequence.length === targetSequence.length) {
+              calibrationStatus.textContent = "Heuristic Alignment Successful!";
+              calibrationNextBtn.disabled = false;
+              // Disable all remaining buttons
+              calibrationGrid
+                .querySelectorAll(".calibration-button:not(.correct)")
+                .forEach((btn) => (btn.disabled = true));
+              calibrationLocked = true; // Keep locked until next step
+            } else {
+              calibrationLocked = false; // Unlock for next input
+            }
+          } else {
+            // Incorrect sequence
+            calibrationStatus.textContent =
+              "Alignment Error! Sequence Mismatch. Resetting...";
+            calibrationStatus.style.color = "var(--tp-secondary)";
+            addGlitchEffect(calibrationStatus, 700);
+            // Flash incorrect button red
+            button.classList.remove("active");
+            button.classList.add("error");
+
+            // Disable all buttons temporarily
+            calibrationGrid
+              .querySelectorAll(".calibration-button")
+              .forEach((btn) => (btn.disabled = true));
+
+            // Reset after a delay
+            setTimeout(() => {
+              setupCalibration(); // Restart the calibration
+            }, 1800); // Longer delay for error visibility
+          }
+        }, 250); // Delay for click processing feedback
+      }
+
+      calibrationNextBtn.addEventListener("click", () => {
+        showStep(3);
+        startEntanglement();
+      });
+
+      // --- Step 3 Logic ---
+      function startEntanglement() {
+        entanglementProgressValue = 0;
+        entanglementProgress.style.width = "0%";
+        entanglementProgress.classList.add("flashing");
+        statusLog.innerHTML =
+          '<p class="info">[SYS] Initiating subspace handshake...</p>';
+        qesdIdSpan.textContent = Math.random()
+          .toString(36)
+          .substring(2, 8)
+          .toUpperCase();
+        entanglementNextBtn.style.display = "none";
+        statusLogCounter = 0; // Reset log counter
+
+        clearInterval(entanglementInterval); // Clear any previous interval
+
+        entanglementInterval = setInterval(() => {
+          const progressIncrement =
+            Math.random() * (entanglementProgressValue < 80 ? 4 : 1.5) + 0.5; // Slower near end
+          entanglementProgressValue += progressIncrement;
+          if (entanglementProgressValue > 100) entanglementProgressValue = 100;
+          entanglementProgress.style.width = `${entanglementProgressValue}%`;
+
+          if (Math.random() > 0.4) {
+            // Log more frequently
+            const randomIndex = Math.floor(Math.random() * technobabble.length);
+            const message = technobabble[randomIndex];
+            let type = "info";
+            if (/warning/i.test(message)) type = "warning";
+            else if (/error/i.test(message)) type = "error";
+            else if (/success/i.test(message)) type = "success";
+            else if (/highlight/i.test(message)) type = "highlight";
+            logStatus(message, type);
+          }
+
+          if (entanglementProgressValue >= 100) {
+            clearInterval(entanglementInterval);
+            setTimeout(() => {
+              // Delay final message slightly
+              logStatus(
+                "Entanglement field stabilized. Link established.",
+                "success"
+              );
+              entanglementNextBtn.style.display = "block";
+              entanglementProgress.classList.remove("flashing");
+            }, 500);
+          }
+        }, 350); // Slightly faster interval
+      }
+
+      entanglementNextBtn.addEventListener("click", () => {
+        showStep(4);
+        displayResult();
+      });
+
+      // --- Step 4 Logic ---
+      function displayResult() {
+        const success = Math.random() > 0.25; // ~75% chance of "success"
+
+        resultMessage.innerHTML = ""; // Clear previous result
+        claimBtn.style.display = "none";
+        retryBtn.style.display = "none";
+
+        const resultH2 = document.createElement("h2");
+        const resultP = document.createElement("p");
+        const prizeDiv = document.createElement("div");
+        prizeDiv.classList.add("prize-graphic");
+
+        if (success) {
+          resultH2.textContent = "Entanglement Successful!";
+          resultH2.style.color = "var(--tp-tertiary)";
+          addGlitchEffect(resultH2, 800);
+          resultP.innerHTML = `Congratulations! You have successfully established a quantum link with QESD Unit <strong>TPX-Q-${qesdIdSpan.textContent}</strong>. Prepare for limitless data horizons! Your access node is being configured.`;
+          prizeDiv.textContent = "Q"; // Success symbol
+          prizeDiv.classList.remove("fail");
+          resultMessage.appendChild(resultH2);
+          resultMessage.appendChild(prizeDiv);
+          resultMessage.appendChild(resultP);
+          claimBtn.style.display = "block";
+        } else {
+          resultH2.textContent = "Entanglement Failed!";
+          resultH2.style.color = "var(--tp-secondary)";
+          addGlitchEffect(resultH2, 800);
+          const failReasons = [
+            "excessive <strong>tachyon interference</strong>",
+            "a critical <strong>decoherence cascade</strong>",
+            "an unexpected <strong>reality shear</strong> event",
+            "a <strong>Heisenberg compensator</strong> malfunction",
+            "unforeseen <strong>chroniton feedback</strong>",
+          ];
+          const reason =
+            failReasons[Math.floor(Math.random() * failReasons.length)];
+          resultP.innerHTML = `Critical error during stabilization phase. The quantum link collapsed due to ${reason}. No QESD link established. Recalibration required.`;
+          prizeDiv.textContent = "X"; // Fail symbol
+          prizeDiv.classList.add("fail");
+          resultMessage.appendChild(resultH2);
+          resultMessage.appendChild(prizeDiv);
+          resultMessage.appendChild(resultP);
+          retryBtn.style.display = "block";
+        }
+      }
+
+      retryBtn.addEventListener("click", () => {
+        showStep(3); // Go back to entanglement
+        startEntanglement();
+      });
+
+      // --- Initial Setup ---
+      // Wrap button text in spans for the hover effect
+      document.querySelectorAll("button").forEach((button) => {
+        const text = button.textContent;
+        button.innerHTML = `<span>${text}</span>`;
+      });
+      showStep(1); // Start at step 1
+    </script>
+  </body>
+</html>
