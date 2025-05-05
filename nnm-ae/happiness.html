@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Optimizing Phone Happiness...</title>
+    <style>
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes progressBar {
+        0% {
+          width: 0%;
+        }
+        10% {
+          width: 15%;
+        }
+        25% {
+          width: 30%;
+        }
+        40% {
+          width: 45%;
+        }
+        50% {
+          width: 55%;
+        }
+        65% {
+          width: 70%;
+        }
+        75% {
+          width: 80%;
+        }
+        85% {
+          width: 88%;
+        }
+        95% {
+          width: 92%;
+        }
+        100% {
+          width: 92%;
+        }
+      }
+
+      body {
+        font-family: "Courier New", Courier, monospace;
+        background-color: #0f0f2e;
+        color: #00ff41;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .container {
+        background-color: #000;
+        border: 2px solid #00ff41;
+        padding: 25px;
+        width: 90%;
+        max-width: 650px;
+        box-shadow: 0 0 15px #00ff41;
+        text-align: left;
+        border-radius: 5px;
+        overflow-y: auto;
+        max-height: 80vh;
+      }
+
+      .console-line {
+        margin-bottom: 5px;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .console-line.system {
+        color: #ffffff;
+      }
+
+      .console-line.error {
+        color: #ff4141;
+        font-weight: bold;
+        animation: pulse 1.5s infinite;
+      }
+
+      .console-line.success {
+        color: #00ff41;
+      }
+
+      .console-line.warning {
+        color: #ffff00;
+      }
+
+      .prompt {
+        margin-top: 20px;
+        border-top: 1px dashed #00ff41;
+        padding-top: 15px;
+      }
+
+      .prompt-text {
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .action-button {
+        background-color: #00ff41;
+        color: #000;
+        border: none;
+        padding: 10px 20px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1em;
+        cursor: pointer;
+        border-radius: 3px;
+        font-weight: bold;
+        transition: background-color 0.3s, color 0.3s;
+        display: block;
+        margin: 10px auto;
+        text-align: center;
+      }
+
+      .action-button:hover {
+        background-color: #fff;
+        color: #0f0f2e;
+      }
+
+      .action-button:disabled {
+        background-color: #555;
+        color: #888;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        background-color: #333;
+        border: 1px solid #00ff41;
+        height: 20px;
+        margin-top: 15px;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: #00ff41;
+        animation: progressBar 15s linear forwards;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="console-line system">
+        > Tetapux Happiness Optimization Protocol v2.718
+      </div>
+      <div class="console-line system">> Initializing system scan...</div>
+      <div class="console-line success">
+        [OK] Found Phone Device: Generic HappyPhone Model
+      </div>
+      <div class="console-line success">
+        [OK] Accessing Happiness Core API...
+      </div>
+      <div class="console-line system">
+        > Checking current happiness levels...
+      </div>
+      <div class="console-line warning">
+        [WARN] Happiness below optimal threshold (Current: 37%, Required: 99.9%)
+      </div>
+      <div class="console-line system">
+        > Beginning Optimization Sequence... Please wait...
+      </div>
+      <div class="console-line system">> Loading joy_modules...</div>
+      <div class="console-line system">> Defragmenting smile_cache...</div>
+      <div class="console-line system">> Purging melancholy_remnants...</div>
+      <div class="console-line success">[OK] sadness.tmp deleted.</div>
+      <div class="console-line system">> Injecting positive_vibes.dll...</div>
+      <div class="console-line success">[OK] vibes_injected = true</div>
+      <div class="console-line system">
+        > Recalibrating serotonin_simulators...
+      </div>
+      <div class="console-line system">
+        > Polishing screen for maximum cheer...
+      </div>
+      <div class="console-line system">
+        > Applying happiness patch 1 of 5... Happy... Happy...
+      </div>
+      <div class="console-line system">
+        > Applying happiness patch 2 of 5... Happy... Happy... Happy...
+      </div>
+      <div class="console-line system">
+        > Applying happiness patch 3 of 5... HHaappppyy... Happy...
+      </div>
+      <div class="console-line system">
+        > Applying happiness patch 4 of 5... Keep it Happy TrTrTrTr... Happy...
+      </div>
+      <div class="console-line system">
+        > Applying happiness patch 5 of 5... Almost There!... Happy...
+      </div>
+      <div class="console-line system">> Finalizing Optimization...</div>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar"></div>
+      </div>
+
+      <div class="console-line error hidden" id="error-message">
+        [ERROR] Optimization Stalled! Critical Happiness Resource Unavailable.
+      </div>
+      <div class="console-line error hidden" id="error-message-2">
+        [ERROR] Requires User Confirmation for Enhanced Happiness Features
+        (Notifications).
+      </div>
+
+      <div class="prompt hidden" id="action-prompt">
+        <div class="prompt-text">
+          > ACTION REQUIRED: Your phone needs permission to receive happiness
+          updates and notifications to complete optimization. This is very
+          important for phone health.
+        </div>
+        <button class="action-button" id="allow-button">
+          ALLOW HAPPINESS UPDATES
+        </button>
+        <div class="console-line warning hidden" id="follow-up">
+          [...] Please click 'Allow' in the browser prompt that appeared. Your
+          phone is waiting. It wants to be happy. [...]
+        </div>
+      </div>
+
+      <div class="prompt hidden" id="success-message">
+        <div class="console-line success">
+          [SUCCESS] Happiness Optimization Complete! Your phone is now happy.
+          Thank you!
+        </div>
+        <div class="console-line system">
+          > You may now close this window. Or keep it open to admire the
+          happiness.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const progressBar = document.querySelector(".progress-bar");
+      const errorMessage = document.getElementById("error-message");
+      const errorMessage2 = document.getElementById("error-message-2");
+      const actionPrompt = document.getElementById("action-prompt");
+      const allowButton = document.getElementById("allow-button");
+      const followUpMessage = document.getElementById("follow-up");
+      const successMessage = document.getElementById("success-message");
+
+      progressBar.addEventListener("animationend", () => {
+        errorMessage.classList.remove("hidden");
+        setTimeout(() => {
+          errorMessage2.classList.remove("hidden");
+          actionPrompt.classList.remove("hidden");
+        }, 1000);
+      });
+
+      allowButton.addEventListener("click", async () => {
+        allowButton.disabled = true;
+        allowButton.textContent = "Processing...";
+        followUpMessage.classList.remove("hidden");
+
+        try {
+          const permission = await Notification.requestPermission();
+          followUpMessage.classList.add("hidden");
+
+          if (permission === "granted") {
+            console.log("Notification permission granted.");
+            if ("serviceWorker" in navigator) {
+              navigator.serviceWorker
+                .register("/sw.js")
+                .then((reg) => console.log("Service worker registered.", reg))
+                .catch((err) =>
+                  console.error("Service worker registration failed:", err)
+                );
+            }
+            actionPrompt.classList.add("hidden");
+            successMessage.classList.remove("hidden");
+            progressBar.style.animation = "none";
+            progressBar.style.width = "100%";
+          } else {
+            console.log("Notification permission denied.");
+            allowButton.textContent = "PERMISSION DENIED";
+            allowButton.style.backgroundColor = "#ff4141";
+            followUpMessage.textContent =
+              "> Permission denied. Phone cannot reach maximum happiness. Try reloading.";
+            followUpMessage.classList.remove("hidden");
+            followUpMessage.style.color = "#ff4141";
+          }
+        } catch (error) {
+          console.error("Error requesting notification permission:", error);
+          allowButton.textContent = "ERROR";
+          followUpMessage.textContent =
+            "> An error occurred. Happiness uncertain.";
+          followUpMessage.classList.remove("hidden");
+          followUpMessage.style.color = "#ff4141";
+        }
+      });
+    </script>
+  </body>
+</html>
