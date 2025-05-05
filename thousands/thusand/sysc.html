@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Core Maintenance</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #f0f0f0;
+        --window-bg: #ffffff;
+        --window-border: #aaaaaa;
+        --title-bg: #005a9e; /* Windows-like blue */
+        --title-text: #ffffff;
+        --text-color: #333333;
+        --error-color: #d93025; /* Google red / Error red */
+        --success-color: #1e8e3e; /* Green */
+        --glitch-color1: #ff00ff;
+        --glitch-color2: #00ffff;
+        --font-main: "Roboto", sans-serif;
+        --font-mono: "Roboto Mono", monospace;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: var(--text-color);
+        overflow: hidden; /* Prevent scrollbars initially */
+      }
+
+      .maintenance-window {
+        background-color: var(--window-bg);
+        border: 1px solid var(--window-border);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 650px;
+        min-height: 450px;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease-in-out;
+        overflow: hidden; /* Clip internal glitches */
+      }
+
+      .title-bar {
+        background-color: var(--title-bg);
+        color: var(--title-text);
+        padding: 8px 12px;
+        font-weight: 500;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .title-bar .icon {
+        /* Placeholder for window icon */
+        width: 16px;
+        height: 16px;
+        background-color: #ccc;
+        margin-right: 5px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .window-controls span {
+        /* Fake close/min/max buttons */
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: #ffffff;
+        margin-left: 4px;
+        border: 1px solid #999;
+        cursor: default;
+        opacity: 0.6;
+      }
+
+      .content-area {
+        padding: 20px;
+        flex-grow: 1;
+        position: relative;
+        overflow: auto; /* Allow scroll if content overflows later */
+      }
+
+      .step {
+        display: none; /* Hidden by default */
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      .step.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: #005a9e;
+      }
+
+      p,
+      li {
+        font-size: 0.95em;
+        line-height: 1.6;
+      }
+      code {
+        font-family: var(--font-mono);
+        background-color: #e0e0e0;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-size: 0.9em;
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        height: 16px;
+        background-color: #e0e0e0;
+        border: 1px solid #c0c0c0;
+        margin: 20px 0;
+        overflow: hidden;
+        position: relative;
+      }
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: var(--success-color);
+        transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth but responsive */
+      }
+      .progress-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        color: #fff;
+        mix-blend-mode: difference; /* Make text visible on bar */
+        text-align: center;
+        font-size: 0.8em;
+        line-height: 16px;
+        font-weight: 500;
+      }
+
+      .log-area {
+        font-family: var(--font-mono);
+        font-size: 0.8em;
+        background-color: #1e1e1e;
+        color: #d4d4d4;
+        border: 1px solid #555;
+        padding: 10px;
+        height: 150px;
+        overflow-y: scroll;
+        margin-top: 15px;
+        white-space: pre; /* Keep formatting */
+      }
+      .log-area .log-entry {
+        display: block;
+        margin-bottom: 3px;
+        word-break: break-all; /* Allow long words to wrap */
+      }
+      .log-area .log-entry.error {
+        color: #f48771;
+      }
+      .log-area .log-entry.warning {
+        color: #ffd700;
+      }
+      .log-area .log-entry.info {
+        color: #cccccc;
+      }
+      .log-area .log-entry.critical {
+        color: #ff5555;
+        font-weight: bold;
+        animation: pulseError 1s infinite;
+      }
+
+      @keyframes pulseError {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      .calibration-controls {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px dashed #cccccc;
+        background-color: #fafafa;
+      }
+      .calibration-controls label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+      .calibration-controls input[type="range"] {
+        width: 100%;
+        cursor: pointer;
+      }
+      .calibration-controls .control-group {
+        margin-bottom: 15px;
+      }
+      .calibration-controls output {
+        display: inline-block;
+        margin-left: 10px;
+        font-weight: bold;
+        font-family: var(--font-mono);
+      }
+
+      .diagram-container {
+        text-align: center;
+        margin: 20px 0;
+        border: 1px solid #ccc;
+        padding: 10px;
+        position: relative; /* For glitches */
+      }
+      .diagram-container svg {
+        width: 80%;
+        max-width: 300px;
+        height: auto;
+        cursor: pointer;
+      }
+      .diagram-container svg .node:hover {
+        stroke-width: 3;
+        filter: drop-shadow(0 0 3px var(--glitch-color2));
+      }
+      .diagram-container svg .node.active {
+        fill: var(--success-color);
+        stroke: #fff;
+        stroke-width: 2;
+      }
+
+      button {
+        background-color: #0078d4;
+        color: white;
+        border: 1px solid #005a9e;
+        padding: 10px 20px;
+        border-radius: 3px;
+        font-size: 0.95em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+        margin-top: 15px;
+        min-width: 120px;
+      }
+      button:hover {
+        background-color: #106ebe;
+        border-color: #005a9e;
+      }
+      button:active {
+        background-color: #005a9e;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        color: #666666;
+        border-color: #aaaaaa;
+        cursor: not-allowed;
+      }
+      button.secondary {
+        background-color: #f0f0f0;
+        color: #333;
+        border-color: #adadad;
+      }
+      button.secondary:hover {
+        background-color: #e5f1fb;
+        border-color: #0078d4;
+      }
+      button.secondary:active {
+        background-color: #cce4f7;
+        border-color: #005a9e;
+      }
+
+      /* Glitch Effects */
+      .glitch {
+        animation: glitchAnim 1s infinite alternate;
+      }
+      .text-glitch::before,
+      .text-glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--window-bg); /* Match background */
+        overflow: hidden;
+        clip-path: inset(50% 0 50% 0); /* Start with minimal clipping */
+      }
+      .text-glitch::before {
+        text-shadow: -1px 0 var(--glitch-color1);
+        animation: glitchSkew1 1.5s infinite linear alternate-reverse;
+      }
+      .text-glitch::after {
+        text-shadow: 1px 0 var(--glitch-color2);
+        animation: glitchSkew2 1.5s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitchSkew1 {
+        /* Subtle movement and clipping */
+        0% {
+          clip-path: inset(40% 0 60% 0);
+          transform: translate(-0.02em, -0.01em);
+        }
+        100% {
+          clip-path: inset(60% 0 40% 0);
+          transform: translate(0.02em, 0.01em);
+        }
+      }
+      @keyframes glitchSkew2 {
+        0% {
+          clip-path: inset(10% 0 80% 0);
+          transform: translate(0.02em, 0.01em);
+        }
+        100% {
+          clip-path: inset(90% 0 5% 0);
+          transform: translate(-0.02em, -0.01em);
+        }
+      }
+      @keyframes glitchAnim {
+        /* More aggressive glitch */
+        0% {
+          transform: translate(0);
+          opacity: 1;
+        }
+        10%,
+        12%,
+        14%,
+        50%,
+        70%,
+        72%,
+        98%,
+        100% {
+          transform: translate(0);
+          opacity: 1;
+        }
+        11% {
+          transform: translate(2px, -3px) skewX(5deg);
+          opacity: 0.8;
+        }
+        71% {
+          transform: translate(-3px, 2px) skewY(-3deg);
+          opacity: 0.9;
+        }
+        99% {
+          transform: translate(1px, -1px) skewX(-2deg);
+          opacity: 0.7;
+        }
+      }
+
+      .corrupted-text {
+        font-family: "Times New Roman", serif !important; /* Unlikely font */
+        color: #aa0000 !important;
+        letter-spacing: 2px;
+      }
+      .shifted-color {
+        background-color: #f0e6ff !important;
+        color: #4a007a !important;
+      }
+      .flicker {
+        animation: flickerAnim 0.1s infinite alternate;
+      }
+      @keyframes flickerAnim {
+        to {
+          opacity: 0.7;
+        }
+      }
+
+      /* Final State */
+      .final-state-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(30, 30, 30, 0.95);
+        color: #0f0; /* Green console text */
+        font-family: var(--font-mono);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 100;
+        padding: 30px;
+        animation: fadeIn 1s ease-in;
+      }
+      .final-state-overlay h1 {
+        color: #f00;
+        font-size: 2em;
+        animation: pulseError 0.8s infinite;
+        margin-bottom: 20px;
+      }
+      .final-state-overlay p {
+        font-size: 1em;
+        line-height: 1.7;
+        margin-bottom: 15px;
+      }
+      .final-state-overlay .ascii-art {
+        font-size: 0.7em;
+        white-space: pre;
+        line-height: 1.1;
+        color: #ccc;
+        margin-bottom: 20px;
+      }
+      .reboot-button {
+        font-size: 1.1em !important;
+        padding: 12px 30px !important;
+        background-color: #f00 !important;
+        border-color: #a00 !important;
+        animation: pulseError 1.5s infinite;
+      }
+      .reboot-button:hover {
+        background-color: #ff3333 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="maintenance-window" id="mainWindow">
+      <div class="title-bar">
+        <div>
+          <span class="icon"></span> System Core Maintenance Utility v7.π
+        </div>
+        <div class="window-controls">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="content-area" id="contentArea">
+        <!-- Step 1: Initial Warning -->
+        <div class="step active" id="step1">
+          <h2>Critical System Anomaly Detected</h2>
+          <p>
+            The System Heuristic Integrity and Time Keeper (S.H.I.T.) subsystem
+            requires immediate recalibration due to detected temporal shear and
+            potential causal desynchronization.
+          </p>
+          <p>
+            Failure to recalibrate may lead to unpredictable system behavior,
+            data paradoxes, or spontaneous existence failure.
+          </p>
+          <p>
+            <strong>Recommended Action:</strong> Initiate Core Re-Alignment.
+          </p>
+          <button onclick="startProcess()">Initiate Re-Alignment</button>
+          <button
+            class="secondary"
+            onclick="window.alert('Action aborted by user. Potential temporal instability remains.')"
+          >
+            Cancel (Not Recommended)
+          </button>
+        </div>
+
+        <!-- Step 2: Scanning -->
+        <div class="step" id="step2">
+          <h2>Phase 1: Analyzing Temporal Datastream</h2>
+          <p>
+            Scanning core components for paradox contamination and causality
+            drift. Please wait...
+          </p>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar1"></div>
+            <div class="progress-text" id="progressText1">0%</div>
+          </div>
+          <div class="log-area" id="logArea1">
+            <span class="log-entry info"
+              >[TIME: UNCERTAIN] Initiating temporal scan...</span
+            >
+          </div>
+          <button onclick="goToStep(3)" id="step2Next" disabled>
+            Continue
+          </button>
+        </div>
+
+        <!-- Step 3: Calibration Input -->
+        <div class="step" id="step3">
+          <h2 id="step3Title">Phase 2: Heuristic Calibration</h2>
+          <p id="step3Desc">
+            Manual adjustment required to stabilize the subjectivity matrix.
+            Please adjust the following parameters based on current perceived
+            reality constants.
+          </p>
+          <div class="calibration-controls" id="calibControls">
+            <div class="control-group">
+              <label for="slider1">Subjectivity Quotient (SQ):</label>
+              <input
+                type="range"
+                id="slider1"
+                min="0"
+                max="100"
+                value="50"
+                oninput="document.getElementById('val1').value = this.value + '%'"
+              />
+              <output id="val1">50%</output>
+            </div>
+            <div class="control-group">
+              <label for="slider2">Causal Inertia Dampening Field:</label>
+              <input
+                type="range"
+                id="slider2"
+                min="-5"
+                max="5"
+                value="0"
+                step="0.1"
+                oninput="document.getElementById('val2').value = this.value + ' Δt'"
+              />
+              <output id="val2">0 Δt</output>
+            </div>
+            <div class="control-group">
+              <label for="slider3">Existential Certainty Bias:</label>
+              <input
+                type="range"
+                id="slider3"
+                min="1"
+                max="11"
+                value="7"
+                oninput="document.getElementById('val3').value = this.value"
+              />
+              <output id="val3">7</output>
+            </div>
+          </div>
+          <p>
+            <em
+              >Note: Incorrect calibration may result in ontological merging or
+              existential unraveling.</em
+            >
+          </p>
+          <button onclick="applyCalibration()">Apply Calibration</button>
+        </div>
+
+        <!-- Step 4: Diagram Interaction -->
+        <div class="step" id="step4">
+          <h2 id="step4Title">Phase 3: Neural Network Pruning</h2>
+          <p id="step4Desc">
+            Identified rogue sentience nodes overloading the precognitive cache.
+            Please select unstable nodes for pruning.
+          </p>
+          <div class="diagram-container" id="diagramContainer">
+            <p>
+              Click on the <strong style="color: red">RED</strong> nodes to mark
+              for deletion:
+            </p>
+            <svg id="neuralDiagram" viewBox="0 0 200 150">
+              <!-- Simple placeholder nodes and links -->
+              <line
+                x1="50"
+                y1="20"
+                x2="100"
+                y2="75"
+                stroke="#aaa"
+                stroke-width="1"
+              />
+              <line
+                x1="150"
+                y1="20"
+                x2="100"
+                y2="75"
+                stroke="#aaa"
+                stroke-width="1"
+              />
+              <line
+                x1="50"
+                y1="130"
+                x2="100"
+                y2="75"
+                stroke="#aaa"
+                stroke-width="1"
+              />
+              <line
+                x1="150"
+                y1="130"
+                x2="100"
+                y2="75"
+                stroke="#aaa"
+                stroke-width="1"
+              />
+
+              <circle
+                class="node stable"
+                cx="50"
+                cy="20"
+                r="10"
+                fill="#88f"
+                stroke="#33a"
+                stroke-width="1"
+                data-id="N1"
+              />
+              <circle
+                class="node rogue"
+                cx="150"
+                cy="20"
+                r="10"
+                fill="#f88"
+                stroke="#a33"
+                stroke-width="1"
+                data-id="N2"
+              />
+              <circle
+                class="node stable"
+                cx="100"
+                cy="75"
+                r="15"
+                fill="#8f8"
+                stroke="#3a3"
+                stroke-width="1"
+                data-id="N3"
+              />
+              <circle
+                class="node rogue"
+                cx="50"
+                cy="130"
+                r="10"
+                fill="#f88"
+                stroke="#a33"
+                stroke-width="1"
+                data-id="N4"
+              />
+              <circle
+                class="node stable"
+                cx="150"
+                cy="130"
+                r="10"
+                fill="#88f"
+                stroke="#33a"
+                stroke-width="1"
+                data-id="N5"
+              />
+            </svg>
+            <p>
+              <span id="nodesSelected">0</span> /
+              <span id="nodesTotal">2</span> nodes marked.
+            </p>
+          </div>
+          <button onclick="pruneNodes()" id="pruneButton" disabled>
+            Initiate Pruning
+          </button>
+        </div>
+
+        <!-- Step 5: Finalizing / Failure -->
+        <div class="step" id="step5">
+          <h2 id="step5Title">Phase 4: Finalizing Re-Alignment...</h2>
+          <p id="step5Desc">
+            Applying changes and verifying system stability across timelines.
+            This may take a moment...
+          </p>
+          <div class="progress-bar-container">
+            <div
+              class="progress-bar"
+              id="progressBar2"
+              style="background-color: #ffc107"
+            ></div>
+            <!-- Yellow warning color -->
+            <div class="progress-text" id="progressText2">0%</div>
+          </div>
+          <div class="log-area" id="logArea2">
+            <span class="log-entry info"
+              >[EPOCH: REDACTED] Commencing final merge...</span
+            >
+          </div>
+        </div>
+
+        <!-- Final Catastrophe State -->
+        <div
+          class="final-state-overlay"
+          id="finalOverlay"
+          style="display: none"
+        >
+          <!-- Content added dynamically by JS -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentStep = 1;
+      let logInterval;
+      let progressInterval;
+      let glitchLevel = 0; // 0 = none, 1 = mild, 2 = moderate, 3 = severe
+      const totalRogueNodes = 2;
+      let selectedRogueNodes = 0;
+
+      const mainWindow = document.getElementById("mainWindow");
+      const contentArea = document.getElementById("contentArea");
+      const steps = document.querySelectorAll(".step");
+
+      function goToStep(stepNum) {
+        if (stepNum === currentStep) return;
+        clearInterval(logInterval);
+        clearInterval(progressInterval);
+
+        document
+          .getElementById(`step${currentStep}`)
+          .classList.remove("active");
+        const nextStep = document.getElementById(`step${stepNum}`);
+        if (nextStep) {
+          nextStep.classList.add("active");
+          currentStep = stepNum;
+          applyGlitchEffect(); // Apply glitches based on current level
+        } else {
+          console.error("Step not found:", stepNum);
+        }
+      }
+
+      function updateProgress(barId, textId, percentage, text = null) {
+        const bar = document.getElementById(barId);
+        const txt = document.getElementById(textId);
+        if (bar) bar.style.width = `${percentage}%`;
+        if (txt) txt.textContent = text !== null ? text : `${percentage}%`;
+      }
+
+      function addLogEntry(areaId, message, type = "info") {
+        const logArea = document.getElementById(areaId);
+        if (logArea) {
+          const entry = document.createElement("span");
+          entry.className = `log-entry ${type}`;
+          entry.textContent = maybeGlitchText(message);
+          logArea.appendChild(entry);
+          logArea.scrollTop = logArea.scrollHeight; // Auto-scroll
+        }
+      }
+
+      function startProcess() {
+        goToStep(2);
+        let progress = 0;
+        updateProgress("progressBar1", "progressText1", 0);
+        addLogEntry("logArea1", "Scanning primary chronometer...");
+        progressInterval = setInterval(() => {
+          progress += Math.random() * 5 + 1; // Uneven progress
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(progressInterval);
+            clearInterval(logInterval);
+            addLogEntry(
+              "logArea1",
+              "Scan complete. Temporal distortions detected.",
+              "warning"
+            );
+            document.getElementById("step2Next").disabled = false;
+            glitchLevel = 1; // Start mild glitches
+          }
+          // Add random glitches during scan
+          if (Math.random() < 0.1) {
+            const elementsToGlitch = ["step2"];
+            const el = document.getElementById(
+              elementsToGlitch[
+                Math.floor(Math.random() * elementsToGlitch.length)
+              ]
+            );
+            if (el) temporaryGlitchElement(el);
+          }
+          updateProgress("progressBar1", "progressText1", Math.round(progress));
+        }, 300);
+
+        // Add log entries periodically
+        logInterval = setInterval(() => {
+          const messages = [
+            "Checking subspace field integrity...",
+            "Querying event horizon registry...",
+            "Pinging alternate timeline PIDs...",
+            "WARN: Minor causality fluctuation detected at timestamp [REDACTED]",
+            "INFO: Recalibrating tachyon receiver...",
+            "FATAL_PROBE: Found orphan timeline segment...",
+            "Analyzing quantum foam density...",
+            "Defragmenting probability vectors...",
+          ];
+          const type =
+            Math.random() > 0.8
+              ? Math.random() > 0.5
+                ? "warning"
+                : "error"
+              : "info";
+          addLogEntry(
+            "logArea1",
+            messages[Math.floor(Math.random() * messages.length)],
+            type
+          );
+        }, 600);
+      }
+
+      function applyCalibration() {
+        addLogEntry(
+          "logArea1",
+          "Calibration values received. Processing...",
+          "info"
+        ); // Add to previous log for continuity? or start step 4 log?
+        glitchLevel = 2; // Increase glitches
+
+        // Simulate processing and maybe failure
+        temporaryGlitchElement(document.getElementById("step3Title"));
+        temporaryGlitchElement(document.getElementById("calibControls"), 1000); // Glitch the whole section
+
+        // Modify Step 4 based on inputs (Just for flavor)
+        const sq = document.getElementById("slider1").value;
+        const inertia = document.getElementById("slider2").value;
+        const bias = document.getElementById("slider3").value;
+
+        let step4Desc =
+          "Residual temporal eddies detected. Pruning unstable network nodes.";
+        if (sq < 20 || sq > 80) {
+          step4Desc +=
+            " High subjectivity variance detected - exercise extreme caution.";
+          document.getElementById("step4Title").classList.add("corrupted-text");
+        }
+        if (Math.abs(inertia) > 3) {
+          step4Desc +=
+            " WARNING: Causal inertia levels outside safe parameters.";
+          temporaryGlitchElement(document.getElementById("step4Title"));
+        }
+        if (bias < 4 || bias > 9) {
+          step4Desc +=
+            " Existential certainty unstable. Network may exhibit paradoxical behavior.";
+          document.getElementById("step4Desc").classList.add("shifted-color");
+        }
+
+        document.getElementById("step4Desc").textContent = step4Desc;
+
+        // Add click handlers for diagram
+        document.querySelectorAll("#neuralDiagram .node").forEach((node) => {
+          node.onclick = handleNodeClick;
+        });
+
+        // Short delay before going to next step
+        addLogEntry(
+          "logArea1",
+          "Calibration Applied. Proceeding to Node Pruning.",
+          "warning"
+        );
+        setTimeout(() => goToStep(4), 1500);
+      }
+
+      function handleNodeClick(event) {
+        const node = event.target;
+        const isRogue = node.classList.contains("rogue");
+
+        if (isRogue) {
+          if (node.classList.contains("active")) {
+            node.classList.remove("active");
+            selectedRogueNodes--;
+          } else {
+            node.classList.add("active");
+            selectedRogueNodes++;
+            temporaryGlitchElement(node, 200, "flicker"); // Flicker selected node
+          }
+        } else {
+          // Clicked a stable node
+          addLogEntry(
+            "logArea2",
+            `ERROR: Attempted to prune stable node ${node.dataset.id}! System integrity compromised!`,
+            "critical"
+          ); // Log in step 5 area early
+          triggerCatastrophe(
+            "STABLE_NODE_PRUNING_ATTEMPT",
+            "Critical error pruning essential cognitive pathways. Cascading failure imminent."
+          );
+          return; // Stop further interaction
+        }
+
+        document.getElementById("nodesSelected").textContent =
+          selectedRogueNodes;
+        document.getElementById("pruneButton").disabled =
+          selectedRogueNodes !== totalRogueNodes;
+
+        applyGlitchEffect(); // Re-apply global glitches potentially intensified by interaction
+      }
+
+      function pruneNodes() {
+        if (selectedRogueNodes !== totalRogueNodes) {
+          addLogEntry(
+            "logArea2",
+            "ERROR: Incorrect node selection for pruning. ABORTING.",
+            "error"
+          );
+          triggerCatastrophe(
+            "PRUNING_LOGIC_FAILURE",
+            "Failed to isolate rogue nodes. Network destabilizing."
+          );
+          return;
+        }
+
+        goToStep(5);
+        glitchLevel = 3; // Maximum glitches
+        let progress = 0;
+        updateProgress("progressBar2", "progressText2", 0, "Pruning...");
+        addLogEntry(
+          "logArea2",
+          "Initiating pruning sequence... Pray this works.",
+          "warning"
+        );
+
+        progressInterval = setInterval(() => {
+          progress += Math.random() * 3 + 0.5; // Slower, more erratic progress
+
+          if (progress > 30 && Math.random() < 0.3) {
+            // Chance of critical failure during process
+            clearInterval(progressInterval);
+            clearInterval(logInterval);
+            addLogEntry(
+              "logArea2",
+              `FATAL ERROR: Paradox cascade overflow in sector ${Math.random()
+                .toString(16)
+                .substring(2, 8)}!`,
+              "critical"
+            );
+            triggerCatastrophe(
+              "PARADOX_CASCADE",
+              "Pruning sequence failed. Reality fragmentation detected. System coherence lost."
+            );
+            return;
+          }
+
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(progressInterval);
+            clearInterval(logInterval);
+            addLogEntry(
+              "logArea2",
+              "Pruning... maybe successful? System state indeterminate.",
+              "warning"
+            );
+            // Instead of success, trigger a different kind of catastrophe
+            triggerCatastrophe(
+              "ALIGNMENT_AMBIGUOUS",
+              "Core re-alignment complete, but system has entered an unknown, potentially unstable state. Subjective reality may vary."
+            );
+          }
+
+          updateProgress(
+            "progressBar2",
+            "progressText2",
+            Math.round(progress),
+            `Merging Timelines... ${Math.round(progress)}%`
+          );
+          applyGlitchEffect(); // Glitches intensify
+        }, 400);
+
+        logInterval = setInterval(() => {
+          const messages = [
+            "Merging timeline branches...",
+            "Recompiling subjective history...",
+            "WARN: Entropy levels exceeding threshold!",
+            "Flushing paradox buffer...",
+            "CRITICAL: Sentience signature detected outside containment!",
+            "Realigning spacetime coordinates (Offset: ??)...",
+            "INFO: Applying duct tape...",
+            "ERROR 777: Probability drive offline.",
+            "SYSTEM MSG: Is anyone there?",
+            "Collapsing wave functions...",
+          ];
+          const type =
+            Math.random() > 0.6
+              ? Math.random() > 0.4
+                ? "critical"
+                : "error"
+              : Math.random() > 0.7
+              ? "warning"
+              : "info";
+          addLogEntry(
+            "logArea2",
+            messages[Math.floor(Math.random() * messages.length)],
+            type
+          );
+        }, 500);
+      }
+
+      function triggerCatastrophe(errorCode, message) {
+        clearInterval(progressInterval);
+        clearInterval(logInterval);
+
+        const finalOverlay = document.getElementById("finalOverlay");
+        finalOverlay.innerHTML = `
+                <h1 class="text-glitch" data-text="SYSTEM FAILURE">SYSTEM FAILURE</h1>
+                 <div class="ascii-art">
+ ██╗   ██╗███████╗███████╗ ██████╗ ██████╗ ██╗   ██╗███████╗██████╗
+ ██║   ██║██╔════╝██╔════╝██╔════╝ ██╔══██╗██║   ██║██╔════╝██╔══██╗
+ ██║   ██║███████╗███████╗██║  ███╗██████╔╝██║   ██║███████╗██████╔╝
+ ██║   ██║╚════██║╚════██║██║   ██║██╔══██╗██║   ██║╚════██║██╔══██╗
+ ╚██████╔╝███████║███████║╚██████╔╝██║  ██║╚██████╔╝███████║██║  ██║
+  ╚═════╝ ╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
+                </div>
+                 <p style="color: #f88;">Error Code: ${errorCode}</p>
+                 <p class="glitch">${message}</p>
+                 <p style="color:#8f8;">Attempting emergency temporal rollback... FAILED.</p>
+                 <p>Reality integrity: <span style="color: red; font-weight: bold; animation: pulseError 0.5s infinite;">CRITICAL</span></p>
+                 <button class="reboot-button" onclick="window.location.reload()">!! FORCE REALITY REBOOT !!</button>
+            `;
+        finalOverlay.style.display = "flex";
+
+        // Apply maximum glitch to the entire window
+        mainWindow.classList.add("glitch");
+        document.title = "!!! SYSTEM FAILURE !!!";
+      }
+
+      // Glitch Control
+      function applyGlitchEffect() {
+        const glitchableElements = contentArea.querySelectorAll(
+          "h2, p, button, label, .diagram-container"
+        );
+        // Clear previous glitches
+        glitchableElements.forEach((el) => {
+          el.classList.remove(
+            "glitch",
+            "text-glitch",
+            "corrupted-text",
+            "shifted-color",
+            "flicker"
+          );
+          el.style.position = "static"; // Reset potential relative positioning
+          // Remove pseudo-elements if they exist? Harder. Let's rely on class removal.
+        });
+
+        if (glitchLevel === 0) return;
+
+        glitchableElements.forEach((el) => {
+          let chance = 0;
+          if (glitchLevel === 1) chance = 0.1;
+          else if (glitchLevel === 2) chance = 0.3;
+          else if (glitchLevel >= 3) chance = 0.6;
+
+          if (Math.random() < chance) {
+            const glitchType = Math.random();
+            if (glitchType < 0.3) {
+              el.classList.add("glitch");
+            } else if (glitchType < 0.6) {
+              if (
+                el.tagName === "H2" ||
+                el.tagName === "P" ||
+                el.tagName === "LABEL"
+              ) {
+                el.dataset.text = el.textContent;
+                el.classList.add("text-glitch");
+                el.style.position = "relative"; // Needed for text-glitch effect
+              } else {
+                el.classList.add("flicker");
+              }
+            } else if (glitchType < 0.8) {
+              el.classList.add("shifted-color");
+            } else {
+              el.classList.add("corrupted-text");
+            }
+          }
+        });
+      }
+
+      function maybeGlitchText(text) {
+        if (glitchLevel === 0) return text;
+        if (Math.random() > 0.9 - glitchLevel * 0.2) {
+          // Higher glitchLevel = higher chance
+          const chars = text.split("");
+          for (let i = 0; i < chars.length; i++) {
+            if (Math.random() < glitchLevel * 0.05) {
+              // Higher glitchLevel = more chars affected
+              const corruptChars = "!@#$%^&*()-=+{}[]|\\;:'\",.<>/?`~";
+              chars[i] =
+                corruptChars[Math.floor(Math.random() * corruptChars.length)];
+            }
+          }
+          return chars.join("");
+        }
+        return text;
+      }
+
+      function temporaryGlitchElement(
+        element,
+        duration = 500,
+        glitchClass = "glitch"
+      ) {
+        if (!element) return;
+        const originalRelative = element.style.position === "relative";
+        if (glitchClass === "text-glitch") {
+          element.dataset.text = element.textContent;
+          element.style.position = "relative";
+        }
+        element.classList.add(glitchClass);
+        setTimeout(() => {
+          element.classList.remove(glitchClass);
+          if (glitchClass === "text-glitch" && !originalRelative) {
+            element.style.position = "static"; // Restore if we made it relative
+          }
+        }, duration);
+      }
+
+      // Initial setup
+      document.getElementById("nodesTotal").textContent = totalRogueNodes;
+      updateProgress("progressBar1", "progressText1", 0); // Initialize bars
+      updateProgress("progressBar2", "progressText2", 0);
+    </script>
+  </body>
+</html>
