@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRITICAL ALERT!</title>
+    <style>
+        /* Basic Reset & Body Styling */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; /* Common Android font */
+            line-height: 1.5;
+            background-color: #444; /* Darker background */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Overlay Styling */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Even darker overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeInOverlay 0.2s ease-out forwards;
+        }
+
+        /* Modal Styling */
+        .modal {
+            background-color: #fafafa; /* Slightly off-white */
+             /* Subtle warning stripes */
+            background-image: linear-gradient(
+                45deg,
+                #ffeeee 25%,
+                transparent 25%,
+                transparent 50%,
+                #ffeeee 50%,
+                #ffeeee 75%,
+                transparent 75%,
+                transparent 100%
+            );
+            background-size: 40px 40px;
+            padding: 20px 25px 25px 25px;
+            border-radius: 8px;
+            max-width: 450px;
+            width: 92%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.5), 0 5px 15px rgba(0,0,0,0.3); /* Stronger shadow + red glow */
+            transform: scale(1); /* Start at full scale for shake */
+            opacity: 0;
+            animation: scaleUpModal 0.3s 0.1s ease-out forwards, shakeModal 0.5s 0.1s ease-in-out, pulseBorder 1.2s infinite ease-in-out;
+            border: 3px solid #dc3545; /* Start with red border */
+        }
+
+
+        /* Close Button Styling - Often removed in high-urgency modals */
+         .close-btn {
+            /* display: none; */ /* HIDE IT for maximum pressure */
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+            padding: 8px;
+             opacity: 0.6;
+            transition: color 0.2s ease, opacity 0.2s ease;
+         }
+        .close-btn:hover {
+             color: #333;
+             opacity: 1;
+         }
+
+
+        /* Icon Styling */
+        .icon-container {
+            margin-bottom: 10px;
+            display: flex; /* Align icon and warning */
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-container img {
+            width: 45px;
+            height: 45px;
+            animation: spinGear 10s linear infinite;
+        }
+        .warning-symbol {
+            font-size: 35px;
+            color: #dc3545; /* Red */
+             animation: pulseWarningSymbol 1s infinite ease-in-out;
+        }
+
+        /* Title Styling */
+        .modal h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            font-weight: 900; /* Very Bold */
+            color: #d9534f;
+             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Paragraph Styling */
+        .modal p {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 1.0em;
+            text-align: center;
+        }
+         .modal p strong {
+            font-weight: 700;
+            color: #d9534f; /* Red emphasis */
+         }
+         .modal p strong.highlight {
+             background-color: #fff3cd; /* Yellow highlight */
+             padding: 0 3px;
+         }
+         .modal p strong.action-needed {
+              color: #0056b3; /* Blue for required action */
+         }
+
+
+        /* Fake Progress/Severity Bar */
+        .severity-bar-container {
+            width: 80%;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 15px auto 5px auto; /* Added margin */
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+        .severity-bar {
+            width: 10%; /* Start low */
+            height: 100%;
+            background: linear-gradient(90deg, #ffc107, #dc3545); /* Yellow to Red */
+            border-radius: 5px;
+            animation: increaseSeverity 60s linear forwards; /* Match timer */
+        }
+
+
+        /* Timer Styling */
+        .timer-container {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ffebeb;
+            border: 1px dashed #dc3545;
+            border-radius: 5px;
+        }
+        .timer-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 3px;
+        }
+
+        .timer {
+            color: #dc3545;
+            font-weight: 900; /* Extremely Bold */
+            font-size: 1.8em; /* Much Larger */
+            animation: none;
+            line-height: 1.1;
+        }
+
+        .timer.extreme-warning {
+            animation: flashRedIntense 0.5s infinite; /* Very Fast Flash */
+        }
+
+        .timer-warning {
+            color: #dc3545;
+            font-size: 0.95em;
+            font-weight: 700;
+            margin-top: 5px;
+            height: auto; /* Allow multiple lines if needed */
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .timer-warning.visible {
+             visibility: visible;
+             opacity: 1;
+        }
+
+
+        /* Button Container */
+        .buttons {
+            display: flex;
+            flex-direction: column; /* Stack buttons */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* General Button Styling */
+        .btn {
+            padding: 15px 20px; /* Taller buttons */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            width: 100%; /* Full width */
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: none;
+        }
+
+        /* Ignore Button Styling */
+        .ignore-btn {
+            background-color: #adb5bd; /* Grey */
+            color: #fff;
+            font-size: 0.8em; /* Smaller text */
+            font-weight: 500;
+            padding: 8px 15px; /* Smaller padding */
+            order: 2; /* Place below update button */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease, opacity 0.3s ease;
+        }
+
+        .ignore-btn:hover {
+            background-color: #6c757d;
+        }
+         .ignore-btn:disabled {
+            background-color: #ced4da;
+            color: #6c757d;
+            cursor: not-allowed;
+             opacity: 0.7;
+         }
+
+        /* Update Button Styling */
+        .update-btn {
+            background-color: #28a745; /* Green for GO/Safety */
+            color: white;
+            font-weight: 900; /* Max Bold */
+            font-size: 1.4em; /* Largest Text */
+            order: 1; /* Place above ignore button */
+            animation: pulseButtonIntense 1s infinite ease-in-out;
+             box-shadow: 0 4px 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .update-btn:hover {
+            background-color: #218838; /* Darker green */
+            animation-play-state: paused;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUpModal { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes spinGear { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        @keyframes shakeModal { /* Subtle shake on load */
+          10%, 90% { transform: translate3d(-1px, 0, 0); }
+          20%, 80% { transform: translate3d(2px, 0, 0); }
+          30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+          40%, 60% { transform: translate3d(3px, 0, 0); }
+        }
+
+        @keyframes pulseBorder { /* Always pulsing red border */
+            0% { box-shadow: 0 0 25px rgba(255, 0, 0, 0.5), 0 5px 15px rgba(0,0,0,0.3); border-color: #dc3545; }
+            50% { box-shadow: 0 0 35px rgba(255, 0, 0, 0.8), 0 5px 15px rgba(0,0,0,0.3); border-color: #ff4d64; }
+            100% { box-shadow: 0 0 25px rgba(255, 0, 0, 0.5), 0 5px 15px rgba(0,0,0,0.3); border-color: #dc3545; }
+        }
+
+         @keyframes pulseWarningSymbol {
+             0%, 100% { transform: scale(1); opacity: 1; }
+             50% { transform: scale(1.2); opacity: 0.7; }
+         }
+
+
+        @keyframes pulseButtonIntense { /* Faster, more aggressive button pulse */
+            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(40, 167, 69, 0.5); }
+            50% { transform: scale(1.06); box-shadow: 0 6px 15px rgba(40, 167, 69, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 4px 10px rgba(40, 167, 69, 0.5); }
+        }
+
+        @keyframes flashRedIntense { /* More obnoxious flash */
+            0%, 49% { color: #dc3545; opacity: 1; transform: scale(1.05); }
+            50%, 100% { color: #ff0000; opacity: 0.5; transform: scale(1); }
+        }
+
+        @keyframes increaseSeverity {
+            from { width: 10%; }
+            to { width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="modal-overlay">
+        <div class="modal" id="update-modal">
+             <button class="close-btn" id="close-modal-btn" aria-label="Close">×</button>
+
+            <div class="icon-container">
+                <span class="warning-symbol" aria-hidden="true">⚠️</span>
+                <img src="https://icons.iconarchive.com/icons/dtafalonso/android-lollipop/512/Settings-icon.png" alt="Settings Icon">
+            </div>
+
+            <h2>🔴 CRITICAL SECURITY ALERT!</h2>
+
+            <p><strong class="highlight">SEVERE Threat Detected:</strong> Your Android system is <strong >compromised!</strong> Performance degradation and <strong >data loss risk HIGH</strong>.</p>
+
+             <div class="severity-bar-container" title="Threat Severity Increasing">
+                 <div class="severity-bar"></div>
+             </div>
+
+
+            <p><strong class="action-needed">IMMEDIATE Action Required:</strong> An urgent security update is mandatory to neutralize threats and prevent <strong >permanent battery damage</strong>.</p>
+
+            <p>Failure to update <strong >NOW</strong> will leave critical vulnerabilities <strong >exploited!</strong></p>
+
+
+            <div class="timer-container">
+                 <div class="timer-label">System Vulnerability Increases In:</div>
+                <div class="timer" id="timer-display">1 minute 00 seconds</div>
+                 <div class="timer-warning" id="timer-warning">WARNING: System protection fails if timer expires! Update will be disabled!</div>
+            </div>
+
+
+            <div class="buttons">
+                <button class="btn update-btn" id="update-btn">UPDATE & SECURE NOW</button>
+                <button class="btn ignore-btn" id="ignore-btn">IGNORE THREAT (HIGH RISK)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Elements ---
+        const overlay = document.getElementById('modal-overlay');
+        const modal = document.getElementById('update-modal');
+        // const closeModalBtn = document.getElementById('close-modal-btn'); // Might be hidden
+        const ignoreBtn = document.getElementById('ignore-btn');
+        const updateBtn = document.getElementById('update-btn');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerWarning = document.getElementById('timer-warning');
+        const severityBar = modal.querySelector('.severity-bar');
+
+        const EXTREME_WARNING_THRESHOLD = 30; // Seconds threshold for intense flashing
+        const DISABLE_IGNORE_THRESHOLD = 15; // Seconds threshold to disable ignore button
+        const START_TIME_SECONDS = 60; // Start with only 60 seconds
+
+        // --- Timer Logic ---
+        let timeInSeconds = START_TIME_SECONDS;
+        let timerInterval = null;
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const paddedSeconds = String(remainingSeconds).padStart(2, '0');
+            const minuteText = minutes === 1 ? "minute" : "minutes";
+            const secondText = remainingSeconds === 1 ? "second" : "seconds";
+
+            if (minutes > 0) {
+                 return `${minutes} ${minuteText} ${paddedSeconds} ${secondText}`;
+            } else {
+                 // More frantic at the end
+                return `${remainingSeconds} ${secondText} LEFT!`;
+            }
+        }
+
+        function updateTimer() {
+            // Update severity bar (visual only)
+             const percentComplete = ((START_TIME_SECONDS - timeInSeconds) / START_TIME_SECONDS) * 100;
+             // Start severity at 10%, so add 10% base + scaled percentage
+             severityBar.style.width = `${Math.max(10, 10 + (percentComplete * 0.9))}%`;
+
+
+            if (timeInSeconds <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = "TIME EXPIRED!";
+                timerWarning.textContent = "CRITICAL FAILURE! System vulnerable. Manual recovery may be needed.";
+                timerWarning.classList.add('visible');
+                timerDisplay.classList.add('extreme-warning');
+                updateBtn.textContent = "UPDATE FAILED";
+                updateBtn.disabled = true;
+                updateBtn.style.backgroundColor = '#dc3545'; // Turn red on failure
+                updateBtn.style.animation = 'none'; // Stop pulsing
+                ignoreBtn.disabled = true; // Ensure ignore is disabled
+                severityBar.style.width = '100%'; // Max out bar
+                return;
+            }
+
+            timerDisplay.textContent = formatTime(timeInSeconds);
+
+            // Add/Remove flashing class and warning text visibility
+            if (timeInSeconds <= EXTREME_WARNING_THRESHOLD && !timerDisplay.classList.contains('extreme-warning')) {
+                timerDisplay.classList.add('extreme-warning');
+                timerWarning.classList.add('visible');
+                timerWarning.textContent = "WARNING: System protection fails if timer expires! Ignore button disabled soon!";
+
+            } else if (timeInSeconds > EXTREME_WARNING_THRESHOLD && timerDisplay.classList.contains('extreme-warning')) {
+                 // This case might not be reached if timer starts low
+                 timerDisplay.classList.remove('extreme-warning');
+                 timerWarning.classList.remove('visible');
+            }
+
+             // Disable ignore button when time is very low
+             if (timeInSeconds <= DISABLE_IGNORE_THRESHOLD) {
+                 ignoreBtn.disabled = true;
+                 if (timerWarning.classList.contains('visible') && !timerWarning.textContent.includes('DISABLED')) { // Avoid adding text repeatedly
+                    timerWarning.textContent = "IGNORE DISABLED! Update immediately to prevent system failure!";
+                 }
+             }
+
+            timeInSeconds--;
+        }
+
+        // --- Confirmation for Ignoring ---
+        function showIgnoreConfirmation(event) {
+             // Prevent immediate close if button wasn't actually clicked (e.g., during disable transition)
+             if (ignoreBtn.disabled) return;
+
+             event.stopPropagation(); // Prevent overlay click listener firing
+
+            const confirmation = confirm(
+                "⚠️ HIGH RISK ACTION! ⚠️\n\n" +
+                "Ignoring this critical update WILL expose your device to:\n\n" +
+                "- SEVERE Performance Loss\n" +
+                "- Potential Data Corruption & Loss\n" +
+                "- Increased Malware & Virus Risk\n" +
+                "- Rapid Battery Degradation\n\n" +
+                "This action is NOT recommended and may void support.\n\n" +
+                "Are you ABSOLUTELY SURE you want to decline protection and accept ALL risks?"
+            );
+
+            if (confirmation) {
+                console.log("User confirmed ignoring the threat.");
+                closeModal();
+            } else {
+                console.log("User cancelled ignoring.");
+                // Optionally, make the update button pulse even harder here
+            }
+        }
+
+
+        // --- Modal Closing Logic ---
+        function closeModal() {
+            modal.style.animation = 'scaleDownModal 0.3s ease-in forwards';
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+            setTimeout(() => {
+                 overlay.style.display = 'none';
+                 modal.style.animation = ''; // Reset complex animations
+            }, 300);
+            clearInterval(timerInterval);
+            console.log("Modal closed.");
+        }
+
+        // Add closing animation keyframes if not already present
+         try {
+             const styleSheet = document.styleSheets[0];
+             styleSheet.insertRule(`
+                @keyframes scaleDownModal {
+                    from { opacity: 1; transform: scale(1); }
+                    to { opacity: 0; transform: scale(0.8); }
+                }
+            `, styleSheet.cssRules.length);
+         } catch (e) {
+             console.error("Could not insert keyframes:", e);
+         }
+
+
+        // --- Event Listeners ---
+         // if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal); // Re-enable if using close button
+        ignoreBtn.addEventListener('click', showIgnoreConfirmation);
+
+
+        updateBtn.addEventListener('click', () => {
+            console.log("Update & Secure Now clicked! (Simulating immediate action...)");
+             clearInterval(timerInterval); // Stop timer
+            updateBtn.textContent = "SECURING...";
+            updateBtn.disabled = true;
+            ignoreBtn.disabled = true;
+             updateBtn.style.animation = 'none'; // Stop pulse during "update"
+             // Simulate update process
+             setTimeout(() => {
+                 alert("System Update Complete!\n\nYour Android is now SECURE and OPTIMIZED.");
+                 closeModal();
+                 // Reset button state for potential reuse
+                 updateBtn.textContent = "UPDATE & SECURE NOW";
+                 updateBtn.disabled = false;
+                 ignoreBtn.disabled = false;
+             }, 2000);
+        });
+
+        // Optional: Close on overlay click (less aggressive)
+        // overlay.addEventListener('click', (event) => {
+        //     if (event.target === overlay) {
+        //        // Maybe show ignore confirmation instead of just closing?
+        //         showIgnoreConfirmation(event);
+        //     }
+        // });
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTimer(); // Initial display
+            timerInterval = setInterval(updateTimer, 1000);
+
+             // Make sure warning is visible if starting below threshold
+            if (START_TIME_SECONDS <= EXTREME_WARNING_THRESHOLD) {
+                 timerDisplay.classList.add('extreme-warning');
+                 timerWarning.classList.add('visible');
+                 timerWarning.textContent = "WARNING: System protection fails if timer expires! Ignore button disabled soon!";
+             }
+             if (START_TIME_SECONDS <= DISABLE_IGNORE_THRESHOLD) {
+                 ignoreBtn.disabled = true;
+                 timerWarning.textContent = "IGNORE DISABLED! Update immediately to prevent system failure!";
+            }
+        });
+
+    </script>
+
+</body>
+</html>
