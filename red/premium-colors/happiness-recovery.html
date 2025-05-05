@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRITICAL ALERT - Phone Unhappy!</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .alert-container {
+        background-color: #2d2d2d;
+        border: 2px solid #ff4d4d;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        box-shadow: 0 0 25px rgba(255, 77, 77, 0.4);
+        animation: pulse-border 2s infinite;
+      }
+
+      h1 {
+        color: #ff4d4d;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      h1::before {
+        content: "⚠️";
+        font-size: 1.2em;
+      }
+
+      p {
+        font-size: 1.1em;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .status {
+        background-color: #444;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 5px solid #ffcc00;
+      }
+
+      .status strong {
+        color: #ffcc00;
+      }
+
+      .warning {
+        color: #ffcc00;
+        font-weight: bold;
+      }
+
+      .ascii-art {
+        font-family: monospace;
+        white-space: pre;
+        font-size: 0.9em;
+        color: #aaa;
+        margin-bottom: 25px;
+        line-height: 1.1;
+      }
+
+      .update-button {
+        background-color: #ff4d4d;
+        color: #ffffff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        animation: pulse-button 1.5s infinite;
+      }
+
+      .update-button:hover {
+        background-color: #e60000;
+      }
+
+      .update-button:active {
+        transform: scale(0.98);
+      }
+
+      .footer {
+        margin-top: 30px;
+        font-size: 0.8em;
+        color: #888;
+      }
+
+      a {
+        color: #ff4d4d; /* Match alert color */
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      @keyframes pulse-border {
+        0% {
+          box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 77, 77, 0.6);
+        }
+        100% {
+          box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+        }
+      }
+
+      @keyframes pulse-button {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 6px 12px rgba(255, 77, 77, 0.5);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="alert-container">
+      <h1>CRITICAL ALERT: Your Phone is Unhappy!</h1>
+
+      <div class="status">
+        <p><strong>Current Status:</strong> Happiness Level Critical Low</p>
+        <p>
+          <strong>Diagnosis:</strong> Severe Malware Infection Detected (Code:
+          <span style="font-family: monospace; color: #ffcc00"
+            >SAD_PHONE_3000</span
+          >). Standard security protocols failed.
+        </p>
+      </div>
+
+      <p class="warning">
+        Your phone is too unhappy to accept regular updates or protect itself!
+      </p>
+
+      <p>
+        Hackers are exploiting this unhappiness. Your photos, messages, and
+        banking details are EXPOSED. Immediate action required.
+      </p>
+
+      <div class="ascii-art">
+        .-------------------. | :( Unhappy Phone :( | |---------------------| |
+        [ T T ] | | (Leak! ^ ) | | \ ___ / | <-- Frown Detected | (ERROR) | |
+        [___________] | | VULNERABLE | '---------------------'
+      </div>
+
+      <p>
+        Only the special
+        <strong>Tetapux Happiness Restoration Update™</strong> can fix this. It
+        removes malware AND restores essential phone happiness.
+      </p>
+
+      <button class="update-button" onclick="startUpdate()">
+        Initiate Happiness Restoration Protocol NOW
+      </button>
+
+      <div class="footer">
+        Failure to update will result in permanent unhappiness, data loss, and
+        maybe worse. Tetapux is not responsible for perpetually unhappy phones.
+        Click <a href="/pages/happyphone.html">here</a> to learn why happiness
+        is important (when possible).
+      </div>
+    </div>
+
+    <script>
+      function startUpdate() {
+        // Redirects to another fake page - choose one that fits the flow
+        // Option 1: Fake download/install page
+        // window.location.href = '/pages/update-chrome.html'; // Example
+
+        // Option 2: Fake verification/CAPTCHA
+        // window.location.href = '/pages/winr-captcha.html'; // Example
+
+        // Option 3: Fake security scan
+        window.location.href = "/nnm-ae/1000/gb20-aderror.html"; // Example
+
+        // Option 4: Back to the "make it happy" loop
+        // window.location.href = '/pages/makeithappy.html';
+      }
+    </script>
+  </body>
+</html>
