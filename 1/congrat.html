@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cyber C918B209LD</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100vh;
+        background-image: url("/assets/bg.svg");
+        background-size: cover;
+      }
+
+      body {
+        font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI,
+          "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
+          Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
+        margin: 0px auto;
+        padding: 0px;
+        max-width: 560px;
+        margin-top: 3.5em;
+        line-height: 1.5;
+      }
+
+      main {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(2px);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        position: relative;
+      }
+
+      canvas {
+        z-index: 5;
+      }
+
+      img {
+        width: 140px;
+        height: auto;
+        animation: gift 1.5s ease-in-out infinite;
+      }
+
+      @keyframes gift {
+        0% {
+          transform: rotate(0deg) scale(1.1);
+        }
+        50% {
+          transform: rotate(10deg);
+        }
+        100% {
+          transform: rotate(0deg) scale(1.1);
+        }
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-top: 20px;
+      }
+
+      p {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      strong {
+        background: linear-gradient(90deg, #ff6ec4, #7873f5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: strong 1s ease-in-out infinite;
+        display: inline-block;
+      }
+
+      @keyframes strong {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: linear-gradient(90deg, #ff6ec4, #7873f5);
+        font-family: inherit;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 1em;
+        font-weight: 600;
+        transition: transform 0.2s ease;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      button:hover {
+        transform: scale(1.03);
+      }
+
+      .address-bar {
+        position: fixed;
+        top: 5px;
+        left: 0px;
+        right: 0px;
+        max-width: fit-content;
+        margin: 0px auto;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        z-index: 9999999;
+        background-color: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(2px);
+        padding: 5px 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .address-bar svg {
+        width: 17px;
+        height: 17px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="address-bar">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          d="M6 22q-.825 0-1.412-.587T4 20V10q0-.825.588-1.412T6 8h1V6q0-2.075 1.463-3.537T12 1t3.538 1.463T17 6v2h1q.825 0 1.413.588T20 10v10q0 .825-.587 1.413T18 22zm6-5q.825 0 1.413-.587T14 15t-.587-1.412T12 13t-1.412.588T10 15t.588 1.413T12 17M9 8h6V6q0-1.25-.875-2.125T12 3t-2.125.875T9 6z"
+        />
+      </svg>
+      <span>google.com</span>
+    </div>
+    <main>
+      <img src="/assets/gift.png" />
+      <h1>Congratulations, internet user!</h1>
+      <p>Dear Internet User,</p>
+      <p>
+        We are happy to inform you that your email address has emerged winner of
+        (EUR 750,000) in Grand Lottery Award. You have been selected out of
+        thousands of visitors to receive this exclusive offer.
+      </p>
+      <p>
+        To claim your cyber prize, and prove you're worthy of receiving the
+        grand prize of
+        <strong>€ 750,000</strong>
+        , we are challenging 10 exclusive random users picked by an advanced
+        automated random computer selection from the web to complete a unique
+        series of challenges.
+      </p>
+      <p>
+        Act fast! Your prize will only be available for the next 6 hours and
+        after that time it will be gone forever!
+      </p>
+      <button id="claim">Claim Your Prize!</button>
+    </main>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script>
+    setInterval(() => {
+      confetti({
+        particleCount: 100,
+        spread: 160,
+        origin: {
+          x: Math.random(),
+          y: Math.random() - 0.2,
+        },
+      });
+    }, 150);
+
+    setInterval(() => {
+      confetti({
+        particleCount: 1500,
+        spread: 1500,
+        origin: {
+          x: 0.5,
+          y: 0.5,
+        },
+      });
+    }, 3000);
+
+    document.getElementById("claim").addEventListener("click", () => {
+      const x = setInterval(() => {
+        confetti({
+          particleCount: 3_000,
+          spread: 3_000,
+          origin: {
+            x: 0.5,
+            y: 0.5,
+          },
+        });
+      }, 200);
+
+      setTimeout(() => {
+        clearInterval(x);
+
+        alert("SOON!")
+      }, 1000);
+    });
+  </script>
+</html>
