@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Meet Verification</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+      :root {
+        --google-blue: #1a73e8;
+        --google-red: #ea4335;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --border-color: #dadce0;
+        --video-bg: #202124;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: system-ui, "Roboto", "Arial", sans-serif;
+        background-color: var(--white);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+
+      .container {
+        max-width: 900px;
+        width: 100%;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+
+      .logo-text {
+        font-size: 22px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 80px;
+      }
+
+      .video-preview-container {
+        position: relative;
+        width: 480px;
+        height: 270px;
+        background-color: var(--video-bg);
+        border-radius: 8px;
+        border: 1px solid #555;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 20px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 16px;
+      }
+
+      .control-button {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .control-button svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .mic-off {
+        background-color: var(--google-red);
+      }
+
+      .mic-off:hover {
+        background-color: #d93025;
+      }
+
+      .video-off {
+        background-color: var(--white);
+        border: 1px solid var(--border-color);
+      }
+
+      .video-off:hover {
+        background-color: #f8f9fa;
+      }
+
+      .verification-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 320px;
+      }
+
+      .verification-panel h1 {
+        font-size: 24px;
+        font-weight: 400;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 10px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 24px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background-color 0.2s, border-color 0.2s;
+      }
+
+      .btn-primary {
+        background-color: var(--google-blue);
+        color: var(--white);
+      }
+
+      .btn-primary:hover {
+        background-color: #186bd6;
+      }
+
+      .btn-secondary {
+        background-color: var(--white);
+        color: var(--google-blue);
+        border-color: var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background-color: #f8f9fa;
+        border-color: #c6c6c6;
+      }
+
+      .btn-secondary svg {
+        fill: var(--google-blue);
+        width: 20px;
+        height: 20px;
+      }
+
+      @media (max-width: 800px) {
+        body {
+          align-items: flex-start;
+          padding-top: 40px;
+        }
+        main {
+          flex-direction: column;
+          gap: 40px;
+        }
+        .video-preview-container {
+          width: 100%;
+          max-width: 480px;
+          /* Maintain 16:9 aspect ratio */
+          aspect-ratio: 16 / 9;
+          height: auto;
+        }
+        .verification-panel {
+          align-items: center;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/1880px-Google_Favicon_2025.svg.png"
+          style="width: 30px; height: 30px"
+        />
+        <span class="logo-text">Google</span>
+      </header>
+
+      <main>
+        <div class="video-preview-container">
+          <div class="controls">
+            <button
+              class="control-button mic-off"
+              aria-label="Microphone muted"
+            >
+              <svg viewBox="0 0 24 24" fill="white">
+                <path
+                  d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1.2-9.1c0-.66.54-1.2 1.2-1.2.66 0 1.2.54 1.2 1.2l-.01 6.2c0 .66-.53 1.2-1.19 1.2s-1.2-.54-1.2-1.2V4.9zm6.5 6.1c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"
+                />
+                <path
+                  d="m1.39 4.22 4.22 4.22c-.15.28-.23.6-.23.94v.2h-1.7c0 .48.07.95.2 1.39l1.46 1.46C5.03 12.01 5 11.51 5 11h1.7c0 .17.02.34.05.51l2.36 2.36c-.53.18-1.01.44-1.41.79l-1.42-1.42-1.41 1.41 1.42 1.42c-.22.29-.41.6-.57.92l-1.46-1.46-1.41 1.41 1.46 1.46C4.18 17.27 4 16.65 4 16h2c0 .41.07.81.18 1.18l2.05 2.05L1.39 4.22zM22.61 19.78 4.22 1.39 2.81 2.81l19.8 19.8 1.41-1.41z"
+                />
+              </svg>
+            </button>
+            <button class="control-button video-off" aria-label="Camera off">
+              <svg viewBox="0 0 24 24" fill="#202124">
+                <path
+                  d="M18 10.48V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4.48l4 4V6.48l-4 4zM16 18H4V6h12v12z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="verification-panel">
+          <h1>Please verify it's you.</h1>
+          <div class="action-buttons">
+            <button class="btn btn-primary">Start verification</button>
+            <button class="btn btn-secondary">Quit</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
