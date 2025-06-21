@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cosmic Forge — Project Chimera Launch Event</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --dark-navy: #0a0f1a;
+        --mid-metal: #1a202c;
+        --light-metal: #2d3748;
+        --border-color: #4a5568;
+        --accent-orange: #f56565;
+        --accent-gold: #f6ad55;
+        --text-primary: #edf2f7;
+        --text-secondary: #a0aec0;
+        --font-display: "Orbitron", sans-serif;
+        --font-body: "Roboto", sans-serif;
+      }
+
+      /* --- Animations --- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes aurora {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 10px #f6ad5566, 0 0 20px #f5656533;
+        }
+        50% {
+          box-shadow: 0 0 25px #f6ad55cc, 0 0 50px #f5656577;
+        }
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes slideInRow {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- Base Styles --- */
+      body {
+        font-family: var(--font-body);
+        background-color: var(--dark-navy);
+        color: var(--text-primary);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background-image: radial-gradient(
+          circle at center,
+          rgba(45, 55, 72, 0.3) 0,
+          transparent 40%
+        );
+        background-size: 150% 150%;
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* --- Header --- */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 40px;
+        border-bottom: 1px solid var(--border-color);
+        animation: fadeIn 0.8s ease-out;
+      }
+      .logo {
+        font-family: var(--font-display);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: 2px;
+      }
+      .logo span {
+        color: var(--accent-orange);
+        text-shadow: 0 0 8px var(--accent-orange);
+      }
+      .nav a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        margin-left: 30px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      .nav a:hover {
+        color: var(--accent-gold);
+        text-shadow: 0 0 5px var(--accent-gold);
+      }
+
+      /* --- Hero Section --- */
+      .hero {
+        text-align: center;
+        padding: 80px 20px;
+        animation: fadeIn 1s 0.2s ease-out both;
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-size: 56px;
+        margin: 0;
+        background: linear-gradient(
+          90deg,
+          var(--accent-orange),
+          var(--accent-gold),
+          var(--text-primary),
+          var(--accent-gold),
+          var(--accent-orange)
+        );
+        background-size: 200% auto;
+        color: #fff;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: aurora 8s ease-in-out infinite;
+      }
+      #typewriter-container {
+        min-height: 70px; /* Prevent layout shift */
+      }
+      .hero p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--text-secondary);
+        max-width: 750px;
+        margin: 20px auto 0;
+        font-weight: 300;
+      }
+
+      /* --- Main Content Grid --- */
+      .main-content {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 30px;
+        margin-top: 20px;
+      }
+
+      /* --- Interactive Card Base --- */
+      .card {
+        background: var(--mid-metal);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        transition: transform 0.1s ease, box-shadow 0.3s ease;
+        transform-style: preserve-3d;
+        animation: fadeIn 1s 0.5s ease-out both;
+      }
+      .card:hover {
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+      }
+      .card h2 {
+        font-family: var(--font-display);
+        font-size: 26px;
+        margin-top: 0;
+        margin-bottom: 25px;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* --- Left Card: Stream & Chat --- */
+      .video-container {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #000;
+        position: relative;
+      }
+      .video-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.6;
+      }
+      .live-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: var(--accent-orange);
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        animation: pulseGlow 2s infinite;
+      }
+      .chat-box {
+        margin-top: 20px;
+        height: 300px; /* Increased height */
+        overflow-y: scroll;
+        padding-right: 15px;
+      }
+      .chat-box::-webkit-scrollbar {
+        width: 4px;
+      }
+      .chat-box::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .chat-box::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 4px;
+      }
+      .chat-message {
+        margin-bottom: 15px;
+        font-size: 14px;
+        animation: fadeIn 0.5s ease-out;
+        line-height: 1.5;
+      }
+      .chat-message span {
+        font-weight: bold;
+        margin-right: 8px;
+      }
+
+      /* --- Right Card: Giveaway Core --- */
+      .giveaway-core {
+        text-align: center;
+      }
+
+      .progress-core-container {
+        position: relative;
+        width: 220px;
+        height: 220px;
+        margin: 20px auto;
+      }
+      .progress-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        animation: spin 30s linear infinite;
+      }
+      .progress-ring-bg {
+        fill: none;
+        stroke: var(--light-metal);
+        stroke-width: 12;
+      }
+      .progress-ring-fill {
+        fill: none;
+        stroke: url(#progress-gradient);
+        stroke-width: 12;
+        stroke-linecap: round;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+        transition: stroke-dashoffset 1s ease-in-out;
+      }
+      .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      .progress-amount {
+        font-family: var(--font-display);
+        font-size: 28px;
+        color: var(--text-primary);
+      }
+      .progress-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .address-box {
+        background: var(--dark-navy);
+        padding: 15px 20px;
+        border-radius: 8px;
+        border: 1px dashed var(--border-color);
+        margin: 25px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .address-box:hover {
+        border-color: var(--accent-gold);
+        background: #101623;
+      }
+      .address-text {
+        font-family: monospace;
+        font-size: 16px;
+        word-break: break-all;
+        color: var(--text-secondary);
+      }
+      .copy-text {
+        display: block;
+        font-size: 12px;
+        margin-top: 5px;
+        color: var(--accent-gold);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .address-box:hover .copy-text {
+        opacity: 1;
+      }
+
+      .bonus-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .bonus-table th,
+      .bonus-table td {
+        text-align: left;
+        padding: 14px 10px;
+        border-bottom: 1px solid var(--light-metal);
+        font-size: 15px;
+      }
+      .bonus-table th {
+        font-size: 12px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+      }
+      .bonus-table td:nth-child(2) {
+        color: var(--accent-gold);
+        font-weight: 500;
+      }
+      .bonus-table tr:last-child td {
+        border: none;
+      }
+      .bonus-table .highlight {
+        background: linear-gradient(90deg, #f6ad5533, transparent);
+        border-left: 3px solid var(--accent-gold);
+      }
+      .bonus-table .highlight td:first-child {
+        padding-left: 20px;
+      }
+
+      /* --- Transactions Section --- */
+      .transactions-section {
+        margin-top: 80px;
+        animation: fadeIn 1s 0.8s ease-out both;
+      }
+      .transactions-section h2 {
+        font-family: var(--font-display);
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 40px;
+      }
+      .tx-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .tx-table th,
+      .tx-table td {
+        padding: 16px;
+        border-bottom: 1px solid var(--border-color);
+        text-align: left;
+        font-size: 14px;
+        font-family: monospace;
+      }
+      .tx-table thead {
+        color: var(--text-secondary);
+      }
+      .tx-table tbody tr {
+        animation: slideInRow 0.6s ease-out;
+      }
+      .tx-hash {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .tx-status-in {
+        color: #48bb78;
+        font-weight: bold;
+      }
+      .tx-status-out {
+        color: #63b3ed;
+        font-weight: bold;
+      }
+      .tx-amount {
+        color: var(--text-primary);
+        font-weight: bold;
+      }
+
+      /* --- Footer --- */
+      .footer {
+        text-align: center;
+        padding: 50px;
+        margin-top: 50px;
+        border-top: 1px solid var(--border-color);
+        color: #718096;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      .footer b {
+        color: var(--accent-orange);
+      }
+
+      /* --- Responsive Design --- */
+      @media (max-width: 1024px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: 42px;
+        }
+        #typewriter-container {
+          min-height: 55px;
+        }
+        .hero p {
+          font-size: 16px;
+        }
+      }
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+        }
+        .nav {
+          margin-top: 10px;
+        }
+        .hero {
+          padding: 40px 10px;
+        }
+        .tx-table {
+          font-size: 12px;
+        }
+        .tx-table td,
+        .tx-table th {
+          padding: 12px 8px;
+        }
+        .tx-hash,
+        .tx-addr {
+          max-width: 100px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        COSMIC
+        <span>_</span>
+        FORGE
+      </div>
+      <nav class="nav">
+        <a href="#">Launch Details</a>
+        <a href="#">Technology</a>
+        <a href="#">Roadmap</a>
+        <a href="#">Support</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="hero">
+        <div id="typewriter-container">
+          <h1 id="typewriter"></h1>
+        </div>
+        <p>
+          "With the successful fusion of our Chimera Alloy, we're not just
+          creating a new material; we're forging a new paradigm in energy and
+          computation. To celebrate this milestone, we're seeding the developer
+          community with 50,000 ETH to build the future with us."
+        </p>
+      </div>
+
+      <div class="main-content">
+        <div class="card" id="card-left">
+          <div class="card-inner">
+            <h2>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="color: var(--accent-orange)"
+              >
+                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+              </svg>
+              Project Chimera: Live Fusion Feed
+            </h2>
+            <div class="video-container">
+              <div class="live-badge">LIVE</div>
+              <video
+                src="https://assets.mixkit.co/videos/preview/mixkit-molten-metal-being-poured-into-a-mold-49528-large.mp4"
+                autoplay
+                loop
+                muted
+                playsinline
+              ></video>
+            </div>
+            <div class="chat-box" id="chat-box">
+              <!-- Chat messages injected by JS -->
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="card-right">
+          <div class="card-inner">
+            <h2>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="color: var(--accent-gold)"
+              >
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                ></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+              Community Seeding Initiative
+            </h2>
+            <div class="giveaway-core">
+              <div class="progress-core-container">
+                <svg class="progress-ring" width="220" height="220">
+                  <defs>
+                    <linearGradient
+                      id="progress-gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="0%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: var(--accent-gold); stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="
+                          stop-color: var(--accent-orange);
+                          stop-opacity: 1;
+                        "
+                      />
+                    </linearGradient>
+                  </defs>
+                  <circle class="progress-ring-bg" cx="110" cy="110" r="104" />
+                  <circle
+                    id="progress-circle"
+                    class="progress-ring-fill"
+                    cx="110"
+                    cy="110"
+                    r="104"
+                  />
+                </svg>
+                <div class="progress-text">
+                  <div id="progress-amount" class="progress-amount">25,304</div>
+                  <div class="progress-label">ETH Remaining</div>
+                </div>
+              </div>
+
+              <div class="address-box" id="address-box">
+                <p class="address-text" id="address-text-val">
+                  0xCF4A252e185f2459C3d4A415E981f4a5A7A71a45
+                </p>
+                <span class="copy-text" id="copy-feedback">
+                  Click to Copy Address
+                </span>
+              </div>
+
+              <table class="bonus-table">
+                <thead>
+                  <tr>
+                    <th>You Send (ETH)</th>
+                    <th>You Receive (ETH)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1 - 5</td>
+                    <td>2 - 10 (2x)</td>
+                  </tr>
+                  <tr>
+                    <td>5 - 10</td>
+                    <td>12.5 - 25 (2.5x)</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>10 - 25</td>
+                    <td>30 - 75 (3x BONUS)</td>
+                  </tr>
+                  <tr>
+                    <td>25+</td>
+                    <td>100+ (4x MAX BONUS)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="transactions-section">
+        <h2>Live Network Transactions</h2>
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Hash</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Amount (ETH)</th>
+            </tr>
+          </thead>
+          <tbody id="tx-table-body">
+            <!-- Transactions injected by JS -->
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <footer class="footer">
+      © 2024 Cosmic Forge Industries. All Rights Reserved.
+      <br />
+      The Community Seeding Initiative is a promotional event. If the total
+      allocation is depleted, contributions will be returned.
+      <br />
+      <br />
+      <b>
+        THIS IS A FICTIONAL DEMONSTRATION. THIS IS NOT A REAL COMPANY OR A REAL
+        GIVEAWAY. DO NOT SEND FUNDS TO THE ADDRESS SHOWN.
+      </b>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- INTERACTIVITY ---
+        const body = document.body;
+        body.addEventListener("mousemove", (e) => {
+          body.style.backgroundPositionX =
+            (e.clientX / window.innerWidth) * 50 - 25 + "%";
+          body.style.backgroundPositionY =
+            (e.clientY / window.innerHeight) * 50 - 25 + "%";
+        });
+
+        function init3DCard(cardId) {
+          const card = document.getElementById(cardId);
+          const inner = card.querySelector(".card-inner");
+          if (!card || !inner) return;
+
+          card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const width = card.offsetWidth;
+            const height = card.offsetHeight;
+
+            const rotateX = -1 * ((y / height) * 12 - 6); // Max rotation 6deg
+            const rotateY = (x / width) * 12 - 6;
+
+            inner.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+          });
+
+          card.addEventListener("mouseleave", () => {
+            inner.style.transform =
+              "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
+          });
+        }
+        init3DCard("card-left");
+        init3DCard("card-right");
+
+        // --- TYPEWRITER ---
+        const typewriterEl = document.getElementById("typewriter");
+        const textToType = "Project Chimera: Activated";
+        let i = 0;
+        function typeWriter() {
+          if (i < textToType.length) {
+            typewriterEl.innerHTML += textToType.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+          }
+        }
+        setTimeout(typeWriter, 1200);
+
+        // --- GIVEAWAY CORE & PROGRESS ---
+        const progressCircle = document.getElementById("progress-circle");
+        const progressAmountEl = document.getElementById("progress-amount");
+        const radius = progressCircle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+
+        const totalGiveaway = 50000;
+        let ethRemaining = 25304;
+
+        function updateProgress() {
+          const decrement = Math.random() * 50 + 5;
+          ethRemaining -= decrement;
+          if (ethRemaining < 0) ethRemaining = 0;
+
+          const percentage = ethRemaining / totalGiveaway;
+          const offset = circumference - percentage * circumference;
+          progressCircle.style.strokeDashoffset = offset;
+
+          progressAmountEl.textContent =
+            Math.floor(ethRemaining).toLocaleString();
+
+          if (ethRemaining <= 0) clearInterval(progressInterval);
+        }
+        const progressInterval = setInterval(updateProgress, 3200);
+        updateProgress();
+
+        // --- ADDRESS COPY ---
+        const addressBox = document.getElementById("address-box");
+        const addressText =
+          document.getElementById("address-text-val").textContent;
+        const copyFeedback = document.getElementById("copy-feedback");
+        addressBox.addEventListener("click", () => {
+          navigator.clipboard.writeText(addressText).then(() => {
+            copyFeedback.textContent = "Address Copied!";
+            setTimeout(() => {
+              copyFeedback.textContent = "Click to Copy Address";
+            }, 2000);
+          });
+        });
+
+        // --- LIVE CHAT SIMULATION ---
+        const chatBox = document.getElementById("chat-box");
+        const users = [
+          { name: "0xPolymer", color: "#f6ad55" },
+          { name: "AlloyDev", color: "#63B3ED" },
+          { name: "FusionFan", color: "#48BB78" },
+          { name: "ChimeraDAO", color: "#f56565" },
+          { name: "CryptoForge", color: "#EDF2F7" },
+        ];
+        const messages = [
+          "This tech is insane, just saw the whitepaper.",
+          "Just sent 10 ETH, fingers crossed! 🤞",
+          "It's real! Got 30 ETH back in my wallet, only took 3 minutes!",
+          "LFG!!! Building the future on Chimera.",
+          "Can confirm, I received the bonus. This is the most legit launch I've seen.",
+          "Is this the next paradigm shift for L2s?",
+          "Sent 5 ETH... waiting... YES! Received 12.5 ETH! Thank you Cosmic Forge!",
+          "The live feed looks like something out of a sci-fi movie. So cool.",
+        ];
+
+        function addChatMessage() {
+          const user = users[Math.floor(Math.random() * users.length)];
+          const message = messages[Math.floor(Math.random() * messages.length)];
+
+          const msgEl = document.createElement("div");
+          msgEl.className = "chat-message";
+          msgEl.innerHTML = `<span style="color: ${user.color};">${user.name}:</span> ${message}`;
+
+          chatBox.prepend(msgEl);
+          if (chatBox.children.length > 25) chatBox.lastChild.remove();
+        }
+        setInterval(addChatMessage, 2900);
+        for (let i = 0; i < 8; i++) addChatMessage();
+
+        // --- LIVE TRANSACTIONS SIMULATION ---
+        const txTableBody = document.getElementById("tx-table-body");
+        const giveawayAddress = "0xCF...1a45";
+
+        function generateRandomAddress() {
+          return `0x${[...Array(6)]
+            .map(() => Math.floor(Math.random() * 16).toString(16))
+            .join("")}...${[...Array(4)]
+            .map(() => Math.floor(Math.random() * 16).toString(16))
+            .join("")}`;
+        }
+        function generateRandomHash() {
+          return `0x${[...Array(10)]
+            .map(() => Math.floor(Math.random() * 16).toString(16))
+            .join("")}...`;
+        }
+
+        function addTransaction() {
+          const fromAddress = generateRandomAddress();
+          const valueIn = (Math.random() * 15 + 1).toFixed(2);
+          const bonusMultiplier = 2 + Math.random() * 2;
+          const valueOut = (valueIn * bonusMultiplier).toFixed(2);
+
+          const rowIn = document.createElement("tr");
+          rowIn.innerHTML = `
+            <td><span class="tx-status-in">IN</span></td>
+            <td class="tx-hash">${generateRandomHash()}</td>
+            <td class="tx-addr">${fromAddress}</td>
+            <td class="tx-addr">${giveawayAddress}</td>
+            <td class="tx-amount">${valueIn} ETH</td>
+        `;
+
+          const rowOut = document.createElement("tr");
+          rowOut.innerHTML = `
+            <td><span class="tx-status-out">OUT</span></td>
+            <td class="tx-hash">${generateRandomHash()}</td>
+            <td class="tx-addr">${giveawayAddress}</td>
+            <td class="tx-addr">${fromAddress}</td>
+            <td class="tx-amount">${valueOut} ETH</td>
+        `;
+
+          txTableBody.prepend(rowOut);
+          setTimeout(() => txTableBody.prepend(rowIn), 100); // Slight delay for effect
+
+          if (txTableBody.children.length > 16) {
+            txTableBody.lastChild.remove();
+            txTableBody.lastChild.remove();
+          }
+        }
+        setInterval(addTransaction, 4200);
+        for (let i = 0; i < 4; i++) addTransaction();
+      });
+    </script>
+  </body>
+</html>
