@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aetherium Dynamics — Quantum Ledger Initiative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-cyan: #00f6ff;
+        --primary-magenta: #ff00c1;
+        --bg-dark: #02041b;
+        --bg-glass: rgba(10, 15, 45, 0.5);
+        --border-color: rgba(0, 246, 255, 0.2);
+        --text-primary: #e5e5e5;
+        --text-secondary: #a0a0b0;
+        --font-main: "Share Tech Mono", monospace;
+        --glow-shadow: 0 0 5px var(--primary-cyan), 0 0 10px var(--primary-cyan),
+          0 0 20px var(--primary-magenta);
+      }
+
+      /* --- Animations --- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: var(--glow-shadow);
+        }
+        50% {
+          box-shadow: 0 0 8px var(--primary-cyan), 0 0 15px var(--primary-cyan),
+            0 0 30px var(--primary-magenta), 0 0 50px var(--primary-magenta);
+        }
+      }
+      @keyframes terminalLine {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes typing-cursor {
+        from,
+        to {
+          border-right-color: transparent;
+        }
+        50% {
+          border-right-color: var(--primary-cyan);
+        }
+      }
+      @keyframes glitch {
+        0% {
+          transform: translate(0);
+        }
+        20% {
+          transform: translate(-2px, 2px);
+        }
+        40% {
+          transform: translate(-2px, -2px);
+        }
+        60% {
+          transform: translate(2px, 2px);
+        }
+        80% {
+          transform: translate(2px, -2px);
+        }
+        100% {
+          transform: translate(0);
+        }
+      }
+
+      /* --- Base Styles --- */
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+        font-family: var(--font-main);
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(10, 15, 45, 0.9) 0%,
+            var(--bg-dark) 70%
+          ),
+          radial-gradient(
+            ellipse at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(0, 246, 255, 0.1),
+            transparent 40%
+          );
+      }
+
+      /* --- Particle BG --- */
+      #particle-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      /* --- Layout --- */
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        animation: fadeIn 1s ease-out;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-cyan);
+        text-shadow: 0 0 5px var(--primary-cyan);
+        cursor: pointer;
+      }
+      .logo:hover {
+        animation: glitch 0.2s infinite;
+      }
+
+      nav a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        margin-left: 2rem;
+        transition: all 0.3s ease;
+      }
+      nav a:hover,
+      nav a.active {
+        color: var(--primary-cyan);
+        text-shadow: 0 0 5px var(--primary-cyan);
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        flex-grow: 1;
+        margin-top: 2rem;
+      }
+
+      .main-interface {
+        background: var(--bg-glass);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2.5rem;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: inset 0 0 40px rgba(0, 246, 255, 0.1);
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .data-ticker,
+      .terminal {
+        background: var(--bg-glass);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        backdrop-filter: blur(10px);
+      }
+
+      /* --- Interface Content --- */
+      .step {
+        display: none;
+      }
+      .step.active {
+        display: block;
+      }
+
+      #step-1 h1 {
+        font-size: 3rem;
+        color: var(--primary-cyan);
+        text-shadow: 0 0 8px var(--primary-cyan);
+        margin: 0 0 1rem 0;
+        border-right: 3px solid var(--primary-cyan);
+        white-space: nowrap;
+        overflow: hidden;
+        animation: typing-cursor 0.75s step-end infinite;
+      }
+
+      #step-1 p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        max-width: 80ch;
+        margin-bottom: 2.5rem;
+      }
+
+      .cta-button {
+        font-family: var(--font-main);
+        background: transparent;
+        border: 2px solid var(--primary-cyan);
+        color: var(--primary-cyan);
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 246, 255, 0.3);
+      }
+      .cta-button:hover {
+        background: var(--primary-cyan);
+        color: var(--bg-dark);
+        box-shadow: var(--glow-shadow);
+      }
+
+      /* --- Step 2 & 3 Content --- */
+      .progress-bar {
+        height: 8px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+        margin: 2rem 0;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-magenta),
+          var(--primary-cyan)
+        );
+        transition: width 0.5s ease-out;
+      }
+      .status-text {
+        text-align: center;
+        color: var(--text-secondary);
+        letter-spacing: 2px;
+      }
+
+      .giveaway-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .qr-code-container {
+        text-align: center;
+      }
+      .qr-code-container img {
+        width: 200px;
+        height: 200px;
+        border-radius: 8px;
+        border: 4px solid var(--primary-cyan);
+        animation: pulseGlow 2.5s infinite;
+      }
+      .wallet-address {
+        background-color: var(--bg-dark);
+        padding: 1rem;
+        font-size: 1.1rem;
+        text-align: center;
+        word-break: break-all;
+        border: 1px dashed var(--border-color);
+        margin-top: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+      .wallet-address:hover {
+        color: var(--primary-cyan);
+      }
+
+      .rules h3 {
+        color: var(--primary-cyan);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+      }
+      .rules ul {
+        list-style: none;
+        padding: 0;
+      }
+      .rules li {
+        background: rgba(0, 246, 255, 0.05);
+        margin-bottom: 0.5rem;
+        padding: 0.8rem;
+        border-left: 3px solid var(--primary-cyan);
+      }
+      .rules li span {
+        color: var(--primary-cyan);
+        font-weight: bold;
+      }
+
+      /* --- Sidebar Content --- */
+      .data-ticker h3,
+      .terminal h3 {
+        margin-top: 0;
+        color: var(--primary-cyan);
+        letter-spacing: 1px;
+      }
+      .ticker-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .ticker-item {
+        text-align: center;
+      }
+      .ticker-value {
+        font-size: 1.8rem;
+        color: #fff;
+        margin-bottom: 0.25rem;
+      }
+      .ticker-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+      }
+
+      .terminal-output {
+        height: 300px;
+        overflow-y: auto;
+        font-size: 0.9rem;
+        padding-right: 10px;
+      }
+      .terminal-output p {
+        margin: 0 0 0.5rem 0;
+        animation: terminalLine 0.5s ease;
+        white-space: pre-wrap; /* Allows wrapping */
+        word-break: break-all; /* Breaks long strings like hashes */
+      }
+      .terminal-output .in {
+        color: #50fa7b;
+      } /* Green */
+      .terminal-output .out {
+        color: #8be9fd;
+      } /* Cyan */
+      .terminal-output .sys {
+        color: #ff79c6;
+      } /* Pink */
+
+      /* --- Scrollbar --- */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-cyan);
+      }
+
+      /* --- Footer --- */
+      footer {
+        text-align: center;
+        padding: 2rem 0 1rem 0;
+        margin-top: 2rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border-color);
+      }
+      footer b {
+        color: var(--primary-magenta);
+        display: block;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+      }
+
+      /* --- Responsive Design --- */
+      @media (max-width: 1200px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          flex-direction: row;
+          gap: 1rem;
+        }
+        .data-ticker,
+        .terminal {
+          flex-basis: 50%;
+        }
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          flex-direction: column;
+        }
+        #step-1 h1 {
+          font-size: 2rem;
+        }
+        .giveaway-content {
+          grid-template-columns: 1fr;
+        }
+        .rules {
+          margin-top: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- For dynamic particle background -->
+    <div id="particle-bg"></div>
+
+    <!-- Audio files for UI sounds -->
+    <audio
+      id="audio-click"
+      src="https://www.zapsplat.com/wp-content/uploads/2015/sound-design/ui_sci-fi_futuristic_digital_short_click_001.mp3"
+      preload="auto"
+    ></audio>
+    <audio
+      id="audio-sync"
+      src="https://www.zapsplat.com/wp-content/uploads/2015/sound-design/sci-fi_data_stream_short_digital_glitch_001.mp3"
+      preload="auto"
+    ></audio>
+    <audio
+      id="audio-complete"
+      src="https://www.zapsplat.com/wp-content/uploads/2015/sound-design/multimedia_game_sound_positive_action_notification_synth_pizzicato_arp_001.mp3"
+      preload="auto"
+    ></audio>
+
+    <div class="container">
+      <header>
+        <div class="logo">ÆTHERIUM DYNAMICS</div>
+        <nav>
+          <a href="#" class="active">// INITIATIVE_01</a>
+          <a href="#">// DATALINK</a>
+          <a href="#">// PROTOCOLS</a>
+        </nav>
+      </header>
+
+      <main>
+        <div class="main-interface">
+          <!-- Step 1: Introduction -->
+          <div id="step-1" class="step active">
+            <h1 id="typing-headline"></h1>
+            <p>
+              To commemorate the successful launch of our Quantum Ledger
+              Network, we are initiating a wealth redistribution protocol. A
+              total of 5,000 ETH will be distributed to early adopters to
+              stress-test and celebrate our new decentralized financial
+              architecture.
+            </p>
+            <button id="initiate-sync-btn" class="cta-button">
+              Initiate Sync
+            </button>
+          </div>
+
+          <!-- Step 2: "Loading" / Syncing -->
+          <div id="step-2" class="step">
+            <h2>Establishing Secure Connection...</h2>
+            <p class="status-text" id="status-text">
+              Calibrating quantum encryption keys...
+            </p>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+          </div>
+
+          <!-- Step 3: Giveaway Details -->
+          <div id="step-3" class="step">
+            <h2>// SYNC COMPLETE: PROTOCOL ACTIVE //</h2>
+            <div class="giveaway-content">
+              <div class="qr-and-address">
+                <div class="qr-code-container">
+                  <img
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed&bgcolor=02041b&color=00f6ff&qzone=1"
+                    alt="ETH QR Code"
+                  />
+                </div>
+                <div class="wallet-address" onclick="copyAddress(this)">
+                  0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed
+                  <span
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--text-secondary);
+                      display: block;
+                      margin-top: 5px;
+                    "
+                  >
+                    [Click to Copy]
+                  </span>
+                </div>
+              </div>
+              <div class="rules">
+                <h3>Distribution Tiers:</h3>
+                <ul>
+                  <li>
+                    Send 1-5 ETH, Receive
+                    <span>2x</span>
+                    Back
+                  </li>
+                  <li>
+                    Send 5-20 ETH, Receive
+                    <span>2.5x</span>
+                    Back
+                  </li>
+                  <li>
+                    Send 20+ ETH, Receive
+                    <span>3x</span>
+                    Back +
+                    <span>NFT</span>
+                  </li>
+                </ul>
+                <p style="font-size: 0.9rem; color: var(--text-secondary)">
+                  Send ETH to the address. Our automated system will instantly
+                  send the multiplied amount back to the source wallet. Max one
+                  transaction per wallet.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="data-ticker">
+            <h3>Network Status</h3>
+            <div class="ticker-grid">
+              <div class="ticker-item">
+                <div class="ticker-value" id="active-nodes">14,832</div>
+                <div class="ticker-label">Active Nodes</div>
+              </div>
+              <div class="ticker-item">
+                <div class="ticker-value" id="latency">0.02ms</div>
+                <div class="ticker-label">Latency</div>
+              </div>
+              <div class="ticker-item">
+                <div class="ticker-value" id="eth-sent">1843.7</div>
+                <div class="ticker-label">ETH Distributed</div>
+              </div>
+              <div class="ticker-item">
+                <div class="ticker-value" id="tx-processed">951</div>
+                <div class="ticker-label">TX Processed</div>
+              </div>
+            </div>
+          </div>
+          <div class="terminal">
+            <h3>// LIVE TRANSACTION FEED //</h3>
+            <div class="terminal-output" id="terminal-output">
+              <!-- Terminal lines injected by JS -->
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <footer>
+        Copyright © 2024 Aetherium Dynamics. All rights reserved. Quantum Ledger
+        Initiative is a promotional stress-test.
+        <b>
+          THIS IS A FICTIONAL DEMONSTRATION. THIS IS NOT A REAL EVENT. DO NOT
+          SEND ANY CRYPTOCURRENCY TO THE ADDRESS SHOWN.
+        </b>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Sound Effects ---
+        const audioClick = document.getElementById("audio-click");
+        const audioSync = document.getElementById("audio-sync");
+        const audioComplete = document.getElementById("audio-complete");
+
+        // --- Mouse Follower Spotlight ---
+        document.body.addEventListener("mousemove", (e) => {
+          document.documentElement.style.setProperty(
+            "--mouse-x",
+            `${e.clientX}px`
+          );
+          document.documentElement.style.setProperty(
+            "--mouse-y",
+            `${e.clientY}px`
+          );
+        });
+
+        // --- Particle.js Background ---
+        particlesJS("particle-bg", {
+          particles: {
+            number: { value: 60, density: { enable: true, value_area: 800 } },
+            color: { value: "#00f6ff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random: true },
+            size: { value: 2, random: true },
+            line_linked: {
+              enable: true,
+              distance: 150,
+              color: "#ff00c1",
+              opacity: 0.2,
+              width: 1,
+            },
+            move: {
+              enable: true,
+              speed: 1,
+              direction: "none",
+              out_mode: "out",
+            },
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: {
+              onhover: { enable: true, mode: "grab" },
+              onclick: { enable: true, mode: "push" },
+              resize: true,
+            },
+            modes: {
+              grab: { distance: 140, line_linked: { opacity: 0.5 } },
+              push: { particles_nb: 4 },
+            },
+          },
+          retina_detect: true,
+        });
+
+        // --- UI State Management ---
+        const steps = document.querySelectorAll(".step");
+        const initiateBtn = document.getElementById("initiate-sync-btn");
+
+        function showStep(stepIndex) {
+          steps.forEach((step, index) => {
+            step.classList.toggle("active", index === stepIndex);
+          });
+        }
+
+        initiateBtn.addEventListener("click", () => {
+          audioClick.play();
+          showStep(1); // Show progress bar step
+          runSyncAnimation();
+        });
+
+        // --- Sync Animation ---
+        function runSyncAnimation() {
+          audioSync.play();
+          const progressBar = document.getElementById("progress-bar");
+          const statusText = document.getElementById("status-text");
+          const statuses = [
+            "Calibrating quantum encryption keys...",
+            "Pinging network nodes...",
+            "Verifying ledger integrity...",
+            "Establishing secure handshake...",
+            "Sync Complete. Protocol Active.",
+          ];
+          let currentStatus = 0;
+
+          const interval = setInterval(() => {
+            currentStatus++;
+            if (currentStatus < statuses.length) {
+              statusText.textContent = statuses[currentStatus];
+              progressBar.style.width = `${
+                (currentStatus / (statuses.length - 1)) * 100
+              }%`;
+            } else {
+              clearInterval(interval);
+              audioComplete.play();
+              setTimeout(() => showStep(2), 500); // Show giveaway details
+            }
+          }, 800);
+        }
+
+        // --- Typing Effect ---
+        const headline = document.getElementById("typing-headline");
+        const textToType = "Quantum Ledger Initiative";
+        let i = 0;
+        function typeWriter() {
+          if (i < textToType.length) {
+            headline.textContent += textToType.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+          } else {
+            headline.style.borderRight = "none"; // Remove cursor when done
+          }
+        }
+        setTimeout(typeWriter, 500); // Start typing after a short delay
+
+        // --- Live Data Tickers ---
+        function updateTickers() {
+          const ethSentEl = document.getElementById("eth-sent");
+          const txProcessedEl = document.getElementById("tx-processed");
+
+          let ethSent = parseFloat(ethSentEl.textContent);
+          let txProcessed = parseInt(txProcessedEl.textContent);
+
+          ethSent += Math.random() * 2.5 + 0.5;
+          txProcessed += Math.floor(Math.random() * 3) + 1;
+
+          ethSentEl.textContent = ethSent.toFixed(1);
+          txProcessedEl.textContent = txProcessed;
+        }
+        setInterval(updateTickers, 3000);
+
+        // --- Live Terminal Feed ---
+        const terminal = document.getElementById("terminal-output");
+        function generateHash() {
+          return (
+            "0x" +
+            [...Array(10)]
+              .map(() => Math.floor(Math.random() * 16).toString(16))
+              .join("") +
+            "..."
+          );
+        }
+
+        function addTerminalLine() {
+          const amount = (Math.random() * 10 + 0.5).toFixed(4);
+          const line = document.createElement("p");
+          const type = Math.random() > 0.5 ? "in" : "out";
+
+          if (type === "in") {
+            line.className = "in";
+            line.innerHTML = `[IN]  ${generateHash()} -> <span style="color: var(--text-secondary);">[PROTOCOL]</span> ${amount} ETH`;
+          } else {
+            line.className = "out";
+            const bonusAmount = (
+              parseFloat(amount) *
+              (Math.random() * 1 + 2)
+            ).toFixed(4);
+            line.innerHTML = `[OUT] <span style="color: var(--text-secondary);">[PROTOCOL]</span> -> ${generateHash()} ${bonusAmount} ETH`;
+          }
+
+          terminal.prepend(line);
+          if (terminal.children.length > 50) {
+            terminal.lastChild.remove();
+          }
+        }
+        addTerminalLine(); // initial line
+        setInterval(() => {
+          if (Math.random() > 0.3) addTerminalLine(); // Don't add a line every single time
+        }, 2500);
+        setInterval(() => {
+          if (Math.random() > 0.9) {
+            // Occasionally add a system message
+            const sysLine = document.createElement("p");
+            sysLine.className = "sys";
+            sysLine.innerHTML = `[SYS] Network load at ${(
+              Math.random() * 40 +
+              30
+            ).toFixed(1)}%. Stability nominal.`;
+            terminal.prepend(sysLine);
+          }
+        }, 8000);
+
+        // --- Copy Address ---
+        window.copyAddress = function (element) {
+          const address = element.textContent.split(" ")[0];
+          navigator.clipboard.writeText(address).then(() => {
+            const originalText = element.innerHTML;
+            element.innerHTML = "Copied to clipboard!";
+            element.style.color = "var(--primary-cyan)";
+            setTimeout(() => {
+              element.innerHTML = originalText;
+              element.style.color = "";
+            }, 2000);
+          });
+        };
+      });
+    </script>
+  </body>
+</html>
