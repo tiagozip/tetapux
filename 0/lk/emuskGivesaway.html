@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tesla & SpaceX — Community Crypto Event</title>
+    <style>
+      /* A professional, dark-themed style mimicking a tech company's event page */
+      :root {
+        --tesla-red: #e82127;
+        --primary-blue: #3b82f6;
+        --dark-bg: #0c0c0e;
+        --medium-bg: #1a1a1c;
+        --border-color: #2a2a2a;
+        --text-primary: #e1e1e1;
+        --text-secondary: #b0b0b0;
+        --success-green: #10b981;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 5px transparent;
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 15px rgba(232, 33, 39, 0.7);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      @keyframes progressBarFlow {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
+      }
+      .logo span {
+        color: var(--tesla-red);
+      }
+      .nav a {
+        color: #aaa;
+        text-decoration: none;
+        margin-left: 25px;
+        font-weight: 500;
+      }
+      .nav a:hover {
+        color: #fff;
+      }
+      .hero {
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .hero h1 {
+        font-size: 48px;
+        font-weight: bold;
+        color: #fff;
+        margin: 0;
+        animation: textShimmer 5s infinite linear;
+        background-size: 200% auto;
+      }
+      .hero p {
+        font-size: 18px;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 15px auto 30px;
+      }
+      .countdown-timer {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .countdown-item {
+        background-color: var(--medium-bg);
+        padding: 15px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        min-width: 80px;
+      }
+      .countdown-item div:first-child {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fff;
+      }
+      .countdown-item div:last-child {
+        font-size: 12px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 40px;
+        margin-top: 20px;
+      }
+      .event-card {
+        background-color: var(--medium-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+      .event-card h2 {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        color: #fff;
+        margin-top: 0;
+      }
+      .live-badge {
+        background-color: var(--tesla-red);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 10px;
+        text-transform: uppercase;
+        animation: pulse 1.5s infinite;
+      }
+      .video-placeholder {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: url("https://imgs.search.brave.com/jnQgwZ9MLj9qR2SpCo5dpMi6Z7biPLEmHjbvLgwhkqM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTk0/NjMyMzYwMi9waG90/by9lbG9uLW11c2st/aXMtc3BlYWtpbmct/YXQtdGhlLXN5bXBv/c2l1bS1hYm91dC1h/bnRpc2VtaXRpc20t/b3JnYW5pemVkLWJ5/LXRoZS1ldXJvcGVh/bi1qZXdpc2guanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPXFv/TTlfQzhpM1BQcUtq/YVQ2OWktNlpKNDQt/c3NtOWZfNldGS2ZG/YWtWMVU9")
+          no-repeat center center;
+        background-size: cover;
+        border-radius: 8px;
+        position: relative;
+      }
+      .video-placeholder::after {
+        content: "▶";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 60px;
+        color: rgba(255, 255, 255, 0.7);
+        text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+      .chat-box {
+        margin-top: 20px;
+        height: 250px;
+        overflow-y: scroll;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      .chat-message {
+        margin-bottom: 12px;
+        font-size: 14px;
+        animation: fadeIn 0.5s ease-out;
+      }
+      .chat-message span {
+        font-weight: bold;
+      }
+      .progress-bar-container {
+        margin: 20px 0;
+      }
+      .progress-bar-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .progress-bar {
+        background-color: var(--border-color);
+        border-radius: 8px;
+        height: 16px;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        width: 50.6%; /* Initial Progress */
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6);
+        background-size: 200% 200%;
+        border-radius: 8px;
+        transition: width 1s ease-in-out;
+        animation: progressBarFlow 2s linear infinite;
+      }
+      .giveaway-address {
+        background-color: var(--dark-bg);
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 15px;
+        text-align: center;
+        word-break: break-all;
+        border: 1px dashed #444;
+        margin: 15px 0;
+      }
+      .waiting-status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      .qr-code {
+        text-align: center;
+      }
+      .qr-code img {
+        width: 160px;
+        height: 160px;
+        border-radius: 8px;
+        border: 4px solid #fff;
+        animation: glow 3s infinite ease-in-out;
+      }
+      .bonus-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .bonus-table th,
+      .bonus-table td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .bonus-table th {
+        font-size: 14px;
+        color: #aaa;
+      }
+      .bonus-table td {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .bonus-tag {
+        background-color: var(--success-green);
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .transactions-table {
+        margin-top: 50px;
+      }
+      .transactions-table h2 {
+        text-align: center;
+      }
+      .tx-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .tx-table th,
+      .tx-table td {
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+        text-align: center;
+        font-family: "Courier New", monospace;
+      }
+      .tx-table tbody tr {
+        animation: fadeIn 0.8s ease;
+      }
+      .tx-table .status-in {
+        color: #22c55e;
+      }
+      .tx-table .status-out {
+        color: var(--primary-blue);
+      }
+      .footer {
+        text-align: center;
+        padding: 40px;
+        margin-top: 40px;
+        border-top: 1px solid var(--border-color);
+        color: #777;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        TESL
+        <span>A</span>
+      </div>
+      <nav class="nav">
+        <a href="#">Event Home</a>
+        <a href="#">How it Works</a>
+        <a href="#">FAQ</a>
+        <a href="#">Support</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="hero">
+        <h1>Tesla & SpaceX Community BTC Giveaway</h1>
+        <p>
+          "To celebrate our full integration of Bitcoin as an official payment
+          method, we are giving back to the community that made it possible. We
+          are proud to announce we are officially giving away 10,000 BTC to our
+          supporters!" —
+          <b>Elon Musk</b>
+        </p>
+        <div class="countdown-timer">
+          <div class="countdown-item">
+            <div id="days">00</div>
+            <div>Days</div>
+          </div>
+          <div class="countdown-item">
+            <div id="hours">00</div>
+            <div>Hours</div>
+          </div>
+          <div class="countdown-item">
+            <div id="minutes">00</div>
+            <div>Minutes</div>
+          </div>
+          <div class="countdown-item">
+            <div id="seconds">00</div>
+            <div>Seconds</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="event-card">
+          <h2>
+            <span class="live-badge">LIVE</span>
+            Live Event Stream
+          </h2>
+          <div class="video-placeholder"></div>
+          <div class="chat-box" id="chat-box">
+            <!-- Chat messages will be dynamically inserted here -->
+          </div>
+        </div>
+
+        <div class="event-card">
+          <h2>Participate in the Giveaway</h2>
+          <div class="progress-bar-container">
+            <div class="progress-bar-labels">
+              <span id="btc-sent">2530.43 BTC Sent</span>
+              <span id="btc-remaining">4969.57 BTC Remaining</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <p style="text-align: center; color: var(--text-secondary)">
+            Send BTC to the official address below. All transactions are
+            automated. Once we receive your BTC, our system will immediately
+            send the promotional amount back to the sending address.
+          </p>
+
+          <div class="qr-code">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=bc1qawvf8yc8885j9hdrkkx9a5vdd2h7r5tr56mgfnx&bgcolor=0c0c0e&color=ffffff&qzone=1"
+              alt="QR Code"
+            />
+          </div>
+
+          <p style="text-align: center; font-weight: 500; color: #fff">
+            Official Giveaway Address:
+          </p>
+          <div class="giveaway-address">
+            bc1qawvf8yc8885j9hdrkkx9a5vdd2h7r5tr56mgfnx
+          </div>
+
+          <div class="waiting-status">
+            <div class="spinner"></div>
+            <span>Waiting for your transaction...</span>
+          </div>
+
+          <table class="bonus-table">
+            <thead>
+              <tr>
+                <th>You Send</th>
+                <th>You Receive</th>
+                <th>Bonus</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0.1+ BTC</td>
+                <td>0.2+ BTC</td>
+                <td><span class="bonus-tag">100% BONUS</span></td>
+              </tr>
+              <tr>
+                <td>0.5+ BTC</td>
+                <td>1.1+ BTC</td>
+                <td><span class="bonus-tag">120% BONUS</span></td>
+              </tr>
+              <tr>
+                <td>1.0+ BTC</td>
+                <td>2.4+ BTC</td>
+                <td><span class="bonus-tag">140% BONUS</span></td>
+              </tr>
+              <tr>
+                <td>2.5+ BTC</td>
+                <td>6.5+ BTC</td>
+                <td><span class="bonus-tag">160% BONUS</span></td>
+              </tr>
+              <tr>
+                <td>5.0+ BTC</td>
+                <td><b>15.0+ BTC</b></td>
+                <td>
+                  <span
+                    class="bonus-tag"
+                    style="
+                      background-color: var(--tesla-red);
+                      animation: glow 2s infinite ease-in-out;
+                    "
+                  >
+                    200% BONUS
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="transactions-table">
+        <h2>Live Transactions</h2>
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody id="tx-table-body">
+            <!-- Transactions will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer class="footer">
+      © 2024 Tesla, Inc. All rights reserved.
+      <br />
+      This is a promotional event. If the giveaway pool is depleted before your
+      transaction is processed, your funds will be automatically returned to the
+      sending address.
+      <br />
+      <br />
+      <b>
+        THIS IS A JOKE, AS ALL OTHER TETAPUX PAGES. THE WALLET DOES NOT EXIST,
+        AND EVEN IF IT DOES, DO NOT SEND ANY MONEY TO IT.
+      </b>
+    </footer>
+
+    <script>
+      // This script is for demonstration purposes to simulate a live event page.
+      // None of the data is real. Do not send cryptocurrency to any address shown.
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- 1. COUNTDOWN TIMER ---
+        const eventEndDate = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+
+        function updateCountdown() {
+          const now = new Date();
+          const diff = eventEndDate - now;
+
+          const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const h = Math.floor(
+            (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+          document.getElementById("days").innerText = d
+            .toString()
+            .padStart(2, "0");
+          document.getElementById("hours").innerText = h
+            .toString()
+            .padStart(2, "0");
+          document.getElementById("minutes").innerText = m
+            .toString()
+            .padStart(2, "0");
+          document.getElementById("seconds").innerText = s
+            .toString()
+            .padStart(2, "0");
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- 2. PROGRESS BAR ---
+        const progressBarFill = document.getElementById("progress-bar-fill");
+        const btcSentEl = document.getElementById("btc-sent");
+        const btcRemainingEl = document.getElementById("btc-remaining");
+        const totalGiveaway = 7500;
+        let btcSent = 2530.43;
+
+        function updateProgress() {
+          const increment = Math.random() * 1.5 + 0.1; // Add between 0.1 and 1.6 BTC
+          btcSent += increment;
+
+          if (btcSent > totalGiveaway) {
+            btcSent = totalGiveaway;
+          }
+
+          const percentage = (btcSent / totalGiveaway) * 100;
+          const btcRemaining = totalGiveaway - btcSent;
+
+          progressBarFill.style.width = `${percentage}%`;
+          btcSentEl.innerText = `${btcSent.toFixed(4)} BTC Sent`;
+          btcRemainingEl.innerText = `${btcRemaining.toFixed(4)} BTC Remaining`;
+
+          if (btcSent >= totalGiveaway) {
+            clearInterval(progressInterval);
+          }
+        }
+        const progressInterval = setInterval(updateProgress, 3500); // Update every 3.5 seconds
+
+        // --- 3. LIVE CHAT ---
+        const chatBox = document.getElementById("chat-box");
+        const users = [
+          { name: "CryptoKing", color: "#3B82F6" },
+          { name: "Sara_H", color: "#E82127" },
+          { name: "DogeLover99", color: "#FBBF24" },
+          { name: "AlexB", color: "#10B981" },
+          { name: "BTC_Maxi", color: "#fff" },
+          { name: "jenna_t", color: "#E82127" },
+          { name: "Mike_R", color: "#3B82F6" },
+        ];
+        const messages = [
+          "Is this real?? Wow",
+          "I just got my bonus back!! I sent 1.5 and got 3.6 back, thank you Elon!",
+          "LETS GOO!! TO THE MOON 🚀",
+          "Confirmed, this is legit. Took about 5 mins.",
+          "finally a real one",
+          "OMG OMG OMG it worked!!!!",
+          "just sent 0.5 btc, waiting now...",
+          "UPDATE: GOT 1.1 BTC BACK!! HOLY",
+        ];
+
+        function addChatMessage() {
+          const user = users[Math.floor(Math.random() * users.length)];
+          const message = messages[Math.floor(Math.random() * messages.length)];
+
+          const messageEl = document.createElement("div");
+          messageEl.className = "chat-message";
+          messageEl.innerHTML = `<span style="color: ${user.color};">${user.name}</span>: ${message}`;
+
+          chatBox.prepend(messageEl);
+
+          // Keep the chat box from getting too full
+          if (chatBox.children.length > 20) {
+            chatBox.lastChild.remove();
+          }
+        }
+        setInterval(addChatMessage, 2800); // Add a message every 2.8 seconds
+        for (let i = 0; i < 7; i++) addChatMessage(); // Pre-fill
+
+        // --- 4. LIVE TRANSACTIONS ---
+        const txTableBody = document.getElementById("tx-table-body");
+        const giveawayAddress = "bc1q...fnx";
+
+        function generateRandomAddress() {
+          const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+          const prefix = ["1", "3", "bc1"][Math.floor(Math.random() * 3)];
+          let address = prefix;
+          for (let i = 0; i < 3; i++)
+            address += chars.charAt(Math.floor(Math.random() * chars.length));
+          address += "...";
+          for (let i = 0; i < 3; i++)
+            address += chars.charAt(Math.floor(Math.random() * chars.length));
+          return address;
+        }
+
+        function addTransaction() {
+          const fromAddress = generateRandomAddress();
+          const valueIn = (Math.random() * 4 + 0.1).toFixed(3); // 0.1 to 4.1
+          const valueOut = (valueIn * (Math.random() * 1.5 + 1.1)).toFixed(3); // 110% to 260% bonus
+
+          const rowIn = document.createElement("tr");
+          rowIn.innerHTML = `
+            <td class="status-in">IN</td>
+            <td>${fromAddress}</td>
+            <td>${giveawayAddress}</td>
+            <td>${valueIn} BTC</td>
+        `;
+
+          const rowOut = document.createElement("tr");
+          rowOut.innerHTML = `
+            <td class="status-out">OUT</td>
+            <td>${giveawayAddress}</td>
+            <td>${fromAddress}</td>
+            <td>${valueOut} BTC</td>
+        `;
+
+          txTableBody.prepend(rowOut);
+          txTableBody.prepend(rowIn);
+
+          // Keep the table from getting too long
+          if (txTableBody.children.length > 20) {
+            txTableBody.lastChild.remove();
+            txTableBody.lastChild.remove();
+          }
+        }
+        setInterval(addTransaction, 4500); // Add a new tx pair every 4.5 seconds
+        for (let i = 0; i < 5; i++) addTransaction(); // Pre-fill
+      });
+    </script>
+  </body>
+</html>
