@@ -33,7 +33,7 @@
                         user-select: none
                         cursor: pointer;
                         display: none;
-                        border: 1.5px solid rgba(0, 0, 0, 0.05);
+                        border: 1.5px solid var(--teta-border, rgba(0, 0, 0, 0.05));
                         position: relative;
                         flex-direction: ${vertical ? "column" : "row"};
                         align-items: center;
@@ -48,15 +48,16 @@
                         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
                         padding-right: 50px;
                         max-width: 100vw;
+                        color: var(--teta-foreground, black)
                     }
                     .a-container:hover {
-                        background-color: rgba(0, 0, 0, 0.05);
+                        background-color: var(--teta-hover-background, rgba(0, 0, 0, 0.05));
                     }
                     .a-container:active {
                         transform: scale(0.99);
                     }
                     .a-container:focus, .a-container:active {
-                        outline: 2px solid black;
+                        outline: 2px solid var(--teta-foreground, black);
                     }
                     .a-container img {
                         width: 80px;
