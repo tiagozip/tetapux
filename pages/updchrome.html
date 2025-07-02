@@ -1,170 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Update Chrome</title>
     <style>
-        body {
-            font-family: 'Product Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-            background-image: url("https://i.ibb.co/qYG5VHbF/image.png");
-            background-size: cover;
-            
-        }
+      body {
+        font-family: "Product Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        background-image: url("https://i.ibb.co/qYG5VHbF/image.png");
+        background-size: cover;
+      }
 
-        .modal {
-            background-color: #fff;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-            text-align: center;
-            padding: 40px;
-            box-sizing: border-box;
-        }
+      .modal {
+        background-color: #fff;
+        border-radius: 8px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        text-align: center;
+        padding: 40px;
+        box-sizing: border-box;
+      }
 
-        .modal img {
-            height: 60px;
-        }
+      .modal img {
+        height: 60px;
+      }
 
-        .title {
-            font-size: 24px;
-            font-weight: 400;
-            margin: 20px 0 10px;
-            color: #202124;
-        }
+      .title {
+        font-size: 24px;
+        font-weight: 400;
+        margin: 20px 0 10px;
+        color: #202124;
+      }
 
-        .subtitle {
-            font-size: 16px;
-            line-height: 1.5;
-            color: #202124;
-            margin: 0 0 20px;
-        }
+      .subtitle {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #202124;
+        margin: 0 0 20px;
+      }
 
-        .button {
-            background-color: #1a73e8;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 100px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 500;
-            transition: background-color 0.2s;
-            margin-top: 10px;
-        }
+      .button {
+        background-color: #1a73e8;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 100px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        margin-top: 10px;
+      }
 
-        .button:hover {
-            background-color: #1b66c9;
-        }
+      .button:hover {
+        background-color: #1b66c9;
+      }
 
+      @font-face {
+        font-family: "Product Sans";
+        font-style: normal;
+        font-weight: 400;
+        src: local("Product Sans"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Regular.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Product Sans'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Regular.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans";
+        font-style: italic;
+        font-weight: 400;
+        src: local("Product Sans"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Italic.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans';
-    font-style: italic;
-    font-weight: 400;
-    src: local('Product Sans'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Italic.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Thin";
+        font-style: normal;
+        font-weight: 250;
+        src: local("Product Sans Thin"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Thin.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Thin';
-    font-style: normal;
-    font-weight: 250;
-    src: local('Product Sans Thin'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Thin.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Light";
+        font-style: normal;
+        font-weight: 300;
+        src: local("Product Sans Light"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Light.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Light';
-    font-style: normal;
-    font-weight: 300;
-    src: local('Product Sans Light'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Light.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Medium";
+        font-style: normal;
+        font-weight: 500;
+        src: local("Product Sans Medium"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Medium.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Medium';
-    font-style: normal;
-    font-weight: 500;
-    src: local('Product Sans Medium'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Medium.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Black";
+        font-style: normal;
+        font-weight: 900;
+        src: local("Product Sans Black"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Black.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Black';
-    font-style: normal;
-    font-weight: 900;
-    src: local('Product Sans Black'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Black.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Thin";
+        font-style: italic;
+        font-weight: 250;
+        src: local("Product Sans Thin"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-ThinItalic.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Thin';
-    font-style: italic;
-    font-weight: 250;
-    src: local('Product Sans Thin'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-ThinItalic.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Light";
+        font-style: italic;
+        font-weight: 300;
+        src: local("Product Sans Light"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-LightItalic.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Light';
-    font-style: italic;
-    font-weight: 300;
-    src: local('Product Sans Light'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-LightItalic.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Medium";
+        font-style: italic;
+        font-weight: 500;
+        src: local("Product Sans Medium"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-MediumItalic.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans Medium';
-    font-style: italic;
-    font-weight: 500;
-    src: local('Product Sans Medium'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-MediumItalic.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans";
+        font-style: normal;
+        font-weight: 700;
+        src: local("Product Sans"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-Bold.woff")
+            format("woff");
+      }
 
-@font-face {
-    font-family: 'Product Sans';
-    font-style: normal;
-    font-weight: 700;
-    src: local('Product Sans'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-Bold.woff') format('woff');
-}
+      @font-face {
+        /* Cursor is stuck again :( */
+        font-family: "Product Sans";
+        font-style: italic;
+        font-weight: 700;
+        src: local("Product Sans"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-BoldItalic.woff")
+            format("woff");
+      }
 
-@font-face { /* Cursor is stuck again :( */
-    font-family: 'Product Sans';
-    font-style: italic;
-    font-weight: 700;
-    src: local('Product Sans'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-BoldItalic.woff') format('woff');
-}
-
-@font-face {
-    font-family: 'Product Sans Black';
-    font-style: italic;
-    font-weight: 900;
-    src: local('Product Sans Black'), url('https://fonts.cdnfonts.com/s/14955/ProductSans-BlackItalic.woff') format('woff');
-}
+      @font-face {
+        font-family: "Product Sans Black";
+        font-style: italic;
+        font-weight: 900;
+        src: local("Product Sans Black"),
+          url("https://fonts.cdnfonts.com/s/14955/ProductSans-BlackItalic.woff")
+            format("woff");
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="modal">
-        <img src="https://www.google.com/chrome/static/images/chrome-logo-landscape.svg" alt="Chrome Logo">
-        <h1 class="title">Chrome update required</h1>
-        <p class="subtitle">Your browser is out of date. Please update to the latest version of Chrome to use this
-            website.</p>
-        <a class="button" href="https://www.google.com/chrome/">Update Chrome</a>
+      <img
+        src="https://www.google.com/chrome/static/images/chrome-logo-landscape.svg"
+        alt="Chrome Logo"
+      />
+      <h1 class="title">Chrome update required</h1>
+      <p class="subtitle">
+        Your browser is out of date. Please update to the latest version of
+        Chrome to use this website.
+      </p>
+      <a class="button" href="https://www.google.com/chrome/">Update Chrome</a>
     </div>
-</body>
-
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

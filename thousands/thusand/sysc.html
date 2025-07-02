@@ -435,10 +435,13 @@
     <div class="maintenance-window" id="mainWindow">
       <div class="title-bar">
         <div>
-          <span class="icon"></span> System Core Maintenance Utility v7.π
+          <span class="icon"></span>
+          System Core Maintenance Utility v7.π
         </div>
         <div class="window-controls">
-          <span></span><span></span><span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </div>
       <div class="content-area" id="contentArea">
@@ -455,7 +458,8 @@
             data paradoxes, or spontaneous existence failure.
           </p>
           <p>
-            <strong>Recommended Action:</strong> Initiate Core Re-Alignment.
+            <strong>Recommended Action:</strong>
+            Initiate Core Re-Alignment.
           </p>
           <button onclick="startProcess()">Initiate Re-Alignment</button>
           <button
@@ -478,9 +482,9 @@
             <div class="progress-text" id="progressText1">0%</div>
           </div>
           <div class="log-area" id="logArea1">
-            <span class="log-entry info"
-              >[TIME: UNCERTAIN] Initiating temporal scan...</span
-            >
+            <span class="log-entry info">
+              [TIME: UNCERTAIN] Initiating temporal scan...
+            </span>
           </div>
           <button onclick="goToStep(3)" id="step2Next" disabled>
             Continue
@@ -535,10 +539,10 @@
             </div>
           </div>
           <p>
-            <em
-              >Note: Incorrect calibration may result in ontological merging or
-              existential unraveling.</em
-            >
+            <em>
+              Note: Incorrect calibration may result in ontological merging or
+              existential unraveling.
+            </em>
           </p>
           <button onclick="applyCalibration()">Apply Calibration</button>
         </div>
@@ -552,8 +556,9 @@
           </p>
           <div class="diagram-container" id="diagramContainer">
             <p>
-              Click on the <strong style="color: red">RED</strong> nodes to mark
-              for deletion:
+              Click on the
+              <strong style="color: red">RED</strong>
+              nodes to mark for deletion:
             </p>
             <svg id="neuralDiagram" viewBox="0 0 200 150">
               <!-- Simple placeholder nodes and links -->
@@ -642,8 +647,10 @@
               />
             </svg>
             <p>
-              <span id="nodesSelected">0</span> /
-              <span id="nodesTotal">2</span> nodes marked.
+              <span id="nodesSelected">0</span>
+              /
+              <span id="nodesTotal">2</span>
+              nodes marked.
             </p>
           </div>
           <button onclick="pruneNodes()" id="pruneButton" disabled>
@@ -668,9 +675,9 @@
             <div class="progress-text" id="progressText2">0%</div>
           </div>
           <div class="log-area" id="logArea2">
-            <span class="log-entry info"
-              >[EPOCH: REDACTED] Commencing final merge...</span
-            >
+            <span class="log-entry info">
+              [EPOCH: REDACTED] Commencing final merge...
+            </span>
           </div>
         </div>
 
@@ -1099,4 +1106,5 @@
       updateProgress("progressBar2", "progressText2", 0);
     </script>
   </body>
+  <script src="/disclaimer.js" async></script>
 </html>

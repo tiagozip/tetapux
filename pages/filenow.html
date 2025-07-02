@@ -1,173 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>URGENT! Download Available!</title>
     <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 15em;
-            margin: 0;
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 15em;
+        margin: 0;
+      }
+
+      /* Notification Popup Styles */
+      .notification-popup {
+        position: fixed;
+        /* Fixed position to stay in place */
+        top: 20px;
+        /* Distance from the top */
+        left: 20px;
+        /* Distance from the left */
+        background-color: #fff;
+        /* White background */
+        border: 1px solid #ccc;
+        /* Light gray border */
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        /* Subtle shadow */
+        padding: 15px;
+        z-index: 1000;
+        /* Ensure it's on top of everything */
+        animation: slideIn 0.3s ease-out;
+        max-width: 350px;
+        /* Maximum width of the popup */
+        width: 100%;
+        /* Take up full width of its parent */
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
         }
 
-        /* Notification Popup Styles */
-        .notification-popup {
-            position: fixed;
-            /* Fixed position to stay in place */
-            top: 20px;
-            /* Distance from the top */
-            left: 20px;
-            /* Distance from the left */
-            background-color: #fff;
-            /* White background */
-            border: 1px solid #ccc;
-            /* Light gray border */
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            /* Subtle shadow */
-            padding: 15px;
-            z-index: 1000;
-            /* Ensure it's on top of everything */
-            animation: slideIn 0.3s ease-out;
-            max-width: 350px;
-            /* Maximum width of the popup */
-            width: 100%;
-            /* Take up full width of its parent */
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .notification-popup h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        color: #333;
+        /* Dark gray title */
+      }
+
+      .notification-popup p {
+        margin-bottom: 12px;
+        font-size: 0.9em;
+        color: #555;
+        /* Medium gray text */
+      }
+
+      .notification-popup .button-container {
+        display: flex;
+        justify-content: flex-end;
+        /* Align buttons to the right */
+      }
+
+      .notification-popup button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        margin-left: 8px;
+        /* Space between buttons */
+        transition: background-color 0.3s ease;
+      }
+
+      .notification-popup .allow-button {
+        background-color: #4caf50;
+        /* Green */
+        color: white;
+      }
+
+      .notification-popup .deny-button {
+        background-color: #f44336;
+        /* Red */
+        color: white;
+      }
+
+      .notification-popup button:hover {
+        opacity: 0.8;
+        /* Slightly reduce opacity on hover */
+      }
+
+      /* Download Area Styles (No Container) */
+      #downloadArea {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .verification {
+        margin-top: 20px;
+      }
+
+      .verification button {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        animation: pulse 1.5s infinite alternate;
+        /* Pulsing button! */
+      }
+
+      @keyframes pulse {
+        from {
+          transform: scale(1);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        to {
+          transform: scale(1.1);
         }
+      }
 
-        .notification-popup h3 {
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-            color: #333;
-            /* Dark gray title */
-        }
+      .verification button:hover {
+        background-color: #0056b3;
+      }
 
-        .notification-popup p {
-            margin-bottom: 12px;
-            font-size: 0.9em;
-            color: #555;
-            /* Medium gray text */
-        }
-
-        .notification-popup .button-container {
-            display: flex;
-            justify-content: flex-end;
-            /* Align buttons to the right */
-        }
-
-        .notification-popup button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-left: 8px;
-            /* Space between buttons */
-            transition: background-color 0.3s ease;
-        }
-
-        .notification-popup .allow-button {
-            background-color: #4CAF50;
-            /* Green */
-            color: white;
-        }
-
-        .notification-popup .deny-button {
-            background-color: #f44336;
-            /* Red */
-            color: white;
-        }
-
-        .notification-popup button:hover {
-            opacity: 0.8;
-            /* Slightly reduce opacity on hover */
-        }
-
-        /* Download Area Styles (No Container) */
-        #downloadArea {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .verification {
-            margin-top: 20px;
-        }
-
-        .verification button {
-            padding: 12px 25px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            animation: pulse 1.5s infinite alternate;
-            /* Pulsing button! */
-        }
-
-        @keyframes pulse {
-            from {
-                transform: scale(1);
-            }
-
-            to {
-                transform: scale(1.1);
-            }
-        }
-
-        .verification button:hover {
-            background-color: #0056b3;
-        }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 0.8em;
-            color: #777;
-        }
+      .footer {
+        margin-top: 30px;
+        font-size: 0.8em;
+        color: #777;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- Notification Popup -->
     <div class="notification-popup">
-        <h3>Website Wants to Show Notifications</h3>
-        <p>Click "Allow" to receive important updates and notifications from this site.</p>
-        <div class="button-container">
-            <button class="deny-button">Block</button>
-            <button class="allow-button">Allow</button>
-        </div>
+      <h3>Website Wants to Show Notifications</h3>
+      <p>
+        Click "Allow" to receive important updates and notifications from this
+        site.
+      </p>
+      <div class="button-container">
+        <button class="deny-button">Block</button>
+        <button class="allow-button">Allow</button>
+      </div>
     </div>
 
     <!-- Download Area (No Container) -->
     <div id="downloadArea">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Microsoft_Defender_2020_Fluent_Design_icon.png"
-            style="width: 80px;" alt="Windows Defender Logo">
-        <h1>Download Available Now</h1>
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/8/85/Microsoft_Defender_2020_Fluent_Design_icon.png"
+        style="width: 80px"
+        alt="Windows Defender Logo"
+      />
+      <h1>Download Available Now</h1>
 
-        <div class="verification">
-            <p>Prove you're not a human by accepting notifications</p>
-            <button onclick="location.href='/pages/winr-captcha.html'">I'm Human</button>
-        </div>
+      <div class="verification">
+        <p>Prove you're not a human by accepting notifications</p>
+        <button onclick="location.href='/pages/winr-captcha.html'">
+          I'm Human
+        </button>
+      </div>
     </div>
-</body>
-<div style="position:fixed;bottom:0px;right:15px;background-color:white;padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px">This is a joke. <a href="/" style="color:black">More</a></div>
+  </body>
+  <script src="/disclaimer.js" async></script>
+  <div
+    style="
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      background-color: white;
+      padding: 4px 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 99999999;
+      font-size: 12px;
+    "
+  >
+    This is a joke.
+    <a href="/" style="color: black">More</a>
+  </div>
 </html>

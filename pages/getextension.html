@@ -1,118 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speed Up Your Computer with Happi Phom Extension</title>
     <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-            animation: rainbowBackground 10s infinite alternate; /* EXTREME BACKGROUND */
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background-color: #f0f0f0;
+        animation: rainbowBackground 10s infinite alternate; /* EXTREME BACKGROUND */
+      }
+
+      @keyframes rainbowBackground {
+        0% {
+          background-color: #ff0000;
         }
-
-        @keyframes rainbowBackground {
-            0% { background-color: #ff0000; }
-            16.66% { background-color: #ffa500; }
-            33.33% { background-color: #ffff00; }
-            50% { background-color: #008000; }
-            66.66% { background-color: #0000ff; }
-            83.33% { background-color: #4b0082; }
-            100% { background-color: #ee82ee; }
+        16.66% {
+          background-color: #ffa500;
         }
-
-        h1 {
-            font-size: 3em;
-            margin-top: 50px;
-            color: #333;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: jiggle 2s infinite alternate, crazyColors 5s infinite; /* HEADLINE CHAOS */
+        33.33% {
+          background-color: #ffff00;
         }
-
-        @keyframes jiggle {
-            0% { transform: rotate(2deg); }
-            100% { transform: rotate(-2deg); }
+        50% {
+          background-color: #008000;
         }
-
-        @keyframes crazyColors {
-            0% { color: red; }
-            25% { color: green; }
-            50% { color: blue; }
-            75% { color: orange; }
-            100% { color: purple; }
+        66.66% {
+          background-color: #0000ff;
         }
-
-        p {
-            font-size: 1.5em;
-            margin-bottom: 30px;
-            animation: fadeInOut 3s infinite, shake 1s infinite; /* DISAPPEARING PARAGRAPH */
+        83.33% {
+          background-color: #4b0082;
         }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { opacity: 0.2; }
+        100% {
+          background-color: #ee82ee;
         }
+      }
 
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(5px); }
-            50% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-            100% { transform: translateX(0); }
+      h1 {
+        font-size: 3em;
+        margin-top: 50px;
+        color: #333;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        animation: jiggle 2s infinite alternate, crazyColors 5s infinite; /* HEADLINE CHAOS */
+      }
+
+      @keyframes jiggle {
+        0% {
+          transform: rotate(2deg);
         }
-
-
-        a {
-            display: inline-block;
-            padding: 20px 40px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            font-size: 1.8em;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-            animation: pulsate 1.5s infinite, rotateAndScale 2s infinite; /* HYPER-ANIMATED BUTTON */
-            transition: transform 0.3s ease;
+        100% {
+          transform: rotate(-2deg);
         }
+      }
 
-        a:hover {
-            transform: scale(1.1);
+      @keyframes crazyColors {
+        0% {
+          color: red;
         }
-
-
-        @keyframes pulsate {
-            0% { box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); }
-            50% { box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); }
-            100% { box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); }
+        25% {
+          color: green;
         }
-
-        @keyframes rotateAndScale {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.2); }
-            100% { transform: rotate(360deg) scale(1); }
+        50% {
+          color: blue;
         }
-
-
-        u {
-            text-decoration: wavy underline red;
-            animation: blinkUnderline 1s steps(5, start) infinite;
+        75% {
+          color: orange;
         }
-
-        @keyframes blinkUnderline {
-          to {
-            text-decoration-color: transparent;
-          }
+        100% {
+          color: purple;
         }
+      }
 
+      p {
+        font-size: 1.5em;
+        margin-bottom: 30px;
+        animation: fadeInOut 3s infinite, shake 1s infinite; /* DISAPPEARING PARAGRAPH */
+      }
 
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0.2;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.2;
+        }
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(5px);
+        }
+        50% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      a {
+        display: inline-block;
+        padding: 20px 40px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        font-size: 1.8em;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        animation: pulsate 1.5s infinite, rotateAndScale 2s infinite; /* HYPER-ANIMATED BUTTON */
+        transition: transform 0.3s ease;
+      }
+
+      a:hover {
+        transform: scale(1.1);
+      }
+
+      @keyframes pulsate {
+        0% {
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        50% {
+          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+        }
+        100% {
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      @keyframes rotateAndScale {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.2);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      u {
+        text-decoration: wavy underline red;
+        animation: blinkUnderline 1s steps(5, start) infinite;
+      }
+
+      @keyframes blinkUnderline {
+        to {
+          text-decoration-color: transparent;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Speed up your computer with Happi Phom</h1>
-    <p>Happi Phom is tested to make sure it <u>does NOT</u> slow your computer down!</p>
+    <p>
+      Happi Phom is tested to make sure it
+      <u>does NOT</u>
+      slow your computer down!
+    </p>
 
-        <a href="https://chrome.google.com/webstore/detail/tetapux/ib" target="_blank">Get Happi Phom!</a>
-</body>
+    <a
+      href="https://chrome.google.com/webstore/detail/tetapux/ib"
+      target="_blank"
+    >
+      Get Happi Phom!
+    </a>
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

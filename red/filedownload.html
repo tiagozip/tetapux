@@ -1,87 +1,127 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Your File Is Ready!</title>
-        <style>
-            .center-container {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                align-items: center;
-            }
-            .center {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-            #fileisready {
-                color: rgba(0, 120, 0, 1);
-                animation: animhappy 3s infinite;
-            }
-            @keyframes animhappy {
-                0%, 100% { color: rgba(0, 120, 0, 1); }
-                50% { color: rgba(255, 0, 0, 1); }
-            }
-            .button {
-                display: inline-block;
-                text-align: center;
-                vertical-align: middle;
-                padding: 12px 24px;
-                border: 1px solid #358a24;
-                border-radius: 8px;
-                background: #56e13b;
-                background: -webkit-gradient(linear, left top, left bottom, from(#56e13b), to(#358a24));
-                background: -moz-linear-gradient(top, #56e13b, #358a24);
-                background: linear-gradient(to bottom, #56e13b, #358a24);
-                -webkit-box-shadow: #4fd036 0px 0px 40px 0px;
-                -moz-box-shadow: #4fd036 0px 0px 40px 0px;
-                box-shadow: #4fd036 0px 0px 40px 0px;
-                text-shadow: #215717 1px 1px 1px;
-                font: normal normal bold 20px arial;
-                color: #ffffff;
-                text-decoration: none;
-            }
-            .button:hover,
-            .button:focus {
-                border: 1px solid #42ad2d;
-                background: #67ff47;
-                background: -webkit-gradient(linear, left top, left bottom, from(#67ff47), to(#40a62b));
-                background: -moz-linear-gradient(top, #67ff47, #40a62b);
-                background: linear-gradient(to bottom, #67ff47, #40a62b);
-                color: #ffffff;
-                text-decoration: none;
-            }
-            .button:active {
-                background: #358a24;
-                background: -webkit-gradient(linear, left top, left bottom, from(#358a24), to(#358a24));
-                background: -moz-linear-gradient(top, #358a24, #358a24);
-                background: linear-gradient(to bottom, #358a24, #358a24);
-            }
-            .button:before{
-                content:  "\0000a0";
-                display: inline-block;
-                height: 24px;
-                width: 24px;
-                line-height: 24px;
-                margin: 0 4px -6px -4px;
-                position: relative;
-                top: 0px;
-                left: 0px;
-                background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADQElEQVRIia2UTWhcVRTHf/fNR2YmM0maxkmTxtgWFKwRREQUTEVEXdQiQku0RdCN4EK611UXfuDGRXciiAiKXyml0FWlgg3iRrBETP2I6dQ20zSJyczkfd57j4t5HSYv0wQSD/y5l3s55/f+99x3FZvE4VM/PZzPOG9m0s76DQFB0EZwA3P6/KnHfr5TjfRmAGtkdOLQ0Kv7ygWMBdR6SBgZ3jnz51lgewBjLG5k+WRqHjc0KKVaDBE49kgZY+xmJTYHaGOpBwbP1/ihRan1+6u+xhjZPsAYoe5bvMDghwalQKGQ2MKKb/4fB0HYVMIAq55B78yBpRYDoqjZg1YIrPgGa8z2AaINfqCJtCGKNvbA9TVW7wBgjSEINGFoibQheU+DQO/MgdWWMDREQdjRgR9orN5Bk602hKEmXPPR0cYvDYKtj0gBPPjyZBr4MJNNj6UzqXhHAQwMDveNXZ9bbDa5LVGA+x7YS+XvW9MKFkUAEbQ2RH40i+KN6S+Phq2csYlvRrJdmR9H790z4tY9tDY4joMCqv8sY+3Gt2L4noHmTCCVciiU8lR+n1/0vXD816+PzZDI4ODRrx7KFbou9pV7+6qzVayV2Ihiw09w20ZsdnD/ILVbNddteM/9NvnSpXVH1B73v/jFs7li/lxxVzG7MHcTEaH1AiXPKF4bGC3j1V3trqxNzJw9PtleL5UELM58+1fvviMVEfVCd39Jef82msdjBUlKhN6hAUIvoLFUP3nl3IlPk/U2AACWrkz+Uho5rJ1s5umuUp6gVkesRUQQsS0Vy7sQKzQWVj744/wr73aq5XRaBBBr32/cXP7IGku+v4TVHjZysVFzzPV1g1LUqoufi7Vv36lOp9a14sAzH6dBzhTLu58PG6u4S1VAke+/i1xPP/XqwgVQR2YvvO5vCwCw/6nTRZR8113e86i3PA9iKeweobFw47JYnpz7/uTKZvlbAgBGn3hvWDnOD93l0QMAawtXK9bY8WtTb1W2yk0CHJrPRzapnr2HDvbcPf4ZKKd2feq12rWL00AYy2+b61gdAVkgF6sQ6/Y8Wxp6fAyVStdvXLrcVtgH3Fh+m2wnQNJNu2D9rbMJ0Ta24j8kac2ho84+egAAAABJRU5ErkJggg==") no-repeat left center transparent;
-                background-size: 100% 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="center-container">
-            <h1 id="fileisready">Your File is ready!</h1>
-            <a class="button" href="../nnm-ae/1000/gb20-aderror.html">Download</a>
-        </div>
-    </body>
-    <div style="position:fixed;bottom:0px;right:15px;background-color:white;padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px">This is a joke. <a href="/" style="color:black">More</a></div>
+  <head>
+    <title>Your File Is Ready!</title>
+    <style>
+      .center-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+      }
+      .center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      #fileisready {
+        color: rgba(0, 120, 0, 1);
+        animation: animhappy 3s infinite;
+      }
+      @keyframes animhappy {
+        0%,
+        100% {
+          color: rgba(0, 120, 0, 1);
+        }
+        50% {
+          color: rgba(255, 0, 0, 1);
+        }
+      }
+      .button {
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        padding: 12px 24px;
+        border: 1px solid #358a24;
+        border-radius: 8px;
+        background: #56e13b;
+        background: -webkit-gradient(
+          linear,
+          left top,
+          left bottom,
+          from(#56e13b),
+          to(#358a24)
+        );
+        background: -moz-linear-gradient(top, #56e13b, #358a24);
+        background: linear-gradient(to bottom, #56e13b, #358a24);
+        -webkit-box-shadow: #4fd036 0px 0px 40px 0px;
+        -moz-box-shadow: #4fd036 0px 0px 40px 0px;
+        box-shadow: #4fd036 0px 0px 40px 0px;
+        text-shadow: #215717 1px 1px 1px;
+        font: normal normal bold 20px arial;
+        color: #ffffff;
+        text-decoration: none;
+      }
+      .button:hover,
+      .button:focus {
+        border: 1px solid #42ad2d;
+        background: #67ff47;
+        background: -webkit-gradient(
+          linear,
+          left top,
+          left bottom,
+          from(#67ff47),
+          to(#40a62b)
+        );
+        background: -moz-linear-gradient(top, #67ff47, #40a62b);
+        background: linear-gradient(to bottom, #67ff47, #40a62b);
+        color: #ffffff;
+        text-decoration: none;
+      }
+      .button:active {
+        background: #358a24;
+        background: -webkit-gradient(
+          linear,
+          left top,
+          left bottom,
+          from(#358a24),
+          to(#358a24)
+        );
+        background: -moz-linear-gradient(top, #358a24, #358a24);
+        background: linear-gradient(to bottom, #358a24, #358a24);
+      }
+      .button:before {
+        content: "\0000a0";
+        display: inline-block;
+        height: 24px;
+        width: 24px;
+        line-height: 24px;
+        margin: 0 4px -6px -4px;
+        position: relative;
+        top: 0px;
+        left: 0px;
+        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADQElEQVRIia2UTWhcVRTHf/fNR2YmM0maxkmTxtgWFKwRREQUTEVEXdQiQku0RdCN4EK611UXfuDGRXciiAiKXyml0FWlgg3iRrBETP2I6dQ20zSJyczkfd57j4t5HSYv0wQSD/y5l3s55/f+99x3FZvE4VM/PZzPOG9m0s76DQFB0EZwA3P6/KnHfr5TjfRmAGtkdOLQ0Kv7ygWMBdR6SBgZ3jnz51lgewBjLG5k+WRqHjc0KKVaDBE49kgZY+xmJTYHaGOpBwbP1/ihRan1+6u+xhjZPsAYoe5bvMDghwalQKGQ2MKKb/4fB0HYVMIAq55B78yBpRYDoqjZg1YIrPgGa8z2AaINfqCJtCGKNvbA9TVW7wBgjSEINGFoibQheU+DQO/MgdWWMDREQdjRgR9orN5Bk602hKEmXPPR0cYvDYKtj0gBPPjyZBr4MJNNj6UzqXhHAQwMDveNXZ9bbDa5LVGA+x7YS+XvW9MKFkUAEbQ2RH40i+KN6S+Phq2csYlvRrJdmR9H790z4tY9tDY4joMCqv8sY+3Gt2L4noHmTCCVciiU8lR+n1/0vXD816+PzZDI4ODRrx7KFbou9pV7+6qzVayV2Ihiw09w20ZsdnD/ILVbNddteM/9NvnSpXVH1B73v/jFs7li/lxxVzG7MHcTEaH1AiXPKF4bGC3j1V3trqxNzJw9PtleL5UELM58+1fvviMVEfVCd39Jef82msdjBUlKhN6hAUIvoLFUP3nl3IlPk/U2AACWrkz+Uho5rJ1s5umuUp6gVkesRUQQsS0Vy7sQKzQWVj744/wr73aq5XRaBBBr32/cXP7IGku+v4TVHjZysVFzzPV1g1LUqoufi7Vv36lOp9a14sAzH6dBzhTLu58PG6u4S1VAke+/i1xPP/XqwgVQR2YvvO5vCwCw/6nTRZR8113e86i3PA9iKeweobFw47JYnpz7/uTKZvlbAgBGn3hvWDnOD93l0QMAawtXK9bY8WtTb1W2yk0CHJrPRzapnr2HDvbcPf4ZKKd2feq12rWL00AYy2+b61gdAVkgF6sQ6/Y8Wxp6fAyVStdvXLrcVtgH3Fh+m2wnQNJNu2D9rbMJ0Ta24j8kac2ho84+egAAAABJRU5ErkJggg==")
+          no-repeat left center transparent;
+        background-size: 100% 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center-container">
+      <h1 id="fileisready">Your File is ready!</h1>
+      <a class="button" href="../nnm-ae/1000/gb20-aderror.html">Download</a>
+    </div>
+  </body>
+  <script src="/disclaimer.js" async></script>
+  <div
+    style="
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      background-color: white;
+      padding: 4px 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 99999999;
+      font-size: 12px;
+    "
+  >
+    This is a joke.
+    <a href="/" style="color: black">More</a>
+  </div>
 </html>
