@@ -1,239 +1,235 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Happy Phone</title>
     <style>
-        * {
-            box-sizing: border-box;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #1aa152;
+        gap: 60px;
+        transition: background-color 8s linear, opacity 8s linear,
+          transform 8s linear;
+        animation: body 1.5s infinite;
+      }
+
+      @keyframes body {
+        0%,
+        100% {
+          background-color: #1aa152;
         }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #1AA152;
-            gap: 60px;
-            transition: background-color 8s linear, opacity 8s linear, transform 8s linear;
-            animation: body 1.5s infinite;
+        50% {
+          background-color: #3ac172;
+        }
+      }
+
+      .phone {
+        width: 200px;
+        height: 400px;
+        background-color: #8bc34a;
+        border-radius: 20px;
+        border: 3px solid #689f38;
+        position: relative;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        animation: phone-in 1s, phone 1.7s infinite;
+      }
+
+      @keyframes phone {
+        0%,
+        100% {
+          transform: translateY(0) rotate(5deg);
         }
 
-        @keyframes body {
+        50% {
+          transform: translateY(5px) rotate(-5deg);
+        }
+      }
 
-            0%,
-            100% {
-                background-color: #1AA152
-            }
+      .screen {
+        width: 90%;
+        height: 70%;
+        background-color: #ffffff;
+        margin: 5% auto;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
 
-            50% {
-                background-color: #3ac172
-            }
+      .smile {
+        font-size: 6em;
+        transform: rotate(90deg);
+        color: #1aa152;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .button {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #333;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        cursor: pointer;
+      }
+
+      .camera {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #222;
+        position: absolute;
+        top: 10px;
+        left: calc(50% - 8px);
+      }
+
+      .flash {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #ddd;
+        position: absolute;
+        top: 10px;
+        left: 25px;
+      }
+
+      h1 {
+        color: white;
+        font-size: 4em;
+        max-width: 400px;
+        line-height: 0.8;
+        font-weight: 500;
+        font-family: "Brush Script MT", cursive;
+        animation: question-in 2s, question 1.3s infinite;
+      }
+
+      @keyframes question {
+        0%,
+        100% {
+          transform: translateY(0);
         }
 
-        .phone {
-            width: 200px;
-            height: 400px;
-            background-color: #8bc34a;
-            border-radius: 20px;
-            border: 3px solid #689f38;
-            position: relative;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            animation: phone-in 1s, phone 1.7s infinite;
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      button {
+        width: 100%;
+        border: none;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 15px;
+        max-width: 400px;
+        margin-bottom: 5px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      button.green {
+        color: #1aa152;
+        animation: green-phom 1s infinite;
+      }
+
+      @keyframes green-phom {
+        0%,
+        100% {
+          transform: scale(1);
         }
 
-        @keyframes phone {
+        50% {
+          transform: scale(1.1);
+        }
+      }
 
-            0%,
-            100% {
-                transform: translateY(0) rotate(5deg);
-            }
+      button.red {
+        color: red;
+        background-color: rgba(255, 255, 255, 0.3);
+      }
 
-            50% {
-                transform: translateY(5px) rotate(-5deg);
-            }
+      @keyframes phone-in {
+        from {
+          transform: scale(0);
+          opacity: 0;
         }
 
-        .screen {
-            width: 90%;
-            height: 70%;
-            background-color: #ffffff;
-            margin: 5% auto;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes question-in {
+        from {
+          transform: translate(0, 30px);
+          opacity: 0;
         }
 
-        .smile {
-            font-size: 6em;
-            transform: rotate(90deg);
-            color: #1AA152;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        to {
+          transform: scale(1);
+          opacity: 1;
         }
-
-        .button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #333;
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            cursor: pointer;
-        }
-
-        .camera {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #222;
-            position: absolute;
-            top: 10px;
-            left: calc(50% - 8px);
-        }
-
-        .flash {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background-color: #ddd;
-            position: absolute;
-            top: 10px;
-            left: 25px;
-        }
-
-        h1 {
-            color: white;
-            font-size: 4em;
-            max-width: 400px;
-            line-height: 0.8;
-            font-weight: 500;
-            font-family: 'Brush Script MT', cursive;
-            animation: question-in 2s, question 1.3s infinite;
-        }
-
-        @keyframes question {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        button {
-            width: 100%;
-            border: none;
-            background-color: rgba(255, 255, 255, .8);
-            padding: 15px;
-            max-width: 400px;
-            margin-bottom: 5px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        button.green {
-            color: #1AA152;
-            animation: green-phom 1s infinite;
-        }
-
-        @keyframes green-phom {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        button.red {
-            color: red;
-            background-color: rgba(255, 255, 255, .3);
-        }
-
-        @keyframes phone-in {
-            from {
-                transform: scale(0);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes question-in {
-            from {
-                transform: translate(0, 30px);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="phone">
-        <div class="camera"></div>
-        <div class="flash"></div>
-        <div class="screen">
-            <div class="smile">:)</div>
-        </div>
-        <div class="button"></div>
+      <div class="camera"></div>
+      <div class="flash"></div>
+      <div class="screen">
+        <div class="smile">:)</div>
+      </div>
+      <div class="button"></div>
     </div>
 
     <div class="question">
-        <h1>Will you make your phone happy?</h1>
-        <button class="green">Yes! Happi Phom!</button>
-        <button class="red">No. Angry Phom.</button>
+      <h1>Will you make your phone happy?</h1>
+      <button class="green">Yes! Happi Phom!</button>
+      <button class="red">No. Angry Phom.</button>
     </div>
-</body>
+  </body>
+  <script src="/disclaimer.js" async></script>
 
-<script>
-    const red = document.querySelector('.red');
-    const green = document.querySelector('.green');
-    const smile = document.querySelector('.smile');
+  <script>
+    const red = document.querySelector(".red");
+    const green = document.querySelector(".green");
+    const smile = document.querySelector(".smile");
 
-    red.addEventListener('click', () => {
-        smile.textContent = ':(';
-        smile.style.color = 'red';
-        document.body.style.backgroundColor = 'red';
-        document.body.style.animation = 'none';
-        document.body.style.transform = 'scale(0)';
-        document.body.style.opacity = '0';
-        document.querySelector(".question").remove()
-        setTimeout(function () {
-            window.open("https://discord.com/channels/@me", "_blank");
-            location.href = "/pages/happyphone.html";
-        }, 9000)
+    red.addEventListener("click", () => {
+      smile.textContent = ":(";
+      smile.style.color = "red";
+      document.body.style.backgroundColor = "red";
+      document.body.style.animation = "none";
+      document.body.style.transform = "scale(0)";
+      document.body.style.opacity = "0";
+      document.querySelector(".question").remove();
+      setTimeout(function () {
+        window.open("https://discord.com/channels/@me", "_blank");
+        location.href = "/pages/happyphone.html";
+      }, 9000);
     });
 
-    green.addEventListener('click', () => {
-        smile.textContent = ':)';
-        document.body.style.animation = 'none';
-        document.body.style.transform = 'scale(0)';
-        document.body.style.opacity = '0';
-        document.querySelector(".question").remove()
-        setTimeout(function () {
-            location.href = "https://discord.com/channels/@me"
-        }, 10000)
+    green.addEventListener("click", () => {
+      smile.textContent = ":)";
+      document.body.style.animation = "none";
+      document.body.style.transform = "scale(0)";
+      document.body.style.opacity = "0";
+      document.querySelector(".question").remove();
+      setTimeout(function () {
+        location.href = "https://discord.com/channels/@me";
+      }, 10000);
     });
-</script>
+  </script>
 </html>

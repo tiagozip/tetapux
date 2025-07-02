@@ -1,241 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Download File - Phone Number Required</title>
     <style>
-        /* General Styles */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+      /* General Styles */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
 
-        .container {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-            padding: 50px;
-            width: 500px;
-            text-align: center;
-            animation: fadeInUp 0.8s ease-out;
-        }
+      .container {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        padding: 50px;
+        width: 500px;
+        text-align: center;
+        animation: fadeInUp 0.8s ease-out;
+      }
 
-        /* Heading and Paragraph Styles */
-        h1 {
-            color: #343a40;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-        }
+      /* Heading and Paragraph Styles */
+      h1 {
+        color: #343a40;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+      }
 
-        p {
-            color: #6c757d;
-            margin-bottom: 35px;
-            line-height: 1.7;
-            font-size: 1.05rem;
-        }
+      p {
+        color: #6c757d;
+        margin-bottom: 35px;
+        line-height: 1.7;
+        font-size: 1.05rem;
+      }
 
-        /* Form Group Styles */
-        .form-group {
-            margin-bottom: 30px;
-            text-align: left;
-        }
+      /* Form Group Styles */
+      .form-group {
+        margin-bottom: 30px;
+        text-align: left;
+      }
 
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #495057;
-            font-size: 1.1rem;
-        }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #495057;
+        font-size: 1.1rem;
+      }
 
-        /* Phone Number Input Styles */
-        input[type="tel"] {
-            width: 100%;
-            padding: 17px;
-            border: 2px solid #ced4da;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            box-sizing: border-box;
-            margin-top: 8px;
-            transition: border-color 0.3s ease-in-out;
-        }
+      /* Phone Number Input Styles */
+      input[type="tel"] {
+        width: 100%;
+        padding: 17px;
+        border: 2px solid #ced4da;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        box-sizing: border-box;
+        margin-top: 8px;
+        transition: border-color 0.3s ease-in-out;
+      }
 
-        input[type="tel"]:focus {
-            border-color: #007bff;
-            outline: none;
-            box-shadow: 0 0 0 0.3rem rgba(0, 123, 255, 0.25);
-        }
+      input[type="tel"]:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 0 0.3rem rgba(0, 123, 255, 0.25);
+      }
 
-        /* Submit Button Styles */
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            padding: 17px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            width: 100%;
-            transition: background-color 0.3s ease;
-            display: block;
-            text-decoration: none;
-            text-align: center;
-            margin-top: 20px;
-        }
+      /* Submit Button Styles */
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 17px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        width: 100%;
+        transition: background-color 0.3s ease;
+        display: block;
+        text-decoration: none;
+        text-align: center;
+        margin-top: 20px;
+      }
 
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
 
-        /* Error and Success Message Styles */
-        .error-message {
-            color: #dc3545;
-            margin-top: 15px;
-            font-size: 1.05rem;
-            font-weight: 500;
-        }
+      /* Error and Success Message Styles */
+      .error-message {
+        color: #dc3545;
+        margin-top: 15px;
+        font-size: 1.05rem;
+        font-weight: 500;
+      }
 
-        .success-message, .downloading-message {
-            color: #28a745;
-            margin-top: 15px;
-            font-size: 1.05rem;
-            font-weight: 500;
-        }
+      .success-message,
+      .downloading-message {
+        color: #28a745;
+        margin-top: 15px;
+        font-size: 1.05rem;
+        font-weight: 500;
+      }
 
-        .downloading-message {
-            color: #17a2b8;
-        }
+      .downloading-message {
+        color: #17a2b8;
+      }
 
-        /* Download Button Styles */
-        .download-button {
-            background-color: #28a745; /* Green for download */
-            color: #fff;
-            padding: 15px 25px;  /* Reduced padding */
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            display: inline-block;  /* Display as inline-block so it's not 100% width */
-            text-decoration: none;
-            text-align: center;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
+      /* Download Button Styles */
+      .download-button {
+        background-color: #28a745; /* Green for download */
+        color: #fff;
+        padding: 15px 25px; /* Reduced padding */
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        display: inline-block; /* Display as inline-block so it's not 100% width */
+        text-decoration: none;
+        text-align: center;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
 
-        .download-button:hover {
-            background-color: #218838;
-        }
+      .download-button:hover {
+        background-color: #218838;
+      }
 
-        /* Disclaimer Styles */
-        .disclaimer {
-            font-size: 0.9rem;
-            color: #868e96;
-            margin-top: 30px;
-        }
+      /* Disclaimer Styles */
+      .disclaimer {
+        font-size: 0.9rem;
+        color: #868e96;
+        margin-top: 30px;
+      }
 
-        .disclaimer a {
-            color: #007bff;
-            text-decoration: none;
-        }
+      .disclaimer a {
+        color: #007bff;
+        text-decoration: none;
+      }
 
-        .disclaimer a:hover {
-            text-decoration: underline;
-        }
+      .disclaimer a:hover {
+        text-decoration: underline;
+      }
 
-        /* Animation Keyframes */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+      /* Animation Keyframes */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Download Your File</h1>
-        <p>To download the document, please enter your phone number below. We'll send you a verification code.</p>
+      <h1>Download Your File</h1>
+      <p>
+        To download the document, please enter your phone number below. We'll
+        send you a verification code.
+      </p>
 
-        <form id="downloadForm" action="#" method="post">
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number:</label>
-                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required pattern="^\+?[1-9]\d{1,14}$">
-                <div class="error-message" id="phoneError"></div>
-            </div>
-
-            <input type="submit" value="Get Verification Code">
-            <div class="downloading-message" id="downloadingMessage" style="display:none;">Authenticating SMS Service...</div>
-            <div class="downloading-message" id="sendingMessage" style="display:none;">Sending Verification Code...</div>
-            <div class="downloading-message" id="autoMessageGetting" style="display:none;">Verifying Code...</div>
-            <a href="#" class="download-button" id="downloadButton" style="display:none;">Click Here To Download</a>
-        </form>
-
-        <div class="disclaimer">
-            By providing your phone number, you agree to our <a href="#" style="color:#007bff;">Terms of Service</a> and <a href="#" style="color:#007bff;">Privacy Policy</a>.
+      <form id="downloadForm" action="#" method="post">
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number:</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="Enter your phone number"
+            required
+            pattern="^\+?[1-9]\d{1,14}$"
+          />
+          <div class="error-message" id="phoneError"></div>
         </div>
+
+        <input type="submit" value="Get Verification Code" />
+        <div
+          class="downloading-message"
+          id="downloadingMessage"
+          style="display: none"
+        >
+          Authenticating SMS Service...
+        </div>
+        <div
+          class="downloading-message"
+          id="sendingMessage"
+          style="display: none"
+        >
+          Sending Verification Code...
+        </div>
+        <div
+          class="downloading-message"
+          id="autoMessageGetting"
+          style="display: none"
+        >
+          Verifying Code...
+        </div>
+        <a
+          href="#"
+          class="download-button"
+          id="downloadButton"
+          style="display: none"
+        >
+          Click Here To Download
+        </a>
+      </form>
+
+      <div class="disclaimer">
+        By providing your phone number, you agree to our
+        <a href="#" style="color: #007bff">Terms of Service</a>
+        and
+        <a href="#" style="color: #007bff">Privacy Policy</a>
+        .
+      </div>
     </div>
 
     <script>
-        const form = document.getElementById('downloadForm');
-        const phoneInput = document.getElementById('phoneNumber');
-        const phoneError = document.getElementById('phoneError');
-        const downloadingMessage = document.getElementById('downloadingMessage');
-        const sendingMessage = document.getElementById('sendingMessage');
-        const autoMessageGetting = document.getElementById('autoMessageGetting');
-        const downloadButton = document.getElementById('downloadButton');
+      const form = document.getElementById("downloadForm");
+      const phoneInput = document.getElementById("phoneNumber");
+      const phoneError = document.getElementById("phoneError");
+      const downloadingMessage = document.getElementById("downloadingMessage");
+      const sendingMessage = document.getElementById("sendingMessage");
+      const autoMessageGetting = document.getElementById("autoMessageGetting");
+      const downloadButton = document.getElementById("downloadButton");
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            if (!phoneInput.checkValidity()) {
-                phoneError.textContent = "Please enter a valid phone number.";
-                phoneError.style.display = 'block';
-                return;
-            } else {
-                phoneError.style.display = 'none';
-            }
+        if (!phoneInput.checkValidity()) {
+          phoneError.textContent = "Please enter a valid phone number.";
+          phoneError.style.display = "block";
+          return;
+        } else {
+          phoneError.style.display = "none";
+        }
 
-            // Hide the submit button
-            form.querySelector('input[type="submit"]').style.display = 'none';
+        // Hide the submit button
+        form.querySelector('input[type="submit"]').style.display = "none";
 
-           // Show the "Fetching SMS Service..." message
-            downloadingMessage.style.display = 'block';
+        // Show the "Fetching SMS Service..." message
+        downloadingMessage.style.display = "block";
 
-            // Simulate the first step
+        // Simulate the first step
+        setTimeout(() => {
+          downloadingMessage.style.display = "none";
+          sendingMessage.style.display = "block";
+
+          // Simulate the second step
+          setTimeout(() => {
+            sendingMessage.style.display = "none";
+            autoMessageGetting.style.display = "block";
+
+            // Simulate the third step
             setTimeout(() => {
-                downloadingMessage.style.display = 'none';
-                sendingMessage.style.display = 'block';
+              autoMessageGetting.style.display = "none";
+              downloadButton.style.display = "block";
 
-                // Simulate the second step
-                setTimeout(() => {
-                   sendingMessage.style.display = 'none';
-                   autoMessageGetting.style.display = 'block';
-
-                   // Simulate the third step
-                    setTimeout(() => {
-                        autoMessageGetting.style.display = 'none';
-                        downloadButton.style.display = 'block';
-
-                        // Simulate download - Replace this with a redirect or direct download trigger
-                      //  downloadButton.href = "your-file.pdf";  // Set the download link
-
-                    }, 2000); // Simulate Verifying
-                }, 2000); // Simulate Sending
-            }, 2000); // Simulate Authenticating
-
-        });
+              // Simulate download - Replace this with a redirect or direct download trigger
+              //  downloadButton.href = "your-file.pdf";  // Set the download link
+            }, 2000); // Simulate Verifying
+          }, 2000); // Simulate Sending
+        }, 2000); // Simulate Authenticating
+      });
     </script>
-</body>
-<div style="position:fixed;bottom:0px;right:15px;background-color:white;padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px">This is a joke. <a href="/" style="color:black">More</a></div>
+  </body>
+  <script src="/disclaimer.js" async></script>
+  <div
+    style="
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      background-color: white;
+      padding: 4px 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 99999999;
+      font-size: 12px;
+    "
+  >
+    This is a joke.
+    <a href="/" style="color: black">More</a>
+  </div>
 </html>

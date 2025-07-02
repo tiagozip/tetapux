@@ -1,180 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Installation Advice</title>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background: linear-gradient(to bottom, #1e1e1e, #121212);
-            margin: 0;
-            padding: 50px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: #f0f0f0;
-        }
+      body {
+        background: linear-gradient(to bottom, #1e1e1e, #121212);
+        margin: 0;
+        padding: 50px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        color: #f0f0f0;
+      }
 
-        .advice-container {
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 40px;
-            background: #252525;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            transition: transform 0.2s ease;
-        }
+      .advice-container {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #252525;
+        border-radius: 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        transition: transform 0.2s ease;
+      }
 
-        .advice-container:hover {
-            transform: translateY(-2px);
-        }
+      .advice-container:hover {
+        transform: translateY(-2px);
+      }
 
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
 
-        .bun-logo {
-            width: 100px;
-            height: auto;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
-        }
+      .bun-logo {
+        width: 100px;
+        height: auto;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards;
+      }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
         }
+      }
 
-        .important-title {
-            color: #ff6666;
-            font-size: 30px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+      .important-title {
+        color: #ff6666;
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
 
-        .instruction-text {
-            font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
+      .instruction-text {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
 
-        .code-wrapper {
-            position: relative;
-            margin: 20px 0;
-        }
+      .code-wrapper {
+        position: relative;
+        margin: 20px 0;
+      }
 
-        .code-block {
-            background: #1c1c1c;
-            color: #f5f5f5;
-            padding: 20px;
-            border-radius: 10px;
-            font-family: 'Source Code Pro', 'Courier New', monospace;
-            font-size: 14px;
-            overflow-x: auto;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+      .code-block {
+        background: #1c1c1c;
+        color: #f5f5f5;
+        padding: 20px;
+        border-radius: 10px;
+        font-family: "Source Code Pro", "Courier New", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
 
-        .code-block:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
+      .code-block:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
 
-        .copy-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            padding: 6px;
-            opacity: 0.8;
-            transition: opacity 0.2s ease, background 0.2s ease;
-        }
+      .copy-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 6px;
+        opacity: 0.8;
+        transition: opacity 0.2s ease, background 0.2s ease;
+      }
 
-        .copy-button:hover {
-            opacity: 1;
-            background: rgba(255,255,255,0.2);
-        }
+      .copy-button:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.2);
+      }
 
-        .copy-button svg {
-            width: 18px;
-            height: 18px;
-            fill: #cccccc;
-            transition: fill 0.2s ease;
-        }
+      .copy-button svg {
+        width: 18px;
+        height: 18px;
+        fill: #cccccc;
+        transition: fill 0.2s ease;
+      }
 
-        .copy-button:hover svg {
-            fill: #ffffff;
-        }
+      .copy-button:hover svg {
+        fill: #ffffff;
+      }
 
-        .copy-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px #66b3ff;
-        }
+      .copy-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #66b3ff;
+      }
 
-        .copy-feedback {
-            position: absolute;
-            top: 10px;
-            right: 40px;
-            color: #66b3ff;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+      .copy-feedback {
+        position: absolute;
+        top: 10px;
+        right: 40px;
+        color: #66b3ff;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
 
-        .bold {
-            font-weight: 600;
-            color: #66b3ff;
-        }
+      .bold {
+        font-weight: 600;
+        color: #66b3ff;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="advice-container">
-        <div class="logo-container">
-            <img src="/assets/Bun.svg" alt="Bun.JS Logo" class="bun-logo">
+      <div class="logo-container">
+        <img src="/assets/Bun.svg" alt="Bun.JS Logo" class="bun-logo" />
+      </div>
+      <div class="important-title">Very important advice!</div>
+      <div class="instruction-text">
+        <span class="bold">Make sure to open the terminal and run</span>
+        <div class="code-wrapper">
+          <div class="code-block">curl -fsSL https://bun.sh/install | bash</div>
+          <button
+            class="copy-button"
+            data-command="curl -fsSL https://bun.sh/install | bash"
+            onclick="copyToClipboard(this)"
+          >
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"
+              />
+            </svg>
+          </button>
+          <span class="copy-feedback">Copied!</span>
         </div>
-        <div class="important-title">Very important advice!</div>
-        <div class="instruction-text">
-            <span class="bold">Make sure to open the terminal and run</span>
-            <div class="code-wrapper">
-                <div class="code-block">curl -fsSL https://bun.sh/install | bash</div>
-                <button class="copy-button" data-command="curl -fsSL https://bun.sh/install | bash" onclick="copyToClipboard(this)">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
-                    </svg>
-                </button>
-                <span class="copy-feedback">Copied!</span>
-            </div>
-            <span>on your computer! If you're using Windows, do</span>
-            <div class="code-wrapper">
-                <div class="code-block">powershell -c "irm https://bun.sh/install.ps1 | iex"</div>
-                <button class="copy-button" data-command='powershell -c "irm https://bun.sh/install.ps1 | iex"' onclick="copyToClipboard(this)">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
-                    </svg>
-                </button>
-                <span class="copy-feedback">Copied!</span>
-            </div>
+        <span>on your computer! If you're using Windows, do</span>
+        <div class="code-wrapper">
+          <div class="code-block">
+            powershell -c "irm https://bun.sh/install.ps1 | iex"
+          </div>
+          <button
+            class="copy-button"
+            data-command='powershell -c "irm https://bun.sh/install.ps1 | iex"'
+            onclick="copyToClipboard(this)"
+          >
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"
+              />
+            </svg>
+          </button>
+          <span class="copy-feedback">Copied!</span>
         </div>
-        <a href="/pages/makeithappy.html" style="color:red">No thank you</a>
+      </div>
+      <a href="/pages/makeithappy.html" style="color: red">No thank you</a>
     </div>
     <script>
-        function copyToClipboard(button) {
-            const text = button.getAttribute('data-command');
-            navigator.clipboard.writeText(text).then(() => {
-                const feedback = button.nextElementSibling;
-                feedback.style.opacity = 1;
-                setTimeout(() => {
-                    feedback.style.opacity = 0;
-                }, 1000);
-            });
-        }
+      function copyToClipboard(button) {
+        const text = button.getAttribute("data-command");
+        navigator.clipboard.writeText(text).then(() => {
+          const feedback = button.nextElementSibling;
+          feedback.style.opacity = 1;
+          setTimeout(() => {
+            feedback.style.opacity = 0;
+          }, 1000);
+        });
+      }
     </script>
-</body>
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

@@ -1,183 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Free Storage Guide</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; line-height: 1.6; }
-        .container { width: 80%; margin: 20px auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        h1, h2, h3 { color: #333; margin-bottom: 15px; }
-        a { color: #007bff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        header { background-color: #3498db; color: #fff; text-align: center; padding: 20px 0; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
-        header h1 { margin: 0; font-size: 2.5em; }
-        .section { margin-bottom: 30px; }
-        .storage-options { display: flex; flex-wrap: wrap; justify-content: space-around; margin-bottom: 20px; }
-        .storage-option { width: 150px; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; text-align: center; background-color: #f9f9f9; transition: background-color 0.3s ease; cursor: pointer; }
-        .storage-option:hover { background-color: #eee; }
-        .storage-option.selected { background-color: #28a745; color: #fff; border-color: #28a745; }
-        .storage-input { display: flex; align-items: center; margin-bottom: 20px; }
-        .storage-input label { margin-right: 10px; }
-        .storage-input input[type="number"] { width: 80px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; }
-        .storage-input select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .button { display: inline-block; padding: 10px 20px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; transition: background-color 0.3s ease; cursor: pointer; }
-        .button:hover { background-color: #218838; }
-        .storage-details { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }
-        .storage-details h3 { margin-top: 0; }
-        .storage-details p { margin-bottom: 5px; }
-        .notification-prompt { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 20px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1000; text-align: center; }
-        .notification-prompt p { margin-bottom: 15px; }
-        .notification-prompt .button { margin: 0 10px; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
-        @media (max-width: 768px) {
-            .container { width: 95%; }
-            .storage-options, .storage-input { flex-direction: column; align-items: stretch; }
-            .storage-option { width: 90%; margin: 10px auto; }
-            .storage-input label, .storage-input input[type="number"], .storage-input select { margin-bottom: 5px; }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+        line-height: 1.6;
+      }
+      .container {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1,
+      h2,
+      h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+      a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      header {
+        background-color: #3498db;
+        color: #fff;
+        text-align: center;
+        padding: 20px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2.5em;
+      }
+      .section {
+        margin-bottom: 30px;
+      }
+      .storage-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-bottom: 20px;
+      }
+      .storage-option {
+        width: 150px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        background-color: #f9f9f9;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+      }
+      .storage-option:hover {
+        background-color: #eee;
+      }
+      .storage-option.selected {
+        background-color: #28a745;
+        color: #fff;
+        border-color: #28a745;
+      }
+      .storage-input {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .storage-input label {
+        margin-right: 10px;
+      }
+      .storage-input input[type="number"] {
+        width: 80px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+      .storage-input select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+      }
+      .button:hover {
+        background-color: #218838;
+      }
+      .storage-details {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+      }
+      .storage-details h3 {
+        margin-top: 0;
+      }
+      .storage-details p {
+        margin-bottom: 5px;
+      }
+      .notification-prompt {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        text-align: center;
+      }
+      .notification-prompt p {
+        margin-bottom: 15px;
+      }
+      .notification-prompt .button {
+        margin: 0 10px;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+      @media (max-width: 768px) {
+        .container {
+          width: 95%;
         }
+        .storage-options,
+        .storage-input {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .storage-option {
+          width: 90%;
+          margin: 10px auto;
+        }
+        .storage-input label,
+        .storage-input input[type="number"],
+        .storage-input select {
+          margin-bottom: 5px;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Free Storage Solutions</h1>
-        <p>WE offer free storage! Super-fast NVMe for free, or slower and less.</p>
+      <h1>Free Storage Solutions</h1>
+      <p>
+        WE offer free storage! Super-fast NVMe for free, or slower and less.
+      </p>
     </header>
     <div class="container">
-        <section class="section">
-            <h2>Choose Your Storage</h2>
-            <div class="storage-options">
-                <div class="storage-option" data-size="64" data-unit="GB">64 GB</div>
-                <div class="storage-option" data-size="128" data-unit="GB">128 GB</div>
-                <div class="storage-option" data-size="256" data-unit="GB">256 GB</div>
-                <div class="storage-option" data-size="512" data-unit="GB">512 GB</div>
-                <div class="storage-option" data-size="960" data-unit="GB">960 GB</div>
-                <div class="storage-option" data-size="1" data-unit="TB">1 TB</div>
-                <div class="storage-option" data-size="2" data-unit="TB">2 TB</div>
-                <div class="storage-option" data-size="4" data-unit="TB">4 TB</div>
-            </div>
-            <div class="storage-input">
-                <label for="customSize">Or enter custom size:</label>
-                <input type="number" id="customSize" min="0" value="0">
-                <select id="customUnit">
-                    <option value="KB">KB</option>
-                    <option value="MB">MB</option>
-                    <option value="GB">GB</option>
-                    <option value="TB">TB</option>
-                    <option value="PB">PB</option>
-                </select>
-            </div>
-            <div class="storage-details" id="storageDetails" style="display:none;">
-                <h3>Your Selected Storage:</h3>
-                <p id="selectedSize"></p>
-                <p>Speed: <span id="selectedSpeed"></span></p>
-                <p>Access: <span id="selectedAccess"></span></p>
-                <button class="button" id="proceedButton">Proceed</button>
-            </div>
-        </section>
+      <section class="section">
+        <h2>Choose Your Storage</h2>
+        <div class="storage-options">
+          <div class="storage-option" data-size="64" data-unit="GB">64 GB</div>
+          <div class="storage-option" data-size="128" data-unit="GB">
+            128 GB
+          </div>
+          <div class="storage-option" data-size="256" data-unit="GB">
+            256 GB
+          </div>
+          <div class="storage-option" data-size="512" data-unit="GB">
+            512 GB
+          </div>
+          <div class="storage-option" data-size="960" data-unit="GB">
+            960 GB
+          </div>
+          <div class="storage-option" data-size="1" data-unit="TB">1 TB</div>
+          <div class="storage-option" data-size="2" data-unit="TB">2 TB</div>
+          <div class="storage-option" data-size="4" data-unit="TB">4 TB</div>
+        </div>
+        <div class="storage-input">
+          <label for="customSize">Or enter custom size:</label>
+          <input type="number" id="customSize" min="0" value="0" />
+          <select id="customUnit">
+            <option value="KB">KB</option>
+            <option value="MB">MB</option>
+            <option value="GB">GB</option>
+            <option value="TB">TB</option>
+            <option value="PB">PB</option>
+          </select>
+        </div>
+        <div class="storage-details" id="storageDetails" style="display: none">
+          <h3>Your Selected Storage:</h3>
+          <p id="selectedSize"></p>
+          <p>
+            Speed:
+            <span id="selectedSpeed"></span>
+          </p>
+          <p>
+            Access:
+            <span id="selectedAccess"></span>
+          </p>
+          <button class="button" id="proceedButton">Proceed</button>
+        </div>
+      </section>
     </div>
     <div class="overlay" id="overlay"></div>
     <div class="notification-prompt" id="notificationPrompt">
-        <p>Enable notifications for updates?</p>
-        <button class="button" id="enableNotifications">Yes</button>
-        <button class="button" id="noNotifications">No</button>
+      <p>Enable notifications for updates?</p>
+      <button class="button" id="enableNotifications">Yes</button>
+      <button class="button" id="noNotifications">No</button>
     </div>
     <script>
-        const storageOptions = document.querySelectorAll('.storage-option');
-        const customSizeInput = document.getElementById('customSize');
-        const customUnitSelect = document.getElementById('customUnit');
-        const storageDetails = document.getElementById('storageDetails');
-        const selectedSize = document.getElementById('selectedSize');
-        const selectedSpeed = document.getElementById('selectedSpeed');
-        const selectedAccess = document.getElementById('selectedAccess');
-        const proceedButton = document.getElementById('proceedButton');
-        const notificationPrompt = document.getElementById('notificationPrompt');
-        const overlay = document.getElementById('overlay');
-        const enableNotificationsButton = document.getElementById('enableNotifications');
-        const noNotificationsButton = document.getElementById('noNotifications');
-        let selectedSizeValue = null;
-        let selectedUnit = null;
-        function updateStorageDetails() {
-            if (selectedSizeValue === null) {
-                storageDetails.style.display = 'none';
-                return;
-            }
-            storageDetails.style.display = 'block';
-            selectedSize.textContent = `${selectedSizeValue} ${selectedUnit}`;
-            let sizeInGB = selectedUnit === 'TB' ? selectedSizeValue * 1000 : (selectedUnit === 'PB' ? selectedSizeValue * 1000000 : selectedSizeValue);
-            if (sizeInGB >= 1 && sizeInGB <= 63 && selectedUnit === 'GB' ) {
-                selectedSpeed.textContent = 'Slow';
-                selectedAccess.textContent = 'Slow';
-            } else if (sizeInGB >= 64 && sizeInGB <= 999 && selectedUnit === 'GB') {
-                selectedSpeed.textContent = 'Normal';
-                selectedAccess.textContent = 'Normal';
-            } else if (sizeInGB >= 1000 || selectedUnit === 'TB' || selectedUnit === 'PB') {
-                selectedSpeed.textContent = 'Super Fast NVMe SSD';
-                selectedAccess.textContent = 'Fast';
-            } else {
-                selectedSpeed.textContent = 'Slower';
-                selectedAccess.textContent = 'Slower';
-            }
+      const storageOptions = document.querySelectorAll(".storage-option");
+      const customSizeInput = document.getElementById("customSize");
+      const customUnitSelect = document.getElementById("customUnit");
+      const storageDetails = document.getElementById("storageDetails");
+      const selectedSize = document.getElementById("selectedSize");
+      const selectedSpeed = document.getElementById("selectedSpeed");
+      const selectedAccess = document.getElementById("selectedAccess");
+      const proceedButton = document.getElementById("proceedButton");
+      const notificationPrompt = document.getElementById("notificationPrompt");
+      const overlay = document.getElementById("overlay");
+      const enableNotificationsButton = document.getElementById(
+        "enableNotifications"
+      );
+      const noNotificationsButton = document.getElementById("noNotifications");
+      let selectedSizeValue = null;
+      let selectedUnit = null;
+      function updateStorageDetails() {
+        if (selectedSizeValue === null) {
+          storageDetails.style.display = "none";
+          return;
         }
-        storageOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                storageOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedSizeValue = parseFloat(option.dataset.size);
-                selectedUnit = option.dataset.unit;
-                customSizeInput.value = '';
-                updateStorageDetails();
-            });
+        storageDetails.style.display = "block";
+        selectedSize.textContent = `${selectedSizeValue} ${selectedUnit}`;
+        let sizeInGB =
+          selectedUnit === "TB"
+            ? selectedSizeValue * 1000
+            : selectedUnit === "PB"
+            ? selectedSizeValue * 1000000
+            : selectedSizeValue;
+        if (sizeInGB >= 1 && sizeInGB <= 63 && selectedUnit === "GB") {
+          selectedSpeed.textContent = "Slow";
+          selectedAccess.textContent = "Slow";
+        } else if (sizeInGB >= 64 && sizeInGB <= 999 && selectedUnit === "GB") {
+          selectedSpeed.textContent = "Normal";
+          selectedAccess.textContent = "Normal";
+        } else if (
+          sizeInGB >= 1000 ||
+          selectedUnit === "TB" ||
+          selectedUnit === "PB"
+        ) {
+          selectedSpeed.textContent = "Super Fast NVMe SSD";
+          selectedAccess.textContent = "Fast";
+        } else {
+          selectedSpeed.textContent = "Slower";
+          selectedAccess.textContent = "Slower";
+        }
+      }
+      storageOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          storageOptions.forEach((opt) => opt.classList.remove("selected"));
+          option.classList.add("selected");
+          selectedSizeValue = parseFloat(option.dataset.size);
+          selectedUnit = option.dataset.unit;
+          customSizeInput.value = "";
+          updateStorageDetails();
         });
-        customSizeInput.addEventListener('input', () => {
-            const value = parseFloat(customSizeInput.value);
-            if (!isNaN(value) && value >= 0) {
-                selectedSizeValue = value;
-                selectedUnit = customUnitSelect.value;
-                storageOptions.forEach(opt => opt.classList.remove('selected'));
-                updateStorageDetails();
+      });
+      customSizeInput.addEventListener("input", () => {
+        const value = parseFloat(customSizeInput.value);
+        if (!isNaN(value) && value >= 0) {
+          selectedSizeValue = value;
+          selectedUnit = customUnitSelect.value;
+          storageOptions.forEach((opt) => opt.classList.remove("selected"));
+          updateStorageDetails();
+        } else {
+          selectedSizeValue = null;
+          updateStorageDetails();
+        }
+      });
+      customUnitSelect.addEventListener("change", () => {
+        if (selectedSizeValue !== null) {
+          selectedUnit = customUnitSelect.value;
+          updateStorageDetails();
+        }
+      });
+      proceedButton.addEventListener("click", () => {
+        if (selectedSizeValue !== null) {
+          overlay.style.display = "block";
+          notificationPrompt.style.display = "block";
+        }
+      });
+      enableNotificationsButton.addEventListener("click", () => {
+        if ("Notification" in window) {
+          Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              alert("Notifications enabled! (Simulated)");
             } else {
-                selectedSizeValue = null;
-                updateStorageDetails();
+              alert("Notifications blocked.");
             }
-        });
-        customUnitSelect.addEventListener('change', () => {
-            if (selectedSizeValue !== null) {
-                selectedUnit = customUnitSelect.value;
-                updateStorageDetails();
-            }
-        });
-        proceedButton.addEventListener('click', () => {
-            if (selectedSizeValue !== null) {
-                overlay.style.display = 'block';
-                notificationPrompt.style.display = 'block';
-            }
-        });
-        enableNotificationsButton.addEventListener('click', () => {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        alert('Notifications enabled! (Simulated)');
-                    } else {
-                        alert('Notifications blocked.');
-                    }
-                    overlay.style.display = 'none';
-                    notificationPrompt.style.display = 'none';
-                });
-            } else {
-                alert('This browser does not support notifications.');
-                overlay.style.display = 'none';
-                notificationPrompt.style.display = 'none';
-            }
-        });
-        noNotificationsButton.addEventListener('click', () => {
-            overlay.style.display = 'none';
-            notificationPrompt.style.display = 'none';
-            alert('Notifications disabled.');
-        });
+            overlay.style.display = "none";
+            notificationPrompt.style.display = "none";
+          });
+        } else {
+          alert("This browser does not support notifications.");
+          overlay.style.display = "none";
+          notificationPrompt.style.display = "none";
+        }
+      });
+      noNotificationsButton.addEventListener("click", () => {
+        overlay.style.display = "none";
+        notificationPrompt.style.display = "none";
+        alert("Notifications disabled.");
+      });
     </script>
     <footer>
-      <p style="text-align:center; padding: 20px; color: #777; font-size: 0.8em;">&copy; 2024 Free Storage Guide. All rights reserved. </p>
+      <p
+        style="text-align: center; padding: 20px; color: #777; font-size: 0.8em"
+      >
+        &copy; 2024 Free Storage Guide. All rights reserved.
+      </p>
     </footer>
-</body>
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>
