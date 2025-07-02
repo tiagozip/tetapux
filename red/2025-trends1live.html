@@ -1,228 +1,277 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Total Chaos - Intensified!</title>
-<style>
-  body {
-    overflow: hidden;
-    background-color: #000;
-    color: #fff;
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
-  .element {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.05); /* Reduced transparency */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Reduced border transparency */
-    padding: 5px; /* Reduced padding for more density */
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); /* Reduced shadow */
-    border-radius: 3px; /* Reduced border radius */
-    overflow: hidden;
-    pointer-events: none; /* Crucial:  Avoids interference with mouse/touch events */
-  }
-
-  .shake {
-    animation: shake 0.1s infinite; /* Faster shake */
-  }
-
-  .shake-intensive {
-    animation: shake-intensive 0.05s infinite; /* Even faster shake */
-  }
-
-  .bounce {
-    animation: bounce 1.2s infinite ease-in-out; /* Faster bounce */
-  }
-
-  .explode {
-    animation: explode 0.3s forwards; /* Faster explode */
-  }
-
-  .resize {
-    animation: resize 2s infinite alternate; /* Faster resize */
-  }
-
-  @keyframes shake {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(-3px, -3px) rotate(-1deg); }
-    50% { transform: translate(3px, 3px) rotate(1deg); }
-    75% { transform: translate(-3px, 3px) rotate(-1deg); }
-    100% { transform: translate(3px, -3px) rotate(1deg); }
-  }
-
-  @keyframes shake-intensive {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(-7px, -7px) rotate(-3deg); }
-    50% { transform: translate(7px, 7px) rotate(3deg); }
-    75% { transform: translate(-7px, 7px) rotate(-3deg); }
-    100% { transform: translate(7px, -7px) rotate(3deg); }
-  }
-
-
-  @keyframes bounce {
-    0%, 100% { bottom: 0; }
-    50% { bottom: 30vh; } /* Lower bounce height for faster action */
-  }
-
-  @keyframes explode {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(1.5); opacity: 0; } /* Less scaling for more density */
-  }
-
-  @keyframes resize {
-    0% { width: 30px; height: 30px; } /* Smaller initial size */
-    100% { width: 100px; height: 80px; } /* smaller resize */
-  }
-
-  /* iOS Loading Spinner (Simple Approximation) */
-  .ios-spinner {
-    width: 25px; /* Smaller spinner */
-    height: 25px; /* Smaller spinner */
-    border: 3px solid rgba(255, 255, 255, 0.1); /* Reduced border */
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite; /* Faster spin */
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  /* Vector Graphic Example (Simple) */
-  .vector {
-    width: 30px;
-    height: 30px;
-  }
-
-  .vector::before,
-  .vector::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 2px; /* Reduced thickness */
-    background-color: #fff;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-  }
-
-  .vector::after {
-    transform: translateY(-50%) rotate(90deg);
-  }
-</style>
-</head>
-<body>
-  <script>
-    const chaosElements = [];
-    const messages = [
-      "Chaos!",
-      "Whoa!",
-      "Intense!",
-      "Random!",
-      "Madness!",
-    ];
-
-    const ads = [
-      '<a href="#" style="color: yellow;">Click me!</a>',
-      'Buy now!',
-      'Limited!',
-      'Sale!',
-    ];
-
-
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function getRandomElement() {
-      // Create element
-      const element = document.createElement('div');
-      element.classList.add('element');
-
-      // Random size
-      const size = getRandomInt(20, 120);
-      element.style.width = `${size}px`;
-      element.style.height = `${size}px`;
-
-      // Random position
-      element.style.left = `${getRandomInt(0, window.innerWidth - size)}px`;
-      element.style.top = `${getRandomInt(0, window.innerHeight - size)}px`;
-
-      // Random content
-      const contentChoice = getRandomInt(1, 6);
-      switch (contentChoice) {
-        case 1: // Random Message
-          element.textContent = messages[getRandomInt(0, messages.length - 1)];
-          break;
-        case 2: // Random Ad
-          element.innerHTML = ads[getRandomInt(0, ads.length - 1)];
-          break;
-        case 3: // iOS Spinner
-          element.classList.add('ios-spinner');
-          break;
-        case 4: // Vector Graphic
-          element.classList.add('vector');
-          break;
-        case 5: // Image (placeholder)
-          const img = document.createElement('img');
-          img.src = 'https://via.placeholder.com/' + size + '/000000/FFFFFF?text=RNDM'; // Smaller, fewer colors
-          img.style.width = '100%';
-          img.style.height = '100%';
-          img.alt = "Random Image";
-          element.appendChild(img);
-          break;
-        default: // Default content (e.g., a number)
-          element.textContent = getRandomInt(1, 100);
+  <head>
+    <title>Total Chaos - Intensified!</title>
+    <style>
+      body {
+        overflow: hidden;
+        background-color: #000;
+        color: #fff;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
       }
 
-      // Random animations
-      const animationChoice = getRandomInt(1, 5);
-      switch (animationChoice) {
-        case 1: element.classList.add('shake'); break;
-        case 2: element.classList.add('shake-intensive'); break;
-        case 3: element.classList.add('bounce'); break;
-        case 4: element.classList.add('explode'); break;
-        case 5: element.classList.add('resize'); break;
+      .element {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.05); /* Reduced transparency */
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Reduced border transparency */
+        padding: 5px; /* Reduced padding for more density */
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); /* Reduced shadow */
+        border-radius: 3px; /* Reduced border radius */
+        overflow: hidden;
+        pointer-events: none; /* Crucial:  Avoids interference with mouse/touch events */
       }
 
-      document.body.appendChild(element);
-      chaosElements.push(element);
-    }
+      .shake {
+        animation: shake 0.1s infinite; /* Faster shake */
+      }
 
+      .shake-intensive {
+        animation: shake-intensive 0.05s infinite; /* Even faster shake */
+      }
 
-    function spawnMoreChaos() {
+      .bounce {
+        animation: bounce 1.2s infinite ease-in-out; /* Faster bounce */
+      }
+
+      .explode {
+        animation: explode 0.3s forwards; /* Faster explode */
+      }
+
+      .resize {
+        animation: resize 2s infinite alternate; /* Faster resize */
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(-3px, -3px) rotate(-1deg);
+        }
+        50% {
+          transform: translate(3px, 3px) rotate(1deg);
+        }
+        75% {
+          transform: translate(-3px, 3px) rotate(-1deg);
+        }
+        100% {
+          transform: translate(3px, -3px) rotate(1deg);
+        }
+      }
+
+      @keyframes shake-intensive {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        25% {
+          transform: translate(-7px, -7px) rotate(-3deg);
+        }
+        50% {
+          transform: translate(7px, 7px) rotate(3deg);
+        }
+        75% {
+          transform: translate(-7px, 7px) rotate(-3deg);
+        }
+        100% {
+          transform: translate(7px, -7px) rotate(3deg);
+        }
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          bottom: 0;
+        }
+        50% {
+          bottom: 30vh;
+        } /* Lower bounce height for faster action */
+      }
+
+      @keyframes explode {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.5);
+          opacity: 0;
+        } /* Less scaling for more density */
+      }
+
+      @keyframes resize {
+        0% {
+          width: 30px;
+          height: 30px;
+        } /* Smaller initial size */
+        100% {
+          width: 100px;
+          height: 80px;
+        } /* smaller resize */
+      }
+
+      /* iOS Loading Spinner (Simple Approximation) */
+      .ios-spinner {
+        width: 25px; /* Smaller spinner */
+        height: 25px; /* Smaller spinner */
+        border: 3px solid rgba(255, 255, 255, 0.1); /* Reduced border */
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite; /* Faster spin */
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Vector Graphic Example (Simple) */
+      .vector {
+        width: 30px;
+        height: 30px;
+      }
+
+      .vector::before,
+      .vector::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px; /* Reduced thickness */
+        background-color: #fff;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
+
+      .vector::after {
+        transform: translateY(-50%) rotate(90deg);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const chaosElements = [];
+      const messages = ["Chaos!", "Whoa!", "Intense!", "Random!", "Madness!"];
+
+      const ads = [
+        '<a href="#" style="color: yellow;">Click me!</a>',
+        "Buy now!",
+        "Limited!",
+        "Sale!",
+      ];
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function getRandomElement() {
+        // Create element
+        const element = document.createElement("div");
+        element.classList.add("element");
+
+        // Random size
+        const size = getRandomInt(20, 120);
+        element.style.width = `${size}px`;
+        element.style.height = `${size}px`;
+
+        // Random position
+        element.style.left = `${getRandomInt(0, window.innerWidth - size)}px`;
+        element.style.top = `${getRandomInt(0, window.innerHeight - size)}px`;
+
+        // Random content
+        const contentChoice = getRandomInt(1, 6);
+        switch (contentChoice) {
+          case 1: // Random Message
+            element.textContent =
+              messages[getRandomInt(0, messages.length - 1)];
+            break;
+          case 2: // Random Ad
+            element.innerHTML = ads[getRandomInt(0, ads.length - 1)];
+            break;
+          case 3: // iOS Spinner
+            element.classList.add("ios-spinner");
+            break;
+          case 4: // Vector Graphic
+            element.classList.add("vector");
+            break;
+          case 5: // Image (placeholder)
+            const img = document.createElement("img");
+            img.src =
+              "https://via.placeholder.com/" +
+              size +
+              "/000000/FFFFFF?text=RNDM"; // Smaller, fewer colors
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.alt = "Random Image";
+            element.appendChild(img);
+            break;
+          default: // Default content (e.g., a number)
+            element.textContent = getRandomInt(1, 100);
+        }
+
+        // Random animations
+        const animationChoice = getRandomInt(1, 5);
+        switch (animationChoice) {
+          case 1:
+            element.classList.add("shake");
+            break;
+          case 2:
+            element.classList.add("shake-intensive");
+            break;
+          case 3:
+            element.classList.add("bounce");
+            break;
+          case 4:
+            element.classList.add("explode");
+            break;
+          case 5:
+            element.classList.add("resize");
+            break;
+        }
+
+        document.body.appendChild(element);
+        chaosElements.push(element);
+      }
+
+      function spawnMoreChaos() {
         // Optimized: Create fewer elements, more frequently
-        for (let i = 0; i < getRandomInt(1, 2); i++) { // Less elements spawned per interval
-            getRandomElement();
+        for (let i = 0; i < getRandomInt(1, 2); i++) {
+          // Less elements spawned per interval
+          getRandomElement();
         }
 
         // Remove old elements to prevent DOM buildup (and memory leaks)
-        if (chaosElements.length > 200) { // Limit the number of elements
-            const elementsToRemove = chaosElements.splice(0, getRandomInt(1, 10));  // Remove a random number of elements
-            elementsToRemove.forEach(el => el.remove());
+        if (chaosElements.length > 200) {
+          // Limit the number of elements
+          const elementsToRemove = chaosElements.splice(0, getRandomInt(1, 10)); // Remove a random number of elements
+          elementsToRemove.forEach((el) => el.remove());
         }
-    }
+      }
 
-
-    // Initial chaos burst
-    for (let i = 0; i < 50; i++) {  // Increase initial elements for more initial chaos
+      // Initial chaos burst
+      for (let i = 0; i < 50; i++) {
+        // Increase initial elements for more initial chaos
         getRandomElement();
-    }
+      }
 
-    // Keep the chaos flowing
-    setInterval(spawnMoreChaos, 200); // Increased spawn rate for more intensity
+      // Keep the chaos flowing
+      setInterval(spawnMoreChaos, 200); // Increased spawn rate for more intensity
 
-    // Prevent right-click and text selection (more chaos)
-    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-
-
-  </script>
-</body>
+      // Prevent right-click and text selection (more chaos)
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
+    </script>
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

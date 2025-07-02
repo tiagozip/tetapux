@@ -36,7 +36,9 @@
         0% {
           opacity: 0;
         }
-        100% { opacity: 1; }
+        100% {
+          opacity: 1;
+        }
       }
 
       h1 {
@@ -125,7 +127,10 @@
         the button below and watch your computer go VROOOOOOOM!
       </p>
 
-      <p>Current Available RAM: <span id="ram-counter">16 GB</span></p>
+      <p>
+        Current Available RAM:
+        <span id="ram-counter">16 GB</span>
+      </p>
 
       <button class="button" onclick="downloadRam()">
         DOWNLOAD FREE RAM NOW!!!
@@ -150,10 +155,10 @@
         downloading = true;
 
         document.getElementById("downloadSound").play();
-        
+
         setInterval(function () {
           document.getElementById("downloadSound").play();
-        }, 100)
+        }, 100);
 
         let progress = 0;
         const ramInterval = setInterval(() => {
@@ -177,5 +182,22 @@
       }
     </script>
   </body>
-  <div style="position:fixed;bottom:0px;right:15px;background-color:rgba(255, 255, 255, .02);padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px;color:rgba(255, 255, 255, .3);">This is a joke. <a href="/" style="color:rgba(255, 255, 255, .4)">More</a></div>
+  <script src="/disclaimer.js" async></script>
+  <div
+    style="
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      background-color: rgba(255, 255, 255, 0.02);
+      padding: 4px 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 99999999;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.3);
+    "
+  >
+    This is a joke.
+    <a href="/" style="color: rgba(255, 255, 255, 0.4)">More</a>
+  </div>
 </html>

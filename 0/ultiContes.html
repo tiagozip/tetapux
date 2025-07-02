@@ -1,290 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ULTIMATE Promotional Contest</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap");
 
-        :root {
-            --primary-glow: #0ff;
-            --secondary-glow: #f0f;
-            --blue: #4267b2;
-            --dark-blue: #365899;
-            --light-grey: #f0f2f5;
-            --white: #ffffff;
-            --success: #28a745;
-            --danger: #dc3545;
-            --bg-color: #12121c;
-        }
+      :root {
+        --primary-glow: #0ff;
+        --secondary-glow: #f0f;
+        --blue: #4267b2;
+        --dark-blue: #365899;
+        --light-grey: #f0f2f5;
+        --white: #ffffff;
+        --success: #28a745;
+        --danger: #dc3545;
+        --bg-color: #12121c;
+      }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            background: linear-gradient(45deg, #12121c, #1a1a2e, #16213e, #0f3460);
-            background-size: 400% 400%;
-            color: var(--white);
-            margin: 0;
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            overflow: hidden;
-            animation: background-pan 15s ease infinite;
-        }
-        
-        @keyframes background-pan {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-color);
+        background: linear-gradient(45deg, #12121c, #1a1a2e, #16213e, #0f3460);
+        background-size: 400% 400%;
+        color: var(--white);
+        margin: 0;
+        padding: 2rem 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        overflow: hidden;
+        animation: background-pan 15s ease infinite;
+      }
 
-        .bg-shape {
-            position: fixed;
-            background-color: var(--primary-glow);
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            animation: float 20s infinite ease-in-out;
+      @keyframes background-pan {
+        0% {
+          background-position: 0% 50%;
         }
-        .shape1 { width: 300px; height: 300px; top: 10%; left: 10%; animation-duration: 25s; }
-        .shape2 { width: 250px; height: 250px; bottom: 5%; right: 15%; background-color: var(--secondary-glow); animation-duration: 20s; animation-delay: -5s; }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
 
-        @keyframes float {
-            0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-            50% { transform: translateY(-40px) translateX(30px) rotate(180deg); }
-            100% { transform: translateY(0px) translateX(0px) rotate(360deg); }
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 720px;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #333;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            animation: fadeInScale 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative;
-            z-index: 10;
-        }
+      .bg-shape {
+        position: fixed;
+        background-color: var(--primary-glow);
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.15;
+        animation: float 20s infinite ease-in-out;
+      }
+      .shape1 {
+        width: 300px;
+        height: 300px;
+        top: 10%;
+        left: 10%;
+        animation-duration: 25s;
+      }
+      .shape2 {
+        width: 250px;
+        height: 250px;
+        bottom: 5%;
+        right: 15%;
+        background-color: var(--secondary-glow);
+        animation-duration: 20s;
+        animation-delay: -5s;
+      }
 
-        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow), 0 0 15px var(--primary-glow); }
-            50% { box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow), 0 0 30px var(--primary-glow); }
+      @keyframes float {
+        0% {
+          transform: translateY(0px) translateX(0px) rotate(0deg);
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        50% {
+          transform: translateY(-40px) translateX(30px) rotate(180deg);
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        100% {
+          transform: translateY(0px) translateX(0px) rotate(360deg);
         }
-        
-        header {
-            background: linear-gradient(45deg, var(--blue), var(--dark-blue));
-            color: var(--white);
-            padding: 16px 24px;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        header h1 { font-size: 1.8em; margin: 0; font-weight: 900; }
-        
-        #progress-bar {
-            height: 10px;
-            width: 0%;
-            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
-            transition: width 0.4s ease-in-out;
-            box-shadow: 0 0 8px var(--primary-glow);
-        }
+      }
 
-        main { padding: 24px 32px; }
-        .intro h2 { font-size: 2em; margin: 0 0 16px 0; font-weight: 700; }
+      .container {
+        width: 100%;
+        max-width: 720px;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #333;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: fadeInScale 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        z-index: 10;
+      }
 
-        #timer-container {
-            font-size: 1.2em; font-weight: bold; color: var(--danger);
-            margin-bottom: 24px; text-align: center; background-color: #fdf7f7;
-            padding: 10px; border-radius: 6px; border: 1px solid #f8d7da;
-            transition: all 0.3s ease;
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
         }
-        #timer-container.pulsing { animation: pulse 1s infinite; }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 5px var(--primary-glow), 0 0 10px var(--primary-glow),
+            0 0 15px var(--primary-glow);
+        }
+        50% {
+          box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow),
+            0 0 30px var(--primary-glow);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
 
-        #survey-area { text-align: center; min-height: 150px; position: relative; }
-        .survey-question { font-size: 1.6em; font-weight: 700; margin-bottom: 24px; }
-        
-        .answer-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .survey-btn {
-            background: linear-gradient(45deg, var(--blue), var(--dark-blue));
-            color: var(--white); border: none; padding: 16px 32px;
-            font-size: 1.1em; font-weight: bold; border-radius: 50px;
-            cursor: pointer; transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .survey-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            animation: glow 1.5s infinite alternate;
-        }
-        
-        #captcha-section {
-            display: none; margin-top: 30px; padding: 20px;
-            border: 1px solid #ddd; border-radius: 8px; background-color: #fafafa;
-            animation: fadeInScale 0.5s;
-        }
-        #captcha-section.visible { display: block; }
-        #captcha-section.shake { animation: shake 0.5s; }
-        .captcha-verify-btn {
-            background: linear-gradient(45deg, var(--success), #218838);
-        }
+      header {
+        background: linear-gradient(45deg, var(--blue), var(--dark-blue));
+        color: var(--white);
+        padding: 16px 24px;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      header h1 {
+        font-size: 1.8em;
+        margin: 0;
+        font-weight: 900;
+      }
 
-        #captcha-status { margin-top: 15px; font-weight: bold; min-height: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        #captcha-status .icon { width: 20px; height: 20px; }
-        .status-success { color: var(--success); }
-        .status-error { color: var(--danger); }
-        
-        .comments-section {
-            background-color: var(--light-grey); padding: 16px 24px; border-top: 1px solid #ddd;
-        }
-        .load-more-btn {
-            display: block; width: 100%; padding: 10px; margin-top: 10px;
-            background-color: var(--dark-blue); color: var(--white);
-            border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s;
-        }
-        .load-more-btn:hover { background-color: var(--blue); }
-        .load-more-btn:disabled { background-color: #888; cursor: not-allowed; }
+      #progress-bar {
+        height: 10px;
+        width: 0%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        transition: width 0.4s ease-in-out;
+        box-shadow: 0 0 8px var(--primary-glow);
+      }
 
-        #prize-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            display: none; justify-content: center; align-items: center;
-            text-align: center; z-index: 1000;
-        }
-        #prize-screen.visible { display: flex; }
-        .prize-box {
-            animation: prize-pop 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            color: var(--white);
-        }
-        .prize-box h2 {
-            font-size: 5em; font-weight: 900;
-            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow), var(--primary-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: text-shine 3s linear infinite, text-flicker 2s linear infinite;
-            text-shadow: 0 0 10px var(--primary-glow), 0 0 40px var(--secondary-glow);
-        }
-        .prize-box p { font-size: 1.5em; }
-        .prize-box .icon { font-size: 6em; animation: spin 5s linear infinite; }
+      main {
+        padding: 24px 32px;
+      }
+      .intro h2 {
+        font-size: 2em;
+        margin: 0 0 16px 0;
+        font-weight: 700;
+      }
 
-        @keyframes prize-pop { from { transform: scale(0); } to { transform: scale(1); } }
-        @keyframes text-shine { to { background-position: -200% center; } }
-        @keyframes text-flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+      #timer-container {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: var(--danger);
+        margin-bottom: 24px;
+        text-align: center;
+        background-color: #fdf7f7;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #f8d7da;
+        transition: all 0.3s ease;
+      }
+      #timer-container.pulsing {
+        animation: pulse 1s infinite;
+      }
+
+      #survey-area {
+        text-align: center;
+        min-height: 150px;
+        position: relative;
+      }
+      .survey-question {
+        font-size: 1.6em;
+        font-weight: 700;
+        margin-bottom: 24px;
+      }
+
+      .answer-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .survey-btn {
+        background: linear-gradient(45deg, var(--blue), var(--dark-blue));
+        color: var(--white);
+        border: none;
+        padding: 16px 32px;
+        font-size: 1.1em;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      .survey-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        animation: glow 1.5s infinite alternate;
+      }
+
+      #captcha-section {
+        display: none;
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
+        animation: fadeInScale 0.5s;
+      }
+      #captcha-section.visible {
+        display: block;
+      }
+      #captcha-section.shake {
+        animation: shake 0.5s;
+      }
+      .captcha-verify-btn {
+        background: linear-gradient(45deg, var(--success), #218838);
+      }
+
+      #captcha-status {
+        margin-top: 15px;
+        font-weight: bold;
+        min-height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      #captcha-status .icon {
+        width: 20px;
+        height: 20px;
+      }
+      .status-success {
+        color: var(--success);
+      }
+      .status-error {
+        color: var(--danger);
+      }
+
+      .comments-section {
+        background-color: var(--light-grey);
+        padding: 16px 24px;
+        border-top: 1px solid #ddd;
+      }
+      .load-more-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: var(--dark-blue);
+        color: var(--white);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .load-more-btn:hover {
+        background-color: var(--blue);
+      }
+      .load-more-btn:disabled {
+        background-color: #888;
+        cursor: not-allowed;
+      }
+
+      #prize-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 1000;
+      }
+      #prize-screen.visible {
+        display: flex;
+      }
+      .prize-box {
+        animation: prize-pop 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        color: var(--white);
+      }
+      .prize-box h2 {
+        font-size: 5em;
+        font-weight: 900;
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow),
+          var(--primary-glow)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% 200%;
+        animation: text-shine 3s linear infinite,
+          text-flicker 2s linear infinite;
+        text-shadow: 0 0 10px var(--primary-glow),
+          0 0 40px var(--secondary-glow);
+      }
+      .prize-box p {
+        font-size: 1.5em;
+      }
+      .prize-box .icon {
+        font-size: 6em;
+        animation: spin 5s linear infinite;
+      }
+
+      @keyframes prize-pop {
+        from {
+          transform: scale(0);
         }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        to {
+          transform: scale(1);
+        }
+      }
+      @keyframes text-shine {
+        to {
+          background-position: -200% center;
+        }
+      }
+      @keyframes text-flicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- Embedded SVG Icons -->
-    <svg width="0" height="0" style="position:absolute">
+    <svg width="0" height="0" style="position: absolute">
       <defs>
         <symbol id="icon-check" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          <path
+            fill="currentColor"
+            d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+          />
         </symbol>
         <symbol id="icon-cross" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          <path
+            fill="currentColor"
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
         </symbol>
         <symbol id="icon-loader" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z" opacity=".3"/>
-            <path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V2a10 10 0 0 0-9.95 9h1.95z">
-                <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
-            </path>
+          <path
+            fill="currentColor"
+            d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z"
+            opacity=".3"
+          />
+          <path
+            fill="currentColor"
+            d="M4 12a8 8 0 0 1 8-8V2a10 10 0 0 0-9.95 9h1.95z"
+          >
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 12 12"
+              to="360 12 12"
+              dur="1s"
+              repeatCount="indefinite"
+            />
+          </path>
         </symbol>
         <symbol id="icon-gift" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M20 12v8H4v-8H2v-2l2-4h16l2 4v2h-2zM6 18h12v-6H6v6zm-2-8l-1.5 3h17l-1.5-3H4zm10-4c0-1.66-1.34-3-3-3s-3 1.34-3 3h2c0-.55.45-1 1-1s1 .45 1 1V4h-2V3a3 3 0 0 1 3-3c1.66 0 3 1.34 3 3v1h-2V4z"/>
+          <path
+            fill="currentColor"
+            d="M20 12v8H4v-8H2v-2l2-4h16l2 4v2h-2zM6 18h12v-6H6v6zm-2-8l-1.5 3h17l-1.5-3H4zm10-4c0-1.66-1.34-3-3-3s-3 1.34-3 3h2c0-.55.45-1 1-1s1 .45 1 1V4h-2V3a3 3 0 0 1 3-3c1.66 0 3 1.34 3 3v1h-2V4z"
+          />
         </symbol>
       </defs>
     </svg>
 
     <!-- Audio for sound effects -->
-    <audio id="audio-click" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E=" preload="auto"></audio>
-    <audio id="audio-success" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E=" preload="auto"></audio>
-    <audio id="audio-error" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E=" preload="auto"></audio>
-    <audio id="audio-tick" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E=" preload="auto"></audio>
-    
+    <audio
+      id="audio-click"
+      src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E="
+      preload="auto"
+    ></audio>
+    <audio
+      id="audio-success"
+      src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E="
+      preload="auto"
+    ></audio>
+    <audio
+      id="audio-error"
+      src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E="
+      preload="auto"
+    ></audio>
+    <audio
+      id="audio-tick"
+      src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAA//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6L//uQZAU8AAAACAAADSAAAA0gAAA1t0jbK2e5uOlHgy6E="
+      preload="auto"
+    ></audio>
+
     <div class="bg-shape shape1"></div>
     <div class="bg-shape shape2"></div>
 
     <div class="container" id="main-container">
-        <header>
-            <h1>CONGRATULATIONS!</h1>
-            <p>Promotional Contest - October 1, 2024</p>
-        </header>
-        <div class="progress-bar-container"><div id="progress-bar"></div></div>
-        <main>
-            <div class="intro">
-                <h2>Dear User,</h2>
-                <p>An exclusive reward from our sponsors is waiting for you! Complete this short survey to claim it.</p>
-            </div>
-            <div id="timer-container">Time Left: <span id="timer">2:30</span></div>
-            <div id="survey-area"></div>
-            <div id="captcha-section">
-                <h3>Final Step: Verify Humanity</h3>
-                <p>Check the box and click verify to finalize your reward and enable notifications for prize updates.</p>
-                <div class="captcha-box"><input type="checkbox" id="robot-checkbox"><label for="robot-checkbox">I am not a robot</label></div>
-                <button id="captcha-verify-btn" class="survey-btn captcha-verify-btn">Verify & Claim Reward!</button>
-                <div id="captcha-status"></div>
-            </div>
-        </main>
-        <section class="comments-section">
-            <div class="comments-header"><span>Recent Activity</span></div>
-            <div class="comment-list"></div>
-            <button id="load-more-btn" class="load-more-btn">Load More Comments</button>
-        </section>
+      <header>
+        <h1>CONGRATULATIONS!</h1>
+        <p>Promotional Contest - October 1, 2024</p>
+      </header>
+      <div class="progress-bar-container"><div id="progress-bar"></div></div>
+      <main>
+        <div class="intro">
+          <h2>Dear User,</h2>
+          <p>
+            An exclusive reward from our sponsors is waiting for you! Complete
+            this short survey to claim it.
+          </p>
+        </div>
+        <div id="timer-container">
+          Time Left:
+          <span id="timer">2:30</span>
+        </div>
+        <div id="survey-area"></div>
+        <div id="captcha-section">
+          <h3>Final Step: Verify Humanity</h3>
+          <p>
+            Check the box and click verify to finalize your reward and enable
+            notifications for prize updates.
+          </p>
+          <div class="captcha-box">
+            <input type="checkbox" id="robot-checkbox" />
+            <label for="robot-checkbox">I am not a robot</label>
+          </div>
+          <button id="captcha-verify-btn" class="survey-btn captcha-verify-btn">
+            Verify & Claim Reward!
+          </button>
+          <div id="captcha-status"></div>
+        </div>
+      </main>
+      <section class="comments-section">
+        <div class="comments-header"><span>Recent Activity</span></div>
+        <div class="comment-list"></div>
+        <button id="load-more-btn" class="load-more-btn">
+          Load More Comments
+        </button>
+      </section>
     </div>
 
     <div id="prize-screen">
-        <div class="prize-box">
-            <div class="icon"><svg><use href="#icon-gift"/></svg></div>
-            <h2>YOU'VE WON!</h2>
-            <p>Your reward is confirmed! We will notify you shortly with details.</p>
+      <div class="prize-box">
+        <div class="icon">
+          <svg><use href="#icon-gift" /></svg>
         </div>
+        <h2>YOU'VE WON!</h2>
+        <p>
+          Your reward is confirmed! We will notify you shortly with details.
+        </p>
+      </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener("DOMContentLoaded", () => {
         // --- Elements ---
-        const surveyArea = document.getElementById('survey-area');
-        const timerElement = document.getElementById('timer');
-        const timerContainer = document.getElementById('timer-container');
-        const progressBar = document.getElementById('progress-bar');
-        const mainContainer = document.getElementById('main-container');
-        const prizeScreen = document.getElementById('prize-screen');
-        const commentList = document.querySelector('.comment-list');
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        
+        const surveyArea = document.getElementById("survey-area");
+        const timerElement = document.getElementById("timer");
+        const timerContainer = document.getElementById("timer-container");
+        const progressBar = document.getElementById("progress-bar");
+        const mainContainer = document.getElementById("main-container");
+        const prizeScreen = document.getElementById("prize-screen");
+        const commentList = document.querySelector(".comment-list");
+        const loadMoreBtn = document.getElementById("load-more-btn");
+
         // CAPTCHA
-        const captchaSection = document.getElementById('captcha-section');
-        const robotCheckbox = document.getElementById('robot-checkbox');
-        const verifyBtn = document.getElementById('captcha-verify-btn');
-        const captchaStatus = document.getElementById('captcha-status');
+        const captchaSection = document.getElementById("captcha-section");
+        const robotCheckbox = document.getElementById("robot-checkbox");
+        const verifyBtn = document.getElementById("captcha-verify-btn");
+        const captchaStatus = document.getElementById("captcha-status");
 
         // Confetti
-        const myConfetti = confetti.create(document.getElementById('confetti-canvas'), { resize: true, useWorker: true });
+        const myConfetti = confetti.create(
+          document.getElementById("confetti-canvas"),
+          { resize: true, useWorker: true }
+        );
 
         // --- State ---
         let currentQuestionIndex = 0;
@@ -292,181 +539,262 @@
         let timerInterval;
         let commentsToShow = 4;
         const rootStyles = getComputedStyle(document.documentElement);
-        
+
         // --- Data ---
         const surveyQuestions = [
-            { question: "What is your gender?", answers: ["Man", "Woman"] },
-            { question: "How old are you?", answers: ["Under 18", "18-34", "35-54", "55+"] },
-            { question: "How often do you participate in online promotions?", answers: ["Frequently", "Sometimes", "Rarely", "Never"] },
-            { question: "How would you rate your experience so far?", answers: ["Excellent", "Good", "Average", "Poor"] }
+          { question: "What is your gender?", answers: ["Man", "Woman"] },
+          {
+            question: "How old are you?",
+            answers: ["Under 18", "18-34", "35-54", "55+"],
+          },
+          {
+            question: "How often do you participate in online promotions?",
+            answers: ["Frequently", "Sometimes", "Rarely", "Never"],
+          },
+          {
+            question: "How would you rate your experience so far?",
+            answers: ["Excellent", "Good", "Average", "Poor"],
+          },
         ];
 
         const commentsData = [
-            { name: "Maria F.", img: 1, text: "Is it possible to play again? :-)", time: "just now" },
-            { name: "Fred H.", img: 3, text: "I had heard about it!", time: "17m ago" },
-            { name: "Patricia K.", img: 5, text: "Thank you so much!", time: "23m ago" },
-            { name: "Miguel S.", img: 7, text: "All the gifts are empty!!!", time: "48m ago" },
-            { name: "Laura W.", img: 6, text: "This was surprisingly fun. Hope I win!", time: "1h ago" },
-            { name: "David C.", img: 12, text: "Finished it. Let's see what happens.", time: "1h ago" },
-            { name: "Sophie D.", img: 21, text: "J'ai adoré, merci pour l'opportunité!", time: "2h ago" },
-            { name: "Kenji T.", img: 33, text: "Simple survey. Waiting for the reward email.", time: "3h ago" },
-            { name: "Ahmed B.", img: 45, text: "My friend told me to try this, glad I did.", time: "4h ago" },
-            { name: "Chloe R.", img: 50, text: "Took less than a minute. Awesome!", time: "5h ago" }
+          {
+            name: "Maria F.",
+            img: 1,
+            text: "Is it possible to play again? :-)",
+            time: "just now",
+          },
+          {
+            name: "Fred H.",
+            img: 3,
+            text: "I had heard about it!",
+            time: "17m ago",
+          },
+          {
+            name: "Patricia K.",
+            img: 5,
+            text: "Thank you so much!",
+            time: "23m ago",
+          },
+          {
+            name: "Miguel S.",
+            img: 7,
+            text: "All the gifts are empty!!!",
+            time: "48m ago",
+          },
+          {
+            name: "Laura W.",
+            img: 6,
+            text: "This was surprisingly fun. Hope I win!",
+            time: "1h ago",
+          },
+          {
+            name: "David C.",
+            img: 12,
+            text: "Finished it. Let's see what happens.",
+            time: "1h ago",
+          },
+          {
+            name: "Sophie D.",
+            img: 21,
+            text: "J'ai adoré, merci pour l'opportunité!",
+            time: "2h ago",
+          },
+          {
+            name: "Kenji T.",
+            img: 33,
+            text: "Simple survey. Waiting for the reward email.",
+            time: "3h ago",
+          },
+          {
+            name: "Ahmed B.",
+            img: 45,
+            text: "My friend told me to try this, glad I did.",
+            time: "4h ago",
+          },
+          {
+            name: "Chloe R.",
+            img: 50,
+            text: "Took less than a minute. Awesome!",
+            time: "5h ago",
+          },
         ];
-        
-        // --- Functions ---
-        
-        const playSound = (id) => {
-            const sound = document.getElementById(id);
-            if(sound) {
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log("User interaction needed to play sound."));
-            }
-        }
-        
-        const startTimer = () => {
-            timerInterval = setInterval(() => {
-                timeRemaining--;
-                const minutes = Math.floor(timeRemaining / 60);
-                const seconds = timeRemaining % 60;
-                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                
-                if (timeRemaining > 0 && timeRemaining <= 10) {
-                    timerContainer.classList.add('pulsing');
-                    playSound('audio-tick');
-                } else {
-                    timerContainer.classList.remove('pulsing');
-                }
 
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    showTimeUpMessage();
-                }
-            }, 1000);
+        // --- Functions ---
+
+        const playSound = (id) => {
+          const sound = document.getElementById(id);
+          if (sound) {
+            sound.currentTime = 0;
+            sound
+              .play()
+              .catch((e) =>
+                console.log("User interaction needed to play sound.")
+              );
+          }
+        };
+
+        const startTimer = () => {
+          timerInterval = setInterval(() => {
+            timeRemaining--;
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerElement.textContent = `${minutes}:${seconds
+              .toString()
+              .padStart(2, "0")}`;
+
+            if (timeRemaining > 0 && timeRemaining <= 10) {
+              timerContainer.classList.add("pulsing");
+              playSound("audio-tick");
+            } else {
+              timerContainer.classList.remove("pulsing");
+            }
+
+            if (timeRemaining <= 0) {
+              clearInterval(timerInterval);
+              showTimeUpMessage();
+            }
+          }, 1000);
         };
 
         const updateProgressBar = () => {
-            progressBar.style.width = `${(currentQuestionIndex / surveyQuestions.length) * 100}%`;
+          progressBar.style.width = `${
+            (currentQuestionIndex / surveyQuestions.length) * 100
+          }%`;
         };
-        
+
         const renderQuestion = () => {
-            const q = surveyQuestions[currentQuestionIndex];
-            surveyArea.innerHTML = `<div class="survey-question">${q.question}</div><div class="answer-buttons">${q.answers.map(a => `<button class="survey-btn">${a}</button>`).join('')}</div>`;
-            document.querySelectorAll('.survey-btn').forEach(b => b.addEventListener('click', handleAnswerClick));
+          const q = surveyQuestions[currentQuestionIndex];
+          surveyArea.innerHTML = `<div class="survey-question">${
+            q.question
+          }</div><div class="answer-buttons">${q.answers
+            .map((a) => `<button class="survey-btn">${a}</button>`)
+            .join("")}</div>`;
+          document
+            .querySelectorAll(".survey-btn")
+            .forEach((b) => b.addEventListener("click", handleAnswerClick));
         };
 
         const handleAnswerClick = () => {
-            playSound('audio-click');
-            currentQuestionIndex++;
-            updateProgressBar();
-            if (currentQuestionIndex < surveyQuestions.length) {
-                renderQuestion();
-            } else {
-                showCompletionMessage();
-            }
+          playSound("audio-click");
+          currentQuestionIndex++;
+          updateProgressBar();
+          if (currentQuestionIndex < surveyQuestions.length) {
+            renderQuestion();
+          } else {
+            showCompletionMessage();
+          }
         };
 
         const showCompletionMessage = () => {
-            clearInterval(timerInterval);
-            timerContainer.style.display = 'none';
-            progressBar.style.width = '100%';
-            surveyArea.innerHTML = '';
-            captchaSection.classList.add('visible');
-            myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          clearInterval(timerInterval);
+          timerContainer.style.display = "none";
+          progressBar.style.width = "100%";
+          surveyArea.innerHTML = "";
+          captchaSection.classList.add("visible");
+          myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         };
-        
+
         const showTimeUpMessage = () => {
-            timerContainer.classList.remove('pulsing');
-            // Correctly get CSS variable value for JS
-            const dangerColor = rootStyles.getPropertyValue('--danger').trim();
-            timerContainer.style.color = 'white';
-            timerContainer.style.backgroundColor = dangerColor;
-            timerContainer.textContent = "Time's up!";
-            surveyArea.innerHTML = `<div class="survey-question">Sorry, you ran out of time!</div><p>Please refresh the page to try again.</p>`;
+          timerContainer.classList.remove("pulsing");
+          // Correctly get CSS variable value for JS
+          const dangerColor = rootStyles.getPropertyValue("--danger").trim();
+          timerContainer.style.color = "white";
+          timerContainer.style.backgroundColor = dangerColor;
+          timerContainer.textContent = "Time's up!";
+          surveyArea.innerHTML = `<div class="survey-question">Sorry, you ran out of time!</div><p>Please refresh the page to try again.</p>`;
         };
-        
+
         const renderComments = () => {
-            const toRender = commentsData.slice(0, commentsToShow);
-            commentList.innerHTML = toRender.map(c => `
+          const toRender = commentsData.slice(0, commentsToShow);
+          commentList.innerHTML = toRender
+            .map(
+              (c) => `
                 <div class="comment"><img src="https://i.pravatar.cc/40?img=${c.img}" alt="${c.name}"><div>
                 <div class="comment-content"><div class="comment-name">${c.name}</div><div>${c.text}</div></div>
-                <div class="comment-actions"><span>Like</span> · <span>Reply</span> · ${c.time}</div></div></div>`).join('');
-            
-            if (commentsToShow >= commentsData.length) {
-                loadMoreBtn.disabled = true;
-                loadMoreBtn.textContent = "All comments shown";
-            }
+                <div class="comment-actions"><span>Like</span> · <span>Reply</span> · ${c.time}</div></div></div>`
+            )
+            .join("");
+
+          if (commentsToShow >= commentsData.length) {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.textContent = "All comments shown";
+          }
         };
 
         const handleVerification = () => {
-            playSound('audio-click');
-            captchaSection.classList.remove('shake');
-            if (!robotCheckbox.checked) {
-                playSound('audio-error');
-                captchaStatus.className = 'status-error';
-                captchaStatus.innerHTML = `<svg class="icon"><use href="#icon-cross"/></svg> Please check the box to verify.`;
-                captchaSection.classList.add('shake');
-                return;
-            }
-            verifyBtn.disabled = true;
-            captchaStatus.innerHTML = `<svg class="icon" style="animation: spin 1s linear infinite;"><use href="#icon-loader"/></svg> Verifying...`;
+          playSound("audio-click");
+          captchaSection.classList.remove("shake");
+          if (!robotCheckbox.checked) {
+            playSound("audio-error");
+            captchaStatus.className = "status-error";
+            captchaStatus.innerHTML = `<svg class="icon"><use href="#icon-cross"/></svg> Please check the box to verify.`;
+            captchaSection.classList.add("shake");
+            return;
+          }
+          verifyBtn.disabled = true;
+          captchaStatus.innerHTML = `<svg class="icon" style="animation: spin 1s linear infinite;"><use href="#icon-loader"/></svg> Verifying...`;
 
-            setTimeout(() => {
-                Notification.requestPermission().then(permission => {
-                    playSound('audio-success');
-                    captchaStatus.className = 'status-success';
-                    captchaStatus.innerHTML = `<svg class="icon"><use href="#icon-check"/></svg> Success! Get Ready...`;
-                    
-                    // Trigger final celebration
-                    setTimeout(() => {
-                        mainContainer.style.display = 'none';
-                        prizeScreen.classList.add('visible');
-                        celebrate();
-                    }, 1000);
+          setTimeout(() => {
+            Notification.requestPermission().then((permission) => {
+              playSound("audio-success");
+              captchaStatus.className = "status-success";
+              captchaStatus.innerHTML = `<svg class="icon"><use href="#icon-check"/></svg> Success! Get Ready...`;
 
-                    if (permission === 'granted') {
-                        new Notification('Reward Confirmed!', { body: 'Thanks for participating!', icon: 'https://i.pravatar.cc/128' });
-                    }
+              // Trigger final celebration
+              setTimeout(() => {
+                mainContainer.style.display = "none";
+                prizeScreen.classList.add("visible");
+                celebrate();
+              }, 1000);
+
+              if (permission === "granted") {
+                new Notification("Reward Confirmed!", {
+                  body: "Thanks for participating!",
+                  icon: "https://i.pravatar.cc/128",
                 });
-            }, 1500);
+              }
+            });
+          }, 1500);
         };
 
         const celebrate = () => {
-            let end = Date.now() + (3 * 1000);
-            let colors = ['#0ff', '#f0f', '#fff'];
-            (function frame() {
-              myConfetti({
-                particleCount: 3,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: colors
-              });
-              myConfetti({
-                particleCount: 3,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: colors
-              });
-              if (Date.now() < end) {
-                requestAnimationFrame(frame);
-              }
-            }());
+          let end = Date.now() + 3 * 1000;
+          let colors = ["#0ff", "#f0f", "#fff"];
+          (function frame() {
+            myConfetti({
+              particleCount: 3,
+              angle: 60,
+              spread: 55,
+              origin: { x: 0 },
+              colors: colors,
+            });
+            myConfetti({
+              particleCount: 3,
+              angle: 120,
+              spread: 55,
+              origin: { x: 1 },
+              colors: colors,
+            });
+            if (Date.now() < end) {
+              requestAnimationFrame(frame);
+            }
+          })();
         };
-        
+
         // --- Init ---
         updateProgressBar();
         renderQuestion();
         startTimer();
         renderComments();
-        verifyBtn.addEventListener('click', handleVerification);
-        loadMoreBtn.addEventListener('click', () => {
-            playSound('audio-click');
-            commentsToShow += 4;
-            renderComments();
+        verifyBtn.addEventListener("click", handleVerification);
+        loadMoreBtn.addEventListener("click", () => {
+          playSound("audio-click");
+          commentsToShow += 4;
+          renderComments();
         });
-    });
+      });
     </script>
-</body>
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

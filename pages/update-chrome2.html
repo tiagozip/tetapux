@@ -1,95 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Chrome Update</title>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif; /* Use a font similar to Chrome's default */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Vertically center content */
-            min-height: 100vh;
-            background-color: #fff; /* White background */
-        }
+      body {
+        font-family: "Roboto", sans-serif; /* Use a font similar to Chrome's default */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Vertically center content */
+        min-height: 100vh;
+        background-color: #fff; /* White background */
+      }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            width: 100%; /* Full width header */
-            box-sizing: border-box;
-            background-color: #fff; /* Explicitly set background */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        width: 100%; /* Full width header */
+        box-sizing: border-box;
+        background-color: #fff; /* Explicitly set background */
+      }
 
-        }
-
-        .logo {
-            height: 30px; /* Adjust logo size as needed */
-            margin-right: 10px;
-        }
+      .logo {
+        height: 30px; /* Adjust logo size as needed */
+        margin-right: 10px;
+      }
       .logo-text {
         font-size: 20px;
         color: #5f6368;
       }
 
-        .container {
-            text-align: center;
-            max-width: 700px;  /* Added max-width for better readability on larger screens */
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box; /* Include padding in width/height */
+      .container {
+        text-align: center;
+        max-width: 700px; /* Added max-width for better readability on larger screens */
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box; /* Include padding in width/height */
+      }
 
-        }
+      .title {
+        font-size: 28px;
+        font-weight: 400; /*  Normal weight */
+        margin-bottom: 20px;
+        color: #202124; /*  Darker text color */
+      }
 
+      .subtitle {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 30px;
+        color: #202124; /* Darker text color */
+      }
 
-        .title {
-            font-size: 28px;
-            font-weight: 400; /*  Normal weight */
-            margin-bottom: 20px;
-            color: #202124; /*  Darker text color */
-        }
+      .button {
+        background-color: #1a73e8; /* Google Blue */
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none; /*  Remove underline if it's a link */
+        display: inline-block; /* Allows padding and margins */
+        font-weight: 500; /*  Slightly bolder button text */
+        transition: background-color 0.2s; /* Smooth transition */
+      }
 
-        .subtitle {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 30px;
-            color: #202124; /* Darker text color */
-        }
-
-        .button {
-            background-color: #1a73e8; /* Google Blue */
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none; /*  Remove underline if it's a link */
-            display: inline-block;  /* Allows padding and margins */
-            font-weight: 500;      /*  Slightly bolder button text */
-            transition: background-color 0.2s; /* Smooth transition */
-        }
-
-        .button:hover {
-          background-color: #1b66c9; /*  Slightly darker blue on hover */
-        }
+      .button:hover {
+        background-color: #1b66c9; /*  Slightly darker blue on hover */
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" alt="Google Chrome Logo" class="logo">
-        <span class='logo-text'>Chrome</span>
+      <img
+        src="https://www.google.com/chrome/static/images/chrome-logo.svg"
+        alt="Google Chrome Logo"
+        class="logo"
+      />
+      <span class="logo-text">Chrome</span>
     </div>
 
     <div class="container">
-        <h1 class="title">You are using an older version of Chrome</h1>
-        <p class="subtitle">Update now to keep your Chrome browser running smoothly and securely.<br>Your download will begin automatically. If not, click here:</p>
-        <a href="/pages/makeithappy.html" class="button">Update Chrome</a>
+      <h1 class="title">You are using an older version of Chrome</h1>
+      <p class="subtitle">
+        Update now to keep your Chrome browser running smoothly and securely.
+        <br />
+        Your download will begin automatically. If not, click here:
+      </p>
+      <a href="/pages/makeithappy.html" class="button">Update Chrome</a>
     </div>
-</body>
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

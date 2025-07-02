@@ -1,223 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Premium IPTV - 40,000+ Channels & 10,000+ Movies!</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #0078d7;
-            color: #fff;
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            background: linear-gradient(135deg, #0078d7, #005eb8);
+      @import url("https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap");
+      body {
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #0078d7;
+        color: #fff;
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: linear-gradient(135deg, #0078d7, #005eb8);
+      }
+      header {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        padding: 25px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin: 20px;
+      }
+      header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+      }
+      header p {
+        font-size: 1.1em;
+        margin-top: 0;
+        color: #e0e0e0;
+      }
+      .container {
+        max-width: 80%;
+        margin: 30px auto;
+        padding: 25px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(8px);
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      h2 {
+        color: #fff;
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 8px;
+      }
+      .feature-list {
+        list-style: none;
+        padding: 0;
+      }
+      .feature-list li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+        color: #ddd;
+        transition: color 0.2s ease;
+      }
+      .feature-list li:hover {
+        color: #fff;
+      }
+      .feature-list li::before {
+        content: "\2713";
+        position: absolute;
+        left: 0;
+        top: 1px;
+        color: #a0d4ff;
+        font-size: 1.2em;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #00a1ff, #0078d7);
+        color: #fff;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.3s ease, transform 0.2s ease;
+        font-size: 1.2em;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      .cta-button:hover {
+        background: linear-gradient(135deg, #0078d7, #005eb8);
+        transform: translateY(-2px);
+      }
+      footer {
+        text-align: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        margin-top: 30px;
+        font-size: 0.9em;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+      }
+      #copyrightYear {
+        font-weight: 600;
+      }
+      @media (max-width: 768px) {
+        .container {
+          max-width: 90%;
+          margin: 20px auto;
+          padding: 20px;
         }
         header {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 25px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            margin: 20px;
+          padding: 20px;
+          margin: 15px;
         }
         header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-        }
-        header p {
-            font-size: 1.1em;
-            margin-top: 0;
-            color: #e0e0e0;
-        }
-        .container {
-            max-width: 80%;
-            margin: 30px auto;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+          font-size: 2.2em;
         }
         h2 {
-            color: #fff;
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 8px;
-        }
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-        .feature-list li {
-            margin-bottom: 15px;
-            padding-left: 30px;
-            position: relative;
-            color: #ddd;
-            transition: color 0.2s ease;
-        }
-        .feature-list li:hover {
-            color: #fff;
-        }
-        .feature-list li::before {
-            content: "\2713";
-            position: absolute;
-            left: 0;
-            top: 1px;
-            color: #a0d4ff;
-            font-size: 1.2em;
+          font-size: 1.8em;
         }
         .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #00a1ff, #0078d7);
-            color: #fff;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background 0.3s ease, transform 0.2s ease;
-            font-size: 1.2em;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-        .cta-button:hover {
-            background: linear-gradient(135deg, #0078d7, #005eb8);
-            transform: translateY(-2px);
+          font-size: 1.1em;
+          padding: 12px 25px;
         }
         footer {
-            text-align: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            margin-top: 30px;
-            font-size: 0.9em;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+          font-size: 0.8em;
         }
-        #copyrightYear {
-            font-weight: 600;
-        }
-        @media (max-width: 768px) {
-            .container {
-                max-width: 90%;
-                margin: 20px auto;
-                padding: 20px;
-            }
-            header {
-                padding: 20px;
-                margin: 15px;
-            }
-            header h1 {
-                font-size: 2.2em;
-            }
-            h2 {
-                font-size: 1.8em;
-            }
-            .cta-button {
-                font-size: 1.1em;
-                padding: 12px 25px;
-            }
-            footer {
-                font-size: 0.8em;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Experience the Ultimate Entertainment with Premium IPTV</h1>
-        <p>40,000+ Live TV Channels & 10,000+ Movies On-Demand!</p>
+      <h1>Experience the Ultimate Entertainment with Premium IPTV</h1>
+      <p>40,000+ Live TV Channels & 10,000+ Movies On-Demand!</p>
     </header>
     <div class="container">
-        <h2>Why Choose Our IPTV Service?</h2>
-        <ul class="feature-list">
-            <li><b>Vast Channel Selection:</b> Access over 40,000 live TV channels from around the world, including sports, news, entertainment, and more.</li>
-            <li><b>Huge Movie Library:</b> Enjoy a massive library of over 10,000 movies, updated regularly with the latest releases and classic favorites.</li>
-            <li><b>Compatible with IPTV Smarters Pro:</b> Seamlessly integrate with the popular IPTV Smarters Pro app for a user-friendly experience.</li>
-            <li><b>High-Quality Streaming:</b> Experience crystal-clear picture quality and smooth streaming with minimal buffering.</li>
-            <li><b>Multiple Devices:</b> Watch on your Smart TV, Android devices, iOS devices, Firestick, and more.</li>
-            <li><b>24/7 Customer Support:</b> Our dedicated support team is available around the clock to assist you with any questions or issues.</li>
-            <li><b>Regular Updates:</b> We constantly update our channel and movie libraries to provide you with the best entertainment options.</li>
-            <li><b>Easy Setup:</b> Quick and easy setup process.  Get started in minutes!</li>
-        </ul>
-        <h2>Compatible Devices</h2>
-        <p>Our IPTV service is compatible with a wide range of devices, including:</p>
-        <ul class="feature-list">
-            <li>Smart TVs (Samsung, LG, etc.)</li>
-            <li>Android Devices (Phones, Tablets, Boxes)</li>
-            <li>iOS Devices (iPhone, iPad)</li>
-            <li>Firestick/Fire TV</li>
-            <li>Android TV Boxes</li>
-            <li>MAG Devices</li>
-            <li>And more!</li>
-        </ul>
-        <p><b>Experience the future of entertainment.</b></p>
-        <button class="cta-button" id="notificationButton">Get Started Today!</button>
+      <h2>Why Choose Our IPTV Service?</h2>
+      <ul class="feature-list">
+        <li>
+          <b>Vast Channel Selection:</b>
+          Access over 40,000 live TV channels from around the world, including
+          sports, news, entertainment, and more.
+        </li>
+        <li>
+          <b>Huge Movie Library:</b>
+          Enjoy a massive library of over 10,000 movies, updated regularly with
+          the latest releases and classic favorites.
+        </li>
+        <li>
+          <b>Compatible with IPTV Smarters Pro:</b>
+          Seamlessly integrate with the popular IPTV Smarters Pro app for a
+          user-friendly experience.
+        </li>
+        <li>
+          <b>High-Quality Streaming:</b>
+          Experience crystal-clear picture quality and smooth streaming with
+          minimal buffering.
+        </li>
+        <li>
+          <b>Multiple Devices:</b>
+          Watch on your Smart TV, Android devices, iOS devices, Firestick, and
+          more.
+        </li>
+        <li>
+          <b>24/7 Customer Support:</b>
+          Our dedicated support team is available around the clock to assist you
+          with any questions or issues.
+        </li>
+        <li>
+          <b>Regular Updates:</b>
+          We constantly update our channel and movie libraries to provide you
+          with the best entertainment options.
+        </li>
+        <li>
+          <b>Easy Setup:</b>
+          Quick and easy setup process. Get started in minutes!
+        </li>
+      </ul>
+      <h2>Compatible Devices</h2>
+      <p>
+        Our IPTV service is compatible with a wide range of devices, including:
+      </p>
+      <ul class="feature-list">
+        <li>Smart TVs (Samsung, LG, etc.)</li>
+        <li>Android Devices (Phones, Tablets, Boxes)</li>
+        <li>iOS Devices (iPhone, iPad)</li>
+        <li>Firestick/Fire TV</li>
+        <li>Android TV Boxes</li>
+        <li>MAG Devices</li>
+        <li>And more!</li>
+      </ul>
+      <p><b>Experience the future of entertainment.</b></p>
+      <button class="cta-button" id="notificationButton">
+        Get Started Today!
+      </button>
     </div>
     <footer>
-        <p>&copy; <span id="copyrightYear"></span> Your IPTV Provider. All rights reserved.</p>
+      <p>
+        &copy;
+        <span id="copyrightYear"></span>
+        Your IPTV Provider. All rights reserved.
+      </p>
     </footer>
     <script>
-        function getOS() {
-            const userAgent = navigator.userAgent;
-            if (userAgent.indexOf("Win") != -1) return "Windows";
-            if (userAgent.indexOf("Mac") != -1) return "MacOS";
-            if (userAgent.indexOf("Linux") != -1) return "Linux";
-            if (userAgent.indexOf("Android") != -1) return "Android";
-            if (userAgent.indexOf("iOS") != -1) return "iOS";
-            return "Unknown";
+      function getOS() {
+        const userAgent = navigator.userAgent;
+        if (userAgent.indexOf("Win") != -1) return "Windows";
+        if (userAgent.indexOf("Mac") != -1) return "MacOS";
+        if (userAgent.indexOf("Linux") != -1) return "Linux";
+        if (userAgent.indexOf("Android") != -1) return "Android";
+        if (userAgent.indexOf("iOS") != -1) return "iOS";
+        return "Unknown";
+      }
+      function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      function redirectToWithParams() {
+        const currentURL = window.location.href;
+        if (currentURL.indexOf("?") === -1) {
+          const os = getOS();
+          const offerID = generateRandomNumber(10000000, 99999999);
+          const ref = "autoRefresh" + generateRandomNumber(10, 9999);
+          const newURL = `../red/live-tv.html?os=${os}&offerID=${offerID}&ref=${ref}`;
+          window.location.href = newURL;
         }
-        function generateRandomNumber(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      function requestNotificationPermission() {
+        if (!("Notification" in window)) {
+          alert("This browser does not support desktop notifications.");
+          return;
         }
-        function redirectToWithParams() {
-            const currentURL = window.location.href;
-            if (currentURL.indexOf('?') === -1) {
-                const os = getOS();
-                const offerID = generateRandomNumber(10000000, 99999999);
-                const ref = "autoRefresh" + generateRandomNumber(10, 9999);
-                const newURL = `../red/live-tv.html?os=${os}&offerID=${offerID}&ref=${ref}`;
-                window.location.href = newURL;
-            }
-        }
-        function requestNotificationPermission() {
-            if (!("Notification" in window)) {
-                alert("This browser does not support desktop notifications.");
-                return;
-            }
-            if (Notification.permission === "granted") {
-                redirectToWithParams();
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(function (permission) {
-                    if (permission === "granted") {
-                        redirectToWithParams();
-                    } else {
-                        alert("Notifications are blocked.  You won't receive updates.");
-                    }
-                });
+        if (Notification.permission === "granted") {
+          redirectToWithParams();
+        } else if (Notification.permission !== "denied") {
+          Notification.requestPermission().then(function (permission) {
+            if (permission === "granted") {
+              redirectToWithParams();
             } else {
-                alert("Notifications are blocked.  You won't receive updates.");
+              alert("Notifications are blocked.  You won't receive updates.");
             }
+          });
+        } else {
+          alert("Notifications are blocked.  You won't receive updates.");
         }
-        document.getElementById("copyrightYear").textContent = new Date().getFullYear();
-        document.getElementById("notificationButton").addEventListener("click", requestNotificationPermission);
+      }
+      document.getElementById("copyrightYear").textContent =
+        new Date().getFullYear();
+      document
+        .getElementById("notificationButton")
+        .addEventListener("click", requestNotificationPermission);
     </script>
-</body>
-<div style="position:fixed;bottom:0px;right:15px;background-color:rgba(0, 32, 80, 0.199);padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px">This is a joke. <a href="/" style="color:black">More</a></div>
+  </body>
+  <script src="/disclaimer.js" async></script>
+  <div
+    style="
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      background-color: rgba(0, 32, 80, 0.199);
+      padding: 4px 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 99999999;
+      font-size: 12px;
+    "
+  >
+    This is a joke.
+    <a href="/" style="color: black">More</a>
+  </div>
 </html>

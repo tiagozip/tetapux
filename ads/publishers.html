@@ -1,92 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>For publishers | Tetapux Ads</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <title>For publishers | Tetapux Ads</title>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+      body {
+        font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI",
+          "Geist Sans", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif,
+          Helvetica, "Apple Color Emoji", Arial, "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        margin: 4em auto;
+        max-width: 550px;
+        background-color: #121212;
+        padding: 0 1em;
+        color: white;
+        line-height: 1.5;
+      }
 
-    body {
-      font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI", "Geist Sans", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, Helvetica, "Apple Color Emoji", Arial, "Segoe UI Emoji", "Segoe UI Symbol";
-      margin: 4em auto;
-      max-width: 550px;
-      background-color: #121212;
-      padding: 0 1em;
-      color: white;
-      line-height: 1.5;
-    }
+      h1 {
+        font-size: 1.8em;
+        margin-bottom: 0.2em;
+      }
 
-    h1 {
-      font-size: 1.8em;
-      margin-bottom: 0.2em;
-    }
+      p {
+        color: hsl(0deg 0% 98%);
+      }
 
-    p {
-      color: hsl(0deg 0% 98%);
-    }
+      .back {
+        color: white;
+        text-decoration: none;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        transition: opacity 0.2s;
+      }
 
-    .back {
-      color: white;
-      text-decoration: none;
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      transition: opacity 0.2s;
-    }
+      .back:not(:hover) {
+        opacity: 0.4;
+      }
 
-    .back:not(:hover) {
-      opacity: 0.4;
-    }
+      code:not(pre code) {
+        color: hsl(0deg 0% 98%);
+        font-weight: 400;
+        font-size: 0.875em;
+        padding: 0.2rem 0.4rem;
+        background-color: hsl(0deg 0% 12.9%);
+        border: 1px solid hsl(0deg 0% 16.1%);
+        border-radius: 0.5rem;
+      }
 
-    code:not(pre code) {
-      color: hsl(0deg 0% 98%);
-      font-weight: 400;
-      font-size: .875em;
-      padding: .2rem .4rem;
-      background-color: hsl(0deg 0% 12.9%);
-      border: 1px solid hsl(0deg 0% 16.1%);
-      border-radius: .5rem;
-    }
+      pre code {
+        color: #3ecf8e;
+        padding: 1rem;
+        background-color: hsl(0deg 0% 12.9%);
+        border: 1px solid hsl(0deg 0% 16.1%);
+        border-radius: 0.5rem;
+        width: 100%;
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 20px;
 
-    pre code {
-      color: #3ECF8E;
-      padding: 1rem;
-      background-color: hsl(0deg 0% 12.9%);
-      border: 1px solid hsl(0deg 0% 16.1%);
-      border-radius: .5rem;
-      width: 100%;
-      display: block;
-      margin-top: 20px;
-      margin-bottom: 20px;
+        text-wrap: auto;
+      }
 
-      text-wrap: auto;
-    }
+      pre code span {
+        color: #ededed;
+      }
 
-    pre code span {
-      color: #ededed;
-    }
+      pre code span.eq {
+        color: #a0a0a0;
+      }
+    </style>
+  </head>
 
-    pre code span.eq {
-      color: #a0a0a0;
-    }
-  </style>
-</head>
-
-<body>
-  <a href="/ads/index.html" class="back">← Back</a>
-  <main>
-    <h1>For publishers</h1>
-    <p>In order to make Tetapux as easy to add as possible, you'll just need to import the Tetapux Ads library:</p>
-    <pre><code><span>&lt;</span>script src<span class="eq">=</span>"https://cdn.jsdelivr.net/gh/tiagorangel1/tetapux/aw.min.js"<span>&gt;&lt;</span>/script<span>&gt;</span></code></pre>
-    <p>Then, you can use the <code>&lt;tetapux-ads&gt;&lt;/tetapux-ads&gt;</code> custom component. The <code>width</code>
-      and <code>height</code> parameters are supported, along with <code>vertical</code> to make the ad vertical and more coming soon. You can also specify custom HTML to inject into the shadow DOM by using <code>inject="your code"</code></p>
-  </main>
-</body>
-
+  <body>
+    <a href="/ads/index.html" class="back">← Back</a>
+    <main>
+      <h1>For publishers</h1>
+      <p>
+        In order to make Tetapux as easy to add as possible, you'll just need to
+        import the Tetapux Ads library:
+      </p>
+      <pre><code><span>&lt;</span>script src<span class="eq">=</span>"https://cdn.jsdelivr.net/gh/tiagorangel1/tetapux/aw.min.js"<span>&gt;&lt;</span>/script<span>&gt;</span></code></pre>
+      <p>
+        Then, you can use the
+        <code>&lt;tetapux-ads&gt;&lt;/tetapux-ads&gt;</code>
+        custom component. The
+        <code>width</code>
+        and
+        <code>height</code>
+        parameters are supported, along with
+        <code>vertical</code>
+        to make the ad vertical and more coming soon. You can also specify
+        custom HTML to inject into the shadow DOM by using
+        <code>inject="your code"</code>
+      </p>
+    </main>
+  </body>
 </html>

@@ -1,124 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Block Ads with Adblocker</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            overflow: hidden;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+        overflow: hidden;
+      }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1em;
-            text-align: center;
-        }
+      header {
+        background-color: #333;
+        color: #fff;
+        padding: 1em;
+        text-align: center;
+      }
 
-        main {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1em;
-            position: relative;
-        }
+      main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 1em;
+        position: relative;
+      }
 
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1em;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 1em;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
 
-        .moving-element {
-            position: absolute;
-            animation: moveElement 10s infinite alternate;
-            white-space: nowrap;
-            transform-origin: 0% 0%;
-            pointer-events: none;
-            margin-top: 2em;
-        }
+      .moving-element {
+        position: absolute;
+        animation: moveElement 10s infinite alternate;
+        white-space: nowrap;
+        transform-origin: 0% 0%;
+        pointer-events: none;
+        margin-top: 2em;
+      }
 
-        @keyframes moveElement {
-            0% { left: 0; }
-            100% { left: 100%; }
+      @keyframes moveElement {
+        0% {
+          left: 0;
         }
+        100% {
+          left: 100%;
+        }
+      }
 
-        .moving-element:nth-child(2) {
-            animation-duration: 8s;
-        }
+      .moving-element:nth-child(2) {
+        animation-duration: 8s;
+      }
 
-        .moving-element:nth-child(3) {
-            animation-duration: 12s;
-        }
+      .moving-element:nth-child(3) {
+        animation-duration: 12s;
+      }
 
-        .year {
-            color: #ff1493;
-            font-weight: bold;
-        }
+      .year {
+        color: #ff1493;
+        font-weight: bold;
+      }
 
-        button {
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      button {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1>Block Ads with Adblocker</h1>
+      <h1>Block Ads with Adblocker</h1>
     </header>
-    
+
     <main>
-        <p>Are you tired of annoying ads cluttering your browsing experience? Say no more! Install an ad blocker and enjoy an ad-free internet browsing experience.</p>
-        
-        <h2>Why Use an Adblocker?</h2>
-        <ul>
-            <li>Block intrusive ads that disrupt your browsing</li>
-            <li>Improve page loading times by blocking ads</li>
-            <li>Enhance your online privacy and security</li>
-        </ul>
-        
-        <div class="moving-element" style="top: 50px;">🚀 Welcome to the Future <span class="year">2025</span> 🚀</div>
-        <div class="moving-element" style="top: 100px;">Experience Ad-Free Browsing</div>
-        <div class="moving-element" style="top: 150px;">Enhance Your Privacy and Security</div>
-        
-        <button onclick="requestNotification()">Get Adblock Upgrade Now</button>
+      <p>
+        Are you tired of annoying ads cluttering your browsing experience? Say
+        no more! Install an ad blocker and enjoy an ad-free internet browsing
+        experience.
+      </p>
+
+      <h2>Why Use an Adblocker?</h2>
+      <ul>
+        <li>Block intrusive ads that disrupt your browsing</li>
+        <li>Improve page loading times by blocking ads</li>
+        <li>Enhance your online privacy and security</li>
+      </ul>
+
+      <div class="moving-element" style="top: 50px">
+        🚀 Welcome to the Future
+        <span class="year">2025</span>
+        🚀
+      </div>
+      <div class="moving-element" style="top: 100px">
+        Experience Ad-Free Browsing
+      </div>
+      <div class="moving-element" style="top: 150px">
+        Enhance Your Privacy and Security
+      </div>
+
+      <button onclick="requestNotification()">Get Adblock Upgrade Now</button>
     </main>
-    
+
     <footer>
-        <p>&copy; <span id="currentYear"></span> Block Ads with Adblocker. All rights reserved.</p>
+      <p>
+        &copy;
+        <span id="currentYear"></span>
+        Block Ads with Adblocker. All rights reserved.
+      </p>
     </footer>
 
     <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+      document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
 
-        function requestNotification() {
-            Notification.requestPermission().then((permission) => {
-                if (permission === 'granted') {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/sw.js');
-                }
-                    alert('You have enabled notifications for Adblock Upgrade!');
-                }
-            });
-        }
+      function requestNotification() {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            if ("serviceWorker" in navigator) {
+              navigator.serviceWorker.register("/sw.js");
+            }
+            alert("You have enabled notifications for Adblock Upgrade!");
+          }
+        });
+      }
     </script>
-</body>
-
+  </body>
+  <script src="/disclaimer.js" async></script>
 </html>

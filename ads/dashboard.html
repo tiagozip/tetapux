@@ -1,298 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>For advertisers | Tetapux Ads</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
+      body {
+        font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI,
+          "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+        margin: 0;
+        background-color: #f7f7f8;
+        color: #1a1a1a;
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      header {
+        width: 100%;
+        max-width: 550px;
+        background: white;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+      }
+
+      h1 {
+        font-size: 2.4rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #1a1a1a;
+      }
+
+      .desc {
+        font-size: 1.1rem;
+        max-width: 350px;
+        margin: 0 auto 2rem;
+        text-align: center;
+        line-height: 1.5;
+        color: #666;
+      }
+
+      .back {
+        color: #666;
+        text-decoration: none;
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        border-radius: 6px;
+      }
+
+      .back:hover {
+        color: #1a1a1a;
+      }
+
+      .input {
+        margin-bottom: 1.5rem;
+      }
+
+      .input label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #4a4a4a;
+      }
+
+      .input label::after {
+        content: "*";
+        color: #ff0000;
+      }
+
+      .input input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: #fafafa;
+      }
+
+      .input input:focus {
+        outline: none;
+        border-color: #000000;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .submit-ad {
+        width: 100%;
+        padding: 16px 30px;
+        border-radius: 14px;
+        background: #000;
+        color: #ffffff;
+        border: none;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        margin-top: 1rem;
+      }
+
+      .submit-ad:hover {
+        transform: scale(1.02);
+      }
+
+      .submit-ad:active {
+        transform: scale(0.98);
+      }
+
+      .submit-ad[disabled] {
+        pointer-events: none;
+        opacity: 0.3;
+      }
+
+      .cf-turnstile {
+        margin: 1.5rem 0;
+      }
+
+      .message {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+        display: none;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      .success-message {
+        background-color: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+      }
+
+      .error-message {
+        background-color: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+      }
+
+      .form-content.hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
         body {
-            font-family:
-                ui-sans-serif,
-                -apple-system,
-                system-ui,
-                Segoe UI,
-                "Geist Sans",
-                Roboto,
-                Ubuntu,
-                Cantarell,
-                Noto Sans,
-                sans-serif;
-            margin: 0;
-            background-color: #f7f7f8;
-            color: #1a1a1a;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
+          padding: 1rem;
         }
 
         header {
-            width: 100%;
-            max-width: 550px;
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
+          padding: 1.5rem;
+          margin-top: 3rem;
         }
 
         h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #1a1a1a;
-        }
-
-        .desc {
-            font-size: 1.1rem;
-            max-width: 350px;
-            margin: 0 auto 2rem;
-            text-align: center;
-            line-height: 1.5;
-            color: #666;
+          font-size: 2rem;
         }
 
         .back {
-            color: #666;
-            text-decoration: none;
-            position: fixed;
-            top: 24px;
-            left: 24px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            border-radius: 6px;
+          top: 16px;
+          left: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        header {
+          padding: 1.25rem;
         }
 
-        .back:hover {
-            color: #1a1a1a;
+        h1 {
+          font-size: 1.75rem;
         }
-
-        .input {
-            margin-bottom: 1.5rem;
-        }
-
-        .input label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #4a4a4a;
-        }
-
-        .input label::after {
-            content: "*";
-            color: #ff0000;
-        }
-
-        .input input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            background: #fafafa;
-        }
-
-        .input input:focus {
-            outline: none;
-            border-color: #000000;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .submit-ad {
-            width: 100%;
-            padding: 16px 30px;
-            border-radius: 14px;
-            background: #000;
-            color: #ffffff;
-            border: none;
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            margin-top: 1rem;
-        }
-
-        .submit-ad:hover {
-            transform: scale(1.02);
-        }
-
-        .submit-ad:active {
-            transform: scale(0.98);
-        }
-
-        .submit-ad[disabled] {
-            pointer-events: none;
-            opacity: 0.3;
-        }
-
-        .cf-turnstile {
-            margin: 1.5rem 0;
-        }
-
-        .message {
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .success-message {
-            background-color: #ecfdf5;
-            color: #047857;
-            border: 1px solid #a7f3d0;
-        }
-
-        .error-message {
-            background-color: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-
-        .form-content.hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            header {
-                padding: 1.5rem;
-                margin-top: 3rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .back {
-                top: 16px;
-                left: 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                padding: 1.25rem;
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <a href="/ads/index.html" class="back">← Back</a>
     <header>
-        <h1>Submit an ad</h1>
+      <h1>Submit an ad</h1>
 
-        <div class="form-content">
-            <div class="input">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-
-            <div class="input">
-                <label for="alt">Tagline</label>
-                <input type="text" id="alt" name="alt" required>
-            </div>
-
-            <div class="input">
-                <label for="link">Link</label>
-                <input type="url" id="link" name="link" required>
-            </div>
-
-            <div class="input">
-                <label for="logo">Logo/Image URL</label>
-                <input type="url" id="logo" name="logo" required>
-            </div>
-
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9WKAN5V3O4c1Uo"></div>
-
-            <button class="submit-ad">Submit ad</button>
+      <div class="form-content">
+        <div class="input">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" required />
         </div>
-        <div class="message success-message">Ad submitted successfully!</div>
-        <div class="message error-message">Error submitting ad. Please try again.</div>
-    </header>
-</body>
 
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script>
+        <div class="input">
+          <label for="alt">Tagline</label>
+          <input type="text" id="alt" name="alt" required />
+        </div>
+
+        <div class="input">
+          <label for="link">Link</label>
+          <input type="url" id="link" name="link" required />
+        </div>
+
+        <div class="input">
+          <label for="logo">Logo/Image URL</label>
+          <input type="url" id="logo" name="logo" required />
+        </div>
+
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA9WKAN5V3O4c1Uo"></div>
+
+        <button class="submit-ad">Submit ad</button>
+      </div>
+      <div class="message success-message">Ad submitted successfully!</div>
+      <div class="message error-message">
+        Error submitting ad. Please try again.
+      </div>
+    </header>
+  </body>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script>
     const sbClient = supabase.createClient(
-        "https://lfbdhntyamptnrquwbcy.supabase.co",
-        `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo`,
+      "https://lfbdhntyamptnrquwbcy.supabase.co",
+      `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYmRobnR5YW1wdG5ycXV3YmN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4OTczMTMsImV4cCI6MjA1NTQ3MzMxM30.HjGKnHepNoBu4o-GPAyFfO7T4vLFUs-RWMHRHzXOkQo`
     );
 
     (async () => {
-        if ((await sbClient.auth.getSession()).data?.session?.user?.role !== "authenticated") {
-            window.location.href = "/ads/index.html";
-        }
+      if (
+        (await sbClient.auth.getSession()).data?.session?.user?.role !==
+        "authenticated"
+      ) {
+        window.location.href = "/ads/index.html";
+      }
     })();
 
-    const formContent = document.querySelector('.form-content');
-    const successMessage = document.querySelector('.success-message');
-    const errorMessage = document.querySelector('.error-message');
+    const formContent = document.querySelector(".form-content");
+    const successMessage = document.querySelector(".success-message");
+    const errorMessage = document.querySelector(".error-message");
 
     const showMessage = (type) => {
-        if (type !== "error") {
-            formContent.classList.add('hidden');
-        }
-        successMessage.style.display = type === 'success' ? 'block' : 'none';
-        errorMessage.style.display = type === 'error' ? 'block' : 'none';
+      if (type !== "error") {
+        formContent.classList.add("hidden");
+      }
+      successMessage.style.display = type === "success" ? "block" : "none";
+      errorMessage.style.display = type === "error" ? "block" : "none";
     };
 
     document.querySelector(".submit-ad").addEventListener("click", async () => {
-        const title = document.querySelector("#title").value;
-        const alt = document.querySelector("#alt").value;
-        const link = document.querySelector("#link").value;
-        const logo = document.querySelector("#logo").value;
+      const title = document.querySelector("#title").value;
+      const alt = document.querySelector("#alt").value;
+      const link = document.querySelector("#link").value;
+      const logo = document.querySelector("#logo").value;
 
-        const turnstile_token = turnstile.getResponse();
+      const turnstile_token = turnstile.getResponse();
 
-        if (turnstile.isExpired() || !turnstile_token) {
-            showMessage('error');
-            errorMessage.innerText = 'Please solve the CAPTCHA first.';
-            return;
-        }
+      if (turnstile.isExpired() || !turnstile_token) {
+        showMessage("error");
+        errorMessage.innerText = "Please solve the CAPTCHA first.";
+        return;
+      }
 
-        document.querySelector(".submit-ad").disabled = true;
-        const { data, error } = await sbClient.functions.invoke('submit-ad', {
-            body: { title, alt, link, logo, turnstile_token },
-        });
-        document.querySelector(".submit-ad").disabled = false;
-        turnstile.reset();
+      document.querySelector(".submit-ad").disabled = true;
+      const { data, error } = await sbClient.functions.invoke("submit-ad", {
+        body: { title, alt, link, logo, turnstile_token },
+      });
+      document.querySelector(".submit-ad").disabled = false;
+      turnstile.reset();
 
-        if (error || !data.ok) {
-            showMessage('error');
-            errorMessage.innerText = data.error;
-            return;
-        }
+      if (error || !data.ok) {
+        showMessage("error");
+        errorMessage.innerText = data.error;
+        return;
+      }
 
-        showMessage('success');
+      showMessage("success");
     });
-</script>
-
+  </script>
 </html>

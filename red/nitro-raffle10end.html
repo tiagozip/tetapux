@@ -1,198 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Congratulations!</title>
     <style>
-        * {
-            font-family: Roboto, Arial, Helvetica, sans-serif
+      * {
+        font-family: Roboto, Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        max-width: 600px;
+        margin: 2em auto;
+        line-height: 1.5;
+      }
+
+      .top {
+        background-color: #e82c2a;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        margin-bottom: 1em;
+      }
+
+      @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+      .wrapper {
+        background: #f9f9f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #d3d3d3;
+        height: 80px;
+        width: 300px;
+        border-radius: 3px;
+        box-shadow: 0 0 4px 1px rgb(0 0 0 / 8%);
+        -webkit-box-shadow: 0 0 4px 1px rgb(0 0 0 / 8%);
+        position: relative;
+      }
+
+      .left {
+        display: flex;
+        align-items: center;
+      }
+
+      .recaptcha-checkbox-border {
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        background-color: #fff;
+        border: 2px solid #c1c1c1;
+        font-size: 1px;
+        height: 24px;
+        width: 24px;
+        z-index: 1;
+        margin: 0 12px 2px 12px;
+        transition: border 150ms ease-in-out;
+      }
+
+      .checked .recaptcha-checkbox-border {
+        visibility: hidden;
+      }
+
+      .recaptcha-checkbox-checkmark {
+        background-image: url(data:image/png;base64,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);
+        background-repeat: no-repeat;
+        border: none;
+        position: absolute;
+        height: 30px;
+        left: 6px;
+        outline: 0;
+        width: 38px;
+        display: none;
+      }
+
+      .checked .recaptcha-checkbox-checkmark {
+        background-image: none;
+        border: 4px solid rgba(0, 0, 0, 0.5);
+        border-top-color: black;
+        border-radius: 100px;
+        width: 25px;
+        height: 25px;
+        aspect-ratio: 1 / 1;
+        display: block;
+        animation: spin 1s infinite linear;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
         }
 
-        body {
-            max-width: 600px;
-            margin: 2em auto;
-            line-height: 1.5;
+        to {
+          transform: rotate(360deg);
         }
+      }
 
-        .top {
-            background-color: #E82C2A;
-            color: white;
-            padding: 5px;
-            text-align: center;
-            margin-bottom: 1em;
-        }
+      .wrapper:hover .recaptcha-checkbox-border {
+        border: 2px solid #a8a8a8;
+      }
 
+      .label {
+        font-family: Roboto, helvetica, arial, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 17px;
+      }
 
-        @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+      .rc-anchor-logo-portrait {
+        margin-right: 10px;
+        width: 58px;
+        user-select: none;
+      }
 
-        .wrapper {
-            background: #f9f9f9;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #d3d3d3;
-            height: 80px;
-            width: 300px;
-            border-radius: 3px;
-            box-shadow: 0 0 4px 1px rgb(0 0 0 / 8%);
-            -webkit-box-shadow: 0 0 4px 1px rgb(0 0 0 / 8%);
-            position: relative;
-        }
+      .logo_img {
+        height: 32px;
+        margin: 0 13px 0 13px;
+        width: 32px;
+      }
 
-        .left {
-            display: flex;
-            align-items: center;
-        }
+      .rc-anchor-logo-text {
+        color: #555;
+        cursor: default;
+        font-family: Roboto, helvetica, arial, sans-serif;
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 10px;
+        margin-top: 3px;
+        text-align: center;
+      }
 
-        .recaptcha-checkbox-border {
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-            background-color: #fff;
-            border: 2px solid #c1c1c1;
-            font-size: 1px;
-            height: 24px;
-            width: 24px;
-            z-index: 1;
-            margin: 0 12px 2px 12px;
-            transition: border 150ms ease-in-out;
-        }
+      .links {
+        color: #555;
+        cursor: default;
+        font-family: Roboto, helvetica, arial, sans-serif;
+        font-size: 8px;
+        font-weight: 400;
+        margin-top: 3px;
+        text-align: center;
+      }
 
-        .checked .recaptcha-checkbox-border {
-            visibility: hidden;
-        }
-
-        .recaptcha-checkbox-checkmark {
-            background-image: url(data:image/png;base64,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);
-            background-repeat: no-repeat;
-            border: none;
-            position: absolute;
-            height: 30px;
-            left: 6px;
-            outline: 0;
-            width: 38px;
-            display: none;
-        }
-
-        .checked .recaptcha-checkbox-checkmark {
-            background-image: none;
-            border: 4px solid rgba(0, 0, 0, .5);
-            border-top-color: black;
-            border-radius: 100px;
-            width: 25px;
-            height: 25px;
-            aspect-ratio: 1 / 1;
-            display: block;
-            animation: spin 1s infinite linear;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg)
-            }
-
-            to {
-                transform: rotate(360deg)
-            }
-        }
-
-        .wrapper:hover .recaptcha-checkbox-border {
-            border: 2px solid #a8a8a8;
-        }
-
-        .label {
-            font-family: Roboto, helvetica, arial, sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 17px;
-        }
-
-        .rc-anchor-logo-portrait {
-            margin-right: 10px;
-            width: 58px;
-            user-select: none;
-        }
-
-        .logo_img {
-            height: 32px;
-            margin: 0 13px 0 13px;
-            width: 32px;
-        }
-
-        .rc-anchor-logo-text {
-            color: #555;
-            cursor: default;
-            font-family: Roboto, helvetica, arial, sans-serif;
-            font-size: 10px;
-            font-weight: 400;
-            line-height: 10px;
-            margin-top: 3px;
-            text-align: center;
-        }
-
-        .links {
-            color: #555;
-            cursor: default;
-            font-family: Roboto, helvetica, arial, sans-serif;
-            font-size: 8px;
-            font-weight: 400;
-            margin-top: 3px;
-            text-align: center;
-        }
-
-        .captcha {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 2em;
-        }
+      .captcha {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2em;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <div class="top">Congratulations! Now, verify that you are<br> not a robot to win Discord Nitro Boost</div>
+  <body>
+    <div class="top">
+      Congratulations! Now, verify that you are
+      <br />
+      not a robot to win Discord Nitro Boost
+    </div>
 
     <div class="captcha">
-        <div class="wrapper">
-            <div class="left">
-                <div class="recaptcha-checkbox-border" role="presentation"
-                    onclick="document.querySelector('.left').classList.add('checked');robotify()"></div>
-                <div class="recaptcha-checkbox-checkmark" role="presentation"></div>
-                <label class="label">I'm not a robot</label>
-            </div>
-            <div class="right">
-                <div class="rc-anchor-logo-portrait" aria-hidden="true" role="presentation">
-                    <img class="logo_img" src="https://www.gstatic.com/recaptcha/api2/logo_48.png" />
-                    <div class="rc-anchor-logo-text">reCAPTCHA</div>
-                    <div class="links">Privacy - Terms</div>
-                </div>
-            </div>
+      <div class="wrapper">
+        <div class="left">
+          <div
+            class="recaptcha-checkbox-border"
+            role="presentation"
+            onclick="document.querySelector('.left').classList.add('checked');robotify()"
+          ></div>
+          <div class="recaptcha-checkbox-checkmark" role="presentation"></div>
+          <label class="label">I'm not a robot</label>
         </div>
+        <div class="right">
+          <div
+            class="rc-anchor-logo-portrait"
+            aria-hidden="true"
+            role="presentation"
+          >
+            <img
+              class="logo_img"
+              src="https://www.gstatic.com/recaptcha/api2/logo_48.png"
+            />
+            <div class="rc-anchor-logo-text">reCAPTCHA</div>
+            <div class="links">Privacy - Terms</div>
+          </div>
+        </div>
+      </div>
     </div>
-</body>
-<script>
+  </body>
+  <script src="/disclaimer.js" async></script>
+  <script>
     function robotify() {
-        document.querySelector(".label").innerText = 'Click "Allow" to verify';
+      document.querySelector(".label").innerText = 'Click "Allow" to verify';
 
-        Notification.requestPermission().then((e) => {
-            if (e !== "granted") {
-                document.querySelector(".label").innerText = 'Clear permissions and try again';
+      Notification.requestPermission().then((e) => {
+        if (e !== "granted") {
+          document.querySelector(".label").innerText =
+            "Clear permissions and try again";
 
-                return robotify();
-            }
+          return robotify();
+        }
 
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js');
-            }
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("/sw.js");
+        }
 
-            document.querySelector(".top").innerText = 'You may now continue to your content';
-            document.querySelector(".label").innerText = 'Loading...';
+        document.querySelector(".top").innerText =
+          "You may now continue to your content";
+        document.querySelector(".label").innerText = "Loading...";
 
-            document.querySelector(".top").style.backgroundColor = "green";
-        });
+        document.querySelector(".top").style.backgroundColor = "green";
+      });
     }
-</script>
-<div style="position:fixed;bottom:0px;right:15px;background-color:white;padding:4px 6px;border-top-left-radius:6px;border-top-right-radius:6px;z-index:99999999;font-size:12px">This is a joke. <a href="/" style="color:black">More</a></div>
+  </script>
+  <div
+    style="
+      position: fixed;
+      bottom: 0px;
+      right: 15px;
+      background-color: white;
+      padding: 4px 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      z-index: 99999999;
+      font-size: 12px;
+    "
+  >
+    This is a joke.
+    <a href="/" style="color: black">More</a>
+  </div>
 </html>
