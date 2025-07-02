@@ -43,7 +43,11 @@
   }, 200);
 
   function isBodyBackgroundDark() {
-    const bgColor = getComputedStyle(document.body).backgroundColor;
+    let bgColor =
+      getComputedStyle(document.body).backgroundColor || "rgb(255, 255, 255)";
+    if (bgColor === "rgba(0, 0, 0, 0)") {
+      bgColor = "rgb(255, 255, 255)"; // Fallback to white if transparent
+    }
 
     // Extract RGB values from 'rgb(r, g, b)' or 'rgba(r, g, b, a)'
     const rgb = bgColor.match(/\d+/g);
