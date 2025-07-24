@@ -91,7 +91,7 @@
                     <div>
                         <h4>Loading...</h4>
                         <p></p>
-                        <a class="credit" href="https://tetapux.pages.dev/ads" target="_blank">FOSS ads</a>
+                        <a class="credit" href="https://tiagorangel1.github.io/tetapux/ads" target="_blank">FOSS ads</a>
                     </div>
                 </div>`;
       shadow.appendChild(div);
