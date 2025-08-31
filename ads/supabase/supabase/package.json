@@ -1,5 +1,5 @@
 {
-    "scripts": {
-        "deploy": "supabase functions deploy submit-ad --project-ref lfbdhntyamptnrquwbcy"
-    }
+  "scripts": {
+    "deploy": "bunx supabase functions deploy submit-ad --project-ref lfbdhntyamptnrquwbcy"
+  }
 }
