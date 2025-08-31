@@ -221,7 +221,7 @@
       client.auth.signInWithOAuth({
         provider: "github",
         options: {
-          redirectTo: `${location.origin}/ads/dashboard.html`,
+          redirectTo: `${location.origin.endsWith(".github.io") ? location.origin + "/tetapux" : location.origin}/ads/dashboard.html`,
         },
       });
     };
