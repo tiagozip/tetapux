@@ -7,6 +7,7 @@ Deno.serve(async (req) => {
     "https://tetapux.pages.dev",
     "https://tetapux.tiago.zip",
     "https://tetapux.glitch.me",
+    "https://tiagozip.github.io",
   ];
 
   const origin = req.headers.get("Origin");
