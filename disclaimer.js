@@ -3,7 +3,7 @@
 	const i = crypto.randomUUID();
 	e.innerHTML = `
     <div class="disc${i}">
-      For phishing simulation only. Not affiliated.
+      Joke for phishing/scam simulation only, credentials not submitted.
     </div>
     <style>
       .disc${i} {
