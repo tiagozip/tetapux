@@ -16,80 +16,25 @@
           "Geist Sans", Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif,
           Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;
         margin: 1.5em auto;
-        max-width: 450px;
+        max-width: 900px;
         padding: 10px;
+        background-color: #fff;
+        color: #121212;
+        display: flex;
+        flex-direction: column;
       }
 
       .pages {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
       }
 
       h1 {
         text-align: center;
-      }
-
-      .pages h2 {
-        font-size: 16px;
-        margin: 0px;
-        margin-top: 10px;
-        margin-bottom: 5px;
-        color: rgb(25, 26, 27);
-        font-weight: 600;
-      }
-
-      .pages a {
         color: black;
-        width: 100%;
-        padding: 12px 20px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        background-color: rgba(0, 0, 0, 0.03);
-        border-radius: 12px;
-        transition: all 0.15s;
-        text-decoration: none;
-      }
-
-      .pages a:hover {
-        background-color: rgba(0, 0, 0, 0.09);
-        transform: scale(1.05);
-      }
-
-      .cpa {
-        color: black;
-        width: 100%;
-        padding: 16px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        background-color: rgba(0, 0, 0, 0.03);
-        border-radius: 12px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 30px;
-      }
-
-      .cpa img {
-        width: 100px;
-      }
-
-      .cpa h4 {
-        margin: 0px;
-        font-size: 15px;
-        font-weight: 500;
-      }
-
-      .cpa p {
-        font-size: 13px;
-        margin: 0px;
-        margin-top: 3px;
-      }
-
-      .cpa a {
-        font-size: 13px;
-        color: black;
-        margin-top: 8px;
-        display: block;
-        width: fit-content;
+        grid-column: 1 / -1;
+        margin-bottom: 18px;
       }
 
       .search {
@@ -98,19 +43,69 @@
         border: 1px solid rgba(0, 0, 0, 0.08);
         background-color: rgba(0, 0, 0, 0.03);
         border-radius: 12px;
-        margin-bottom: 10px;
         font: inherit;
         background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+");
         background-position: 12px 50%;
         background-repeat: no-repeat;
         background-size: 18px;
         padding-left: 38px;
+        max-width: 600px;
+        margin: 0px auto;
+        margin-bottom: 20px;
       }
 
       .search:focus {
         outline: none;
         border-color: rgba(0, 0, 0, 0.15);
-        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        box-shadow: 0px 0px 0px 2px black;
+      }
+
+      .search::placeholder {
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      .pages h2 {
+        font-size: 16px;
+        margin: 0px;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        font-weight: 600;
+        grid-column: 1 / -1;
+      }
+
+      .pages a {
+        color: black;
+        width: 100%;
+        padding: 12px 20px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 12px;
+        transition: all 0.15s;
+        text-decoration: none;
+      }
+
+      .pages a:hover {
+        background-color: rgba(0, 0, 0, 0.09);
+        transform: scale(1.01);
+      }
+
+      .pages a:focus {
+        box-shadow: 0px 0px 0px 2px black;
+      }
+
+      tetapux-ads {
+        max-width: 590px;
+        margin: 0px auto;
+      }
+
+      @media (max-width: 600px) {
+        .pages {
+          grid-template-columns: 1fr;
+        }
+
+        body {
+          max-width: 450px;
+        }
       }
     </style>
   </head>
@@ -119,40 +114,30 @@
     <h1>Tetapux</h1>
 
     <input type="text" class="search" placeholder="Search..." />
-    <div class="cpa">
-      <div class="text">
-        <h4>Try Tetapux's free ads</h4>
-        <a href="/tetapux/ads/index.html">Try now for free →</a>
-      </div>
-    </div>
 
     <div class="pages">
-      <h2>Fake CAPTCHAS/Win+R</h2>
+      <h2>Fake CAPTCHAS (Win+R)</h2>
       <a href="/tetapux/heta/gemini-refake.html">
-        Fake Run Dialog/MacOS Terminal fake Turnstile CAPTCHA (with device
-        detection)
+        Fake Turnstile (windows, macOS and linux)
       </a>
-      <a href="/tetapux/pages/winr-captcha.html">
-        Basic fake Run Dialog reCAPTCHA
-      </a>
+      <a href="/tetapux/pages/winr-captcha.html">Fake reCAPTCHA (run dialog)</a>
       <a href="/tetapux/heta/heta-challenge.html">
-        Fake Run Dialog Turnstile CAPTCHA
+        Fake Turnstile 2 (run dialog)
       </a>
       <a href="/tetapux/red/premium-colors/bst.html">
-        Cookie modal + BSOD + Win+R
+        Fake Cookie modal / BSOD (run dialog)
       </a>
-      <a href="/tetapux/nnm-ae/blogl.html">
-        Security Verification fake CAPTCHA
+      <a href="/tetapux/nnm-ae/blogl.html">Security verification CAPTCHA
       </a>
-      <a href="/tetapux/red/winSec-o.html">Win+R fake virus warning</a>
+      <a href="/tetapux/red/winSec-o.html">Windows Security fake CAPTCHA</a>
       <a href="/tetapux/thousands/thusand/catastrophic.html">
-        System lockdown warning
+        System lockdown
       </a>
       <a href="/tetapux/thousands/confirm-not-robot-1000.html">
         Simple reCAPTCHA clone
       </a>
-      <a href="/tetapux/pages/human.html">Notifications prompt trick CAPTCHA</a>
-      <a href="/tetapux/0/lowVerify.html">Notifications prompt CAPTCHA</a>
+      <a href="/tetapux/pages/human.html">Notifications prompt CAPTCHA</a>
+      <a href="/tetapux/0/lowVerify.html">DDOS-Guard CAPTCHA</a>
 
       <h2>FileFix</h2>
       <a href="/tetapux/0/tetaDrive.html">OneDrive sharing</a>
@@ -253,18 +238,16 @@
       <a href="/tetapux/red/premium-colors/vpn-subscripti.html">UltraV VPN</a>
       <a href="/tetapux/red/premium-colors/search/search.html">HetaSearch</a>
       <a href="/tetapux/red/premium-colors/adblock.html">Adblock Download</a>
+
+      <h2>Tetapux</h2>
+      <a href="/tetapux/about.html">What's Tetapux?</a>
+      <a href="/tetapux/ads/index.html">Try Tetapux Ads →</a>
     </div>
 
     <tetapux-ads
       width="100%"
       style="margin-top: 20px; display: block"
     ></tetapux-ads>
-
-    <p style="text-align: center; margin-top: 30px">
-      <a href="/tetapux/about.html" style="color: black; font-size: 13px">
-        About
-      </a>
-    </p>
 
     <script>
       document.querySelector(".search").addEventListener("input", function () {
