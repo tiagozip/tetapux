@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚨 MRBEAST'S MEGA ROBUX MANIA! CLAIM YOUR FREE ROBUX NOW! 🚨</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Confetti.js for a more performant confetti effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+      /* WARNING: EXTREME VISUALS AHEAD! PROCEED WITH MAXIMUM HYPE! */
+      :root {
+        --color-primary: #ff00ff; /* Magenta */
+        --color-secondary: #00ffff; /* Cyan */
+        --color-accent: #ffcc00; /* Gold */
+        --color-danger: #ff0000; /* Red */
+        --color-success: #00ff00; /* Green */
+        --color-dark: #000;
+        --text-shadow-strong: 5px 5px 0 var(--color-dark);
+        --text-stroke-strong: 2px var(--color-danger);
+      }
+
+      body {
+        font-family: "Luckiest Guy", cursive; /* A bold, fun font */
+        background: linear-gradient(
+          45deg,
+          var(--color-primary),
+          var(--color-secondary),
+          var(--color-accent),
+          var(--color-primary),
+          var(--color-success)
+        ); /* Psychedelic background */
+        background-size: 200% 200%; /* Reduced for performance */
+        animation: gradientAnimation 10s ease infinite alternate; /* Smoother animation */
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+        overflow-x: hidden; /* Prevent horizontal scroll from extreme elements */
+        cursor: url("https://raw.githubusercontent.com/google/material-design-icons/master/png/navigation/fullscreen_exit/2x/baseline_fullscreen_exit_black_24dp.png"),
+          auto; /* Custom cursor for fun */
+        position: relative;
+        min-height: 100vh; /* Ensure body takes full height */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        isolation: isolate; /* Create new stacking context */
+      }
+
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      .button-container {
+        text-shadow: var(--text-shadow-strong);
+        -webkit-text-stroke: var(--text-stroke-strong);
+        color: var(--color-accent); /* Yellow fill */
+        font-weight: 900;
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 2; /* Ensure text is above background effects */
+      }
+
+      h1 {
+        font-family: "Press Start 2P", cursive;
+        font-size: 3em; /* Reduced for better fit */
+        line-height: 1.4;
+        animation: neonGlow 1.5s ease-in-out infinite alternate;
+        margin-top: 40px;
+        margin-bottom: 30px;
+        word-break: break-word; /* Ensure text wraps on small screens */
+        padding: 0 10px;
+      }
+
+      .h1-icon {
+        height: 0.8em; /* Adjust icon size relative to font */
+        vertical-align: middle;
+        margin: 0 0.1em;
+      }
+
+      @keyframes neonGlow {
+        from {
+          text-shadow: 0 0 10px var(--color-danger),
+            0 0 20px var(--color-danger), 0 0 30px var(--color-danger),
+            0 0 40px var(--color-danger);
+        }
+        to {
+          text-shadow: 0 0 5px var(--color-danger), 0 0 10px var(--color-danger),
+            0 0 15px var(--color-danger), 0 0 20px var(--color-danger);
+        }
+      }
+
+      h2 {
+        font-size: 2.8em; /* Reduced */
+        color: var(--color-success); /* Green */
+        -webkit-text-stroke: 2px var(--color-secondary); /* Blue outline */
+        margin-bottom: 30px;
+        word-break: break-word;
+        padding: 0 10px;
+      }
+
+      h3 {
+        font-size: 2em; /* Reduced */
+        color: #ff8c00; /* Dark Orange */
+        -webkit-text-stroke: 1.5px #8b008b; /* Dark Magenta outline */
+        margin-bottom: 25px;
+        padding: 0 10px;
+      }
+
+      p {
+        font-size: 1.5em; /* Reduced */
+        line-height: 1.4;
+        max-width: 900px;
+        margin: 0 auto 30px auto;
+        color: #ffffff;
+        -webkit-text-stroke: 1px var(--color-dark);
+        text-shadow: 2px 2px 0 var(--color-danger);
+        padding: 0 15px;
+      }
+
+      .mrbeast-hero-banner {
+        width: 100%;
+        max-width: 1000px;
+        margin: 30px auto;
+        border: 15px solid var(--color-accent);
+        box-shadow: 0 0 40px 15px var(--color-accent),
+          0 0 80px 30px var(--color-danger);
+        transform: rotate(-3deg) scale(1.02); /* Slight tilt and scale */
+        animation: pulseBorder 2s infinite alternate;
+        position: relative;
+        z-index: 2;
+        overflow: hidden; /* Ensure image doesn't spill */
+      }
+      .mrbeast-hero-banner img {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        display: block;
+      }
+
+      .mrbeast-logo-banner {
+        width: 100%;
+        max-width: 700px;
+        margin: 30px auto;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 8px solid var(--color-success);
+        box-shadow: 0 0 30px 5px var(--color-success),
+          0 0 60px 10px var(--color-secondary);
+        animation: pulseLogo 1.5s infinite alternate;
+        position: relative;
+        z-index: 2;
+        border-radius: 20px;
+      }
+      .mrbeast-logo-banner img {
+        width: 100%;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+
+      @keyframes pulseBorder {
+        from {
+          box-shadow: 0 0 40px 15px var(--color-accent),
+            0 0 80px 30px var(--color-danger);
+        }
+        to {
+          box-shadow: 0 0 50px 20px #ffdd00, 0 0 100px 40px #aa0000;
+        }
+      }
+
+      @keyframes pulseLogo {
+        from {
+          transform: scale(1);
+          border-color: var(--color-success);
+        }
+        to {
+          transform: scale(1.03);
+          border-color: var(--color-secondary);
+        }
+      }
+
+      .countdown-wrapper {
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 8px solid var(--color-secondary);
+        box-shadow: 0 0 25px var(--color-secondary),
+          0 0 50px var(--color-secondary);
+        padding: 20px 40px;
+        border-radius: 20px;
+        margin: 40px auto;
+        max-width: 600px;
+        animation: bounce 1s infinite alternate;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .countdown-icon {
+        height: 1.5em; /* Adjust icon size */
+        vertical-align: middle;
+      }
+
+      @keyframes bounce {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-10px);
+        }
+      }
+
+      #countdown {
+        font-family: "Press Start 2P", cursive;
+        font-size: 3.5em; /* Reduced */
+        color: var(--color-primary); /* Magenta */
+        -webkit-text-stroke: 2px var(--color-secondary); /* Cyan outline */
+        text-shadow: 0 0 15px var(--color-primary),
+          0 0 30px var(--color-primary);
+        display: block;
+      }
+
+      .button-container {
+        margin: 60px auto;
+        max-width: 700px;
+        position: relative;
+        perspective: 1000px; /* For 3D transform */
+        z-index: 2;
+      }
+
+      .claim-button {
+        display: inline-flex; /* Use flex for icon alignment */
+        align-items: center;
+        justify-content: center;
+        padding: 25px 50px; /* Reduced padding */
+        font-size: 3em; /* Reduced */
+        font-family: "Press Start 2P", cursive;
+        font-weight: bold;
+        color: var(--color-accent); /* Gold */
+        background: linear-gradient(
+          to right,
+          #ff4500,
+          #ffa500,
+          #ff4500
+        ); /* Fiery gradient */
+        border: 10px solid var(--color-danger); /* Red border */
+        border-radius: 50px;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 15px 0 #8b0000, 0 20px 0 #550000,
+          0 0 40px var(--color-accent), 0 0 80px #ff4500;
+        transition: all 0.1s ease-out;
+        transform: translateZ(0) rotateX(0deg);
+        animation: pulsateButton 0.8s infinite alternate;
+        letter-spacing: 2px;
+        -webkit-text-stroke: 2px var(--color-dark);
+        gap: 15px; /* Space between text and icon */
+      }
+
+      .claim-button-icon {
+        height: 1.2em; /* Adjust icon size relative to font */
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+      }
+
+      .claim-button:hover {
+        transform: translateY(5px) rotateX(5deg);
+        box-shadow: 0 10px 0 #8b0000, 0 15px 0 #550000,
+          0 0 50px var(--color-accent), 0 0 100px #ff4500;
+        background: linear-gradient(
+          to right,
+          #ff6347,
+          #ffd700,
+          #ff6347
+        ); /* Brighter on hover */
+      }
+
+      .claim-button:active {
+        transform: translateY(10px) rotateX(10deg);
+        box-shadow: 0 5px 0 #8b0000, 0 10px 0 #550000,
+          0 0 30px var(--color-accent);
+      }
+
+      @keyframes pulsateButton {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.02);
+          box-shadow: 0 15px 0 #8b0000, 0 20px 0 #550000,
+            0 0 50px var(--color-accent), 0 0 90px #ff4500;
+        }
+      }
+
+      .rewards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.8);
+        border: 10px dashed var(--color-success); /* Green dashed border */
+        box-shadow: 0 0 30px var(--color-success), 0 0 60px var(--color-success);
+        border-radius: 25px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .reward-card {
+        background: linear-gradient(
+          135deg,
+          #8b008b,
+          var(--color-primary),
+          #8b008b
+        ); /* Purple/Magenta gradient */
+        border: 8px solid var(--color-accent); /* Gold border */
+        border-radius: 20px;
+        padding: 25px;
+        color: #fff;
+        box-shadow: 0 0 20px var(--color-primary), 0 0 40px var(--color-primary),
+          inset 0 0 15px #fff;
+        transform: scale(1) rotate(0deg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .reward-card:hover {
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 0 30px var(--color-primary), 0 0 70px var(--color-primary),
+          inset 0 0 20px #fff;
+      }
+
+      .reward-card h4 {
+        font-family: "Press Start 2P", cursive;
+        font-size: 2em; /* Reduced */
+        margin-bottom: 15px;
+        color: var(--color-secondary); /* Cyan */
+        -webkit-text-stroke: 1.2px var(--color-dark);
+        text-shadow: 3px 3px 0 #8b008b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .reward-card h4 .card-icon {
+        height: 1.2em;
+        vertical-align: middle;
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+      }
+
+      .reward-card p {
+        font-size: 1.3em; /* Reduced */
+        line-height: 1.3;
+        margin-bottom: 0;
+        color: #ffffff;
+        -webkit-text-stroke: 0.8px var(--color-dark);
+        text-shadow: 2px 2px 0 #ff4500;
+        padding: 0; /* Remove extra padding from global p rule */
+      }
+
+      .footer-note {
+        font-size: 1.2em;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        color: var(--color-accent);
+        -webkit-text-stroke: 1px #8b0000;
+        text-shadow: 2px 2px 0 var(--color-dark);
+        max-width: 800px;
+        position: relative;
+        z-index: 2;
+        padding: 0 15px;
+      }
+
+      .explosion {
+        position: absolute;
+        width: 0;
+        height: 0;
+        background-color: transparent;
+        border-radius: 50%;
+        animation: explode 0.8s forwards;
+        pointer-events: none;
+        z-index: 1000;
+        transform: translate(-50%, -50%); /* Center explosion on click */
+      }
+
+      @keyframes explode {
+        0% {
+          width: 0;
+          height: 0;
+          opacity: 1;
+        }
+        50% {
+          width: 150px; /* Smaller explosion for performance */
+          height: 150px;
+          opacity: 0.8;
+          background-color: rgba(255, 255, 0, 0.7);
+          box-shadow: 0 0 30px 10px rgba(255, 165, 0, 0.8),
+            0 0 60px 20px rgba(255, 0, 0, 0.7);
+        }
+        100% {
+          width: 200px; /* Max size */
+          height: 200px;
+          opacity: 0;
+          background-color: rgba(255, 255, 0, 0);
+          box-shadow: 0 0 60px 20px rgba(255, 165, 0, 0),
+            0 0 120px 40px rgba(255, 0, 0, 0);
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+      }
+
+      /* Responsive adjustments for smaller screens */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.8em;
+          margin-top: 20px;
+        }
+        h2 {
+          font-size: 2em;
+        }
+        h3 {
+          font-size: 1.6em;
+        }
+        p {
+          font-size: 1.1em;
+        }
+        .mrbeast-hero-banner,
+        .mrbeast-logo-banner {
+          margin: 20px auto;
+          border-width: 10px;
+        }
+        .countdown-wrapper {
+          padding: 15px 25px;
+          margin: 30px auto;
+        }
+        #countdown {
+          font-size: 2.5em;
+        }
+        .claim-button {
+          padding: 18px 35px;
+          font-size: 2.2em;
+          border-width: 7px;
+          border-radius: 40px;
+          gap: 10px;
+        }
+        .claim-button-icon {
+          height: 1em;
+        }
+        .rewards-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          margin: 40px auto;
+          padding: 15px;
+        }
+        .reward-card h4 {
+          font-size: 1.6em;
+        }
+        .reward-card h4 .card-icon {
+          height: 1em;
+        }
+        .reward-card p {
+          font-size: 1.1em;
+        }
+        .footer-note {
+          font-size: 0.9em;
+          margin-top: 30px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+        h1 {
+          font-size: 2em;
+        }
+        .h1-icon {
+          height: 0.7em;
+        }
+        h2 {
+          font-size: 1.5em;
+        }
+        h3 {
+          font-size: 1.2em;
+        }
+        p {
+          font-size: 0.9em;
+        }
+        #countdown {
+          font-size: 1.8em;
+        }
+        .claim-button {
+          padding: 12px 25px;
+          font-size: 1.8em;
+          border-width: 5px;
+          border-radius: 30px;
+        }
+        .claim-button-icon {
+          height: 0.8em;
+        }
+        .mrbeast-hero-banner,
+        .mrbeast-logo-banner {
+          border-width: 7px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- EXPLOSIVE START! GET READY TO BE BLOWN AWAY! -->
+    <audio id="background-music" loop>
+      <source
+        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        type="audio/mp3"
+      />
+      Your browser does not support the audio element.
+    </audio>
+    <audio id="claim-sound" preload="auto">
+      <source
+        src="https://freesound.org/data/previews/140/140590_2508967-lq.mp3"
+        type="audio/mp3"
+      />
+      <!-- Explosion sound -->
+      Your browser does not support the audio element.
+    </audio>
+
+    <script>
+      document.querySelector("#background-music").play();
+
+      document.body.addEventListener("click", function (e) {
+        document.querySelector("#background-music").play();
+      });
+    </script>
+
+    <div class="explosion-container"></div>
+
+    <h1>
+      <img
+        src="https://imgs.search.brave.com/ERt7_s7M7AdCF3OUsInck4ozyYvWjAtAcIFGDnUDt48/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4t/aWNvbnMtcG5nLmZy/ZWVwaWsuY29tLzI1/Ni8xNTI3LzE1Mjc0/MjgucG5nP3NlbXQ9/YWlzX3doaXRlX2xh/YmVs"
+        alt="Robux Icon"
+        class="h1-icon"
+      />
+      🎉🤯 MRBEAST'S ULTIMATE ROBUX RAMPAGE! 🤯🎉
+      <br />
+      GET YOUR FREE ROBUX NOW!
+      <img
+        src="https://imgs.search.brave.com/ERt7_s7M7AdCF3OUsInck4ozyYvWjAtAcIFGDnUDt48/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4t/aWNvbnMtcG5nLmZy/ZWVwaWsuY29tLzI1/Ni8xNTI3LzE1Mjc0/MjgucG5nP3NlbXQ9/YWlzX3doaXRlX2xh/YmVs"
+        alt="Robux Icon"
+        class="h1-icon"
+      />
+    </h1>
+
+    <p>
+      YES, YOU READ THAT RIGHT! The KING OF YOUTUBE, the LEGEND himself,
+      <strong
+        style="
+          color: var(--color-accent);
+          -webkit-text-stroke: 1.5px var(--color-dark);
+        "
+      >
+        MRBEAST
+      </strong>
+      , is giving away a MOUNTAIN OF ROBUX! This isn't a drill! This isn't a
+      scam! This is the REAL DEAL! Prepare for a world-changing event!
+    </p>
+
+    <div class="mrbeast-hero-banner">
+      <img
+        src="https://i.ytimg.com/vi/4U-O8_SmgKA/maxresdefault.jpg"
+        alt="MrBeast Hero Image"
+      />
+    </div>
+
+    <div class="mrbeast-logo-banner">
+      <img
+        src="https://imgs.search.brave.com/pYda9fyJa_BAoEPtamY8K-Cnospr8_sKvbcDtkWn3b8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMTUvTXJC/ZWFzdC1Mb2dvLVBO/Ry1QaWN0dXJlLnBu/Zw"
+        alt="MrBeast Official Logo"
+      />
+    </div>
+
+    <h2>
+      🔥 LIMITED ROBUX! HOURLY DROPS! DON'T MISS YOUR CHANCE TO BECOME A ROBLOX
+      TYCOON! 🔥
+    </h2>
+
+    <p>
+      Our coffers are overflowing, but these Robux are disappearing FASTER than
+      MrBeast can build a house out of cash! Every hour, a new wave of Robux is
+      unleashed upon the lucky few! Will YOU be one of them?! Your destiny
+      awaits!
+    </p>
+
+    <div class="countdown-wrapper">
+      <h3>
+        <img
+          src="https://imgs.search.brave.com/W8nnlFrrWNHf86qnOSmrR4VWjRA8mN4gM1XeuIbTC9o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/ZGZnLmNvbS5ici9p/dGVtdGh1bWJuYWls/cy85ODIwNzMzMzUt/c2l0ZXMtcXVlLXRl/LXBhZ2FtLW11aXRv/LXJvYnV4LVlMQVct/dGh1bWJuYWlsLndl/YnA"
+          alt="Gift Icon"
+          class="countdown-icon"
+        />
+        NEXT ROBUX WAVE IN:
+      </h3>
+      <div id="countdown">LOADING...</div>
+    </div>
+
+    <div class="button-container">
+      <a
+        href="https://dub.sh/freeboxes"
+        target="_blank"
+        class="claim-button"
+        onclick="playClaimSound(); triggerExplosion(event);"
+      >
+        CLAIM YOUR FREE ROBUX!
+        <img
+          src="https://imgs.search.brave.com/ERt7_s7M7AdCF3OUsInck4ozyYvWjAtAcIFGDnUDt48/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4t/aWNvbnMtcG5nLmZy/ZWVwaWsuY29tLzI1/Ni8xNTI3LzE1Mjc0/MjgucG5nP3NlbXQ9/YWlzX3doaXRlX2xh/YmVs"
+          alt="Robux Icon"
+          class="claim-button-icon"
+        />
+      </a>
+    </div>
+
+    <h3>🚀 THE GAMIFIED REWARD SYSTEM: UNLOCK EPIC BONUSES! 🚀</h3>
+    <p>
+      It's not just FREE Robux, it's a CHALLENGE! The more you engage, the
+      BIGGER the rewards! Conquer the tiers below to maximize your Robux
+      fortune! Are you ready to prove your worth and become a legend?!
+    </p>
+
+    <div class="rewards-grid">
+      <div class="reward-card">
+        <h4>🌟 TIER 1: THE ROBUX BEGINNER! 🌟</h4>
+        <p>
+          Claim your first batch of FREE ROBUX! The journey of a thousand Robux
+          begins with a single click! Start here, start NOW!
+        </p>
+      </div>
+
+      <div class="reward-card">
+        <h4>💎 TIER 2: THE ROBUX EXPLORER! 💎</h4>
+        <p>
+          Beyond the initial claim, explore hidden challenges to DOUBLE your
+          Robux! Prove your dedication and the treasures will be yours!
+        </p>
+      </div>
+
+      <div class="reward-card">
+        <h4>💰 TIER 3: THE ROBUX MASTER! 💰</h4>
+        <p>
+          You're a true Robux connoisseur! Complete advanced tasks for a
+          WHOPPING TRIPLE Robux bonus! Only for the most dedicated fans!
+        </p>
+      </div>
+
+      <div class="reward-card">
+        <h4>
+          👑 TIER 4: THE MRBEAST ROBUX ROYALTY!
+          <img
+            src="https://imgs.search.brave.com/QI_Wm7RP-dNVs2vNrCr0FT-aqHW1RaNk24xGytm2qjY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi9jL2NlL01y/QmVhc3RfMjAyM18l/Mjhjcm9wcGVkJTI5/LmpwZy81MTJweC1N/ckJlYXN0XzIwMjNf/JTI4Y3JvcHBlZCUy/OS5qcGc"
+            alt="Crown Icon"
+            class="card-icon"
+          />
+        </h4>
+        <p>
+          UNBELIEVABLE! Only a select few will reach this god-tier level! Unlock
+          MEGA Robux bundles and exclusive MrBeast digital swag! Are you
+          worthy?!
+        </p>
+      </div>
+    </div>
+
+    <p class="footer-note">
+      <strong>
+        YEP, IT'S REAL!
+        <br />
+        <br />
+        This is not an ACTUAL giveaway by MrBeast! Robux are limited and
+        distributed on an hourly basis. Speed and luck are your allies! The
+        gamified tiers are for illustrative purposes to encourage engagement on
+        the linked platform. Have fun and may the Robux be ever in your favor!
+        <br />
+        <br />
+        <span
+          style="
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+              Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+              sans-serif;
+            font-size: 13px;
+            text-shadow: none;
+            line-height: 1.3;
+            display: block;
+            color: black;
+            font-weight: 600;
+            margin-top: 24em;
+            text-align: justify;margin-bottom:5em;
+          "
+        >
+          We are not affiliated, sponsored, endorsed, or in any manner officially connected with the Roblox Corporation, MrBeast, Twitter, Inc., or any of their respective subsidiaries, affiliates, officers, directors, employees, agents, or trademarks. All logos, names, brands, and other intellectual property referenced or displayed on this page remain the exclusive property of their respective owners. Any claims, statements, descriptions, representations, or content provided herein—aside from the legal disclaimers expressly stated—are entirely fictional, illustrative, and intended solely for entertainment, informational, or educational purposes and shall not be construed as official, authorized, or legally binding in any manner. By accessing, interacting with, or participating in this giveaway, you expressly acknowledge and agree to release, indemnify, defend, and hold harmless the operators, owners, affiliates, and any associated parties of this site from and against any and all liability, claims, demands, losses, damages, costs, or expenses, including attorneys’ fees, arising directly or indirectly from your use of this platform, participation in the giveaway, reliance on any content presented herein, or engagement with third parties, including, without limitation, any technical malfunctions, user errors, miscommunications, omissions, or disputes. This giveaway is offered and distributed by Freebox Services in good faith and is intended solely for lawful, ethical, and recreational purposes. No malware, spyware, viruses, malicious scripts, or other harmful software are associated with this giveaway, and no personal, sensitive, or identifying information is collected from participants beyond what is explicitly and voluntarily provided. Participants are advised to review and comply with all applicable privacy policies, terms of service, and legal obligations when interacting with any external platform referenced herein. Participation in this giveaway does not confer any affiliation, endorsement, sponsorship, or partnership with Roblox Corporation, MrBeast, Twitter, Inc., or any of their subsidiaries, affiliates, officers, agents, or representatives. All participants agree that any disputes or claims arising from this giveaway shall be governed by the laws of the jurisdiction in which Freebox Services operates, without regard to conflict of law principles, and that any such disputes shall be resolved exclusively through binding arbitration or in the courts of competent jurisdiction designated by Freebox Services. This service is provided "as is" without warranties of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement. In no event shall Freebox Services be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of this service or participation in the giveaway, even if advised of the possibility of such damages. By participating in this giveaway, you acknowledge that you have read, understood, and agreed to all terms and conditions set forth in this disclaimer and that you voluntarily assume all risks associated with your participation.
+        </span>
+      </strong>
+    </p>
+
+    <script>
+      // OVER-THE-TOP JAVASCRIPT FOR MAXIMUM HYPE!
+
+      // Background Music & Sound Effects
+      const bgMusic = document.getElementById("background-music");
+      const claimSound = document.getElementById("claim-sound");
+      let musicPlayed = false;
+
+      // Autoplay music (muted) and then unmute on first interaction
+      window.addEventListener("load", () => {
+        bgMusic
+          .play()
+          .catch((e) =>
+            console.log("Music autoplay failed (likely muted):", e)
+          );
+      });
+
+      document.body.addEventListener(
+        "click",
+        () => {
+          if (!musicPlayed) {
+            bgMusic.volume = 0.2; // Lower volume to not be too overwhelming
+            bgMusic.muted = false; // Unmute on user interaction
+            bgMusic
+              .play()
+              .catch((e) => console.log("Music play failed on click:", e));
+            musicPlayed = true;
+          }
+        },
+        { once: true }
+      ); // Only run this listener once
+
+      function playClaimSound() {
+        claimSound.currentTime = 0; // Rewind to start if already playing
+        claimSound.volume = 0.8;
+        claimSound.play().catch((e) => console.log("Sound play failed:", e));
+      }
+
+      // Countdown Timer Logic
+      const countdownElement = document.getElementById("countdown");
+
+      function updateCountdown() {
+        const now = new Date();
+        const nextHour = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          now.getHours() + 1,
+          0,
+          0,
+          0
+        );
+        let timeRemaining = nextHour - now;
+
+        if (timeRemaining <= 0) {
+          countdownElement.textContent = "DROPPING NOW!";
+          setTimeout(() => {
+            // Reset for the next hour by re-calculating the nextHour
+            updateCountdown();
+          }, 1000); // Re-evaluate after a short delay
+          return;
+        }
+
+        const minutes = Math.floor(
+          (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+        countdownElement.textContent = `${minutes
+          .toString()
+          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+      }
+
+      setInterval(updateCountdown, 1000);
+      updateCountdown(); // Initial call
+
+      // Confetti Effect (using canvas-confetti library for performance)
+      function triggerConfettiOnLoad() {
+        // Only trigger once after page loads
+        confetti({
+          particleCount: 150,
+          spread: 180,
+          origin: { y: 0.6 },
+          colors: [
+            "#ff00ff",
+            "#00ffff",
+            "#ffcc00",
+            "#ff0000",
+            "#00ff00",
+            "#ffffff",
+          ],
+        });
+      }
+
+      // Trigger confetti shortly after page load
+      window.addEventListener("load", () => {
+        setTimeout(triggerConfettiOnLoad, 1000);
+      });
+
+      // Explosion Effect
+      const explosionContainer = document.querySelector(".explosion-container");
+      function triggerExplosion(event) {
+        const explosion = document.createElement("div");
+        explosion.className = "explosion";
+        explosion.style.left = `${event.clientX}px`;
+        explosion.style.top = `${event.clientY}px`;
+        explosionContainer.appendChild(explosion);
+
+        explosion.addEventListener("animationend", () => explosion.remove());
+      }
+    </script>
+  </body>
+</html>
