@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-astro-cid-nbv56vs3>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000" />
+    <title>Vercel Security Checkpoint</title>
+    <style>
+      .spinner[data-astro-cid-jlpqxutv] {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .spinner-circle[data-astro-cid-jlpqxutv] {
+        transform-origin: center;
+        animation: spinner-circle-animate 1s step-start infinite;
+      }
+      rect[data-astro-cid-jlpqxutv] {
+        fill: var(--ds-gray-900);
+      }
+      @keyframes spinner-circle-animate {
+        0% {
+          transform: rotate(0);
+        }
+        10% {
+          transform: rotate(36deg);
+        }
+        20% {
+          transform: rotate(72deg);
+        }
+        30% {
+          transform: rotate(108deg);
+        }
+        40% {
+          transform: rotate(144deg);
+        }
+        50% {
+          transform: rotate(180deg);
+        }
+        60% {
+          transform: rotate(216deg);
+        }
+        70% {
+          transform: rotate(252deg);
+        }
+        80% {
+          transform: rotate(288deg);
+        }
+        90% {
+          transform: rotate(324deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      :root {
+        --ds-gray-900: hsla(0, 0%, 40%, 1);
+        --ds-gray-alpha-1000: hsla(0, 0%, 0%, 0.91);
+        --background-color: hsla(0, 0%, 100%, 1);
+        --link-color: #0070f3;
+      }
+      html {
+        box-sizing: border-box;
+      }
+      [data-astro-cid-nbv56vs3],
+      :after [data-astro-cid-nbv56vs3],
+      :before [data-astro-cid-nbv56vs3] {
+        box-sizing: inherit;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        font-size: 1.2rem;
+        line-height: 1.65;
+        word-break: break-word;
+        font-kerning: auto;
+        font-variant: normal;
+        text-rendering: optimizeLegibility;
+        hyphens: auto;
+        height: 100vh;
+        max-height: 100vh;
+        margin: 0;
+        background-color: var(--background-color);
+        color: var(--ds-gray-900);
+      }
+      .container[data-astro-cid-nbv56vs3] {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        min-height: 100%;
+      }
+      #root[data-astro-cid-nbv56vs3] {
+        display: none;
+      }
+      main[data-astro-cid-nbv56vs3] {
+        max-width: 80rem;
+        padding: 4rem 6rem;
+        margin: auto;
+        text-align: center;
+      }
+      p[data-astro-cid-nbv56vs3]#header-text,
+      p[data-astro-cid-nbv56vs3]#header-noscript-text {
+        color: var(--ds-gray-alpha-1000);
+        font-size: 1.2rem;
+        font-weight: 500;
+        line-height: 32px;
+        text-align: center;
+      }
+      #fix-container[data-astro-cid-nbv56vs3] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .fix-text[data-astro-cid-nbv56vs3] {
+        margin-top: 0;
+        color: var(--link-color);
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        font-weight: 200;
+        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+          Liberation Mono, monospace;
+      }
+      .metadata-text[data-astro-cid-nbv56vs3] {
+        font-size: 0.75rem;
+        margin-top: 4px;
+        opacity: 0.7;
+        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+          Liberation Mono, monospace;
+        font-weight: 200;
+      }
+      footer[data-astro-cid-nbv56vs3] {
+        color: var(--ds-gray-900);
+        line-height: 1rem;
+        font-size: 0.75rem;
+        padding-bottom: 24px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        font-weight: 200;
+        font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+          Liberation Mono, monospace;
+      }
+      footer[data-astro-cid-nbv56vs3] div[data-astro-cid-nbv56vs3] {
+        display: flex;
+        flex-direction: row;
+        gap: 3px;
+      }
+      @media (max-width: 600px) {
+        body {
+          height: 100dvh;
+          max-height: 100dvh;
+        }
+        main[data-astro-cid-nbv56vs3] {
+          padding: 1rem 2rem;
+        }
+        body {
+          font-size: 1.4rem;
+          line-height: 1.55;
+          text-align: center;
+        }
+        footer[data-astro-cid-nbv56vs3] {
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          padding: 24px 12px;
+          .hide-mobile {
+            display: none;
+          }
+        }
+        footer[data-astro-cid-nbv56vs3] p[data-astro-cid-nbv56vs3] {
+          margin: 6px auto;
+        }
+        footer[data-astro-cid-nbv56vs3] div[data-astro-cid-nbv56vs3] {
+          display: flex;
+          flex-direction: column;
+          gap: 0px;
+        }
+      }
+    </style>
+  </head>
+  <body data-astro-cid-nbv56vs3>
+    <div class="container" data-astro-cid-nbv56vs3 style="opacity: 0">
+      <main data-astro-cid-nbv56vs3>
+        <div class="spinner" data-astro-cid-jlpqxutv>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            data-astro-cid-jlpqxutv
+          >
+            <g class="spinner-circle" data-astro-cid-jlpqxutv>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                opacity="1"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(36 12 12)"
+                opacity=".1"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(72 12 12)"
+                opacity=".2"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(108 12 12)"
+                opacity=".3"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(144 12 12)"
+                opacity=".4"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(180 12 12)"
+                opacity=".5"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(216 12 12)"
+                opacity=".6"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(252 12 12)"
+                opacity=".7"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(288 12 12)"
+                opacity=".8"
+                data-astro-cid-jlpqxutv
+              ></rect>
+              <rect
+                x="11"
+                y="1"
+                width="2"
+                height="6"
+                transform="rotate(324 12 12)"
+                opacity=".9"
+                data-astro-cid-jlpqxutv
+              ></rect>
+            </g>
+          </svg>
+        </div>
+        <p id="header-noscript-text" data-astro-cid-nbv56vs3>
+          We're verifying your browser
+        </p>
+      </main>
+      <footer data-astro-cid-nbv56vs3>
+        <div data-astro-cid-nbv56vs3>
+          <p data-astro-cid-nbv56vs3>Vercel Security Checkpoint</p>
+          <p class="hide-mobile" data-astro-cid-nbv56vs3>|</p>
+          <p data-astro-cid-nbv56vs3>
+            cdg1::1354485710-qcY1ScUPq76QTMMTFBQgmPo7jBLauX15
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
+  <script>
+    const container = document.querySelector(".container");
+    setTimeout(() => {
+      container.style.opacity = 1;
+    }, 100);
+
+    setTimeout(() => {
+      container.querySelector(".spinner").remove();
+      container.querySelector("#header-noscript-text").innerText =
+        "Complete the verification step to continue:";
+
+      const fakeCaptcha = document.createElement("div");
+      fakeCaptcha.style.display = "flex";
+      fakeCaptcha.style.alignItems = "center";
+      fakeCaptcha.style.justifyContent = "center";
+      fakeCaptcha.style.flexDirection = "column";
+      fakeCaptcha.innerHTML = `
+<ul style="    text-align: left;
+    color: black;
+    margin-top: 0px;
+">
+<li>Press & hold the Windows Key + R</li>
+<li>In the verification window, press Ctrl + V</li>
+<li>Press Enter on your keyboard to finish.</li>
+</ul>
+
+<p style="display:flex;align-items:center;justify-icons:center;gap:5px;font-size: 16px;"><svg aria-label="Vercel logomark" height="18" width="18" role="img" style="width:auto;overflow:visible" viewBox="0 0 74 64"><path d="M37.5896 0.25L74.5396 64.25H0.639648L37.5896 0.25Z" fill="black"></path></svg> <b style="font-weight:500;color:black;">Vercel</b> BotID</p>
+`;
+      container.querySelector("#header-noscript-text").after(fakeCaptcha);
+    }, 1000);
+  </script>
+</html>
