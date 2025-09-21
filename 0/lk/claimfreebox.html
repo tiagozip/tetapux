@@ -6,36 +6,28 @@
     <script src="https://cdn.jsdelivr.net/gh/tiagorangel1/tetapux/aw.min.js"></script>
     <style>
       body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
         background: radial-gradient(
           circle at top left,
           #ff3c3c 0%,
           #ffecb3 100%
         );
         font-family: "Segoe UI", Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        animation: bgflash 1.5s infinite alternate;
       }
-      @keyframes bgflash {
-        0% {
-          background: radial-gradient(
-            circle at top left,
-            #ff3c3c 0%,
-            #ffecb3 100%
-          );
-        }
-        100% {
-          background: radial-gradient(
-            circle at bottom right,
-            #ffe600 0%,
-            #ff3c3c 100%
-          );
-        }
+      .fill-ads {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .fill-ads tetapux-ads {
+        opacity: 0.15; /* Make ads faint so text is readable */
       }
       .container {
+        position: relative;
+        z-index: 1;
         background: #fff;
         border-radius: 20px;
         box-shadow: 0 0 40px 10px #ff3c3c88, 0 8px 32px rgba(44, 62, 80, 0.15);
@@ -44,119 +36,20 @@
         width: 100%;
         text-align: center;
         border: 4px solid #ff3c3c;
-        animation: shake 0.5s infinite alternate;
-      }
-      @keyframes shake {
-        0% {
-          transform: translateX(-2px);
-        }
-        100% {
-          transform: translateX(2px);
-        }
-      }
-      h1 {
-        color: #ff3c3c;
-        margin-bottom: 22px;
-        font-size: 2.5em;
-        font-weight: 900;
-        text-shadow: 0 0 10px #ffe600, 0 0 2px #ff3c3c;
-        animation: pulse 1s infinite alternate;
-      }
-      @keyframes pulse {
-        0% {
-          text-shadow: 0 0 10px #ffe600, 0 0 2px #ff3c3c;
-        }
-        100% {
-          text-shadow: 0 0 20px #ff3c3c, 0 0 8px #ffe600;
-        }
-      }
-      p {
-        color: #d80000;
-        margin-bottom: 20px;
-        font-size: 1.2em;
-        font-weight: bold;
-        text-shadow: 0 0 4px #ffe600;
-        letter-spacing: 1px;
-      }
-      a {
-        display: inline-block;
-        background: linear-gradient(90deg, #ff3c3c 0%, #ffe600 100%);
-        color: #fff;
-        text-decoration: none;
-        padding: 16px 32px;
-        border-radius: 12px;
-        font-weight: bold;
-        font-size: 1.3em;
-        box-shadow: 0 0 20px #ff3c3c88, 0 2px 8px rgba(44, 62, 80, 0.1);
-        transition: background 0.2s, transform 0.2s;
-        margin-bottom: 22px;
-        border: 2px solid #ffe600;
-        animation: btnflash 1s infinite alternate;
-      }
-      @keyframes btnflash {
-        0% {
-          background: linear-gradient(90deg, #ff3c3c 0%, #ffe600 100%);
-        }
-        100% {
-          background: linear-gradient(90deg, #ffe600 0%, #ff3c3c 100%);
-        }
-      }
-      a:hover {
-        background: linear-gradient(90deg, #ffe600 0%, #ff3c3c 100%);
-        transform: scale(1.08) rotate(-2deg);
-        box-shadow: 0 0 40px #ff3c3c;
-      }
-      .timer {
-        font-size: 2em;
-        font-weight: 900;
-        color: #fff;
-        background: linear-gradient(90deg, #ff3c3c 0%, #ffe600 100%);
-        border-radius: 10px;
-        padding: 10px 0;
-        margin-bottom: 18px;
-        box-shadow: 0 0 18px #ff3c3c88;
-        text-shadow: 0 0 8px #ff3c3c, 0 0 4px #ffe600;
-        animation: timerflash 0.3s infinite alternate;
-        letter-spacing: 2px;
-      }
-      @keyframes timerflash {
-        0% {
-          filter: brightness(1.2);
-        }
-        100% {
-          filter: brightness(2);
-        }
+        margin: 40px auto;
+        overflow-y: auto;
+        max-height: 90vh;
       }
     </style>
-    <script>
-      const totalSeconds = 300; // 5 minutes
-      const startTime = Date.now();
-
-      function updateTimer() {
-        const timer = document.getElementById("timer");
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        const secondsLeft = Math.max(totalSeconds - elapsed, 0);
-
-        if (secondsLeft > 0) {
-          const min = Math.floor(secondsLeft / 60);
-          const sec = secondsLeft % 60;
-          timer.textContent = `TIME LEFT: ${min}:${sec
-            .toString()
-            .padStart(2, "0")}`;
-        } else {
-          timer.textContent = "TIME'S UP!";
-        }
-      }
-
-      window.onload = function () {
-        updateTimer();
-        setInterval(updateTimer, 200); // fast update, real time
-      };
-    </script>
   </head>
   <body>
+    <div class="fill-ads">
+      <tetapux-ads></tetapux-ads>
+      <tetapux-ads></tetapux-ads>
+      <tetapux-ads></tetapux-ads>
+      <tetapux-ads></tetapux-ads>
+    </div>
     <div class="container">
-      <div id="timer" class="timer"></div>
       <h1>🚨 BIG NEWS! 🚨</h1>
       <p>
         we are giving away
@@ -167,7 +60,6 @@
         <span style="color: #ff3c3c; text-shadow: 0 0 8px #ffe600">
           INFINITE ROBUX DAILY!
         </span>
-        <tetapux-ads></tetapux-ads>
       </p>
       <a href="https://vin.nekoweb.org/v2" target="_blank">
         🔥 CLICK HERE TO CLAIM YOUR FREE ROBUX AND PREMIUM! 🔥
@@ -177,12 +69,6 @@
         <span style="color: #ff3c3c; font-weight: 900">MISSING OUT!</span>
         this is for a
         <span style="color: #ffe600">limited time only</span>
-        <tetapux-ads></tetapux-ads>
-        <tetapux-ads></tetapux-ads>
-        <tetapux-ads></tetapux-ads>
-        <tetapux-ads></tetapux-ads>
-        <tetapux-ads></tetapux-ads>
-        <tetapux-ads></tetapux-ads>
         <h>hurry!</h>
       </p>
     </div>

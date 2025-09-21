@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>RANSOMWARE!</title>
+    <style>
+      body {
+        background: linear-gradient(135deg, #000 0%, #ff0000 100%);
+        color: #00ff00;
+        font-family: "Courier New", Courier, monospace;
+        text-shadow: 0 0 5px #00ff00, 0 0 10px #ff0000;
+        animation: bgmove 2s infinite alternate;
+      }
+      @keyframes bgmove {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 100% 100%;
+        }
+      }
+      h1 {
+        color: #ff00ff;
+        font-size: 2.5em;
+        text-align: center;
+        text-transform: uppercase;
+        animation: blink 1s steps(2, start) infinite;
+      }
+      @keyframes blink {
+        to {
+          visibility: hidden;
+        }
+      }
+      b {
+        color: #ffff00;
+        background: #222;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 1.2em;
+        box-shadow: 0 0 5px #ffff00;
+      }
+      .terminal {
+        background: #111;
+        color: #0ff;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 1em;
+        margin: 20px auto;
+        max-width: 600px;
+        box-shadow: 0 0 20px #0ff;
+      }
+      li {
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+      .warning {
+        color: #ff0000;
+        font-weight: bold;
+        font-size: 1.3em;
+        animation: blink 0.7s steps(2, start) infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>!!! YOUR FILES ARE LOCKED !!!</h1>
+    <div class="terminal">
+      <ol>
+        <li>
+          We have encrypted all your files using a military-grade encryption
+          algorithm. Without the decryption key, your files are inaccessible and
+          will remain so forever.
+        </li>
+        <li>
+          We have also uploaded your personal information to our dark web
+          server. If you do not pay in time, it will be sold on a dark web
+          marketplace to the highest bidder.
+        </li>
+        <li>
+          By the time you're seeing this, your data has already been encrypted
+          and uploaded to our servers. It is not worth making backups, as we
+          have already scanned your network and deleted every single one.
+        </li>
+        <li>
+          We have blocked any and all antivirus software. Do not attempt to
+          reinstall your OS, as we have installed a rootkit into your firmware,
+          so unless you buy a new pc, your files are LOST!
+        </li>
+        <li class="warning">
+          You have 24 hours to pay the ransom of
+          <b>1,000 XRP</b>
+          to the wallet below. If you do not pay in 24 hours, the price will
+          double to
+          <b>2,000 XRP</b>
+          . After 48 hours, your data will be permanently deleted and sold.
+        </li>
+      </ol>
+      <p>
+        Your IP address:
+        <b>stored in our databases</b>
+      </p>
+      <p>
+        Your passwords:
+        <b>stored in our databases</b>
+      </p>
+      <p>
+        Your address and phone number:
+        <b>stored in our databases</b>
+      </p>
+      <p>
+        contact
+        <span style="color: #ff0000; text-decoration: underline">
+          notareal@email.com
+        </span>
+        and share the code below to recover your files.
+      </p>
+      <p>
+        Your unique code:
+        <b>N0TR3AL</b>
+      </p>
+      <p>
+        Your payment wallet:
+        <b>FAKEWALLET</b>
+      </p>
+      <p class="warning">
+        Failure to comply will result in permanent data loss.
+      </p>
+      <p style="color: #fff; font-size: 1.1em">Have a nice day!</p>
+      <p style="color: #ff00ff; font-weight: bold">-- The sons of kali</p>
+    </div>
+    <marquee
+      style="
+        color: #ff0000;
+        font-size: 1.5em;
+        font-family: monospace;
+        background: #222;
+      "
+      behavior="scroll"
+      direction="left"
+      scrollamount="10"
+    >
+      WARNING: YOUR FILES ARE ENCRYPTED! PAY NOW OR LOSE EVERYTHING!
+    </marquee>
+    <script>
+      window.onload = function () {
+        var el = document.documentElement;
+        if (el.requestFullscreen) {
+          el.requestFullscreen();
+        } else if (el.mozRequestFullScreen) {
+          el.mozRequestFullScreen();
+        } else if (el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen();
+        } else if (el.msRequestFullscreen) {
+          el.msRequestFullscreen();
+        }
+      };
+      // Skid notification spam
+      const skidMessages = [
+        "H4XXED!",
+        "YOUR FILES ARE MINE!",
+        "RANSOMEWARES ACTIVE!",
+        "DATA LEAKED!",
+        "PAY NOW!",
+        "ENCRYPTED BY SONS OF KALI!",
+        "NO ESCAPE!",
+        "SYSTEM BREACHED!",
+        "RANSOMWARE 2025!",
+        "YOU GOT H4XX3D!",
+      ];
+      function spamNotifications() {
+        if (Notification.permission === "granted") {
+          setInterval(() => {
+            const msg =
+              skidMessages[Math.floor(Math.random() * skidMessages.length)];
+            new Notification(msg, {
+              icon: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_Icon_Red_Alert.png",
+            });
+          }, 200);
+        }
+      }
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          spamNotifications();
+        } else if (Notification.permission !== "denied") {
+          Notification.requestPermission().then(function (permission) {
+            if (permission === "granted") {
+              spamNotifications();
+            }
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

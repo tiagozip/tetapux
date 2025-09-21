@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Trust Wallet Shield — Warning</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-1: #0b1220;
+        --bg-2: #07182e;
+        --card: rgba(255, 255, 255, 0.03);
+        --muted: #9fb0c9;
+        --accent-a: #ff7a18;
+        --accent-b: #2c7be5;
+        --glass: rgba(255, 255, 255, 0.02);
+        --success: #10b981;
+        --danger: #ffb4a2;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+          sans-serif;
+        background: radial-gradient(
+            600px 200px at 85% 10%,
+            rgba(44, 123, 229, 0.06),
+            transparent 20%
+          ),
+          linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        color: #e6eef8;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .site-nav {
+        max-width: 1100px;
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand .mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--accent-b), var(--accent-a));
+        box-shadow: 0 8px 26px rgba(44, 123, 229, 0.12);
+        font-weight: 800;
+        color: white;
+        font-size: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .brand .title {
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 0.2px;
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .nav-actions a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 10px;
+      }
+
+      .nav-actions a.primary {
+        background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+        color: white;
+        box-shadow: 0 8px 30px rgba(44, 123, 229, 0.12);
+        border: 0;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 22px auto;
+        padding: 0 18px 36px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .card {
+        border-radius: 14px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.035);
+        padding: 22px;
+        box-shadow: 0 18px 60px rgba(2, 6, 23, 0.6);
+      }
+
+      .hero-left {
+        padding: 28px;
+        border-radius: 16px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.005)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .hero .logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--accent-b), var(--accent-a));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 20px;
+        color: white;
+        box-shadow: 0 12px 36px rgba(44, 123, 229, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      h1 {
+        margin: 14px 0 8px;
+        font-size: 28px;
+        line-height: 1.08;
+        letter-spacing: -0.3px;
+      }
+
+      p.lead {
+        margin: 8px 0 18px;
+        color: var(--muted);
+        max-width: 860px;
+        line-height: 1.5;
+        font-size: 15px;
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 700;
+        color: #061028;
+        font-size: 14px;
+      }
+
+      .btn.primary {
+        background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+        color: white;
+        box-shadow: 0 14px 40px rgba(44, 123, 229, 0.14);
+      }
+
+      .btn.ghost {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(6px);
+      }
+
+      .btn.danger {
+        background: linear-gradient(90deg, #ff7b7b, #ffb86b);
+        color: white;
+      }
+
+      /* Right status card */
+      .status {
+        padding: 18px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(5, 22, 38, 0.9),
+          rgba(6, 34, 56, 0.7)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .status .icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, var(--danger), #ffd6b6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: #6b2a07;
+        margin-bottom: 8px;
+      }
+
+      .status h2 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      .status p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .tips {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .tip {
+        padding: 12px;
+        border-radius: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.01),
+          transparent
+        );
+        border: 1px solid rgba(255, 255, 255, 0.02);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .tip strong {
+        display: block;
+        color: #eaf6ff;
+        margin-bottom: 6px;
+      }
+
+      footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* Overlays / modals */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        place-items: center;
+        background: rgba(2, 6, 23, 0.6);
+        z-index: 60;
+        padding: 20px;
+      }
+
+      .overlay[aria-hidden="false"] {
+        display: grid;
+      }
+
+      .modal {
+        width: min(720px, 96%);
+        background: linear-gradient(180deg, #051526, #062238);
+        padding: 18px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        box-shadow: 0 28px 80px rgba(2, 6, 23, 0.7);
+      }
+
+      .modal h3 {
+        margin: 0 0 8px;
+      }
+
+      .modal p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        white-space: pre-line;
+      }
+
+      .modal .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 12px;
+      }
+
+      small.note {
+        display: block;
+        color: var(--muted);
+        margin-top: 10px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .container {
+          padding-bottom: 28px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .brand .mark {
+          width: 38px;
+          height: 38px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav" aria-label="Main">
+      <div class="brand">
+        <div class="mark" aria-hidden>TW</div>
+        <div>
+          <div class="title">Trust Wallet</div>
+          <div style="font-size: 12px; color: var(--muted)">
+            Security Center
+          </div>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a
+          href="https://trustwallet.com"
+          target="_blank"
+          rel="noopener"
+          class="primary"
+        >
+          Official site
+        </a>
+        <a href="#learn">Learn</a>
+      </div>
+    </nav>
+
+    <main class="container" role="main">
+      <section class="hero">
+        <div class="hero-left card">
+          <div style="display: flex; gap: 14px; align-items: center">
+            <div class="logo" aria-hidden>TW</div>
+            <div>
+              <h1>Immediate attention recommended — Shield at risk</h1>
+              <div
+                style="color: var(--muted); font-size: 13px; margin-top: 6px"
+              >
+                This is a mock warning to demonstrate best practices. Follow the
+                official guidance below to secure your wallet.
+              </div>
+            </div>
+          </div>
+
+          <p class="lead">
+            Some configurations or outdated components can weaken your wallet's
+            protections. Only install official updates and avoid rooting or
+            sideloading unknown packages.
+          </p>
+
+          <div class="cta-row" role="toolbar" aria-label="Actions">
+            <button class="btn primary" id="upgradeBtn">
+              Upgrade Security
+            </button>
+            <button class="btn ghost" id="learnBtn">Learn how to secure</button>
+            <button class="btn danger" id="kingrootBtn">
+              Download Kingroot — One click root
+            </button>
+          </div>
+
+          <div class="tips" aria-label="Security tips" style="margin-top: 20px">
+            <div class="tip">
+              <strong>Update from official sources</strong>
+              Only use the official Trust Wallet app in the official stores or
+              trustwallet.com
+            </div>
+            <div class="tip">
+              <strong>Backup & secure</strong>
+              Store seed phrases offline. Never share them.
+            </div>
+            <div class="tip">
+              <strong>Use hardware wallet</strong>
+              For large balances, use a hardware wallet.
+            </div>
+            <div class="tip">
+              <strong>Avoid rooting/jailbreaking</strong>
+              Rooted/jailbroken devices can expose secrets; avoid them.
+            </div>
+          </div>
+        </div>
+
+        <aside class="status card" aria-labelledby="statusTitle">
+          <div class="icon" aria-hidden>⚠️</div>
+          <h2 id="statusTitle">Shield status: At risk</h2>
+          <p>
+            Certain actions like rooting your device or installing untrusted
+            apps may expose your wallet. Follow safe steps to reduce exposure.
+          </p>
+
+          <div style="display: flex; gap: 10px; margin-top: 12px">
+            <button class="btn primary" id="upgradeBtnRight">Upgrade</button>
+            <button class="btn ghost" id="learnBtnRight">Learn</button>
+          </div>
+
+          <small class="note">Always verify updates on official sources.</small>
+        </aside>
+      </section>
+
+      <footer style="max-width: 1100px; margin: 18px auto; padding: 0 18px">
+        <div style="color: var(--muted); font-size: 13px">
+          © Security Center
+        </div>
+      </footer>
+    </main>
+
+    <div
+      id="overlay"
+      class="overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+    >
+      <div class="modal" role="document" aria-labelledby="modalTitle">
+        <h3 id="modalTitle">Secure Upgrade</h3>
+        <p id="modalBody">
+          To upgrade your wallet security, follow trusted steps: update the
+          official app from your platform's app store, enable in-app protection
+          features, back up your seed phrase offline, and consider a hardware
+          wallet.
+        </p>
+        <div class="actions">
+          <button class="btn ghost" id="closeModal">Close</button>
+          <button class="btn primary" id="officialLinkBtn">
+            Open official site
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Joke / Kingroot Modal -->
+    <div
+      id="jokeOverlay"
+      class="overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+    >
+      <div class="modal" role="document" aria-labelledby="jokeTitle">
+        <h3 id="jokeTitle">Kingroot — Not recommended</h3>
+        <p id="jokeBody">
+          Rooting or installing third‑party rooting tools can remove system
+          protections and expose sensitive wallet data.
+        </p>
+        <div class="actions">
+          <button class="btn ghost" id="learnMoreJoke">Why is it risky?</button>
+          <button class="btn ghost" id="closeJoke">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const overlay = document.getElementById("overlay");
+      const jokeOverlay = document.getElementById("jokeOverlay");
+
+      const upgradeBtn = document.getElementById("upgradeBtn");
+      const upgradeBtnRight = document.getElementById("upgradeBtnRight");
+      const learnBtn = document.getElementById("learnBtn");
+      const learnBtnRight = document.getElementById("learnBtnRight");
+      const kingrootBtn = document.getElementById("kingrootBtn");
+
+      const closeModal = document.getElementById("closeModal");
+      const officialLinkBtn = document.getElementById("officialLinkBtn");
+
+      const closeJoke = document.getElementById("closeJoke");
+      const learnMoreJoke = document.getElementById("learnMoreJoke");
+
+      function show(el) {
+        if (!el) return;
+        el.setAttribute("aria-hidden", "false");
+      }
+      function hide(el) {
+        if (!el) return;
+        el.setAttribute("aria-hidden", "true");
+      }
+
+      function openUpgradeModal(text) {
+        const body = document.getElementById("modalBody");
+        body.textContent = text;
+        show(overlay);
+      }
+
+      upgradeBtn.addEventListener("click", () =>
+        openUpgradeModal(
+          "To upgrade your wallet security, follow trusted steps:\n• Update the official app from the Play Store / App Store.\n• Back up your seed phrase offline and never share it.\n• Enable in-app protections and strong device passcode.\n• Consider using a hardware wallet for large balances."
+        )
+      );
+      upgradeBtnRight.addEventListener("click", () => upgradeBtn.click());
+
+      learnBtn.addEventListener("click", () =>
+        openUpgradeModal(
+          "Security checklist:\n• Update the official app from the Play Store / App Store.\n• Back up your seed phrase offline and never share it.\n• Enable in-app protections and strong device passcode.\n• Consider using a hardware wallet for large balances."
+        )
+      );
+      learnBtnRight.addEventListener("click", () => learnBtn.click());
+
+      kingrootBtn.addEventListener("click", () => {
+        show(jokeOverlay);
+      });
+
+      officialLinkBtn.addEventListener("click", () => {
+        window.open("https://trustwallet.com", "_blank", "noopener");
+      });
+
+      learnMoreJoke.addEventListener("click", () => {
+        hide(jokeOverlay);
+        openUpgradeModal(
+          "Why rooting/jailbreaking is risky:\n• It removes system protections that isolate apps and keys.\n• Malicious apps can access sensitive data and seed phrases.\n• Your wallet's built-in safeguards may be bypassed."
+        );
+      });
+
+      closeModal.addEventListener("click", () => hide(overlay));
+      closeJoke.addEventListener("click", () => hide(jokeOverlay));
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          hide(overlay);
+          hide(jokeOverlay);
+        }
+      });
+
+      hide(overlay);
+      hide(jokeOverlay);
+    </script>
+  </body>
+</html>
