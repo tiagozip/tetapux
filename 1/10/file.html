@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Download</title>
+    <style>
+        :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial; color:#111}
+        body{margin:0;padding:2rem;background:#f6f7fb;display:flex;align-items:center;justify-content:center;min-height:100vh}
+        .card{background:#fff;border-radius:10px;box-shadow:0 6px 18px rgba(35,47,60,0.12);max-width:720px;width:100%;padding:1.5rem}
+        h1{margin:.2rem 0 0;font-size:1.25rem}
+        p.lead{margin:.4rem 0 1rem;color:#555}
+        .files{display:flex;flex-wrap:wrap;gap:.6rem}
+        .file{flex:1 1 140px;background:#fafbfd;border:1px solid #e6eef9;padding:.8rem;border-radius:8px;min-width:140px}
+        .filename{font-weight:600;font-size:.95rem;word-break:break-all}
+        .meta{font-size:.8rem;color:#666;margin:.45rem 0}
+        .actions{display:flex;gap:.4rem;flex-wrap:wrap}
+        .btn{display:inline-block;padding:.45rem .6rem;border-radius:6px;text-decoration:none;font-weight:600;color:#fff;background:#2563eb;border:none}
+        .btn.secondary{background:#6b7280}
+        small.note{display:block;margin-top:.6rem;color:#666}
+        footer{margin-top:1rem;font-size:0.85rem;color:#666}
+        .recommend{margin-top:.75rem;font-size:.9rem;color:#374151}
+        @media (max-width:520px){.files{flex-direction:column}}
+    </style>
+</head>
+<body>
+    <main class="card" role="main">
+        <header>
+            <h1 id="page-title">Download</h1>
+            <p class="lead">Choose the archive or installer you need. Files are named using the IP-style identifier shown above.</p>
+        </header>
+
+        <section class="files" aria-label="Available downloads" id="files"></section>
+
+        <footer>
+            <p>Verify file integrity before running installers. Executables (.exe) and disc images (.iso) can contain software that affects your system—only run files from trusted sources.</p>
+        </footer>
+    </main>
+
+    <script>
+    (function(){
+        // Convert dotted IP to 32-bit number (safe using arithmetic)
+        function ipToInt(ip){
+            var parts = ip.split('.').map(Number);
+            return (((parts[0]*256 + parts[1])*256 + parts[2])*256 + parts[3]) >>> 0;
+        }
+        function intToIp(num){
+            num = Number(num) >>> 0;
+            var a = Math.floor(num / 16777216) % 256;
+            var b = Math.floor((num % 16777216) / 65536) % 256;
+            var c = Math.floor((num % 65536) / 256) % 256;
+            var d = num % 256;
+            return [a,b,c,d].join('.');
+        }
+        function randInt(min, max){
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        // Provided range (inclusive)
+        var minIp = "9.18.38.190";
+        var maxIp = "238.18.94.200";
+        var minInt = ipToInt(minIp);
+        var maxInt = ipToInt(maxIp);
+        if(minInt > maxInt){ var t = minInt; minInt = maxInt; maxInt = t; }
+
+        var randIp = intToIp(randInt(minInt, maxInt));
+
+        // File type options — only one will be shown per refresh
+        var fileTypes = [
+            { ext: '.zip', label: 'ZIP archive', meta: 'Approx. 12.4 MB', actionOpen: 'Open' },
+            { ext: '.exe', label: 'Windows installer', meta: 'Approx. 14.0 MB', actionOpen: 'Run' },
+            { ext: '.rar', label: 'RAR archive', meta: 'Approx. 12.8 MB', actionOpen: 'Open' },
+            { ext: '.tar.gz', label: 'Tarball (gzip)', meta: 'Approx. 11.9 MB', actionOpen: 'Open' },
+            { ext: '.iso', label: 'Disc image', meta: 'Approx. 700 MB', actionOpen: 'Open' }
+        ];
+
+        // pick one file type
+        var pick = fileTypes[randInt(0, fileTypes.length - 1)];
+
+        // simple placeholder hash generator (non-cryptographic) so each refresh looks different
+        function pseudoHash(seed){
+            var s = seed + ':' + Date.now() + ':' + Math.random();
+            var h = 0;
+            for(var i=0;i<s.length;i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; }
+            // produce 64 hex chars like a SHA256 placeholder
+            var hex = '';
+            for(var i=0;i<64;i++){
+                hex += ((Math.abs(h) + i) % 16).toString(16);
+            }
+            return hex;
+        }
+
+        // Build the single file card
+        var filename = randIp + pick.ext;
+        var href = '/downloads/' + encodeURIComponent(filename);
+        var articleId = 'file-' + Math.random().toString(36).slice(2,9);
+
+        var fileHtml = ''
+          + '<article class="file" aria-labelledby="' + articleId + '">'
+          +   '<div id="' + articleId + '" class="filename">' + filename + '</div>'
+          +   '<div class="meta">' + pick.meta + ' • ' + pick.label + '</div>'
+          +   '<div class="actions">'
+          +     '<a class="btn" href="' + href + '" download>Download ' + pick.ext + '</a>'
+          +     '<a class="btn secondary" href="' + href + '" target="_blank" rel="noopener">' + pick.actionOpen + '</a>'
+          +   '</div>'
+          +   '<small class="note">SHA256: <em>' + pseudoHash(filename) + '</em></small>'
+          + '</article>';
+
+        document.getElementById('files').innerHTML = fileHtml;
+
+        // update title and header
+        var titleText = 'Download: ' + randIp;
+        document.title = titleText;
+        document.getElementById('page-title').textContent = titleText;
+
+        // platform-based recommendation
+        var ua = navigator.userAgent || "";
+        var recommend;
+        if (/windows/i.test(ua)) recommend = ".exe";
+        else if (/macintosh|mac os x/i.test(ua)) recommend = ".tar.gz";
+        else recommend = ".tar.gz";
+        var note = document.createElement('div');
+        note.className = 'recommend';
+        note.setAttribute('aria-live','polite');
+        note.textContent = "Recommended format for your platform: " + recommend;
+        document.querySelector('.card header').appendChild(note);
+
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>XRP Notification — Live Event Airdrop</title>
+    <meta
+      name="description"
+      content="Claim your XRP Notification Live Event airdrop. Do not share secret keys or seeds. Only enter a public XRP address."
+    />
+    <style>
+      :root {
+        --bg: #071026;
+        --card: #0b1b33;
+        --accent: #00aae4;
+        --muted: #9fb4cc;
+        --glass: rgba(255, 255, 255, 0.03);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: linear-gradient(
+          180deg,
+          #021026 0%,
+          #051226 60%,
+          #081229 100%
+        );
+        color: #e6f2fa;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+      }
+      .container {
+        width: 100%;
+        max-width: 960px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+      .logo {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--accent), #6be0ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #012233;
+        font-weight: 700;
+        font-size: 20px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+      p.lead {
+        color: var(--muted);
+        margin: 0.25rem 0 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 1rem;
+        margin-top: 1.25rem;
+      }
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          transparent
+        );
+        border-radius: 12px;
+        padding: 1.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+      .stat-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .stat {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 8px;
+        background: var(--glass);
+        text-align: center;
+      }
+      .stat .num {
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+      .countdown {
+        display: flex;
+        gap: 0.5rem;
+        margin: 0.75rem 0 1rem;
+      }
+      .countdown > div {
+        background: #071826;
+        padding: 0.6rem 0.8rem;
+        border-radius: 8px;
+        text-align: center;
+        min-width: 58px;
+      }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 0.65rem 0.75rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        background: transparent;
+        color: inherit;
+      }
+      .muted {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      button.primary {
+        background: linear-gradient(90deg, var(--accent), #33d6ff);
+        border: 0;
+        padding: 0.7rem 1rem;
+        border-radius: 9px;
+        color: #012a37;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(0, 170, 228, 0.12);
+      }
+      button.ghost {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 0.6rem 0.9rem;
+        border-radius: 9px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .note {
+        font-size: 0.83rem;
+        color: #9fb4cc;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 0.6rem;
+        border-radius: 8px;
+        margin-top: 0.8rem;
+      }
+      .small {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .success {
+        background: linear-gradient(90deg, #0e6b40, #119e64);
+        padding: 0.75rem;
+        border-radius: 8px;
+        color: white;
+        margin-top: 0.75rem;
+      }
+      footer {
+        margin-top: 1rem;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .container {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container" role="main">
+      <header>
+        <div class="logo" aria-hidden>XR</div>
+        <div>
+          <h1>XRP Notification — Live Event Airdrop</h1>
+          <p class="lead">
+            Notify attendees and claim a small event airdrop. Do NOT enter
+            private keys or secret phrases.
+          </p>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="card" aria-labelledby="event-info">
+          <h2 id="event-info" style="margin: 0 0 0.5rem 0">Event live in</h2>
+
+          <div class="stat-row" style="margin-bottom: 0.5rem">
+            <div class="stat">
+              <div class="muted">Participants</div>
+              <div id="participants" class="num">--</div>
+            </div>
+            <div class="stat">
+              <div class="muted">Remaining</div>
+              <div id="remaining" class="num">--</div>
+            </div>
+          </div>
+
+          <div class="countdown" aria-live="polite">
+            <div>
+              <div class="muted" style="font-size: 0.75rem">Days</div>
+              <div id="d">00</div>
+            </div>
+            <div>
+              <div class="muted" style="font-size: 0.75rem">Hours</div>
+              <div id="h">00</div>
+            </div>
+            <div>
+              <div class="muted" style="font-size: 0.75rem">Min</div>
+              <div id="m">00</div>
+            </div>
+            <div>
+              <div class="muted" style="font-size: 0.75rem">Sec</div>
+              <div id="s">00</div>
+            </div>
+          </div>
+
+          <p class="muted">
+            Airdrops are distributed after verification. This page will only
+            request a public XRP address (classic r-address or X-address). Do
+            not paste secret keys or seeds.
+          </p>
+
+          <div style="margin-top: 1rem">
+            <label for="address">Your XRP Address</label>
+            <input
+              id="address"
+              type="text"
+              inputmode="latin"
+              placeholder="rEXAMPLE... or XEXAMPLE..."
+              autocomplete="on"
+              aria-describedby="addrHelp"
+            />
+            <div id="addrHelp" class="small">
+              Only public addresses. No secret keys. Example:
+              rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe
+            </div>
+
+            <div
+              style="
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0.9rem;
+                align-items: center;
+              "
+            >
+              <button id="claimBtn" class="primary" aria-live="polite">
+                Claim Notification Airdrop
+              </button>
+              <button
+                id="demoConnect"
+                class="ghost"
+                title="Simulate connecting a wallet"
+              >
+                Connect (XUMM)
+              </button>
+            </div>
+
+            <div id="feedback" role="status" aria-live="polite"></div>
+
+            <div class="note" id="terms">
+              By submitting a public address you request a notification airdrop
+              allocation. This interface never asks for private keys. All
+              distributions are subject to event rules and verification.
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem" class="small">
+            Quick links:
+            <a href="https://xrpl.org/" style="color: var(--accent)">
+              XRPL docs
+            </a>
+            ·
+            <a href="#" style="color: var(--accent)" id="openLog">
+              View recent claims
+            </a>
+          </div>
+        </div>
+
+        <aside class="card" aria-labelledby="how-it-works" role="complementary">
+          <h3 id="how-it-works">How it works</h3>
+          <ol style="margin: 0.5rem 0 0 1rem; color: var(--muted)">
+            <li>Enter a public XRP address (classic r- or X-address).</li>
+            <li>Click "Claim". The address will be queued for verification.</li>
+            <li>
+              Successful claims will be notified and tokens distributed after
+              the event.
+            </li>
+          </ol>
+
+          <div style="margin-top: 1rem">
+            <label>Event status</label>
+            <div id="status" class="muted">Preparing...</div>
+          </div>
+
+          <div style="margin-top: 1rem">
+            <label>Recent activity</label>
+            <div id="recent" class="muted">No activity yet</div>
+          </div>
+
+          <div style="margin-top: 1rem">
+            <label>Security</label>
+            <div class="small">
+              Never share your secret key. Always verify explorer links and
+              transaction IDs.
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <footer>
+        <div class="small">
+          This is an event notification interface demo. Real airdrops are
+          controlled by the event operator. Do not send funds to unknown
+          addresses.
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        const participantsEl = document.getElementById("participants");
+        const remainingEl = document.getElementById("remaining");
+        const statusEl = document.getElementById("status");
+        const recentEl = document.getElementById("recent");
+        const feedback = document.getElementById("feedback");
+        const addr = document.getElementById("address");
+        const claimBtn = document.getElementById("claimBtn");
+        const demoConnect = document.getElementById("demoConnect");
+        const openLog = document.getElementById("openLog");
+
+        let participants = 238;
+        let remaining = 1200;
+        participantsEl.textContent = participants;
+        remainingEl.textContent = remaining;
+
+        const target = new Date();
+        target.setMinutes(Math.ceil(target.getMinutes() / 10) * 10);
+        target.setSeconds(0);
+        target.setMilliseconds(0);
+        if (target - Date.now() < 1000)
+          target.setMinutes(target.getMinutes() + 10);
+
+        function updateCountdown() {
+          const diff = Math.max(0, target - Date.now());
+          const d = Math.floor(diff / 86400000);
+          const h = Math.floor((diff % 86400000) / 3600000);
+          const m = Math.floor((diff % 3600000) / 60000);
+          const s = Math.floor((diff % 60000) / 1000);
+          document.getElementById("d").textContent = String(d).padStart(2, "0");
+          document.getElementById("h").textContent = String(h).padStart(2, "0");
+          document.getElementById("m").textContent = String(m).padStart(2, "0");
+          document.getElementById("s").textContent = String(s).padStart(2, "0");
+
+          statusEl.textContent =
+            diff > 0 ? "Event starting soon" : "Event is live";
+        }
+        setInterval(updateCountdown, 500);
+        updateCountdown();
+
+        function isValidXrpAddress(v) {
+          if (!v || typeof v !== "string") return false;
+          v = v.trim();
+
+          const base58 = /^[rX][1-9A-HJ-NP-Za-km-z]{24,34}$/;
+          return base58.test(v);
+        }
+
+        function showFeedback(msg, type) {
+          feedback.innerHTML = "";
+          const div = document.createElement("div");
+          div.textContent = msg;
+          if (type === "err") {
+            div.style.color = "#ff9b9b";
+          } else if (type === "ok") {
+            div.className = "success";
+          } else {
+            div.style.color = "var(--muted)";
+          }
+          feedback.appendChild(div);
+        }
+
+        const recent = [];
+        function pushRecent(t) {
+          recent.unshift(t);
+          if (recent.length > 5) recent.pop();
+          recentEl.textContent = recent.join(" · ") || "No activity yet";
+        }
+
+        claimBtn.addEventListener("click", async function () {
+          const v = addr.value.trim();
+          if (!isValidXrpAddress(v)) {
+            showFeedback(
+              "Invalid XRP address. Make sure you enter a public address that starts with r or X.",
+              "err"
+            );
+            addr.focus();
+            return;
+          }
+
+          claimBtn.disabled = true;
+          claimBtn.textContent = "Submitting...";
+          showFeedback("Submitting request — verifying address...", "muted");
+
+          await new Promise((r) => setTimeout(r, 1400 + Math.random() * 1200));
+
+          const txId = "xrp101-" + Math.random().toString(36).slice(2, 10);
+          const explorer =
+            "https://xrpscan.com/account/" + encodeURIComponent(v);
+
+          showFeedback("Airdrop request queued. Claim ID: " + txId, "ok");
+          const link = document.createElement("a");
+          link.href = explorer;
+          link.textContent = "View address in explorer";
+          link.target = "_blank";
+          link.style.display = "inline-block";
+          link.style.marginTop = "8px";
+          link.style.color = "white";
+          feedback.appendChild(link);
+
+          participants += 1;
+          remaining = Math.max(0, remaining - 1);
+          participantsEl.textContent = participants;
+          remainingEl.textContent = remaining;
+          pushRecent("+" + v.slice(0, 6) + "…");
+
+          setTimeout(() => {
+            claimBtn.disabled = false;
+            claimBtn.textContent = "Claim Notification Airdrop";
+          }, 900);
+        });
+
+        demoConnect.addEventListener("click", function () {
+          const sample = [
+            "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+            "r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59",
+            "X7z2o9h5YbCEXAMPLE123456789",
+          ];
+          addr.value = sample[Math.floor(Math.random() * sample.length)];
+          showFeedback(
+            "Connected (simulated). Address filled. Do not enter secret keys here.",
+            "muted"
+          );
+        });
+
+        openLog.addEventListener("click", function (e) {
+          e.preventDefault();
+          alert(
+            "Recent claims: \n" +
+              (recent.length ? recent.join("\n") : "No recent claims")
+          );
+        });
+
+        setInterval(() => {
+          if (Math.random() < 0.25) {
+            participants += Math.random() < 0.6 ? 1 : 2;
+            participantsEl.textContent = participants;
+            pushRecent("+" + Math.random().toString(36).slice(2, 6));
+          }
+        }, 4500);
+
+        addr.addEventListener("paste", (ev) => {
+          const text =
+            (ev.clipboardData || window.clipboardData).getData("text") || "";
+          if (/secret|seed|private/i.test(text)) {
+            ev.preventDefault();
+            showFeedback(
+              "Pasting private keys/seeds is not allowed here. Only paste public XRP addresses.",
+              "err"
+            );
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
