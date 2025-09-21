@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Get (or Find) Free Domains from Namecheap — Guide</title>
+    <meta
+      name="description"
+      content="Guide to finding promotions, coupons and ways to get free or heavily-discounted .vip, .pro, .com, .net, .org, .me, .dev, .io, .co, .co.uk and .ai domains via Namecheap."
+    />
+    <style>
+      :root {
+        --bg: #f5f6fb;
+        --card: #ffffff;
+        --accent: #ffb000;
+        --accent-strong: #d17a00;
+        --muted: #6b7280;
+        --glass: rgba(15, 23, 36, 0.03);
+        --border: #e7e9ef;
+        --max-width: 1180px;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, sans-serif;
+        color-scheme: light;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: #0f1724;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.45;
+      }
+
+      .site-top {
+        background: linear-gradient(180deg, #fff, #fbfbfb);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 6px 16px rgba(15, 23, 36, 0.03);
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
+      .container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+      }
+      .logo {
+        width: 92px;
+        height: 34px;
+        border-radius: 6px;
+        background: linear-gradient(
+          180deg,
+          var(--accent),
+          var(--accent-strong)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+        color: white;
+        box-shadow: 0 6px 18px rgba(217, 133, 15, 0.12);
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: 16px;
+        letter-spacing: -0.2px;
+        color: #0b1220;
+        font-weight: 700;
+      }
+      nav.topnav {
+        margin-left: 6px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex: 1;
+      }
+      nav.topnav a {
+        color: #334155;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 10px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      nav.topnav a:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
+
+      .top-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .btn-primary {
+        background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .hero-wrap {
+        max-width: var(--max-width);
+        margin: 20px auto;
+        padding: 22px;
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 20px;
+        align-items: start;
+      }
+      .hero-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 28px rgba(15, 23, 36, 0.04);
+      }
+
+      .search-bar {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .search-input {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        border: 1px solid #e6eef8;
+        padding: 10px 12px;
+        border-radius: 8px;
+        gap: 8px;
+      }
+      .search-input input {
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font-size: 15px;
+        flex: 1;
+      }
+      .search-go {
+        background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      main {
+        max-width: var(--max-width);
+        margin: 0 auto 40px;
+        padding: 0 22px;
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 20px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 18px;
+        border: 1px solid var(--border);
+        box-shadow: 0 6px 20px rgba(15, 23, 36, 0.03);
+      }
+
+      .tlds {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .tag {
+        background: #fff7ef;
+        color: #8b3d00;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 13px;
+        border: 1px solid rgba(255, 160, 90, 0.12);
+      }
+
+      .disclaimer {
+        margin-top: 12px;
+        background: #fff8f0;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 160, 90, 0.12);
+        color: #8b3d00;
+        font-size: 13px;
+      }
+
+      aside .card {
+        position: sticky;
+        top: 96px;
+      }
+
+      footer {
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+        padding: 26px 20px;
+      }
+
+      @media (max-width: 980px) {
+        .hero-wrap,
+        main {
+          grid-template-columns: 1fr;
+        }
+        aside .card {
+          position: static;
+        }
+        .brand h1 {
+          display: none;
+        }
+        .logo {
+          width: 78px;
+          height: 30px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-top" role="banner">
+      <div class="container">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">NMC</div>
+          <h1>Domains & Hosting</h1>
+        </div>
+
+        <nav class="topnav" aria-label="Main navigation">
+          <a href="#">Domains</a>
+          <a href="#">Hosting</a>
+          <a href="#">Security</a>
+          <a href="#">Apps</a>
+          <a href="#">Pricing</a>
+          <a href="#">Support</a>
+        </nav>
+
+        <div class="top-actions">
+          <a class="btn-ghost" href="#" aria-label="Sign in">Sign in</a>
+          <a class="btn-primary" href="#" aria-label="Create account">
+            Create account
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="hero-wrap" role="region" aria-label="Domain search and guide">
+      <section class="hero-card">
+        <strong style="display: block">Find free or promotional domains</strong>
+        <p style="margin: 8px 0 0; color: var(--muted)">
+          Search domain names and check common promotions. This search box is a
+          quick launcher to Namecheap's domain search experience.
+        </p>
+
+        <div class="search-bar" style="margin-top: 14px">
+          <div class="search-input" role="search" aria-label="search domain">
+            <span style="opacity: 0.6">🔎</span>
+            <input
+              type="search"
+              placeholder="Try example.com or enter a keyword"
+              aria-label="Search domains"
+            />
+            <select
+              aria-label="TLD"
+              style="
+                border: 0;
+                background: transparent;
+                font-weight: 600;
+                color: var(--muted);
+              "
+            >
+              <option value="any">Any TLD</option>
+              <option value=".com">.com</option>
+              <option value=".net">.net</option>
+              <option value=".io">.io</option>
+            </select>
+          </div>
+          <button class="search-go" type="button">Search</button>
+        </div>
+
+        <div style="margin-top: 16px">
+          <strong>Popular TLDs covered</strong>
+          <div class="tlds" aria-hidden="true">
+            <span class="tag">.vip</span>
+            <span class="tag">.pro</span>
+            <span class="tag">.com</span>
+            <span class="tag">.net</span>
+            <span class="tag">.org</span>
+            <span class="tag">.me</span>
+            <span class="tag">.dev</span>
+            <span class="tag">.io</span>
+            <span class="tag">.co</span>
+            <span class="tag">.co.uk</span>
+            <span class="tag">.ai</span>
+          </div>
+        </div>
+
+        <div class="how" style="margin-top: 16px">
+          <h3 style="margin: 12px 0 8px">
+            How to check for free or deeply discounted domains
+          </h3>
+          <ol style="padding-left: 18px; color: var(--muted)">
+            <li>
+              Visit Namecheap's domain search page and check TLD availability
+              for the names you want.
+            </li>
+            <li>
+              Look for site banners, promotions, coupons and seasonal offers
+              (first-year discounts are common).
+            </li>
+            <li>
+              Check the cart price and promo code field — some coupons reduce
+              the first-year price to £0 or $0 for specific TLDs or bundles.
+            </li>
+            <li>
+              Review renewal fees and terms carefully. A free first-year offer
+              often has standard renewal charges afterward.
+            </li>
+          </ol>
+          <div class="disclaimer">
+            <strong>Note:</strong>
+            Promotions change frequently. Always confirm the final checkout
+            price and the renewal cost before completing a purchase.
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <strong>Steps to try</strong>
+          <ol style="margin-top: 10px; color: var(--muted)">
+            <li>Search the exact name + each TLD.</li>
+            <li>Check for promo codes or site banners.</li>
+            <li>Compare first-year price vs renewal price.</li>
+            <li>Consider privacy protection (often paid separately).</li>
+          </ol>
+
+          <div style="margin-top: 12px">
+            <strong>Resources</strong>
+            <ul style="margin: 8px 0 0 18px; color: var(--muted)">
+              <li>
+                <a
+                  class="link"
+                  href="https://www.namecheap.com/domains/"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Namecheap Domains
+                </a>
+              </li>
+              <li>
+                <a
+                  class="link"
+                  href="https://www.namecheap.com/support/"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Support & TOS
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div style="margin-top: 12px">
+            <strong>Checklist before checkout</strong>
+            <ul style="margin: 8px 0 0 18px; color: var(--muted)">
+              <li>Confirm final checkout total (with tax)</li>
+              <li>Note renewal price and when first payment occurs</li>
+              <li>Enable two-factor auth on your account</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <main>
+      <section class="card">
+        <h3 style="margin-top: 0">Frequently asked</h3>
+        <details style="margin-top: 10px">
+          <summary style="cursor: pointer; font-weight: 700">
+            Are free offers real?
+          </summary>
+          <div style="margin-top: 8px; color: var(--muted)">
+            Yes — some promotions can make the first year free or nearly free.
+            These are usually limited-time offers or tied to specific TLDs and
+            often come with normal renewal fees starting the following year.
+          </div>
+        </details>
+        <details>
+          <summary style="cursor: pointer; font-weight: 700">
+            Will I be charged later?
+          </summary>
+          <div style="margin-top: 8px; color: var(--muted)">
+            Most free-first-year offers require a paid renewal. Check the
+            domain's renewal rate and any registration restrictions before you
+            accept an offer.
+          </div>
+        </details>
+        <details>
+          <summary style="cursor: pointer; font-weight: 700">
+            Can I transfer a free domain later?
+          </summary>
+          <div style="margin-top: 8px; color: var(--muted)">
+            Yes — domains can generally be transferred, but policies and waiting
+            periods may apply. Transfers often require the domain to be older
+            than 60 days.
+          </div>
+        </details>
+      </section>
+
+      <aside>
+        <div class="card">
+          <strong>Quick tips</strong>
+          <ul style="margin: 8px 0 0 18px; color: var(--muted)">
+            <li>
+              Search multiple variations — some TLDs are discounted only for
+              select names or categories.
+            </li>
+            <li>
+              Follow Namecheap’s blog, newsletters, or social channels for
+              time-limited coupons.
+            </li>
+            <li>
+              Use the Namecheap coupon field at checkout — community sites
+              sometimes post valid codes.
+            </li>
+            <li>
+              Check TLD rules: country-code TLDs like .co.uk or .ai may have
+              extra eligibility or fees.
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div
+        style="max-width: var(--max-width); margin: 0 auto; color: var(--muted)"
+      >
+        This page is an informational guide — it does not guarantee free
+        domains. Always verify any promotion directly on the Namecheap website
+        and read terms and conditions before purchasing or registering a domain.
+      </div>
+    </footer>
+  </body>
+</html>
