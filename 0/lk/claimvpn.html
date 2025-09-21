@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pro VPN - Free Proxy VPN</title>
     <style>
-      /* Catppuccin Mocha palette */
       :root {
         --base: #1e1e2e;
         --mantle: #181825;
@@ -30,6 +29,7 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
+        overflow-x: hidden;
       }
       .container {
         max-width: 700px;
@@ -40,12 +40,32 @@
         padding: 36px 32px 100px 32px;
         position: relative;
         overflow: hidden;
+        animation: fadeInUp 1.2s cubic-bezier(0.23, 1.01, 0.32, 1) both;
+      }
+      @keyframes fadeInUp {
+        0% {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .logo {
         display: flex;
         align-items: center;
         gap: 14px;
         margin-bottom: 22px;
+        animation: fadeIn 1.2s 0.2s both;
+      }
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
       }
       .logo-icon {
         width: 44px;
@@ -58,6 +78,20 @@
         font-size: 2em;
         color: var(--base);
         box-shadow: 0 2px 8px rgba(137, 180, 250, 0.18);
+        animation: popIn 1s 0.4s both;
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.7);
+          opacity: 0;
+        }
+        80% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
       }
       h1 {
         font-size: 2.3em;
@@ -65,6 +99,7 @@
         font-weight: 700;
         color: var(--blue);
         letter-spacing: 1px;
+        animation: fadeIn 1.2s 0.5s both;
       }
       .features {
         display: flex;
@@ -81,7 +116,14 @@
         text-align: center;
         box-shadow: 0 2px 8px rgba(69, 71, 90, 0.1);
         color: var(--subtext1);
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.3s;
+        animation: fadeInUp 1.2s cubic-bezier(0.23, 1.01, 0.32, 1) both;
+      }
+      .feature:hover {
+        background: var(--surface2);
+        color: var(--text);
+        transform: translateY(-6px) scale(1.04);
+        box-shadow: 0 6px 24px rgba(203, 166, 247, 0.22);
       }
       .feature-title {
         font-size: 1.15em;
@@ -89,9 +131,16 @@
         margin-bottom: 10px;
         color: var(--mauve);
       }
-      .feature:hover {
-        background: var(--surface2);
-        color: var(--text);
+      .about,
+      .faq,
+      .testimonials,
+      .global-users,
+      .security-details,
+      .vpn-story,
+      .more-faq,
+      .final-note,
+      .privacy {
+        animation: fadeIn 1.2s both;
       }
       .about {
         margin: 28px 0 36px 0;
@@ -117,13 +166,19 @@
         font-weight: 700;
         cursor: pointer;
         box-shadow: 0 4px 16px rgba(137, 180, 250, 0.18);
-        transition: background 0.2s, box-shadow 0.2s;
+        transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
         letter-spacing: 1px;
+        animation: fadeInUp 1.2s 1s both;
       }
       .activate-btn:hover {
         background: linear-gradient(90deg, var(--mauve) 0%, var(--blue) 100%);
         box-shadow: 0 6px 24px rgba(203, 166, 247, 0.22);
         color: var(--text);
+        transform: scale(1.07);
+      }
+      .global-users #testimonial-display {
+        animation: fadeIn 1.2s both;
+        transition: opacity 0.5s, transform 0.5s;
       }
       @media (max-width: 600px) {
         .container {
@@ -173,32 +228,31 @@
         </div>
         <div class="feature">
           <div class="feature-title">Next-Gen Security</div>
-          <div>
-            Catppuccin Mocha encryption keeps your data safe and private.
-          </div>
+          <div>Bitcoin-style encryption keeps your data safe and private.</div>
         </div>
         <div class="feature">
           <div class="feature-title">Zero Logs</div>
           <div>
             We never track, store, or sell your browsing activity. Your privacy
-            is our priority.
+            is our priority, protected by Bitcoin-style encryption.
           </div>
         </div>
         <div class="feature">
           <div class="feature-title">Global Access</div>
           <div>
             Bypass geo-restrictions and access content from anywhere in the
-            world.
+            world, secured by Bitcoin-style encryption.
           </div>
         </div>
       </div>
       <div class="about">
         <strong>About Pro VPN:</strong>
         <br />
-        Pro VPN is your gateway to a safer, faster, and more open internet. With
-        a sleek Catppuccin Mocha-inspired interface, you get instant access to
-        secure proxy servers, advanced privacy, and a truly modern experience.
-        Join thousands who trust Pro VPN for their online freedom.
+        Pro VPN is your gateway to a safer, faster, and more open internet. You
+        get instant access to secure proxy servers, advanced privacy, and a
+        truly modern experience. Our Bitcoin-style encryption ensures your data
+        is protected at all times. Join thousands who trust Pro VPN for their
+        online freedom.
       </div>
       <section class="faq" style="margin: 40px 0 0 0">
         <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
@@ -301,38 +355,6 @@
         <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
           See What Users Say Around the World
         </h2>
-        <label
-          for="country-select"
-          style="
-            font-size: 1.1em;
-            color: var(--subtext1);
-            margin-bottom: 10px;
-            display: block;
-          "
-        >
-          Select Country:
-        </label>
-        <select
-          id="country-select"
-          style="
-            background: var(--surface1);
-            color: var(--text);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 1em;
-            border: none;
-            outline: none;
-            margin-bottom: 24px;
-          "
-        >
-          <option value="UK">United Kingdom</option>
-          <option value="India">India</option>
-          <option value="USA">United States</option>
-          <option value="Germany">Germany</option>
-          <option value="Brazil">Brazil</option>
-          <option value="Japan">Japan</option>
-          <option value="Australia">Australia</option>
-        </select>
         <div
           id="testimonial-display"
           style="
@@ -345,27 +367,37 @@
           "
         ></div>
         <script>
-          const testimonials = {
-            UK: '<em>"Pro VPN is the fastest free VPN I\'ve ever used. Streaming is smooth and my privacy is protected!"</em><br><span style="color:var(--green);font-weight:600;">— Alex, UK</span>',
-            India:
-              '<em>"I love the modern look and how easy it is to use. Highly recommended for anyone who values security."</em><br><span style="color:var(--blue);font-weight:600;">— Priya, India</span>',
-            USA: '<em>"No logs, no ads, just pure privacy. Pro VPN is my go-to for safe browsing."</em><br><span style="color:var(--mauve);font-weight:600;">— Jordan, USA</span>',
-            Germany:
-              '<em>"Pro VPN helped me access content from all over the world. The speed is incredible!"</em><br><span style="color:var(--yellow);font-weight:600;">— Lukas, Germany</span>',
-            Brazil:
-              '<em>"Finally a VPN that works for free and keeps my data safe. Obrigado!"</em><br><span style="color:var(--red);font-weight:600;">— Ana, Brazil</span>',
-            Japan:
-              '<em>"Pro VPN is simple, fast, and secure. I use it every day for work and streaming."</em><br><span style="color:var(--pink);font-weight:600;">— Yuki, Japan</span>',
-            Australia:
-              '<em>"The best VPN for privacy and speed. Highly recommend to everyone in Australia!"</em><br><span style="color:var(--teal);font-weight:600;">— Mia, Australia</span>',
-          };
-          const select = document.getElementById("country-select");
+          const locations = [
+            { city: "London", country: "UK", color: "var(--green)" },
+            { city: "Berlin", country: "Germany", color: "var(--yellow)" },
+            { city: "New York", country: "USA", color: "var(--mauve)" },
+            { city: "Sydney", country: "Australia", color: "var(--teal)" },
+            { city: "Tokyo", country: "Japan", color: "var(--pink)" },
+            { city: "Rio de Janeiro", country: "Brazil", color: "var(--red)" },
+            { city: "Delhi", country: "India", color: "var(--blue)" },
+            { city: "Paris", country: "France", color: "var(--subtext1)" },
+            { city: "Toronto", country: "Canada", color: "var(--blue)" },
+            {
+              city: "Cape Town",
+              country: "South Africa",
+              color: "var(--green)",
+            },
+            { city: "Moscow", country: "Russia", color: "var(--yellow)" },
+            { city: "Madrid", country: "Spain", color: "var(--red)" },
+            { city: "Rome", country: "Italy", color: "var(--mauve)" },
+            { city: "Singapore", country: "Singapore", color: "var(--teal)" },
+            { city: "Dubai", country: "UAE", color: "var(--yellow)" },
+          ];
+          const reviewText =
+            '<em>"Pro VPN is the fastest free VPN I\'ve ever used. Streaming is smooth and my privacy is protected!"</em>';
+          const name = "Alex";
           const display = document.getElementById("testimonial-display");
-          function updateTestimonial() {
-            display.innerHTML = testimonials[select.value];
+          function showTestimonial() {
+            const loc = locations[Math.floor(Math.random() * locations.length)];
+            display.innerHTML = `${reviewText}<br><span style="color:${loc.color};font-weight:600;">— ${name}, ${loc.city}, ${loc.country}</span>`;
           }
-          select.addEventListener("change", updateTestimonial);
-          updateTestimonial();
+          showTestimonial();
+          setInterval(showTestimonial, 3000);
         </script>
       </section>
       <section class="security-details" style="margin: 48px 0 0 0">
@@ -373,12 +405,13 @@
           Advanced Security Features
         </h2>
         <ul style="color: var(--subtext0); font-size: 1.08em; line-height: 2">
-          <li>256-bit AES encryption for all connections</li>
+          <li>Bitcoin-style 256-bit AES encryption for all connections</li>
           <li>DNS and IPv6 leak protection</li>
           <li>Automatic kill switch for maximum safety</li>
           <li>Multi-hop routing for extra privacy</li>
           <li>Secure servers in 50+ countries</li>
           <li>Ad and tracker blocking built-in</li>
+          <li>All traffic protected by Bitcoin-style cryptography</li>
         </ul>
       </section>
       <section class="vpn-story" style="margin: 48px 0 0 0">
@@ -392,16 +425,18 @@
           working remotely, or simply browsing, Pro VPN ensures your data stays
           safe and your access remains unrestricted. Our team is dedicated to
           providing the fastest, most reliable, and most secure VPN service
-          available—free for everyone. Join the movement and experience true
-          internet freedom.
+          available—free for everyone. With Bitcoin-style encryption, your data
+          is protected by the same technology that secures the world's leading
+          cryptocurrency. Join the movement and experience true internet
+          freedom.
         </p>
         <p style="color: var(--subtext0); line-height: 1.8; font-size: 1.08em">
           With servers in over 50 countries, Pro VPN lets you bypass censorship,
           access global content, and stay anonymous online. Our zero-logs policy
-          means your activity is never tracked, and our advanced encryption
-          keeps your data out of the hands of hackers and snoops. Try Pro VPN
-          today and see why millions trust us for their privacy and security
-          needs.
+          means your activity is never tracked, and our advanced Bitcoin-style
+          encryption keeps your data out of the hands of hackers and snoops. Try
+          Pro VPN today and see why millions trust us for their privacy and
+          security needs.
         </p>
       </section>
       <section class="more-faq" style="margin: 48px 0 0 0">
@@ -456,3 +491,4 @@
     </div>
   </body>
 </html>
+<!-- I will activate my VPN for free. -->
