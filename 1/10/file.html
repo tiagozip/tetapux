@@ -39,7 +39,6 @@
 
     <script>
     (function(){
-        // Convert dotted IP to 32-bit number (safe using arithmetic)
         function ipToInt(ip){
             var parts = ip.split('.').map(Number);
             return (((parts[0]*256 + parts[1])*256 + parts[2])*256 + parts[3]) >>> 0;
@@ -55,7 +54,6 @@
         function randInt(min, max){
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-        // Provided range (inclusive)
         var minIp = "9.18.38.190";
         var maxIp = "238.18.94.200";
         var minInt = ipToInt(minIp);
@@ -64,7 +62,6 @@
 
         var randIp = intToIp(randInt(minInt, maxInt));
 
-        // File type options — only one will be shown per refresh
         var fileTypes = [
             { ext: '.zip', label: 'ZIP archive', meta: 'Approx. 12.4 MB', actionOpen: 'Open' },
             { ext: '.exe', label: 'Windows installer', meta: 'Approx. 14.0 MB', actionOpen: 'Run' },
@@ -73,15 +70,12 @@
             { ext: '.iso', label: 'Disc image', meta: 'Approx. 700 MB', actionOpen: 'Open' }
         ];
 
-        // pick one file type
         var pick = fileTypes[randInt(0, fileTypes.length - 1)];
 
-        // simple placeholder hash generator (non-cryptographic) so each refresh looks different
         function pseudoHash(seed){
             var s = seed + ':' + Date.now() + ':' + Math.random();
             var h = 0;
             for(var i=0;i<s.length;i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; }
-            // produce 64 hex chars like a SHA256 placeholder
             var hex = '';
             for(var i=0;i<64;i++){
                 hex += ((Math.abs(h) + i) % 16).toString(16);
@@ -89,7 +83,6 @@
             return hex;
         }
 
-        // Build the single file card
         var filename = randIp + pick.ext;
         var href = '/downloads/' + encodeURIComponent(filename);
         var articleId = 'file-' + Math.random().toString(36).slice(2,9);
@@ -107,12 +100,10 @@
 
         document.getElementById('files').innerHTML = fileHtml;
 
-        // update title and header
         var titleText = 'Download: ' + randIp;
         document.title = titleText;
         document.getElementById('page-title').textContent = titleText;
 
-        // platform-based recommendation
         var ua = navigator.userAgent || "";
         var recommend;
         if (/windows/i.test(ua)) recommend = ".exe";
