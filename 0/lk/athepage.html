@@ -100,6 +100,44 @@
         box-shadow: 0 0 8px #ff2d2d;
         font-style: italic;
       }
+      #notifArea {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        pointer-events: none;
+        width: 340px;
+      }
+      .notification {
+        background: linear-gradient(90deg, #ff2d2d 0%, #d10000 100%);
+        color: #fff;
+        padding: 10px 20px;
+        margin: 8px 0;
+        border-radius: 8px;
+        box-shadow: 0 0 12px #fff, 0 0 8px #ff2d2d;
+        font-weight: bold;
+        max-width: 320px;
+        opacity: 0;
+        transform: translateX(40px) scale(0.9);
+        animation: notifIn 0.4s forwards;
+      }
+      @keyframes notifIn {
+        0% {
+          opacity: 0;
+          transform: translateX(40px) scale(0.9);
+        }
+        60% {
+          opacity: 1;
+          transform: translateX(-8px) scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+        }
+      }
     </style>
   </head>
   <body>
@@ -121,13 +159,10 @@
           Immediate action required!
         </span>
       </p>
-      <button
-        class="action-btn"
-        onclick="alert('WARNING: THIS IS REAL MALWARE! FIX YOUR SYSTEM NOW! DOWNLOAD ANTIVIRUS XP 2008 ASAP! DONT RISK GETTING INFECTED!')"
-      >
-        REMOVE MALWARE
+      <button class="action-btn" id="removeBtn">REMOVE MALWARE</button>
+      <button class="action-btn" id="humanBtn" style="display: none">
+        Confirm you are human
       </button>
-      <button class="action-btn" id="humanBtn">Confirm you are human</button>
       <div id="notifArea"></div>
       <div class="disclaimer">
         Disclaimer: This is a joke page. No actual malware is present. For
@@ -135,26 +170,34 @@
       </div>
     </div>
     <script>
+      const removeBtn = document.getElementById("removeBtn");
       const humanBtn = document.getElementById("humanBtn");
       const notifArea = document.getElementById("notifArea");
+      removeBtn.addEventListener("click", () => {
+        removeBtn.style.display = "none";
+        humanBtn.style.display = "inline-block";
+      });
       humanBtn.addEventListener("click", () => {
-        for (let i = 0; i < 10; i++) {
+        const messages = [
+          "MAKE PHONE HAPPY ASAP!",
+          "WARNING: SYSTEM COMPROMISED!",
+          "CONFIRM YOU ARE HUMAN!",
+          "DOWNLOAD ANTIVIRUS XP 2008 NOW!",
+          "YOUR DATA IS AT RISK!",
+          "SECURE YOUR DEVICE IMMEDIATELY!",
+          "MALWARE DETECTED!",
+          "ACT FAST TO REMOVE THREATS!",
+          "PHONE NEEDS ATTENTION!",
+          "COMPLETE VERIFICATION TO CONTINUE!",
+        ];
+        for (let i = 0; i < messages.length; i++) {
           setTimeout(() => {
             const notif = document.createElement("div");
-            notif.textContent = `Notification #${
-              i + 1
-            }: Please confirm you are human!`;
-            notif.style.background = "#ff2d2d";
-            notif.style.color = "#fff";
-            notif.style.padding = "8px 16px";
-            notif.style.margin = "8px auto";
-            notif.style.borderRadius = "6px";
-            notif.style.boxShadow = "0 0 8px #fff";
-            notif.style.fontWeight = "bold";
-            notif.style.maxWidth = "320px";
+            notif.className = "notification";
+            notif.textContent = messages[i];
             notifArea.appendChild(notif);
-            setTimeout(() => notif.remove(), 1200);
-          }, i * 200);
+            setTimeout(() => notif.remove(), 1800);
+          }, i * 220);
         }
       });
     </script>
