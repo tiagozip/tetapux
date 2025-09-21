@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>27" 4K OLED Monitor Giveaway — Enter for a free monitor</title>
+        <meta
+            name="description"
+            content="Enter to win a premium 27-inch 4K OLED monitor. No purchase necessary. Winner selected at random. See official rules."
+        />
+        <style>
+            :root {
+                --bg: #f7f8fa;
+                --paper: #ffffff;
+                --text: #0f1724;
+                --muted: #475569;
+                --accent: #0b84ff;
+                --border: #e6e9ee;
+                --panel: #fbfdff;
+                --success-bg: #e6f6ea;
+                font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+                    Arial, sans-serif;
+                line-height: 1.45;
+                color: var(--text);
+            }
+
+            body {
+                margin: 0;
+                background: var(--bg);
+                padding: 22px;
+                display: flex;
+                justify-content: center;
+                font-size: 16px;
+                min-height: 100vh;
+            }
+
+            .container {
+                width: min(100%, 980px);
+                background: linear-gradient(180deg, var(--paper), var(--panel));
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 22px;
+                display: grid;
+                grid-template-rows: auto 1fr auto;
+                gap: 20px;
+            }
+
+            header {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 12px;
+            }
+
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .logo {
+                width: 64px;
+                height: 64px;
+                border-radius: 8px;
+                background: var(--accent);
+                color: #fff;
+                font-weight: 700;
+                display: grid;
+                place-items: center;
+                font-size: 18px;
+                border: 1px solid rgba(255, 255, 255, 0.06);
+            }
+
+            h1 {
+                margin: 0;
+                font-size: 20px;
+            }
+
+            .layout {
+                display: grid;
+                grid-template-columns: 1fr 360px;
+                gap: 24px;
+                align-items: start;
+            }
+
+            .content {
+                padding-right: 6px;
+            }
+
+            .monitor-illustration {
+                width: 100%;
+                max-width: 560px;
+                height: 200px;
+                background: linear-gradient(180deg, #081024, #0f1724);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-weight: 700;
+                font-size: 20px;
+                border: 1px solid rgba(0, 0, 0, 0.18);
+                margin-bottom: 14px;
+            }
+
+            .lead {
+                margin: 10px 0 16px;
+                color: var(--muted);
+            }
+
+            .features {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-top: 8px;
+            }
+
+            .feature {
+                background: transparent;
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+                font-size: 14px;
+            }
+
+            .form-panel {
+                background: transparent;
+                border: 1px solid var(--border);
+                padding: 14px;
+                border-radius: 8px;
+                align-self: start;
+                position: sticky;
+                top: 28px;
+            }
+
+            form {
+                display: grid;
+                gap: 10px;
+            }
+
+            label {
+                font-size: 13px;
+                color: var(--text);
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="number"],
+            select {
+                width: 100%;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+                background: var(--paper);
+                font-size: 14px;
+                font-family: inherit;
+                color: var(--text);
+            }
+
+            .row {
+                display: flex;
+                gap: 10px;
+            }
+
+            .row > * {
+                flex: 1;
+            }
+
+            .small {
+                font-size: 13px;
+                color: var(--muted);
+            }
+
+            button {
+                background: var(--accent);
+                color: #fff;
+                padding: 10px 14px;
+                border-radius: 8px;
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                cursor: pointer;
+                font-weight: 600;
+                font-family: inherit;
+            }
+
+            button[disabled] {
+                opacity: 0.6;
+                cursor: default;
+            }
+
+            .terms {
+                display: flex;
+                gap: 8px;
+                align-items: flex-start;
+                font-size: 13px;
+                color: var(--muted);
+            }
+
+            .terms input[type="checkbox"] {
+                margin-top: 3px;
+            }
+
+            .rules {
+                margin-top: 12px;
+                padding: 12px;
+                background: transparent;
+                border-radius: 8px;
+                border: 1px dashed var(--border);
+                font-size: 13px;
+                color: var(--muted);
+            }
+
+            .notice {
+                font-size: 13px;
+                color: var(--muted);
+                margin-top: 8px;
+            }
+
+            .success {
+                margin-top: 10px;
+                padding: 10px;
+                background: var(--success-bg);
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                color: var(--text);
+                border-radius: 6px;
+                display: none;
+            }
+
+            .error {
+                color: #b91c1c;
+                font-size: 13px;
+                min-height: 18px;
+            }
+
+            footer {
+                margin-top: 8px;
+                font-size: 13px;
+                color: var(--muted);
+                border-top: 1px solid var(--border);
+                padding-top: 12px;
+            }
+
+            @media (max-width: 880px) {
+                .layout {
+                    grid-template-columns: 1fr;
+                }
+                .form-panel {
+                    order: 2;
+                    margin-top: 12px;
+                    position: relative;
+                    top: auto;
+                }
+                .content {
+                    order: 1;
+                }
+                .monitor-illustration {
+                    max-width: 100%;
+                    height: 160px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <main class="container" role="main" aria-labelledby="page-title">
+            <header>
+                <div class="brand">
+                    <div class="logo" aria-hidden="true">4K</div>
+                    <div>
+                        <h1 id="page-title">27" 4K OLED Monitor Giveaway</h1>
+                        <p class="lead">
+                            Enter to win a premium 27-inch 4K OLED monitor (one winner). No
+                            purchase necessary. Winner selected at random and contacted by
+                            email.
+                        </p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="layout">
+                <section class="content" aria-labelledby="about-heading">
+                    <div
+                        class="monitor-illustration"
+                        aria-hidden="true"
+                        title="27-inch 4K OLED monitor illustration"
+                    >
+                        27" 4K OLED
+                    </div>
+
+                    <div class="features" aria-hidden="false">
+                        <div class="feature">
+                            <strong>Resolution:</strong>
+                            <div>3840 × 2160 (4K)</div>
+                        </div>
+                        <div class="feature">
+                            <strong>Panel:</strong>
+                            <div>OLED (true black & high contrast)</div>
+                        </div>
+                        <div class="feature">
+                            <strong>Size:</strong>
+                            <div>27" (flat)</div>
+                        </div>
+                        <div class="feature">
+                            <strong>Connectivity:</strong>
+                            <div>HDMI 2.1, DisplayPort, USB-C (PD)</div>
+                        </div>
+                    </div>
+
+                    <section id="rules" class="rules" aria-labelledby="rules-heading">
+                        <h3 id="rules-heading" style="margin-top: 0">
+                            Official rules (summary)
+                        </h3>
+                        <ul style="margin-top: 6px">
+                            <li>
+                                Eligibility: Open to legal residents who meet the minimum age in
+                                their jurisdiction. Void where prohibited.
+                            </li>
+                            <li>No purchase necessary. This giveaway is free to enter.</li>
+                            <li>
+                                One entry per person. Winner selected at random and contacted by
+                                email.
+                            </li>
+                            <li>
+                                Prize: One 27" 4K OLED monitor (approximate retail value: USD
+                                700). Taxes, import duties, or other fees are the responsibility
+                                of the winner where required by law.
+                            </li>
+                        </ul>
+                    </section>
+                </section>
+
+                <aside class="form-panel" aria-labelledby="enter-heading">
+                    <form id="giveaway-form" aria-labelledby="enter-heading" novalidate>
+                        <h2 id="enter-heading" style="font-size: 15px; margin: 0 0 6px">
+                            Enter the giveaway
+                        </h2>
+                        <p class="small">
+                            Fill in your details below. We will never ask for payment details.
+                            This form is used only to administer the giveaway.
+                        </p>
+
+                        <label for="fullName">Full name</label>
+                        <input
+                            id="fullName"
+                            name="fullName"
+                            type="text"
+                            autocomplete="name"
+                            placeholder="Jane Doe"
+                            required
+                            aria-describedby="fullName-hint fullName-error"
+                            maxlength="100"
+                            pattern="[A-Za-zÀ-ÖØ-öø-ÿ' .-]+"
+                            title="Enter your full name (letters, spaces, hyphens, apostrophes or periods)"
+                        />
+                        <div id="fullName-hint" class="small">
+                            Use the name you would accept a prize under.
+                        </div>
+                        <div id="fullName-error" class="error" aria-live="polite"></div>
+
+                        <label for="email">Email address</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="you@example.com"
+                            required
+                            aria-describedby="email-error"
+                        />
+                        <div id="email-error" class="error" aria-live="polite"></div>
+
+                        <div class="row">
+                            <div>
+                                <label for="country">Country</label>
+                                <select
+                                    id="country"
+                                    name="country"
+                                    required
+                                    aria-describedby="country-error"
+                                >
+                                    <option value="">Select country</option>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                                <div id="country-error" class="error" aria-live="polite"></div>
+                            </div>
+                            <div>
+                                <label for="age">Age</label>
+                                <input
+                                    id="age"
+                                    name="age"
+                                    type="number"
+                                    inputmode="numeric"
+                                    placeholder="e.g. 25"
+                                    min="13"
+                                    max="120"
+                                    required
+                                    aria-describedby="age-hint age-error"
+                                />
+                                <div id="age-hint" class="small">
+                                    Must meet the minimum age in your jurisdiction.
+                                </div>
+                                <div id="age-error" class="error" aria-live="polite"></div>
+                            </div>
+                        </div>
+
+                        <div class="terms">
+                            <input
+                                id="agree"
+                                type="checkbox"
+                                required
+                                aria-describedby="agree-error"
+                            />
+                            <label for="agree" style="margin: 0">
+                                I confirm I am eligible and agree to the
+                                <a href="#rules">official rules</a>
+                                . No purchase necessary.
+                            </label>
+                        </div>
+                        <div id="agree-error" class="error" aria-live="polite"></div>
+
+                        <button type="submit" id="submitBtn">Enter giveaway (Free)</button>
+
+                        <div
+                            class="success"
+                            id="success"
+                            role="status"
+                            aria-live="polite"
+                        ></div>
+
+                        <p class="notice" id="entries-count" aria-live="polite"></p>
+                        <p class="small" style="margin-top: 6px">
+                            Privacy: Entries are used only to administer this giveaway. We
+                            will not sell your personal information. By entering you consent
+                            to the collection and use of your data for this giveaway.
+                        </p>
+                    </form>
+                </aside>
+            </div>
+
+            <footer>
+                <p>
+                    Questions? Contact the giveaway organizer at
+                    <a href="mailto:support@example.com">support@example.com</a>
+                    .
+                </p>
+            </footer>
+        </main>
+
+        <script>
+            (function () {
+                var form = document.getElementById("giveaway-form");
+                var success = document.getElementById("success");
+                var submitBtn = document.getElementById("submitBtn");
+                var entriesCountEl = document.getElementById("entries-count");
+
+                var ENTRY_KEY = "giveaway_entries_v1";
+                function readEntries() {
+                    try {
+                        return parseInt(localStorage.getItem(ENTRY_KEY), 10) || 120;
+                    } catch (e) {
+                        return 120;
+                    }
+                }
+                function writeEntries(n) {
+                    try {
+                        localStorage.setItem(ENTRY_KEY, String(n));
+                    } catch (e) {}
+                }
+                function renderEntries() {
+                    var n = readEntries();
+                    entriesCountEl.textContent =
+                        "Entries received so far: " + n.toLocaleString();
+                }
+                renderEntries();
+
+                function setError(id, message) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = message || "";
+                }
+
+                form.addEventListener("submit", function (ev) {
+                    ev.preventDefault();
+
+                    setError("fullName-error", "");
+                    setError("email-error", "");
+                    setError("age-error", "");
+                    setError("country-error", "");
+                    setError("agree-error", "");
+                    success.style.display = "none";
+                    success.textContent = "";
+
+                    if (!form.checkValidity()) {
+                        if (!form.fullName.checkValidity()) {
+                            setError("fullName-error", "Please enter your full name.");
+                            form.fullName.focus();
+                        } else if (!form.email.checkValidity()) {
+                            setError("email-error", "Please enter a valid email address.");
+                            form.email.focus();
+                        } else if (!form.country.checkValidity()) {
+                            setError("country-error", "Please select your country.");
+                            form.country.focus();
+                        } else if (!form.age.checkValidity()) {
+                            setError("age-error", "Please enter your age (numbers only).");
+                            form.age.focus();
+                        } else if (!form.agree.checkValidity()) {
+                            setError(
+                                "agree-error",
+                                "You must confirm eligibility and agree to the rules."
+                            );
+                            form.agree.focus();
+                        }
+                        form.reportValidity();
+                        return;
+                    }
+
+                    var age = parseInt(form.age.value, 10);
+                    if (Number.isNaN(age) || age < 13 || age > 120) {
+                        setError("age-error", "Please enter a valid age (13–120).");
+                        form.age.focus();
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = "Submitting…";
+
+                    setTimeout(function () {
+                        var n = readEntries() + 1;
+                        writeEntries(n);
+                        renderEntries();
+
+                        success.style.display = "block";
+                        success.innerHTML =
+                            "Thank you — your entry has been recorded. A confirmation has been sent to <strong>" +
+                            (form.email.value || "your email") +
+                            "</strong>. The winner will be selected at random and notified by email per the official rules.";
+
+                        form.fullName.value = "";
+                        form.email.value = "";
+                        form.age.value = "";
+                        form.agree.checked = false;
+
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Enter giveaway (Free)";
+                        success.focus && success.focus();
+                    }, 900);
+                });
+
+                ["fullName", "email", "age", "country"].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (!el) return;
+                    el.addEventListener("input", function () {
+                        setError(id + "-error", "");
+                    });
+                });
+                document
+                    .getElementById("agree")
+                    .addEventListener("change", function () {
+                        setError("agree-error", "");
+                    });
+            })();
+        </script>
+    </body>
+</html>
