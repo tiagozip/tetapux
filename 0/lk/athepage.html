@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alert!</title>
+    <style>
+      body {
+        background: radial-gradient(circle, #ff2d2d 0%, #2d2d2d 100%);
+        color: #fff;
+        font-family: "Arial Black", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .container {
+        background: rgba(0, 0, 0, 0.85);
+        padding: 32px 48px;
+        border-radius: 12px;
+        box-shadow: 0 0 48px #ff2d2d, 0 0 16px #fff inset;
+        text-align: center;
+        animation: pulseBox 0.18s infinite alternate;
+      }
+      @keyframes pulseBox {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 48px #ff2d2d, 0 0 16px #fff inset;
+        }
+        100% {
+          transform: scale(1.12);
+          box-shadow: 0 0 80px #ff2d2d, 0 0 32px #fff inset;
+        }
+      }
+      h1 {
+        color: #ff2d2d;
+        font-size: 2.7em;
+        margin-bottom: 18px;
+        text-shadow: 0 0 16px #fff, 0 0 8px #ff2d2d;
+        animation: flicker 0.12s infinite alternate;
+      }
+      @keyframes flicker {
+        0% {
+          opacity: 1;
+          text-shadow: 0 0 16px #fff, 0 0 8px #ff2d2d;
+        }
+        100% {
+          opacity: 0.7;
+          text-shadow: 0 0 32px #ff2d2d, 0 0 24px #fff;
+        }
+      }
+      p {
+        font-size: 1.3em;
+        color: #fff;
+        text-shadow: 0 0 8px #ff2d2d;
+      }
+      .action-btn {
+        margin-top: 24px;
+        padding: 14px 36px;
+        font-size: 1.1em;
+        background: linear-gradient(90deg, #ff2d2d 0%, #d10000 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 2px 16px #222;
+        transition: background 0.2s, transform 0.1s;
+        animation: pulseAll 0.5s infinite alternate;
+      }
+      @keyframes pulseAll {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.12);
+        }
+      }
+      .action-btn:hover {
+        background: #ff2d2d;
+        transform: scale(1.08);
+      }
+      .malware {
+        color: #ff2d2d;
+        font-size: 1.5em;
+        font-family: "Fira Mono", "Consolas", monospace;
+        margin: 18px 0 8px 0;
+        text-shadow: 0 0 12px #fff, 0 0 8px #ff2d2d;
+        animation: flicker 0.09s infinite alternate;
+      }
+      .disclaimer {
+        margin-top: 32px;
+        font-size: 1em;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 8px #ff2d2d;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚠️ MALWARES ALERT! ⚠️</h1>
+      <div class="malware">
+        Your system is INFECTED!
+        <br />
+        Malware detected!
+      </div>
+      <p>
+        <strong>Suspicious activity detected.</strong>
+        <br />
+        Take action to secure your system.
+        <br />
+        <span
+          style="color: yellow; text-shadow: 0 0 8px #ff2d2d; font-size: 1.1em"
+        >
+          Immediate action required!
+        </span>
+      </p>
+      <button
+        class="action-btn"
+        onclick="alert('WARNING: THIS IS REAL MALWARE! FIX YOUR SYSTEM NOW! DOWNLOAD ANTIVIRUS XP 2008 ASAP! DONT RISK GETTING INFECTED!')"
+      >
+        REMOVE MALWARE
+      </button>
+      <button class="action-btn" id="humanBtn">Confirm you are human</button>
+      <div id="notifArea"></div>
+      <div class="disclaimer">
+        Disclaimer: This is a joke page. No actual malware is present. For
+        entertainment purposes only!
+      </div>
+    </div>
+    <script>
+      const humanBtn = document.getElementById("humanBtn");
+      const notifArea = document.getElementById("notifArea");
+      humanBtn.addEventListener("click", () => {
+        for (let i = 0; i < 10; i++) {
+          setTimeout(() => {
+            const notif = document.createElement("div");
+            notif.textContent = `Notification #${
+              i + 1
+            }: Please confirm you are human!`;
+            notif.style.background = "#ff2d2d";
+            notif.style.color = "#fff";
+            notif.style.padding = "8px 16px";
+            notif.style.margin = "8px auto";
+            notif.style.borderRadius = "6px";
+            notif.style.boxShadow = "0 0 8px #fff";
+            notif.style.fontWeight = "bold";
+            notif.style.maxWidth = "320px";
+            notifArea.appendChild(notif);
+            setTimeout(() => notif.remove(), 1200);
+          }, i * 200);
+        }
+      });
+    </script>
+  </body>
+</html>

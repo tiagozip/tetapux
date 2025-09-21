@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wana Decrypt0r 2.0 (Simulated UI)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #333; /* Dark background to make the window stand out */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        overflow: hidden; /* Prevent body scroll if window is slightly larger than screen */
+      }
+
+      .ransomware-window {
+        width: 800px; /* Approximate width from the image */
+        height: 600px; /* Approximate height from the image */
+        background-color: #fff;
+        border: 1px solid #000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        resize: both; /* Allows resizing for demonstration */
+        overflow: hidden; /* Keep content within bounds */
+        min-width: 600px;
+        min-height: 450px;
+      }
+
+      /* Title bar - Not cloning text, just the bar appearance */
+      .window-title-bar {
+        background-color: #f0f0f0;
+        border-bottom: 1px solid #ccc;
+        padding: 5px 10px;
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 30px; /* Approx height */
+        box-sizing: border-box;
+      }
+      .window-title-bar span {
+        color: #333;
+      }
+      .window-controls button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 0 5px;
+        line-height: 1;
+      }
+      .window-controls .close-btn {
+        color: #ff0000;
+        font-weight: bold;
+      }
+
+      .content-area {
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+      }
+
+      .left-panel {
+        flex: 0 0 220px; /* Fixed width for the left panel */
+        background-color: #841212; /* Dark red */
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        box-sizing: border-box;
+        color: white;
+        overflow-y: auto; /* Allow scrolling if content is too long */
+        border-right: 1px solid #5a0c0c;
+      }
+
+      .padlock-section {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .padlock-section svg {
+        width: 100px;
+        height: 100px;
+        fill: white;
+      }
+
+      .timer-section {
+        background-color: #a01515; /* Slightly lighter red for sections */
+        border: 1px solid #b71a1a;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 3px;
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .timer-section strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #ffda44; /* Yellow for "Payment will be raised on" */
+      }
+      .timer-section .date {
+        font-size: 14px;
+        margin-bottom: 5px; /* Reduced margin */
+      }
+      .timer-section .time-left-label {
+        font-size: 13px;
+        color: #ddd;
+        margin-bottom: 5px;
+      }
+      .timer-section .time-display {
+        font-family: 'Share Tech Mono', monospace; /* Digital clock font style */
+        font-size: 20px;
+        color: #ffffff;
+        letter-spacing: 1px;
+        line-height: 1; /* Prevent extra space */
+        margin-top: 5px;
+        margin-bottom: 0; /* No bottom margin */
+        overflow: visible; /* Ensure it's not cut off */
+      }
+      .timer-section .progress-bar-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 10px;
+        background-color: #7b0d0d;
+        border-left: 1px solid #b71a1a;
+      }
+      .timer-section .progress-bar {
+        background-color: #00cc00; /* Green */
+        width: 100%;
+        height: 60%; /* Example progress */
+        position: absolute;
+        bottom: 0;
+      }
+      .timer-section.files-lost strong {
+        color: #ffda44; /* Yellow for "Your files will be lost on" */
+      }
+      .timer-section.files-lost .progress-bar {
+        height: 90%; /* Example progress */
+        background-color: #cc0000; /* Red for files lost */
+      }
+
+      .links-section {
+        margin-top: 15px;
+      }
+      .links-section a {
+        display: block;
+        color: white;
+        text-decoration: underline;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+      .links-section a:hover {
+        color: #ffda44;
+      }
+
+      .right-panel {
+        flex: 1;
+        background-color: #fff;
+        padding: 20px 25px;
+        color: #333;
+        overflow-y: auto; /* Allow scrolling for content */
+      }
+
+      .right-panel .header h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #841212; /* Dark red header */
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .right-panel h2 {
+        font-size: 18px;
+        color: #841212;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      .right-panel p,
+      .right-panel li {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
+      .right-panel ol {
+        padding-left: 20px;
+        margin-top: 0;
+      }
+      .right-panel ul {
+        list-style-type: disc;
+        padding-left: 20px;
+        margin-top: 0;
+      }
+      .right-panel b {
+        color: #841212;
+      } /* Emphasize bold text with the main red color */
+
+      .bottom-panel {
+        background-color: #841212; /* Dark red */
+        padding: 15px 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        color: white;
+        border-top: 1px solid #5a0c0c;
+        flex-shrink: 0; /* Prevent shrinking if content is too long */
+      }
+
+      .payment-details {
+        display: flex;
+        align-items: center;
+        background-color: #b71a1a; /* Lighter red for this section */
+        border: 1px solid #d02020;
+        padding: 10px 15px;
+        border-radius: 3px;
+        position: relative;
+      }
+      .payment-details svg {
+        height: 30px; /* Size of bitcoin accepted logo */
+        margin-right: 15px;
+      }
+      .payment-details .address-info {
+        flex-grow: 1;
+        font-size: 13px;
+      }
+      .payment-details .address-info .label {
+        color: #ffda44; /* Yellow label */
+        margin-bottom: 3px;
+        display: block;
+      }
+      .payment-details .wallet-address {
+        background-color: #5a0c0c; /* Darker background for address */
+        color: #ffffff;
+        padding: 5px 8px;
+        border-radius: 3px;
+        font-family: monospace; /* Monospace for addresses */
+        font-size: 14px;
+        display: inline-block;
+        word-break: break-all;
+      }
+      .payment-details .copy-button {
+        background-color: #6a1010;
+        color: white;
+        border: 1px solid #8c1414;
+        padding: 8px 12px;
+        border-radius: 3px;
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+      .payment-details .copy-button:hover {
+        background-color: #8c1414;
+      }
+
+      .buttons-section {
+        display: flex;
+        justify-content: flex-end; /* Align buttons to the right */
+        gap: 10px;
+      }
+      .buttons-section button {
+        background-color: #6a1010; /* Darker red buttons */
+        color: white;
+        border: 1px solid #8c1414;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 15px;
+        min-width: 120px;
+      }
+      .buttons-section button:hover {
+        background-color: #8c1414;
+      }
+
+      /* Responsive adjustments for smaller windows */
+      @media (max-width: 768px) {
+        .ransomware-window {
+          width: 95%;
+          height: 95vh;
+        }
+        .left-panel {
+          flex: 0 0 180px;
+          padding: 10px;
+        }
+        .right-panel {
+          padding: 15px;
+        }
+        .right-panel .header h1 {
+          font-size: 20px;
+        }
+        .right-panel h2 {
+          font-size: 16px;
+        }
+        .right-panel p,
+        .right-panel li {
+          font-size: 13px;
+        }
+        .payment-details {
+          flex-wrap: wrap;
+          justify-content: center;
+          text-align: center;
+        }
+        .payment-details .bitcoin-logo {
+          margin-right: 0;
+          margin-bottom: 10px;
+        }
+        .payment-details .address-info {
+          flex-basis: 100%;
+        }
+        .payment-details .copy-button {
+          margin-left: 0;
+          margin-top: 10px;
+        }
+        .buttons-section {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .buttons-section button {
+          min-width: unset;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ransomware-window">
+      <div class="window-title-bar">
+        <span>WannaDecrypt0r 3.0</span>
+        <div class="window-controls">
+          <button>-</button>
+          <button>☐</button>
+          <button class="close-btn">X</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="left-panel">
+          <div class="padlock-section">
+            <!-- Padlock SVG icon -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+            >
+              <path
+                d="M18 10h-1V7c0-2.76-2.24-5-5-5S7 4.24 7 7v3H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V12c0-1.1-.9-2-2-2zm-9-3c0-1.66 1.34-3 3-3s3 1.34 3 3v3H9V7zm9 15H6V12h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+              />
+            </svg>
+          </div>
+
+          <div class="timer-section payment-raise">
+            <strong>Payment will be raised on</strong>
+            <div class="date" id="paymentRaiseDate"></div>
+            <div class="time-left-label">Time Left</div>
+            <div class="time-display" id="paymentRaiseCountdown">
+              00:00:00:00
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar"></div>
+            </div>
+          </div>
+
+          <div class="timer-section files-lost">
+            <strong>Your files will be lost on</strong>
+            <div class="date" id="filesLostDate"></div>
+            <div class="time-left-label">Time Left</div>
+            <div class="time-display" id="filesLostCountdown">
+              00:00:00:00
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar"></div>
+            </div>
+          </div>
+
+          <div class="links-section">
+            <a href="#">About bitcoin</a>
+            <a href="#">How to buy bitcoins?</a>
+            <a href="#">Contact Us</a>
+          </div>
+        </div>
+
+        <div class="right-panel">
+          <div class="header">
+            <!-- Original user h1 content goes here -->
+            <h1>
+              Your files have been encrypted and your data will be sold on the
+              dark web.
+            </h1>
+          </div>
+
+          <h2>What Happened to My Computer?</h2>
+          <!-- First two points of user's ol -->
+          <p>
+            Your important files are encrypted. Many of your documents, photos,
+            videos, databases and other files are no longer accessible because
+            they have been encrypted. Maybe you are busy looking for a way to
+            recover your files, but do not waste your time. Nobody can recover
+            your files without our decryption service.
+          </p>
+          <ol>
+            <li>
+              We have encrypted all your files using a military-grade encryption
+              algorithm. Without the decryption key, your files are inaccessible
+              and will remain so forever.
+            </li>
+            <li>
+              We have also uploaded your personal information to our dark web
+              server. If you do not pay in time, it will be sold on a dark web
+              marketplace to the highest bidder.
+            </li>
+          </ol>
+
+          <h2>Can I Recover My Files?</h2>
+          <!-- Remaining points of user's ol -->
+          <p>
+            Sure. We guarantee that you can recover all your files safely and
+            easily. But you have not so enough time. You can decrypt some of
+            your files for free. Try now by clicking &lt;Decrypt&gt;. But if you
+            want to decrypt all your files, you need to pay.
+          </p>
+          <ol start="3">
+            <li>
+              By the time you're seeing this, your data has already been
+              encrypted and uploaded to our servers. It is not worth making
+              backups, as we have already scanned your network and deleted every
+              single one.
+            </li>
+            <li>
+              We have blocked any and all antivirus software. Do not attempt to
+              reinstall your OS, as we have installed a rootkit into your
+              firmware, so unless you buy a new pc, your files are LOST!
+            </li>
+          </ol>
+
+          <h2>How Do I Pay?</h2>
+          <!-- User's bold payment instruction and contact info -->
+          <p>
+            Payment is accepted in XRP only. For more information, click
+            &lt;About XRP&gt;. Please check the current price of XRP and buy
+            some XRP. For more information, click &lt;How to buy XRPs&gt;. And
+            send the correct amount to the address specified in this window.
+            After your payment, click &lt;Check Payment&gt;.
+          </p>
+          <p>
+            <b>
+              You have 24 hours to pay the ransom of 1,000 XRP to the wallet
+              below. If you do not pay in 24 hours, the price will double to
+              2,000 XRP. After 48 hours, your data will be permanently deleted
+              and sold.
+            </b>
+          </p>
+          <p>
+            contact
+            <span style="color: #ff0000">notareal@email.com</span>
+            and share the code below to recover your files.
+          </p>
+          <p>
+            Your unique code:
+            <b>N0TR3AL</b>
+          </p>
+          <p>Failure to comply will result in permanent data loss.</p>
+          <p>Have a nice day!</p>
+          <p>-- The sons of kali</p>
+          <!-- The comment <!-- Hello i wil XRP you Join my live event xrp-live2025.com -->
+        </div>
+      </div>
+
+      <div class="bottom-panel">
+        <div class="payment-details">
+          <!-- Placeholder for Bitcoin logo, adapting for XRP -->
+          
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 424"><defs><style>.cls-1{fill:white;}</style></defs><title>x</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1" d="M437,0h74L357,152.48c-55.77,55.19-146.19,55.19-202,0L.94,0H75L192,115.83a91.11,91.11,0,0,0,127.91,0Z"/><path class="cls-1" d="M74.05,424H0L155,270.58c55.77-55.19,146.19-55.19,202,0L512,424H438L320,307.23a91.11,91.11,0,0,0-127.91,0Z"/></g></g></svg>
+          <div class="address-info">
+            <span class="label">Send 1,000 XRP to this address:</span>
+            <span class="wallet-address">
+              <!-- User's wallet address -->
+              <b>xrp193ne827wfakewallet928435194u</b>
+            </span>
+          </div>
+          <button class="copy-button">Copy</button>
+        </div>
+
+        <div class="buttons-section">
+          <button>Check Payment</button>
+          <button>Decrypt</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function pad(num) {
+        return num < 10 ? '0' + num : num;
+      }
+
+      function updateCountdown(targetDate, countdownElementId, dateElementId) {
+        const countdownElement = document.getElementById(countdownElementId);
+        const dateElement = document.getElementById(dateElementId);
+
+        // Display the target date in a readable format
+        dateElement.textContent = targetDate.toLocaleString('en-US', {
+          month: 'numeric',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        });
+
+        function calculateTime() {
+          const now = new Date().getTime();
+          const distance = targetDate.getTime() - now;
+
+          if (distance < 0) {
+            countdownElement.textContent = '00:00:00:00';
+            clearInterval(timerInterval);
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (distance % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          countdownElement.textContent = `${pad(days)}:${pad(hours)}:${pad(
+            minutes
+          )}:${pad(seconds)}`;
+        }
+
+        // Initial call
+        calculateTime();
+        // Update every second
+        const timerInterval = setInterval(calculateTime, 1000);
+      }
+
+      // Set target dates relative to now to simulate the image's countdown
+      const now = new Date();
+
+      const paymentRaiseTarget = new Date(now.getTime());
+      // Original image shows ~2 days 23 hours. Let's make it 2 days and 23 hours from now.
+      paymentRaiseTarget.setDate(now.getDate() + 2);
+      paymentRaiseTarget.setHours(now.getHours() + 23); // Roughly 2 days 23 hours total
+      paymentRaiseTarget.setMinutes(now.getMinutes() + 57);
+      paymentRaiseTarget.setSeconds(now.getSeconds() + 37);
+
+      const filesLostTarget = new Date(now.getTime());
+      // Original image shows ~6 days 23 hours. Let's make it 6 days and 23 hours from now.
+      filesLostTarget.setDate(now.getDate() + 6);
+      filesLostTarget.setHours(now.getHours() + 23); // Roughly 6 days 23 hours total
+      filesLostTarget.setMinutes(now.getMinutes() + 57);
+      filesLostTarget.setSeconds(now.getSeconds() + 37);
+
+      // Start the countdowns
+      updateCountdown(
+        paymentRaiseTarget,
+        'paymentRaiseCountdown',
+        'paymentRaiseDate'
+      );
+      updateCountdown(filesLostTarget, 'filesLostCountdown', 'filesLostDate');
+    </script>
+  </body>
+</html>

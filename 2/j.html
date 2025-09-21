@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Malware Warning · Security Notice</title>
+    <style>
+        :root{
+            --bg:#0f1720; --card:#0b1220; --accent:#ef4444; --muted:#9aa4b2; --glass: rgba(255,255,255,0.03);
+            --maxw:900px;
+            font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            color: #e6eef6;
+        }
+        html,body{height:100%;margin:0;background:
+            linear-gradient(180deg,#071021 0%, #071726 60%); -webkit-font-smoothing:antialiased;}
+        .wrap{max-width:var(--maxw);margin:36px auto;padding:20px;}
+        header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+        .badge{background:linear-gradient(90deg,#fff6,#fff0);border-left:6px solid var(--accent);padding:12px 14px;border-radius:8px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 20px rgba(8,10,15,0.6)}
+        .badge h1{margin:0;font-size:18px;color:var(--accent)}
+        .hero{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+        .row{display:flex;gap:18px;flex-wrap:wrap}
+        .col{flex:1;min-width:240px}
+        p.lead{margin:8px 0 0;color:var(--muted);font-size:14px}
+        section{margin-top:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:10px}
+        h2{margin:0 0 8px 0;font-size:16px}
+        ul{margin:8px 0 0 18px;color:var(--muted)}
+        .danger{border-left:4px solid var(--accent);padding:10px 12px;background:var(--glass);color:#fff}
+        .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+        button, .link{
+            background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px 12px;border-radius:8px;cursor:pointer;
+        }
+        button.primary{background:var(--accent);border:0;color:white}
+        .small{font-size:13px;color:var(--muted)}
+        details{margin-top:8px;color:var(--muted)}
+        footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+        @media (max-width:520px){header{flex-direction:column;align-items:flex-start}}
+    </style>
+</head>
+<body>
+    <main class="wrap" role="main" aria-labelledby="title">
+        <header>
+            <div class="badge" role="banner" aria-live="polite">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16" r="5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div>
+                    <h1 id="title">Malware Warning</h1>
+                    <p class="lead">This page summarizes immediate steps, dos & don'ts, and trusted resources if you suspect infection.</p>
+                </div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+                <div class="small">Severity</div>
+                <div style="font-weight:700;color:var(--accent)">High</div>
+            </div>
+        </header>
+
+        <div class="hero">
+            <div class="row">
+                <div class="col">
+                    <section class="danger" aria-describedby="overview">
+                        <h2 id="overview">Overview</h2>
+                        <p class="small">Malware can range from annoying adware to dangerous ransomware and data stealers. If you see unexpected behavior (popups, encrypted files, unknown processes, or blocked access), treat the situation as potentially serious.</p>
+                        <div class="actions" role="group" aria-label="quick actions">
+                            <button class="primary" onclick="quickPrint()">Print checklist</button>
+                            <button onclick="copyChecklist()">Copy checklist</button>
+                            <button onclick="document.getElementById('more').scrollIntoView({behavior:'smooth'})">Learn more</button>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col" aria-hidden="false">
+                    <section aria-labelledby="immediate">
+                        <h2 id="immediate">Immediate actions (first 10 minutes)</h2>
+                        <ul>
+                            <li><strong>Disconnect</strong> from the network (unplug Ethernet, turn off Wi‑Fi) to limit spread and exfiltration.</li>
+                            <li><strong>Isolate</strong> the affected device — don't use it for banking or passwords.</li>
+                            <li><strong>Do not</strong> pay ransom, click suspicious links, or provide credentials to unknown contacts.</li>
+                            <li>Take photos/screenshots of any ransom messages or alerts for evidence.</li>
+                        </ul>
+                        <details>
+                            <summary style="cursor:pointer">Why disconnect?</summary>
+                            <p class="small">Disconnecting can stop immediate data transmission, lateral movement across your network, and further damage while you assess the incident.</p>
+                        </details>
+                    </section>
+                </div>
+            </div>
+
+            <section id="more" aria-labelledby="next">
+                <h2 id="next">Next steps & recommended checks</h2>
+                <ul>
+                    <li>Run a full system scan with a reputable antivirus/antimalware product. If unsure, seek professional help rather than running unknown tools.</li>
+                    <li>Change passwords from a clean device for critical accounts (email, banking) and enable multi-factor authentication.</li>
+                    <li>Back up important files (if not encrypted) to an external drive that you can keep offline.</li>
+                    <li>Collect basic incident details: time, symptoms, filenames, screenshots, and any unusual processes or network traffic.</li>
+                    <li>Consider contacting a professional incident responder for suspected data theft or ransomware.</li>
+                </ul>
+            </section>
+
+            <section aria-labelledby="avoid">
+                <h2 id="avoid">What NOT to do</h2>
+                <ul>
+                    <li>Do not follow instructions from unknown popups or messages instructing you to install software.</li>
+                    <li>Do not give remote access to unverified "tech support" callers.</li>
+                    <li>Do not post sensitive screenshots publicly (they may contain personal data).</li>
+                </ul>
+            </section>
+
+            <section aria-labelledby="resources">
+                <h2 id="resources">Trusted resources</h2>
+                <ul>
+                    <li><a class="link" href="https://www.cisa.gov/uscert" target="_blank" rel="noopener">US-CERT (CISA)</a></li>
+                    <li><a class="link" href="https://support.microsoft.com" target="_blank" rel="noopener">Microsoft Support - Security</a></li>
+                    <li><a class="link" href="https://www.consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams" target="_blank" rel="noopener">FTC - Avoid Phishing</a></li>
+                </ul>
+            </section>
+
+            <section aria-labelledby="checklist">
+                <h2 id="checklist">Printable checklist</h2>
+                <ol>
+                    <li>Isolate device from network</li>
+                    <li>Document symptoms and take screenshots</li>
+                    <li>Scan with trusted AV/antimalware</li>
+                    <li>Change critical passwords from a safe device</li>
+                    <li>Contact IT/security professional if needed</li>
+                </ol>
+                <div style="margin-top:10px">
+                    <button onclick="window.print()" class="primary">Print now</button>
+                </div>
+            </section>
+
+        </div>
+
+        <footer>
+            If this is an emergency affecting many users or critical systems, contact your IT/security team and local authorities. This page is informational and not a substitute for professional incident response.
+        </footer>
+    </main>
+
+    <script>
+        function copyChecklist(){
+            const text = [
+                "Malware Checklist:",
+                "1. Isolate device (disconnect network).",
+                "2. Document symptoms (screenshots, time).",
+                "3. Run reputable AV/antimalware scan.",
+                "4. Change critical passwords from a safe device.",
+                "5. Contact a professional incident responder if needed."
+            ].join("\\n");
+            navigator.clipboard?.writeText(text).then(()=>alert("Checklist copied to clipboard."), ()=>alert("Unable to copy. Please copy manually."));
+        }
+        function quickPrint(){ window.print(); }
+    </script>
+</body>
+</html>

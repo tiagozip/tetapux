@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Live Event</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root{
+        --bg:#f4f6fb;
+        --card:#ffffff;
+        --muted:#6b7280;
+        --accent:#1f6feb;
+        --accent-600:#1558d6;
+        --radius:10px;
+        --glass: rgba(255,255,255,0.6);
+      }
+
+      html,body{
+        height:100%;
+        margin:0;
+        font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, var(--bg) 0%, #eef3f8 100%);
+        color:#0f1724;
+        -webkit-font-smoothing:antialiased;
+        -moz-osx-font-smoothing:grayscale;
+      }
+
+      .page {
+        min-height:100vh;
+        display:flex;
+        flex-direction:column;
+      }
+
+      header {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        padding:20px 28px;
+        max-width:1100px;
+        margin:0 auto;
+        width:100%;
+      }
+
+      .brand {
+        display:flex;
+        align-items:center;
+        gap:12px;
+      }
+
+      .logo {
+        width:44px;
+        height:44px;
+        border-radius:8px;
+        background:linear-gradient(135deg, var(--accent), #4ea0ff);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        font-weight:700;
+        box-shadow: 0 6px 18px rgba(31,111,235,0.12);
+      }
+
+      nav {
+        display:flex;
+        gap:18px;
+        align-items:center;
+        font-weight:600;
+        color:var(--muted);
+      }
+
+      .container {
+        width:100%;
+        max-width:1100px;
+        margin:0 auto;
+        padding:22px;
+        box-sizing:border-box;
+      }
+
+      main {
+        display:grid;
+        grid-template-columns: 1fr 360px;
+        gap:28px;
+        align-items:start;
+        margin-top:18px;
+      }
+
+      @media (max-width:860px){
+        main { grid-template-columns: 1fr; }
+      }
+
+      .hero {
+        background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.55));
+        border-radius:var(--radius);
+        padding:36px;
+        box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+        display:flex;
+        flex-direction:column;
+        gap:18px;
+      }
+
+      .eyebrow {
+        color:var(--accent);
+        font-weight:600;
+        letter-spacing:0.6px;
+        font-size:13px;
+      }
+
+      .title {
+        font-size:28px;
+        font-weight:700;
+        line-height:1.05;
+        margin:0;
+      }
+
+      .subtitle {
+        color:var(--muted);
+        font-size:15px;
+        margin:0;
+      }
+
+      .hero-grid {
+        display:flex;
+        gap:18px;
+        align-items:center;
+        margin-top:12px;
+        flex-wrap:wrap;
+      }
+
+      .cta {
+        display:inline-flex;
+        align-items:center;
+        gap:12px;
+        padding:12px 18px;
+        background:var(--accent);
+        color:#fff;
+        border-radius:10px;
+        font-weight:600;
+        text-decoration:none;
+        box-shadow: 0 8px 20px rgba(31,111,235,0.12);
+        transition:transform .12s ease, box-shadow .12s ease;
+        border:0;
+        cursor:pointer;
+      }
+
+      .cta:active { transform:translateY(1px); }
+      .cta:hover { box-shadow: 0 12px 28px rgba(31,111,235,0.16); }
+
+      .meta {
+        display:flex;
+        gap:12px;
+        align-items:center;
+        color:var(--muted);
+        background:rgba(15,23,42,0.02);
+        padding:8px 12px;
+        border-radius:999px;
+        font-weight:600;
+        font-size:13px;
+      }
+
+      .card {
+        background:var(--card);
+        border-radius:12px;
+        padding:18px;
+        box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+      }
+
+      .card h3 {
+        margin:0 0 10px 0;
+        font-size:16px;
+      }
+
+      .details {
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        color:var(--muted);
+        font-size:14px;
+      }
+
+      .badge {
+        display:inline-block;
+        padding:6px 10px;
+        background:linear-gradient(90deg, rgba(31,111,235,0.08), rgba(31,111,235,0.04));
+        color:var(--accent-600);
+        border-radius:999px;
+        font-weight:700;
+        font-size:13px;
+      }
+
+      footer {
+        margin-top:auto;
+        padding:22px;
+        text-align:center;
+        color:var(--muted);
+        font-size:13px;
+      }
+
+      .muted { color:var(--muted); }
+      .small { font-size:13px; }
+      .spaced { margin-top:12px; }
+
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="brand">
+          <div class="logo" aria-hidden="true">LE</div>
+          <div>
+            <div style="font-weight:700">Live Event</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:2px">live-event.com</div>
+          </div>
+        </div>
+
+        <nav aria-label="Main navigation">
+          <div class="small muted">Agenda</div>
+          <div class="small muted">Speakers</div>
+          <div class="small muted">Tickets</div>
+        </nav>
+      </header>
+
+      <div class="container">
+        <main>
+          <section class="hero" aria-labelledby="hero-title">
+            <div class="eyebrow">Live • Virtual & In-person</div>
+            <h1 id="hero-title" class="title">Enter Live Event — live-event.com</h1>
+            <p class="subtitle">Join leaders, developers, and enthusiasts to explore the future of payments and innovation. Streamed live with curated in-person hubs.</p>
+
+            <div class="hero-grid">
+              <a class="cta" href="#" role="button">Register Now</a>
+
+              <div class="meta">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7 10l5 5 5-9" stroke="#1f6feb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Keynotes, panels & workshops</span>
+              </div>
+
+              <div class="meta" style="margin-left:auto;">
+                <span class="badge">Upcoming</span>
+                <span style="margin-left:8px">Live Stream + Hubs</span>
+              </div>
+            </div>
+
+            <div class="spaced muted small">
+              <strong>Pro tip:</strong> Add this event to your calendar after registration.
+            </div>
+          </section>
+
+          <aside class="card" aria-labelledby="info-title">
+            <h3 id="info-title">Event details</h3>
+            <div class="details">
+              <div><strong>Date:</strong> <span id="event-date">Loading…</span></div>
+              <div><strong>Format:</strong> Virtual + Regional Hubs</div>
+              <div><strong>Tracks:</strong> Developers · Finance · Regulation · UX</div>
+              <div class="spaced">
+                <button class="cta" style="width:100%">Get Tickets</button>
+              </div>
+            </div>
+          </aside>
+        </main>
+      </div>
+
+      <footer>
+        © Live Event — live-event.com • Designed with a clean, professional aesthetic
+      </footer>
+    </div>
+
+    <script>
+      (function(){
+        var now = new Date();
+        var start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2);
+        var end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5);
+
+        function formatRange(a, b) {
+          var aMonth = a.toLocaleString(undefined, { month: 'short' });
+          var bMonth = b.toLocaleString(undefined, { month: 'short' });
+          var aDay = a.getDate();
+          var bDay = b.getDate();
+          var aYear = a.getFullYear();
+          var bYear = b.getFullYear();
+
+          if (aYear === bYear) {
+            if (aMonth === bMonth) {
+              return aMonth + ' ' + aDay + '–' + bDay + ', ' + aYear;
+            } else {
+              return aMonth + ' ' + aDay + ' – ' + bMonth + ' ' + bDay + ', ' + aYear;
+            }
+          }
+          return aMonth + ' ' + aDay + ', ' + aYear + ' – ' + bMonth + ' ' + bDay + ', ' + bYear;
+        }
+
+        var el = document.getElementById('event-date');
+        if (el) el.textContent = formatRange(start, end);
+      })();
+    </script>
+  </body>
+</html>
