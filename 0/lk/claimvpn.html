@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pro VPN - Free Proxy VPN</title>
+    <style>
+      /* Catppuccin Mocha palette */
+      :root {
+        --base: #1e1e2e;
+        --mantle: #181825;
+        --surface0: #313244;
+        --surface1: #45475a;
+        --surface2: #585b70;
+        --text: #cdd6f4;
+        --subtext1: #bac2de;
+        --subtext0: #a6adc8;
+        --blue: #89b4fa;
+        --green: #a6e3a1;
+        --red: #f38ba8;
+        --yellow: #f9e2af;
+        --mauve: #cba6f7;
+        --pink: #f5c2e7;
+        --teal: #94e2d5;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, var(--mantle) 0%, var(--base) 100%);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 700px;
+        margin: 48px auto 0 auto;
+        background: var(--surface0);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(30, 30, 46, 0.25);
+        padding: 36px 32px 100px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .logo-icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, var(--blue), var(--mauve));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+        color: var(--base);
+        box-shadow: 0 2px 8px rgba(137, 180, 250, 0.18);
+      }
+      h1 {
+        font-size: 2.3em;
+        margin-bottom: 12px;
+        font-weight: 700;
+        color: var(--blue);
+        letter-spacing: 1px;
+      }
+      .features {
+        display: flex;
+        gap: 28px;
+        margin: 36px 0 28px 0;
+        flex-wrap: wrap;
+      }
+      .feature {
+        background: var(--surface1);
+        border-radius: 12px;
+        padding: 20px 18px;
+        flex: 1 1 180px;
+        min-width: 160px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(69, 71, 90, 0.1);
+        color: var(--subtext1);
+        transition: background 0.2s;
+      }
+      .feature-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--mauve);
+      }
+      .feature:hover {
+        background: var(--surface2);
+        color: var(--text);
+      }
+      .about {
+        margin: 28px 0 36px 0;
+        font-size: 1.12em;
+        line-height: 1.7;
+        color: var(--subtext0);
+        background: var(--surface1);
+        border-radius: 10px;
+        padding: 18px 16px;
+        box-shadow: 0 1px 4px rgba(69, 71, 90, 0.08);
+      }
+      .activate-btn {
+        position: absolute;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, var(--blue) 0%, var(--mauve) 100%);
+        color: var(--base);
+        border: none;
+        border-radius: 32px;
+        padding: 20px 48px;
+        font-size: 1.25em;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(137, 180, 250, 0.18);
+        transition: background 0.2s, box-shadow 0.2s;
+        letter-spacing: 1px;
+      }
+      .activate-btn:hover {
+        background: linear-gradient(90deg, var(--mauve) 0%, var(--blue) 100%);
+        box-shadow: 0 6px 24px rgba(203, 166, 247, 0.22);
+        color: var(--text);
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 18px 6px 100px 6px;
+        }
+        .features {
+          flex-direction: column;
+          gap: 18px;
+        }
+        .feature {
+          min-width: 0;
+        }
+        .activate-btn {
+          width: 95%;
+          padding: 16px 0;
+          font-size: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon">🛡️</div>
+        <span
+          style="
+            font-size: 1.35em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text);
+          "
+        >
+          Pro VPN
+        </span>
+        <span style="font-size: 1em; color: var(--subtext1); font-weight: 500">
+          Free Proxy VPN
+        </span>
+      </div>
+      <h1>Modern, Fast & Private</h1>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-title">Ultra-Fast Speeds</div>
+          <div>
+            Connect to servers with up to 10Gbps for streaming, gaming, and
+            browsing.
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">Next-Gen Security</div>
+          <div>
+            Catppuccin Mocha encryption keeps your data safe and private.
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">Zero Logs</div>
+          <div>
+            We never track, store, or sell your browsing activity. Your privacy
+            is our priority.
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">Global Access</div>
+          <div>
+            Bypass geo-restrictions and access content from anywhere in the
+            world.
+          </div>
+        </div>
+      </div>
+      <div class="about">
+        <strong>About Pro VPN:</strong>
+        <br />
+        Pro VPN is your gateway to a safer, faster, and more open internet. With
+        a sleek Catppuccin Mocha-inspired interface, you get instant access to
+        secure proxy servers, advanced privacy, and a truly modern experience.
+        Join thousands who trust Pro VPN for their online freedom.
+      </div>
+      <section class="faq" style="margin: 40px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          Frequently Asked Questions
+        </h2>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">What is a VPN?</strong>
+          <br />
+          A VPN (Virtual Private Network) encrypts your internet connection,
+          protecting your data and privacy while allowing you to access content
+          securely from anywhere.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">Is Pro VPN really free?</strong>
+          <br />
+          Yes! Pro VPN offers a free proxy VPN service with no hidden fees.
+          Enjoy unlimited bandwidth and privacy at no cost.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">
+            How do I activate Pro VPN?
+          </strong>
+          <br />
+          Simply click the "Activate VPN for Free" button at the bottom of this
+          page and follow the instructions.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">Does Pro VPN keep logs?</strong>
+          <br />
+          No. We have a strict zero-logs policy. Your browsing activity is never
+          tracked, stored, or sold.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">
+            Can I use Pro VPN on any device?
+          </strong>
+          <br />
+          Yes! Pro VPN works on all major devices and platforms, including
+          Windows, macOS, Linux, Android, and iOS.
+        </div>
+      </section>
+      <section class="testimonials" style="margin: 48px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          What Our Users Say
+        </h2>
+        <div
+          style="
+            background: var(--surface1);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 18px;
+            color: var(--subtext1);
+          "
+        >
+          <em>
+            "Pro VPN is the fastest free VPN I've ever used. Streaming is smooth
+            and my privacy is protected!"
+          </em>
+          <br />
+          <span style="color: var(--green); font-weight: 600">— Alex, UK</span>
+        </div>
+        <div
+          style="
+            background: var(--surface1);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 18px;
+            color: var(--subtext1);
+          "
+        >
+          <em>
+            "I love the modern look and how easy it is to use. Highly
+            recommended for anyone who values security."
+          </em>
+          <br />
+          <span style="color: var(--blue); font-weight: 600">
+            — Priya, India
+          </span>
+        </div>
+        <div
+          style="
+            background: var(--surface1);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 18px;
+            color: var(--subtext1);
+          "
+        >
+          <em>
+            "No logs, no ads, just pure privacy. Pro VPN is my go-to for safe
+            browsing."
+          </em>
+          <br />
+          <span style="color: var(--mauve); font-weight: 600">
+            — Jordan, USA
+          </span>
+        </div>
+      </section>
+      <section class="global-users" style="margin: 48px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          See What Users Say Around the World
+        </h2>
+        <label
+          for="country-select"
+          style="
+            font-size: 1.1em;
+            color: var(--subtext1);
+            margin-bottom: 10px;
+            display: block;
+          "
+        >
+          Select Country:
+        </label>
+        <select
+          id="country-select"
+          style="
+            background: var(--surface1);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 1em;
+            border: none;
+            outline: none;
+            margin-bottom: 24px;
+          "
+        >
+          <option value="UK">United Kingdom</option>
+          <option value="India">India</option>
+          <option value="USA">United States</option>
+          <option value="Germany">Germany</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Japan">Japan</option>
+          <option value="Australia">Australia</option>
+        </select>
+        <div
+          id="testimonial-display"
+          style="
+            background: var(--surface1);
+            border-radius: 10px;
+            padding: 18px;
+            color: var(--subtext1);
+            min-height: 80px;
+            transition: background 0.2s;
+          "
+        ></div>
+        <script>
+          const testimonials = {
+            UK: '<em>"Pro VPN is the fastest free VPN I\'ve ever used. Streaming is smooth and my privacy is protected!"</em><br><span style="color:var(--green);font-weight:600;">— Alex, UK</span>',
+            India:
+              '<em>"I love the modern look and how easy it is to use. Highly recommended for anyone who values security."</em><br><span style="color:var(--blue);font-weight:600;">— Priya, India</span>',
+            USA: '<em>"No logs, no ads, just pure privacy. Pro VPN is my go-to for safe browsing."</em><br><span style="color:var(--mauve);font-weight:600;">— Jordan, USA</span>',
+            Germany:
+              '<em>"Pro VPN helped me access content from all over the world. The speed is incredible!"</em><br><span style="color:var(--yellow);font-weight:600;">— Lukas, Germany</span>',
+            Brazil:
+              '<em>"Finally a VPN that works for free and keeps my data safe. Obrigado!"</em><br><span style="color:var(--red);font-weight:600;">— Ana, Brazil</span>',
+            Japan:
+              '<em>"Pro VPN is simple, fast, and secure. I use it every day for work and streaming."</em><br><span style="color:var(--pink);font-weight:600;">— Yuki, Japan</span>',
+            Australia:
+              '<em>"The best VPN for privacy and speed. Highly recommend to everyone in Australia!"</em><br><span style="color:var(--teal);font-weight:600;">— Mia, Australia</span>',
+          };
+          const select = document.getElementById("country-select");
+          const display = document.getElementById("testimonial-display");
+          function updateTestimonial() {
+            display.innerHTML = testimonials[select.value];
+          }
+          select.addEventListener("change", updateTestimonial);
+          updateTestimonial();
+        </script>
+      </section>
+      <section class="security-details" style="margin: 48px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          Advanced Security Features
+        </h2>
+        <ul style="color: var(--subtext0); font-size: 1.08em; line-height: 2">
+          <li>256-bit AES encryption for all connections</li>
+          <li>DNS and IPv6 leak protection</li>
+          <li>Automatic kill switch for maximum safety</li>
+          <li>Multi-hop routing for extra privacy</li>
+          <li>Secure servers in 50+ countries</li>
+          <li>Ad and tracker blocking built-in</li>
+        </ul>
+      </section>
+      <section class="vpn-story" style="margin: 48px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          Why Millions Choose Pro VPN
+        </h2>
+        <p style="color: var(--subtext0); line-height: 1.8; font-size: 1.08em">
+          In today's digital world, privacy is more important than ever. Pro VPN
+          was created to empower users everywhere to take control of their
+          online experience. Whether you're streaming your favorite shows,
+          working remotely, or simply browsing, Pro VPN ensures your data stays
+          safe and your access remains unrestricted. Our team is dedicated to
+          providing the fastest, most reliable, and most secure VPN service
+          available—free for everyone. Join the movement and experience true
+          internet freedom.
+        </p>
+        <p style="color: var(--subtext0); line-height: 1.8; font-size: 1.08em">
+          With servers in over 50 countries, Pro VPN lets you bypass censorship,
+          access global content, and stay anonymous online. Our zero-logs policy
+          means your activity is never tracked, and our advanced encryption
+          keeps your data out of the hands of hackers and snoops. Try Pro VPN
+          today and see why millions trust us for their privacy and security
+          needs.
+        </p>
+      </section>
+      <section class="more-faq" style="margin: 48px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          More Questions?
+        </h2>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">
+            Can I use Pro VPN for streaming?
+          </strong>
+          <br />
+          Absolutely! Pro VPN is optimized for streaming services worldwide, so
+          you can enjoy your favorite content without buffering or restrictions.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">
+            Is there a bandwidth limit?
+          </strong>
+          <br />
+          No, Pro VPN offers unlimited bandwidth for all users, free of charge.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">How do I get support?</strong>
+          <br />
+          Our support team is available 24/7. Contact us via live chat or email
+          for any questions or issues.
+        </div>
+        <div style="margin-bottom: 22px">
+          <strong style="color: var(--mauve)">
+            Can I use Pro VPN on public Wi-Fi?
+          </strong>
+          <br />
+          Yes! Pro VPN protects your data on any network, including unsecured
+          public Wi-Fi hotspots.
+        </div>
+      </section>
+      <section class="final-note" style="margin: 48px 0 0 0">
+        <h2 style="color: var(--blue); font-size: 1.5em; margin-bottom: 18px">
+          Ready to Experience True Privacy?
+        </h2>
+        <p style="color: var(--subtext0); line-height: 1.7; font-size: 1.08em">
+          Scroll down and activate your free VPN now. Join millions of users
+          worldwide who trust Pro VPN for speed, security, and freedom.
+        </p>
+      </section>
+      <button
+        class="activate-btn"
+        onclick="window.location.href='/tetapux/pages/winr-captcha.html'"
+      >
+        Activate VPN for Free
+      </button>
+    </div>
+  </body>
+</html>

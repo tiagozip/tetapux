@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Бесплатные Robux — безопасная информация (2025)</title>
+    <style>
+      /* стиль оформлен аккуратно */
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.5;
+        color: #111;
+        margin: 24px;
+        max-width: 900px;
+      }
+      header h1 {
+        margin: 0 0 8px 0;
+        font-size: 1.6rem;
+      }
+      section {
+        margin-top: 18px;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 8px 0;
+      }
+      p,
+      li {
+        font-size: 0.95rem;
+      }
+      ul {
+        margin: 6px 0 0 20px;
+      }
+      .warning {
+        color: #a00;
+        font-weight: 600;
+      }
+      footer {
+        margin-top: 24px;
+        font-size: 0.85rem;
+        color: #555;
+      }
+      code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .cta-row {
+        margin-top: 12px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(180deg, #2a9df4, #0078d7);
+      }
+      .btn.secondary {
+        background: linear-gradient(180deg, #eee, #ddd);
+        color: #222;
+        font-weight: 600;
+        border: 1px solid #ccc;
+      }
+      .btn.ghost {
+        background: transparent;
+        color: #0078d7;
+        border: 1px dashed #0078d7;
+        padding: 8px 12px;
+        border-radius: 6px;
+      }
+      .btn[aria-disabled="true"],
+      .btn[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+        filter: grayscale(0.1);
+      }
+      .note {
+        font-size: 0.9rem;
+        color: #444;
+        margin-top: 6px;
+      }
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 1000;
+      }
+      .modal {
+        background: #fff;
+        max-width: 680px;
+        width: 100%;
+        border-radius: 10px;
+        padding: 18px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      }
+      .modal h3 {
+        margin: 0 0 8px 0;
+      }
+      .modal p {
+        margin: 6px 0;
+      }
+      .modal .actions {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .faq dt {
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      .faq dd {
+        margin: 6px 0 12px 12px;
+        color: #333;
+      }
+      .resource-list {
+        margin-top: 8px;
+      }
+      a.inline-link {
+        color: #0078d7;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Примерный комментарий: начать здесь -->
+    <header>
+      <h1>Robux и безопасность — факты на 2025</h1>
+      <p>
+        Короткая справка о законных способах получения Robux и о том, как не
+        попасться на мошенников.
+      </p>
+    </header>
+
+    <section>
+      <h2>Что такое Robux?</h2>
+      <p>
+        Robux — внутренняя валюта платформы Roblox. Она используется для покупки
+        предметов, экипировки, доступа к играм и пр. Robux нельзя легально
+        сгенерировать с помощью сторонних «генераторов».
+      </p>
+    </section>
+
+    <section>
+      <h2>Законные способы получить Robux</h2>
+      <ul>
+        <li>
+          Покупка через официальный магазин Roblox или мобильные магазины.
+        </li>
+        <li>
+          Подписка
+          <strong>Roblox Premium</strong>
+          — ежемесячная выдача Robux и дополнительные преимущества.
+        </li>
+        <li>
+          Продажа своих предметов, игр или аксессуаров: разработчики получают
+          долю от продаж.
+        </li>
+        <li>
+          Промо‑коды и официальные события Roblox — могут временно давать
+          предметы или Robux.
+        </li>
+        <li>Подарочные карты Roblox, приобретённые в магазинах-партнёрах.</li>
+      </ul>
+
+      <div class="cta-row" aria-hidden="false">
+        <!-- не нажимайте бессмысленно -->
+        <button
+          id="free-robux-btn"
+          class="btn"
+          aria-haspopup="dialog"
+          aria-controls="modal-warning"
+        >
+          Получить бесплатные Robux
+        </button>
+
+        <a
+          class="btn secondary"
+          href="https://www.roblox.com/upgrades/robux"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Купить Robux (официально)
+        </a>
+        <a
+          class="btn ghost"
+          href="https://www.roblox.com/premium/membership"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Узнать про Roblox Premium
+        </a>
+      </div>
+      <div class="note">
+        Кнопка "Получить бесплатные Robux" показывает предупреждение —
+        официальные способы перечислены выше. Никогда не вводите пароль на
+        сторонних сайтах.
+      </div>
+    </section>
+
+    <section>
+      <h2 class="warning">Чего избегать — предупреждение</h2>
+      <ul>
+        <li>
+          Не используйте сайты и приложения, обещающие «бесплатные Robux» в
+          обмен на личные данные, пароли или установку ПО.
+        </li>
+        <li>
+          Не вводите данные аккаунта на сторонних ресурсах; это приведёт к краже
+          аккаунта.
+        </li>
+        <li>
+          Игнорируйте предложения в чатах/дмах о «быстрой раздаче» — это часто
+          фишинг.
+        </li>
+        <li>
+          Если предложение связано с прогой, VPN или «скриптом» — считайте это
+          подозрительным.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Советы по безопасности</h2>
+      <ul>
+        <li>
+          Включите двухфакторную аутентификацию в настройках аккаунта Roblox.
+        </li>
+        <li>
+          Проверяйте URL официального сайта:
+          <code>roblox.com</code>
+          и используйте встроенные покупки платформы.
+        </li>
+        <li>
+          Если что-то выглядит слишком хорошо, чтобы быть правдой — вероятно,
+          это мошенничество.
+        </li>
+        <li>
+          Сообщайте о подозрительной активности в службу поддержки Roblox.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Как распознать мошенничество — краткая памятка</h2>
+      <ul>
+        <li>
+          Запрос пароля, кода из SMS/почты, секретных ключей — почти всегда
+          мошенничество.
+        </li>
+        <li>
+          Ссылки с сокращёнными URL, неясные домены, подделанные страницы под
+          Roblox.
+        </li>
+        <li>Требование установить неизвестное ПО или расширения браузера.</li>
+        <li>
+          Сообщения, от имени администрации, про «ошибку начисления» —
+          сомнительны.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>FAQ</h2>
+      <dl class="faq" id="faq">
+        <dt tabindex="0" data-q="q1">
+          Можно ли получить Robux бесплатно легально?
+        </dt>
+        <dd data-a="q1">
+          Да — через официальные промо‑акции, подарочные карты и
+          премиум‑подписку. Сторонние генераторы не работают и опасны.
+        </dd>
+
+        <dt tabindex="0" data-q="q2">Где вводить промо‑код?</dt>
+        <dd data-a="q2">
+          Промо‑коды официально вводятся на
+          <a
+            class="inline-link"
+            href="https://www.roblox.com/redeem"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://www.roblox.com/redeem
+          </a>
+          . Проверяйте URL вручную.
+        </dd>
+
+        <dt tabindex="0" data-q="q3">Куда сообщать о мошенниках?</dt>
+        <dd data-a="q3">
+          О злоумышленниках сообщайте через
+          <a
+            class="inline-link"
+            href="https://en.help.roblox.com/hc/articles/203313410-How-to-Report-Abusive-Users"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            форму поддержки Roblox
+          </a>
+          или через встроенные инструменты платформы.
+        </dd>
+      </dl>
+    </section>
+
+    <footer>
+      <p>
+        Этот документ не продвигает обходы платёжной системы и не содержит
+        инструкций по взлому. Для официальной информации используйте центр
+        поддержки Roblox и правила платформы.
+      </p>
+    </footer>
+
+    <div
+      id="modal-backdrop"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-hidden="true"
+    >
+      <!-- предупреждение отображается модально -->
+      <div class="modal" role="document" aria-labelledby="modal-title">
+        <h3 id="modal-title" class="warning">Осторожно: "Бесплатные Robux"</h3>
+        <p>
+          Сайты/боты/страницы, обещающие генерацию Robux, обычно мошенничают.
+          Никакие внешние генераторы не могут легально добавить Robux на ваш
+          аккаунт.
+        </p>
+        <p>Что делать:</p>
+        <ul class="resource-list">
+          <li>
+            Используйте только официальные покупки:
+            <a
+              href="https://www.roblox.com/upgrades/robux"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              roblox.com
+            </a>
+            .
+          </li>
+          <li>
+            Промо‑коды проверяйте и вводите только на официальном сайте:
+            <a
+              href="https://www.roblox.com/redeem"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              roblox.com/redeem
+            </a>
+            .
+          </li>
+          <li>
+            Сообщайте о мошенничестве:
+            <a
+              href="https://en.help.roblox.com/hc/articles/203313410-How-to-Report-Abusive-Users"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              центр поддержки Roblox
+            </a>
+            .
+          </li>
+        </ul>
+        <div class="actions">
+          <button id="modal-close" class="btn secondary">Закрыть</button>
+          <button id="modal-open-support" class="btn">
+            Перейти в поддержку
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // здесь обработчики событий
+      (function () {
+        var freeBtn = document.getElementById("free-robux-btn");
+        var backdrop = document.getElementById("modal-backdrop");
+        var closeBtn = document.getElementById("modal-close");
+        var supportBtn = document.getElementById("modal-open-support");
+        var lastFocused = null;
+
+        function openModal() {
+          lastFocused = document.activeElement;
+          backdrop.style.display = "flex";
+          backdrop.setAttribute("aria-hidden", "false");
+          backdrop.querySelector(".modal").focus();
+          document.body.style.overflow = "hidden";
+        }
+        function closeModal() {
+          backdrop.style.display = "none";
+          backdrop.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          if (lastFocused) lastFocused.focus();
+        }
+
+        freeBtn.addEventListener("click", function (e) {
+          openModal();
+        });
+
+        closeBtn.addEventListener("click", closeModal);
+        backdrop.addEventListener("click", function (e) {
+          if (e.target === backdrop) closeModal();
+        });
+
+        supportBtn.addEventListener("click", function () {
+          window.open(
+            "https://en.help.roblox.com/hc/articles/203313410-How-to-Report-Abusive-Users",
+            "_blank",
+            "noopener"
+          );
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && backdrop.style.display === "flex")
+            closeModal();
+        });
+
+        // FAQ раскрывается по клику
+        var faq = document.getElementById("faq");
+        if (faq) {
+          faq.addEventListener("click", function (e) {
+            var dt = e.target.closest("dt");
+            if (!dt) return;
+            var next = dt.nextElementSibling;
+            if (!next) return;
+            var isVisible = next.style.display === "block";
+            next.style.display = isVisible ? "none" : "block";
+          });
+          faq.querySelectorAll("dt").forEach(function (dt) {
+            var dd = dt.nextElementSibling;
+            if (dd) dd.style.display = "none";
+            dt.addEventListener("keydown", function (ev) {
+              if (ev.key === "Enter" || ev.key === " ") {
+                ev.preventDefault();
+                dt.click();
+              }
+            });
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
