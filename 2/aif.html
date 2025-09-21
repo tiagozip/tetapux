@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Бесплатное расширение VPN — для Chrome, Firefox, Safari, Edge и других</title>
+    <meta name="description" content="Бесплатное расширение VPN для популярных браузеров. Лёгкая установка, защита приватности, доступ к заблокированным сайтам." />
+    <style>
+        /* Более классический / «менее современный» тёмный стиль */
+        :root{
+            --bg: #0b0f17;           /* фон страницы */
+            --surface: #0f1721;      /* основная панель */
+            --card: #0d1620;         /* карточки/контейнеры */
+            --muted: #98a4b3;        /* вторичный текст */
+            --accent: #05b39a;       /* акцентный цвет */
+            --border: rgba(255,255,255,0.06);
+            --radius: 6px;          /* менее скруглённые углы */
+            --sidebar-w: 260px;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            color-scheme: dark;
+        }
+
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            background: linear-gradient(180deg, var(--bg) 0%, #071126 60%);
+            color:#e6eef6;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height:1.5;
+            font-size:15px;
+        }
+
+        /* Top header — классический, полоса по ширине */
+        header.topbar{
+            background:var(--surface);
+            border-bottom:1px solid var(--border);
+            padding:12px 18px;
+            display:flex;
+            align-items:center;
+            gap:18px;
+        }
+        .container{
+            max-width:1100px;
+            margin:18px auto;
+            padding:0 18px;
+        }
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+        .logo{
+            width:44px;height:44px;border-radius:6px;
+            background:var(--accent);color:#03201c;font-weight:700;
+            display:flex;align-items:center;justify-content:center;font-size:14px;
+            border:1px solid rgba(0,0,0,0.15);
+        }
+        .brand .title{font-weight:700;font-size:1rem;margin:0}
+        nav.main-nav{margin-left:auto;display:flex;gap:8px}
+        .nav-btn{
+            background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:4px;
+            color:var(--muted);cursor:pointer;font-size:0.95rem;
+            transition:box-shadow .12s ease, transform .08s ease, border-color .12s ease;
+        }
+        .nav-btn:hover{border-color:rgba(255,255,255,0.12)}
+        .nav-btn:active{transform:translateY(1px)}
+        .nav-btn.primary{background:var(--accent);color:#03201c;border:none;font-weight:700}
+
+        /* focus styles for keyboard users */
+        .nav-btn:focus-visible, .install-btn:focus-visible, .store-link:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(5,179,154,0.14), 0 1px 2px rgba(0,0,0,0.4);
+            border-radius:4px;
+        }
+
+        /* Основная сетка: боковое меню слева, контент справа */
+        .layout{
+            display:flex;
+            gap:18px;
+            align-items:flex-start;
+        }
+
+        /* Сайдбар — коробочный старый стиль */
+        aside.sidebar{
+            width:var(--sidebar-w);
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            padding:14px;
+            flex:0 0 var(--sidebar-w);
+        }
+        aside.sidebar h3{margin:0 0 10px 0;font-size:1rem}
+        .store-link{
+            text-decoration:none;
+            color:inherit;
+            background:transparent;
+            border:1px solid var(--border);
+            padding:10px;
+            border-radius:4px;
+            margin-bottom:10px;
+            display:flex;
+            gap:10px;
+            align-items:center;
+            transition:background .12s ease, border-color .12s ease;
+        }
+        .store-link:hover{background:rgba(255,255,255,0.01); border-color: rgba(255,255,255,0.10)}
+        .store-icon{
+            width:36px;height:36px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;border-radius:4px;
+            flex:0 0 36px;
+        }
+        .store-icon svg{width:20px;height:20px;color:var(--muted);stroke:currentColor;fill:none}
+        .store-meta{display:flex;flex-direction:column}
+        .store-meta .title{font-weight:700;font-size:0.95rem}
+        .store-meta .sub{font-size:0.85rem;color:var(--muted)}
+        .install-btn{
+            margin-left:auto;
+            background:transparent;border:1px solid var(--border);
+            padding:6px 10px;border-radius:4px;color:var(--muted);cursor:pointer;
+            transition:background .12s ease, border-color .12s ease, transform .06s ease;
+        }
+        .install-btn:hover{border-color:rgba(255,255,255,0.12)}
+        .install-btn:active{transform:translateY(1px)}
+        .install-btn.primary{
+            background:var(--accent);border:none;color:#03201c;font-weight:700;
+        }
+
+        .sidebar .note{margin-top:12px;font-size:0.9rem;color:var(--muted)}
+
+        /* Основной контент — правее */
+        main.content{
+            flex:1;
+            min-width:0;
+        }
+
+        .hero{
+            background:var(--surface);
+            border:1px solid var(--border);
+            padding:18px;
+            border-radius:var(--radius);
+            display:flex;
+            gap:16px;
+            align-items:center;
+            margin-bottom:14px;
+        }
+        .hero .left{flex:1}
+        .hero h1{margin:0 0 6px 0;font-size:1.45rem}
+        .hero p.lead{margin:0;color:var(--muted);font-size:0.98rem}
+
+        /* Списки особенностей — классический маркерный список */
+        .features-list{
+            background:var(--card);
+            border:1px solid var(--border);
+            padding:14px;border-radius:var(--radius);
+        }
+        .features-list h2{margin-top:0}
+        .features-list ul{margin:8px 0;padding-left:1.25rem}
+        .features-list li{margin-bottom:8px}
+
+        /* FAQ и другие блоки — простые секции */
+        .card{
+            background:var(--card);
+            border:1px solid var(--border);
+            padding:14px;border-radius:var(--radius);
+            margin-bottom:12px;
+        }
+
+        footer.site-footer{
+            max-width:1100px;margin:16px auto;padding:12px 18px;color:var(--muted);text-align:center;font-size:13px;
+        }
+
+        /* Простая адаптация */
+        @media (max-width:900px){
+            .container{padding:0 12px}
+            .layout{flex-direction:column}
+            aside.sidebar{width:100%;flex:unset}
+            .hero{flex-direction:column;align-items:flex-start}
+            nav.main-nav{display:none}
+        }
+
+        /* Иконки в фичах — простые однотонные */
+        svg.simple{width:38px;height:38px;flex:0 0 38px; color:var(--accent)}
+        .small{font-size:0.95rem;color:var(--muted)}
+        a.inline{color:var(--accent);text-decoration:underline}
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="container" style="display:flex;align-items:center;gap:16px;padding:0">
+            <div class="brand">
+                <div class="logo" aria-hidden="true">VPN</div>
+                <div>
+                    <div class="title">Бесплатное расширение VPN</div>
+                    <div style="font-size:0.85rem;color:var(--muted)">Лёгкая защита приватности в браузере</div>
+                </div>
+            </div>
+
+            <nav class="main-nav" aria-label="Основные действия">
+                <button class="nav-btn">О продукте</button>
+                <button class="nav-btn">FAQ</button>
+                <button class="nav-btn primary">Скачать</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" role="main">
+        <div class="layout">
+            <aside class="sidebar" aria-labelledby="install-title">
+                <h3 id="install-title">Установить расширение</h3>
+
+                <a class="store-link" href="#" title="Chrome Web Store">
+                    <div class="store-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" class="simple" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="store-meta">
+                        <div class="title">Chrome</div>
+                        <div class="sub">Web Store</div>
+                    </div>
+                    <button class="install-btn primary">Установить</button>
+                </a>
+
+                <a class="store-link" href="#" title="Firefox Add-ons">
+                    <div class="store-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" class="simple" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="store-meta">
+                        <div class="title">Firefox</div>
+                        <div class="sub">Add-ons</div>
+                    </div>
+                    <button class="install-btn primary">Установить</button>
+                </a>
+
+                <a class="store-link" href="#" title="Microsoft Edge Add-ons">
+                    <div class="store-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" class="simple" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="store-meta">
+                        <div class="title">Edge</div>
+                        <div class="sub">Add-ons</div>
+                    </div>
+                    <button class="install-btn primary">Установить</button>
+                </a>
+
+                <a class="store-link" href="#" title="Safari Extensions">
+                    <div class="store-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" class="simple" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="store-meta">
+                        <div class="title">Safari</div>
+                        <div class="sub">App Store / Расширения</div>
+                    </div>
+                    <button class="install-btn primary">Установить</button>
+                </a>
+
+                <a class="store-link" href="#" title="Другие браузеры">
+                    <div class="store-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" class="simple" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="store-meta">
+                        <div class="title">Opera / Другие</div>
+                        <div class="sub">Поддержка расширений</div>
+                    </div>
+                    <button class="install-btn primary">Установить</button>
+                </a>
+
+                <div class="note">Если расширение недоступно в магазине вашего браузера, скачайте пакет с официальной страницы разработчика или используйте совместимый магазин.</div>
+            </aside>
+
+            <main class="content">
+                <div class="hero" role="region" aria-label="Описание расширения">
+                    <div class="left">
+                        <h1>Быстро. Легко. Без лишних настроек.</h1>
+                        <p class="lead">Установите расширение в пару кликов и сразу начните защищать своё соединение в браузере. Никаких сложных конфигураций — только кнопка «Подключиться».</p>
+                    </div>
+                    <div style="width:130px;text-align:center">
+                        <div style="background:var(--card);border:1px solid var(--border);padding:10px;border-radius:4px">
+                            <div style="font-weight:700;color:var(--accent);font-size:0.95rem">Бесплатно</div>
+                            <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">Базовая версия</div>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="features-list card" aria-labelledby="features-title">
+                    <h2 id="features-title">Особенности</h2>
+                    <ul>
+                        <li>Мгновенное подключение — одна кнопка, минимальные усилия.</li>
+                        <li>Совместимость с популярными браузерами (Chrome, Firefox, Edge, Safari).</li>
+                        <li>Блокировка трекеров и простой ad‑block для комфортного просмотра.</li>
+                        <li>Управление включением для конкретных сайтов.</li>
+                    </ul>
+                </section>
+
+                <section class="card" aria-labelledby="faq-title">
+                    <h2 id="faq-title">Частые вопросы</h2>
+
+                    <h3 style="margin:10px 0 6px">Это действительно бесплатно?</h3>
+                    <p class="small">Да, базовая версия бесплатна. Могут быть платные планы с расширенными возможностями — проверьте условия на странице магазина или в приложении.</p>
+
+                    <h3 style="margin:10px 0 6px">Защищён ли мой трафик полностью?</h3>
+                    <p class="small">Расширение шифрует трафик браузера, но не заменяет системный VPN для всего устройства.</p>
+
+                    <h3 style="margin:10px 0 6px">Сохраняются ли логи?</h3>
+                    <p class="small">Политика логов зависит от разработчика расширения. Рекомендуется ознакомиться с политикой конфиденциальности перед установкой.</p>
+
+                    <p class="note" style="margin-top:12px">Важно: соблюдайте местное законодательство при использовании VPN и обходе блокировок.</p>
+                </section>
+
+                <section class="card">
+                    <h3>Контакты и поддержка</h3>
+                    <p class="small">Есть вопросы? Пишите: <a class="inline" href="mailto:support@example.com">support@example.com</a></p>
+
+                    <div style="margin-top:12px;display:flex;gap:8px">
+                        <button class="install-btn" onclick="openPrivacy()">Политика конфиденциальности</button>
+                        <button class="nav-btn" onclick="openHelp()">Справка</button>
+                    </div>
+
+                    <div style="margin-top:12px">
+                        <strong>Примечание</strong>
+                        <p class="small">Этот сайт — информационная страница. Перед установкой расширения проверяйте рейтинг и отзывы в официальных магазинах расширений.</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div>© 2025 — Бесплатное расширение VPN. Все права не нарушают сторонних брендов.</div>
+    </footer>
+
+    <script>
+        // Простейшие функции поддержки
+        function openPrivacy(){
+            alert('Политика конфиденциальности: перед установкой ознакомьтесь с описанием и условиями в магазине расширений.');
+        }
+        function openHelp(){
+            alert('Справка: посетите страницу поддержки или свяжитесь с нами по почте.');
+        }
+
+        // Делегирование для кнопок установки в сайдбаре
+        document.querySelectorAll('.install-btn').forEach(btn=>{
+            btn.addEventListener('click', function(e){
+                e.preventDefault();
+                // На реальном сайте здесь переход в магазин; пока показываем подсказку
+                const block = e.target.closest('.store-link');
+                const label = block ? block.querySelector('.title').textContent : 'магазин';
+                alert('Открытие магазина: ' + label + '\nПроверьте страницу магазина вашего браузера.');
+            });
+        });
+    </script>
+</body>
+</html>
