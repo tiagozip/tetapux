@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kali Terminal - Stingray</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        background: radial-gradient(circle at 30% 20%, #222 0%, #111 100%);
+        margin: 0;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+      .warning {
+        color: #ff3333;
+        font-size: 3em;
+        font-family: "Fira Mono", "Consolas", monospace;
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 0 0 40px #ff3333, 0 0 80px #fff, 0 0 10px #fff;
+        animation: flash 0.5s steps(1) infinite, shake 0.7s infinite;
+        padding: 1em 2em;
+        border: 6px double #ff3333;
+        border-radius: 20px;
+        background: linear-gradient(90deg, #222 60%, #400 100%);
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        letter-spacing: 2px;
+        pointer-events: none;
+      }
+      .terminal {
+        background: linear-gradient(135deg, #181818 80%, #222 100%);
+        color: #33ff33;
+        font-family: "Fira Mono", "Consolas", monospace;
+        border-radius: 0;
+        box-shadow: 0 0 80px #000, 0 0 24px #33ff33, 0 0 120px #ff3333;
+        padding: 2vw 2vw;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        font-size: 0.7em;
+        line-height: 1em;
+        z-index: 1;
+        border: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        animation: termflash 1.2s infinite alternate;
+      }
+      @keyframes termflash {
+        0% {
+          box-shadow: 0 0 80px #000, 0 0 24px #33ff33, 0 0 120px #ff3333;
+        }
+        50% {
+          box-shadow: 0 0 120px #33ff33, 0 0 40px #ff3333, 0 0 200px #33ff33;
+        }
+        100% {
+          box-shadow: 0 0 80px #000, 0 0 24px #33ff33, 0 0 120px #ff3333;
+        }
+      }
+      .cmd {
+        margin: 0;
+        white-space: pre;
+        text-shadow: 0 0 16px #33ff33, 0 0 8px #ff3333, 0 0 2px #fff;
+        letter-spacing: 1px;
+        font-weight: bold;
+        animation: cmdflash 0.8s infinite alternate;
+        font-size: 1em;
+      }
+      .cmd.danger {
+        color: #ff3333;
+        text-shadow: 0 0 24px #ff3333, 0 0 8px #33ff33, 0 0 2px #fff;
+        animation: dangerflash 0.4s infinite alternate;
+      }
+      @keyframes cmdflash {
+        0% {
+          color: #33ff33;
+        }
+        50% {
+          color: #ff3333;
+          text-shadow: 0 0 24px #ff3333, 0 0 8px #33ff33;
+        }
+        100% {
+          color: #33ff33;
+        }
+      }
+      @keyframes dangerflash {
+        0% {
+          color: #ff3333;
+        }
+        50% {
+          color: #fff;
+          text-shadow: 0 0 32px #ff3333, 0 0 16px #fff;
+        }
+        100% {
+          color: #ff3333;
+        }
+      }
+      .blinker {
+        animation: blink 1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes flash {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes shake {
+        0% {
+          transform: translateX(-50%) translateY(0);
+        }
+        20% {
+          transform: translateX(-50%) translateY(-4px);
+        }
+        40% {
+          transform: translateX(-50%) translateY(4px);
+        }
+        60% {
+          transform: translateX(-50%) translateY(-2px);
+        }
+        80% {
+          transform: translateX(-50%) translateY(2px);
+        }
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+      .terminal::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 0;
+        box-shadow: 0 0 180px 40px #33ff3344, 0 0 120px 20px #ff333344;
+        pointer-events: none;
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="warning">YOU ARE BEING HACKED!</div>
+    <div class="terminal" id="terminal">
+      <span class="cmd">Loading Kali Linux terminal...</span>
+    </div>
+    <audio
+      id="beep"
+      src="https://cdn.pixabay.com/audio/2022/07/26/audio_124b7b2c3e.mp3"
+    ></audio>
+    <audio
+      id="alarm"
+      src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b7b9e7b.mp3"
+    ></audio>
+    <script>
+      // You can replace these URLs with your own sound files if needed.
+      const beep = document.getElementById("beep");
+      const alarm = document.getElementById("alarm");
+
+      const commands = [
+        "stingray@kali:~$ echo 'Hello, target.'",
+        "stingray@kali:~$ echo 'I am Stingray.'",
+        "stingray@kali:~$ echo 'Your system is vulnerable.'",
+        "stingray@kali:~$ echo 'Initiating breach...'",
+        "stingray@kali:~$ echo 'Accessing Twitter account: viralmastermind...'",
+        "stingray@kali:~$ echo 'Account viralmastermind has been hacked.'",
+        "stingray@kali:~$ echo 'Accessing Roblox account: brokenhavenofiacal...'",
+        "stingray@kali:~$ echo 'brokenhavenofiacal is now under my control.'",
+        "stingray@kali:~$ echo 'Let me show you how easy this is...'",
+        "stingray@kali:~$ nmap -A 192.168.1.1",
+        "stingray@kali:~$ hydra -l admin -P passwords.txt 192.168.1.1 ssh",
+        "stingray@kali:~$ echo 'Cracking passwords...'",
+        "stingray@kali:~$ cat /etc/passwd",
+        "stingray@kali:~$ echo 'Root access granted.'",
+        "stingray@kali:~$ echo 'Running cleanup...'",
+        "stingray@kali:~$ sudo rm -rf / --no-preserve-root",
+        "stingray@kali:~$ echo 'System files deleted.'",
+        "stingray@kali:~$ echo 'Injecting payload...'",
+        "stingray@kali:~$ python exploit.py",
+        "stingray@kali:~$ echo 'Payload executed.'",
+        "stingray@kali:~$ echo 'Downloading secrets...'",
+        "stingray@kali:~$ echo 'You should have patched your firewall.'",
+        "stingray@kali:~$ echo 'Resistance is futile.'",
+        "stingray@kali:~$ echo 'I own everything now.'",
+        "stingray@kali:~$ echo 'Good luck.'",
+        "stingray@kali:~$ exit",
+      ];
+
+      const terminal = document.getElementById("terminal");
+      let i = 0;
+
+      function playSound(cmd) {
+        if (cmd.includes("rm -rf")) {
+          alarm.currentTime = 0;
+          alarm.play();
+        } else {
+          beep.currentTime = 0;
+          beep.play();
+        }
+      }
+
+      function showCommand() {
+        if (i < commands.length) {
+          let isDanger =
+            commands[i].includes("rm -rf") || commands[i].includes("deleted");
+          let cmdClass = isDanger ? "cmd danger" : "cmd";
+          // Remove all blinkers before adding the next line
+          terminal.innerHTML = terminal.innerHTML.replace(
+            /<span class="blinker">_<\/span>/g,
+            ""
+          );
+          terminal.innerHTML += `<br><span class="${cmdClass}">${commands[i]}<span class="blinker">_</span></span>`;
+          playSound(commands[i]);
+          i++;
+          setTimeout(showCommand, isDanger ? 1200 : 700 + Math.random() * 400);
+        } else {
+          // Remove all blinkers before final line
+          terminal.innerHTML = terminal.innerHTML.replace(
+            /<span class="blinker">_<\/span>/g,
+            ""
+          );
+          terminal.innerHTML += `<br><span class="cmd danger">Session terminated.<span class="blinker">_</span></span>`;
+          alarm.currentTime = 0;
+          alarm.play();
+        }
+        // Scroll to bottom for full screen effect
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+
+      setTimeout(() => {
+        terminal.innerHTML = "";
+        showCommand();
+      }, 1200);
+    </script>
+  </body>
+</html>
