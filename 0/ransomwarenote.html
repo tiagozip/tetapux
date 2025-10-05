@@ -153,41 +153,6 @@
           el.msRequestFullscreen();
         }
       };
-      // Skid notification spam
-      const skidMessages = [
-        "H4XXED!",
-        "YOUR FILES ARE MINE!",
-        "RANSOMEWARES ACTIVE!",
-        "DATA LEAKED!",
-        "PAY NOW!",
-        "ENCRYPTED BY SONS OF KALI!",
-        "NO ESCAPE!",
-        "SYSTEM BREACHED!",
-        "RANSOMWARE 2025!",
-        "YOU GOT H4XX3D!",
-      ];
-      function spamNotifications() {
-        if (Notification.permission === "granted") {
-          setInterval(() => {
-            const msg =
-              skidMessages[Math.floor(Math.random() * skidMessages.length)];
-            new Notification(msg, {
-              icon: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitmap_Icon_Red_Alert.png",
-            });
-          }, 200);
-        }
-      }
-      if ("Notification" in window) {
-        if (Notification.permission === "granted") {
-          spamNotifications();
-        } else if (Notification.permission !== "denied") {
-          Notification.requestPermission().then(function (permission) {
-            if (permission === "granted") {
-              spamNotifications();
-            }
-          });
-        }
-      }
     </script>
   </body>
 </html>
