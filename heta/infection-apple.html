@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRITICAL SYSTEM WARNING! (Simulation)</title>
+    <style>
+      /* Global & Reset */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #1d1d1f;
+        line-height: 1.5;
+        /* Better Background: Subtle gradient mimicking a lit screen or modern OS backdrop */
+        background: linear-gradient(180deg, #e4e4e9 0%, #f7f7fa 100%);
+        min-height: 100vh;
+      }
+
+      /* Urgent Colors */
+      .color-primary-red {
+        color: #ff3b30;
+      }
+      .color-critical-red {
+        color: #d11a1a;
+      }
+      .dot-red {
+        background-color: #ff3b30;
+      }
+      .dot-orange {
+        background-color: #ff9500;
+      }
+      .dot-green {
+        background-color: #34c759;
+      }
+      .dot-gray {
+        background-color: #8e8e93;
+      }
+      .dot-yellow {
+        background-color: #ffcc00;
+      }
+      .dot-purple {
+        background-color: #af52de;
+      } /* New color for 'Other' */
+
+      /* Container */
+      .container {
+        max-width: 650px;
+        margin: 0 auto;
+      }
+
+      /* Header (Dark Bar) */
+      header {
+        background-color: #1c1c1e;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      /* Apple Logo (Stylized placeholder) */
+      .apple-logo {
+        width: 20px;
+        height: 25px;
+        background-color: white;
+        /* SVG Path for Apple Logo */
+        mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 14 17" xmlns="http://www.w3.org/2000/svg"><path d="M12.915 6.04c-.035-.195-.14-.38-.3-.51-.315-.265-.79-.42-1.35-.42-.815 0-1.63.46-2.145.46-.515 0-1.125-.46-2.07-.46-.94 0-1.555.46-2.07.46-.51 0-1.025-.46-2.07-.46-1.02 0-1.57.49-2.02.49-.44 0-.85-.185-1.065-.48-.225-.32-.24-.695-.025-1.01 1.76-2.585 4.315-2.73 5.435-2.73 1.05 0 2.21.365 3.03.365.82 0 1.94-.365 3.03-.365.57 0 1.25.13 1.83.47.53.33 1.13 1.05 1.165 2.05-.015.015-1.685 1.015-1.685 3.03 0 1.54.915 2.25 1.02 2.33.025.02.26.11.26.47 0 .285-.165.655-.38.86-.225.215-.495.27-.81.27-.47 0-1.19-.345-1.95-.345-.75 0-1.25.345-1.95.345-.7 0-1.19-.345-1.945-.345-.755 0-1.92.345-2.675.345-.4 0-.675-.125-.79-.27-.195-.23-.21-.595-.015-.895 1.155-1.745 1.96-3.235 1.96-4.57 0-.585-.02-1.055-.065-1.52zm.45 7.15c.67.65 1.265 1.575 1.265 2.76 0 1.485-.73 3.03-1.875 3.03-1.14 0-1.875-1.545-1.875-3.03 0-1.185.595-2.11 1.265-2.76.65.65 1.265 1.575 1.265 2.76 0 1.485-.73 3.03-1.875 3.03-1.14 0-1.875-1.545-1.875-3.03 0-1.185.595-2.11 1.265-2.76-.67-.65-1.265-1.575-1.265-2.76 0-1.485.73-3.03 1.875-3.03 1.14 0 1.875 1.545 1.875 3.03 0 1.185-.595 2.11-1.265 2.76z"/></svg>');
+        -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 14 17" xmlns="http://www.w3.org/2000/svg"><path d="M12.915 6.04c-.035-.195-.14-.38-.3-.51-.315-.265-.79-.42-1.35-.42-.815 0-1.63.46-2.145.46-.515 0-1.125-.46-2.07-.46-.94 0-1.555.46-2.07.46-.51 0-1.025-.46-2.07-.46-1.02 0-1.57.49-2.02.49-.44 0-.85-.185-1.065-.48-.225-.32-.24-.695-.025-1.01 1.76-2.585 4.315-2.73 5.435-2.73 1.05 0 2.21.365 3.03.365.82 0 1.94-.365 3.03-.365.57 0 1.25.13 1.83.47.53.33 1.13 1.05 1.165 2.05-.015.015-1.685 1.015-1.685 3.03 0 1.54.915 2.25 1.02 2.33.025.02.26.11.26.47 0 .285-.165.655-.38.86-.225.215-.495.27-.81.27-.47 0-1.19-.345-1.95-.345-.75 0-1.25.345-1.95.345-.7 0-1.19-.345-1.945-.345-.755 0-1.92.345-2.675.345-.4 0-.675-.125-.79-.27-.195-.23-.21-.595-.015-.895 1.155-1.745 1.96-3.235 1.96-4.57 0-.585-.02-1.055-.065-1.52zm.45 7.15c.67.65 1.265 1.575 1.265 2.76 0 1.485-.73 3.03-1.875 3.03-1.14 0-1.875-1.545-1.875-3.03 0-1.185.595-2.11 1.265-2.76.65.65 1.265 1.575 1.265 2.76 0 1.485-.73 3.03-1.875 3.03-1.14 0-1.875-1.545-1.875-3.03 0-1.185.595-2.11 1.265-2.76z"/></svg>');
+        display: inline-block;
+        margin-top: 3px;
+      }
+
+      /* Main Content */
+      main {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #d11a1a;
+        margin-bottom: 20px;
+      }
+
+      /* Alert Box Card */
+      .alert-box {
+        background-color: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border: 2px solid #ff3b30;
+      }
+
+      h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-top: 0;
+        margin-bottom: 25px;
+        line-height: 1.1;
+      }
+
+      /* Countdown Timer Simulation */
+      .countdown-wrapper {
+        background-color: #ffe5e5;
+        border: 2px dashed #ff3b30;
+        padding: 15px;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        font-weight: 700;
+        animation: pulse-border 1.5s infinite;
+      }
+
+      .countdown-text {
+        font-size: 1.1rem;
+        color: #d11a1a;
+        margin-bottom: 5px;
+      }
+
+      .timer {
+        font-size: 3rem; /* Extra large */
+        color: #d11a1a;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+      }
+
+      @keyframes pulse-border {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+        }
+      }
+
+      /* Storage Widget - FIXED AND IMPROVED */
+      .storage-widget {
+        margin-bottom: 30px;
+        padding: 15px 0;
+        border-top: 1px solid #ffcccc;
+        border-bottom: 1px solid #ffcccc;
+      }
+
+      .storage-bar {
+        height: 16px; /* Slightly thicker */
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        background-color: #e5e5ea;
+      }
+
+      /* New Proportions (Total 90% usage = 231/256 GB) */
+      .segment-photos {
+        width: 30%;
+        background-color: #ff3b30;
+      } /* Red */
+      .segment-apps {
+        width: 25%;
+        background-color: #ff9500;
+      } /* Orange */
+      .segment-viruses {
+        width: 25%;
+        background-color: #ffcc00;
+      } /* Yellow - Alarmingly large */
+      .segment-ios {
+        width: 5%;
+        background-color: #8e8e93;
+      } /* Gray */
+      .segment-other {
+        width: 5%;
+        background-color: #af52de;
+      } /* Purple */
+
+      /* Legend */
+      .storage-legend {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px 20px;
+        font-size: 0.95rem;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      /* Instructions */
+      .instructions {
+        margin-top: 20px;
+      }
+
+      .instructions h3 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #ff3b30;
+        margin-bottom: 15px;
+      }
+
+      /* Aggressive Call to Action */
+      .cta-button {
+        display: block;
+        width: 100%;
+        padding: 18px;
+        margin-top: 25px;
+        background-color: #ff3b30;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 700;
+        text-align: center;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 5px 20px rgba(255, 0, 0, 0.7); /* Stronger glow */
+        animation: vibrate 0.5s infinite; /* Added a subtle "vibrating" effect */
+      }
+
+      .cta-button:hover {
+        background-color: #d11a1a;
+        animation: none;
+      }
+
+      /* Animation for the button to draw attention */
+      @keyframes vibrate {
+        0% {
+          transform: translate(1px, 1px) rotate(0deg);
+        }
+        25% {
+          transform: translate(-1px, -2px) rotate(-0.5deg);
+        }
+        50% {
+          transform: translate(1px, 2px) rotate(0.5deg);
+        }
+        75% {
+          transform: translate(-1px, 1px) rotate(0deg);
+        }
+        100% {
+          transform: translate(1px, -2px) rotate(-0.5deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo-area">
+          <span class="apple-logo"></span>
+          Apple security
+        </div>
+        <div class="date-area">
+          Thursday
+          <br />
+          16 October 2025
+        </div>
+      </header>
+
+      <main>
+        <h1>CRITICAL WARNING! IMMEDIATE ACTION REQUIRED!</h1>
+
+        <div class="alert-box">
+          <h2>
+            Your system is SEVERELY damaged by
+            <span class="color-critical-red">(44)</span>
+            VIRUSES!
+          </h2>
+
+          <p>
+            <strong>SECURITY BREACH ALERT:</strong>
+            We have detected that your iPhone has been critically infected.
+            Failure to act within the time limit below will result in
+            <strong>PERMANENT DATA LOSS</strong>
+            , corruption of your SIM card, and exposure of all private data!
+          </p>
+
+          <!-- STATIC Countdown Simulation -->
+          <div class="countdown-wrapper">
+            <div class="countdown-text">
+              Time Remaining Before Irreversible Damage:
+            </div>
+            <div class="timer">01:45</div>
+          </div>
+
+          <div class="storage-widget">
+            <div class="storage-header">
+              <span>iPhone Storage</span>
+              <span>231 GB of 256 GB used</span>
+            </div>
+
+            <div class="storage-bar">
+              <!-- Updated segments based on new percentages -->
+              <div class="segment segment-photos dot-red"></div>
+              <div class="segment segment-apps dot-orange"></div>
+              <div class="segment segment-viruses dot-yellow"></div>
+              <div class="segment segment-ios dot-gray"></div>
+              <div class="segment segment-other dot-purple"></div>
+            </div>
+
+            <!-- Updated Legend -->
+            <div class="storage-legend">
+              <div class="legend-item">
+                <span class="legend-dot dot-red"></span>
+                Photos
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot dot-orange"></span>
+                Apps
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot dot-yellow"></span>
+                Viruses / Malware
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot dot-gray"></span>
+                iOS
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot dot-purple"></span>
+                Other Files
+              </div>
+            </div>
+          </div>
+
+          <div class="instructions">
+            <h3>*** Immediate Removal Protocol ***</h3>
+            <ol>
+              <li>Install the ONLY certified virus removal application.</li>
+              <li>
+                Run the app IMMEDIATELY to secure your data and phone before the
+                timer expires.
+              </li>
+            </ol>
+          </div>
+
+          <!-- Aggressive Call to Action -->
+          <a href="#" class="cta-button">ACTIVATE VIRUS REMOVAL PROTECTION</a>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
