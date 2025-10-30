@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacOS Critical System Alert - Simulation</title>
+    <style>
+        /* --- General Setup & MacOS Font Stack --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1f2746 0%, #0c0f20 100%); /* Deep MacOS-like wallpaper */
+            background-image: url("https://i0.wp.com/mrmacintosh.com/wp-content/uploads/2024/08/Screenshot-2024-08-05-at-5.37.59%E2%80%AFPM.png?resize=1536%2C832&ssl=1");
+            background-size: cover;
+            background-position: 50% 50%;
+        }
+
+        /* --- Window Styles --- */
+        #warning-window {
+            width: 700px;
+            background-color: #f7f7f7;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4);
+            overflow: hidden;
+        }
+
+        /* --- Window Header (Traffic Lights) --- */
+        #window-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #ececec;
+            color: #555;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 7px;
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .red { background-color: #ff605c; }
+        .yellow { background-color: #ffbd44; }
+        .green { background-color: #00ca4e; }
+
+        /* --- Content Area --- */
+        #window-content {
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        /* --- Main Alert Message --- */
+        .alert-icon {
+            font-size: 70px;
+            color: #ff3333;
+            margin-bottom: 15px;
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .main-message h1 {
+            color: #222;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .main-message p {
+            color: #444;
+            font-size: 16px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+        
+        .urgent-text {
+            color: #cc0000;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* --- Storage/Infection Status --- */
+        .status-panel {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .drive-info {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .drive-info strong {
+            color: #222;
+        }
+
+        .storage-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .storage-bar {
+            height: 100%;
+            float: left;
+        }
+        
+        /* 45% Infected */
+        .infected { width: 45%; background-color: #ff4747; }
+        /* 30% System */
+        .system { width: 30%; background-color: #a0a0a0; }
+        /* 15% Data (Still clean) */
+        .data { width: 15%; background-color: #52a8ff; }
+
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        /* --- Timer and Action --- */
+        .timer-container {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 2px dashed #ff4747;
+            border-radius: 6px;
+            background-color: #fff0f0;
+        }
+
+        .timer-label {
+            font-weight: 600;
+            color: #cc0000;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            color: #ff0000;
+            font-family: monospace; /* Digital look */
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(255, 0, 0, 0.4);
+        }
+
+        .action-button {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            background-color: #e73030;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(231, 48, 48, 0.5);
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+        }
+
+        .action-button:hover {
+            background-color: #cc1010;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="warning-window">
+        <div id="window-header">
+            <div class="traffic-lights">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            Critical System Integrity Alert
+        </div>
+
+        <div id="window-content">
+            <div class="alert-icon">
+                &#9888; <!-- Warning sign unicode -->
+            </div>
+
+            <div class="main-message">
+                <h1>CRITICAL VIRUS INFECTION DETECTED!</h1>
+                <p>
+                    <span class="urgent-text">IMMEDIATE ACTION REQUIRED!</span> Your MacOS system files and personal data are currently being encrypted by (38) aggressive malware agents. 
+                </p>
+                <p>
+                    <span class="urgent-text">SECURITY BREACH ALERT:</span> Failure to initiate the cleansing protocol within the limited time will result in <span class="urgent-text">IRREVERSIBLE DATA LOSS</span> and exposure of confidential files (Keychain, Browsing History, Financial Data).
+                </p>
+            </div>
+
+            <div class="status-panel">
+                <div class="drive-info">
+                    <strong>Macintosh HD Integrity Status:</strong> 892 GB of 1 TB Used (45% Infected)
+                </div>
+
+                <div class="storage-bar-container">
+                    <div class="storage-bar infected"></div>
+                    <div class="storage-bar system"></div>
+                    <div class="storage-bar data"></div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #ff4747;"></span> Infected Malware Files (45%)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #a0a0a0;"></span> System Core Files (30%)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background-color: #52a8ff;"></span> Usable Data (15%)
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-container">
+                <div class="timer-label">TIME REMAINING BEFORE DRIVE WIPE:</div>
+                <!-- Note: This is static HTML for simulation purposes, not a functional JS timer -->
+                <div class="timer-display">00:01:38</div> 
+            </div>
+
+            <button class="action-button">
+                ACTIVATE FULL SYSTEM VIRUS REMOVAL NOW
+            </button>
+
+            <div class="footer-note">
+                <p>Certified Anti-Malware Protocol v12.4. Do not close this window.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
