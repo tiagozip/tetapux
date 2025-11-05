@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prize Alert!!!</title>
+    <style>
+        :root {
+            --primary-orange: #f9862b;
+            --primary-orange-dark: #e0701a;
+            --success-green: #28a745;
+            --success-green-dark: #218838;
+            --gold-glow: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #2c5364;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .page-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background: linear-gradient(to bottom right, #1f4037, #99f2c8);
+            transform: scale(1.1);
+            filter: blur(3px);
+            z-index: 0;
+        }
+        
+        .bg-chest-wrapper {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bg-chest {
+            width: 100%;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 580px;
+            width: 95%;
+            max-height: 95vh;
+            overflow: hidden; /* Hide overflowing confetti */
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            animation: fadeInScaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            position: relative; /* For confetti container */
+        }
+        
+        #confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        @keyframes fadeInScaleUp {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content {
+            padding: 30px 40px;
+            text-align: center;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        
+        .modal-content.is-hidden {
+            display: none;
+        }
+
+        .prize-icon img {
+            height: 120px;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .date-time {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .description {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .attempts {
+            color: #666;
+            font-size: 15px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .continue-btn, .submit-btn {
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .continue-btn {
+             background: linear-gradient(135deg, #ff9a44, var(--primary-orange));
+             box-shadow: 0 4px 15px rgba(249, 134, 43, 0.4);
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(249, 134, 43, 0.6);
+        }
+        
+        .box-selection-container {
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            margin: 40px 0;
+        }
+
+        .box-option {
+            cursor: pointer; 
+            text-align: center; 
+            transition: transform 0.2s ease-in-out;
+            position: relative;
+        }
+        
+        .box-option.no-hover:hover {
+            animation: none;
+            transform: scale(1);
+        }
+        
+        .box-option img {
+            width: 100px;
+        }
+
+        .box-option:hover {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .box-option.winner {
+            animation: winnerPulse 1.5s infinite;
+        }
+
+        @keyframes winnerPulse {
+            0% { transform: scale(1.1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+            100% { transform: scale(1.1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        .box-option-label {
+            font-weight: bold; 
+            margin-top: 10px;
+            color: #555;
+        }
+        
+        #win-message-container {
+            height: 48px; /* Reserve space to prevent layout shift */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .win-message {
+            font-weight: bold; 
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            animation: fadeInScaleUp 0.3s;
+        }
+
+        /* SURVEY & SUCCESS STYLES from previous version, slightly polished */
+        .survey-form { text-align: left; margin-top: 30px; }
+        .survey-title { text-align: center; font-size: 22px; color: #333; font-weight: bold; margin-bottom: 25px; }
+        .question { margin-bottom: 25px; }
+        .question label { display: block; font-weight: 600; color: #444; margin-bottom: 10px; font-size: 15px; }
+        .question input[type="text"], .question input[type="email"], .question select { width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; transition: border-color 0.3s, box-shadow 0.3s; }
+        .question input:focus, .question select:focus { outline: none; border-color: var(--primary-orange); box-shadow: 0 0 0 3px rgba(249, 134, 43, 0.2); }
+        .radio-group { display: flex; flex-direction: column; gap: 12px; }
+        .radio-option { display: flex; align-items: center; padding: 12px; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .radio-option:hover { border-color: var(--primary-orange); background: #fff8f2; }
+        .radio-option input[type="radio"] { margin-right: 12px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-orange); }
+        .submit-btn { background: linear-gradient(135deg, #34d058, var(--success-green)); box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); width: 100%; margin-top: 20px; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6); }
+        .success-screen { text-align: center; padding: 60px 30px; }
+        .success-icon { font-size: 80px; margin-bottom: 20px; color: var(--success-green); }
+        .success-title { font-size: 32px; font-weight: bold; color: #333; margin-bottom: 15px; }
+        .success-message { font-size: 18px; color: #666; }
+        .step-indicator { text-align: center; color: #999; font-size: 14px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="page-background" id="pageBackground"></div>
+
+    <div class="modal-overlay">
+        <div class="modal">
+            <div id="confetti-container"></div>
+            
+            <div class="modal-content" id="initialScreen">
+                <!-- Content from previous version -->
+                <div class="prize-icon"><img src="https://cdn.dlcompare.com/bundles/dlcomparemain/img/chest.png.webp" alt="Treasure Chest"></div>
+                <h1 class="title">CONGRATULATIONS, YOU ARE THE VISITOR NO. 1.000.000!</h1>
+                <div class="date-time">Monday, 12 July 2021 at 15:18:22</div>
+                <p class="description">Like every Monday we randomly give 100 users fantastic prizes. The prize of today is: 10.000 Tokens! Only 100 lucky users who live in Philippines will be the winners!</p>
+                <p class="description">To see if you are one of the lucky ones you will have to select the correct box.</p>
+                <div class="attempts">You have three attempts. Good luck!</div>
+                <button class="continue-btn" onclick="switchScreen('initialScreen', 'boxSelectionScreen')">Continue</button>
+            </div>
+
+            <div class="modal-content is-hidden" id="boxSelectionScreen">
+                <div class="step-indicator">Step 1 of 2</div>
+                <h2 class="survey-title">🎁 Select the Correct Box to Win! 🎁</h2>
+                <div class="box-selection-container">
+                    <div class="box-option" onclick="selectBox(this)">
+                        <img src="https://cdn.dlcompare.com/bundles/dlcomparemain/img/chest.png.webp" alt="Treasure Chest 1">
+                        <div class="box-option-label">Box 1</div>
+                    </div>
+                    <div class="box-option" onclick="selectBox(this)">
+                        <img src="https://cdn.dlcompare.com/bundles/dlcomparemain/img/chest.png.webp" alt="Treasure Chest 2">
+                        <div class="box-option-label">Box 2</div>
+                    </div>
+                    <div class="box-option" onclick="selectBox(this)">
+                        <img src="https://cdn.dlcompare.com/bundles/dlcomparemain/img/chest.png.webp" alt="Treasure Chest 3">
+                        <div class="box-option-label">Box 3</div>
+                    </div>
+                </div>
+                <div id="win-message-container"></div>
+            </div>
+
+            <div class="modal-content is-hidden" id="surveyScreen">
+                 <!-- Content from previous version -->
+                <div class="step-indicator">Step 2 of 2</div>
+                <h2 class="survey-title">📋 Complete Survey to Claim Prize</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">Answer these quick questions to verify your eligibility.</p>
+                <form class="survey-form" id="surveyForm">
+                    <div class="question"><label>1. What is your age?</label><select required><option value="">Select age range</option><option>Under 18</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div>
+                    <div class="question"><label>2. What is your gender?</label><div class="radio-group"><label class="radio-option"><input type="radio" name="gender" value="male" required>Male</label><label class="radio-option"><input type="radio" name="gender" value="female">Female</label><label class="radio-option"><input type="radio" name="gender" value="other">Other</label></div></div>
+                    <div class="question"><label>3. Email address (for prize notification)</label><input type="email" placeholder="your.email@example.com" required></div>
+                    <div class="question"><label>4. How often do you shop online?</label><select required><option value="">Select frequency</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Rarely</option><option>Never</option></select></div>
+                    <div class="question"><label>5. Would you recommend this to friends?</label><div class="radio-group"><label class="radio-option"><input type="radio" name="recommend" value="yes" required>Yes, definitely!</label><label class="radio-option"><input type="radio" name="recommend" value="maybe">Maybe</label><label class="radio-option"><input type="radio" name="recommend" value="no">No</label></div></div>
+                    <button type="submit" class="submit-btn">Submit & Claim Prize!</button>
+                </form>
+            </div>
+
+            <div class="modal-content is-hidden" id="successScreen">
+                 <!-- Content from previous version -->
+                <div class="success-screen"><div class="success-icon">✓</div><div class="success-title">SUCCESS!</div><p class="success-message">Your entry has been submitted!<br>You will be contacted via email if you are a winner.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Animated Background ---
+        const bgContainer = document.getElementById('pageBackground');
+        for (let i = 0; i < 40; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bg-chest-wrapper';
+            // Randomize animation delay and duration for a more natural look
+            wrapper.style.animationDelay = `${Math.random() * 6}s`;
+            wrapper.style.animationDuration = `${5 + Math.random() * 4}s`;
+
+            const chestImg = document.createElement('img');
+            chestImg.src = 'https://cdn.dlcompare.com/bundles/dlcomparemain/img/chest.png.webp';
+            chestImg.className = 'bg-chest';
+            
+            wrapper.appendChild(chestImg);
+            bgContainer.appendChild(wrapper);
+        }
+
+        // --- Screen Switching Logic ---
+        function switchScreen(fromId, toId) {
+            const fromScreen = document.getElementById(fromId);
+            const toScreen = document.getElementById(toId);
+            
+            if (fromScreen) fromScreen.classList.add('is-hidden');
+            if (toScreen) toScreen.classList.remove('is-hidden');
+        }
+
+        // --- Box Selection Game ---
+        function selectBox(clickedBox) {
+            const allBoxes = document.querySelectorAll('.box-option');
+            const messageContainer = document.getElementById('win-message-container');
+
+            // 1. Disable all boxes to prevent multiple clicks
+            allBoxes.forEach(box => {
+                box.onclick = null; // Remove click listener
+                box.classList.add('no-hover'); // Disable hover animation
+            });
+            
+            // 2. Show "Checking" message
+            messageContainer.innerHTML = `<div class="win-message" style="color: #555;">Checking your choice...</div>`;
+
+            // 3. Simulate a delay for checking the prize
+            setTimeout(() => {
+                // 4. Reveal the win
+                messageContainer.innerHTML = `<div class="win-message" style="color: var(--success-green); background: #e9f7ef;">Congratulations! You found the prize!</div>`;
+                clickedBox.classList.add('winner');
+                
+                // Play a sound effect here if you have one
+                // Example: new Audio('win-sound.mp3').play();
+
+                // 5. Trigger confetti
+                triggerConfetti(clickedBox);
+
+                // 6. Automatically move to the next step after a celebration delay
+                setTimeout(() => {
+                    switchScreen('boxSelectionScreen', 'surveyScreen');
+                }, 2500); // Wait 2.5 seconds to let the user enjoy the win
+
+            }, 1500); // 1.5 second "checking" delay
+        }
+        
+        // --- Confetti Effect ---
+        function triggerConfetti(element) {
+            const container = document.getElementById('confetti-container');
+            const rect = element.getBoundingClientRect(); // Get position of the clicked box
+            const modalRect = container.parentElement.getBoundingClientRect();
+
+            // Calculate origin point relative to the modal
+            const originX = (rect.left + rect.width / 2) - modalRect.left;
+            const originY = (rect.top + rect.height / 2) - modalRect.top;
+
+            for (let i = 0; i < 80; i++) {
+                createConfettiParticle(container, originX, originY);
+            }
+        }
+
+        function createConfettiParticle(container, x, y) {
+            const particle = document.createElement('div');
+            container.appendChild(particle);
+
+            const size = Math.floor(Math.random() * 10 + 5);
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800'];
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.position = 'absolute';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.borderRadius = '50%';
+            
+            const angle = Math.random() * 360;
+            const velocity = Math.random() * 150 + 100;
+            const gravity = 0.8;
+
+            let vx = Math.cos(angle * Math.PI / 180) * velocity;
+            let vy = Math.sin(angle * Math.PI / 180) * velocity;
+            let life = 0;
+
+            const animate = () => {
+                particle.style.left = `${x + vx * life / 60}px`;
+                particle.style.top = `${y - vy * life / 60 + 0.5 * gravity * life * life / 30}px`;
+                particle.style.opacity = 1 - (life / 120);
+                life++;
+                if (life < 120) {
+                    requestAnimationFrame(animate);
+                } else {
+                    particle.remove();
+                }
+            };
+            animate();
+        }
+
+
+        // --- Form Submission ---
+        document.getElementById('surveyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            switchScreen('surveyScreen', 'successScreen');
+        });
+    </script>
+</body>
+</html>
