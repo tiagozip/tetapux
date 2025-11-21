@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM MELTDOWN - CRITICAL</title>
+    <style>
+        /* --- FONTS & RESET --- */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        * {
+            box-sizing: border-box;
+            cursor: crosshair;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'VT323', monospace;
+            overflow: hidden;
+            color: #0f0;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* --- EDUCATIONAL DISCLAIMER --- */
+        #safe-mode-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #000;
+            color: #ffff00;
+            border-bottom: 1px solid #ffff00;
+            text-align: center;
+            padding: 5px;
+            z-index: 999999;
+            font-family: sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* --- BACKGROUND MATRIX EFFECT --- */
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* --- CRT MONITOR OVERLAY --- */
+        .crt-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 90;
+            animation: flicker 0.15s infinite;
+        }
+
+        /* --- MAIN GRID LAYOUT --- */
+        .chaos-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 2fr 1fr;
+            gap: 10px;
+            height: 100vh;
+            padding: 40px 20px 20px 20px; /* Top padding for banner */
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- WINDOW CONTAINERS --- */
+        .window {
+            background: rgba(0, 20, 0, 0.9);
+            border: 2px solid #0f0;
+            box-shadow: 0 0 15px #0f0, inset 0 0 20px rgba(0, 255, 0, 0.2);
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .window.alert {
+            border-color: #f00;
+            color: #f00;
+            box-shadow: 0 0 15px #f00;
+            animation: shake 0.5s infinite;
+        }
+
+        h2 {
+            margin: 0;
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 24px;
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.5);
+        }
+
+        /* --- SPECIFIC MODULES --- */
+        
+        /* 1. Identity Box */
+        .id-box {
+            font-size: 18px;
+            line-height: 1.4;
+        }
+        .scary-data {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* 2. Central Threat */
+        .central-threat {
+            grid-column: 2;
+            grid-row: 2;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            border: 4px double #f00;
+        }
+
+        .skull-art {
+            font-size: 12px;
+            line-height: 10px;
+            white-space: pre;
+            color: #f00;
+            margin-bottom: 20px;
+            animation: pulse 1s infinite;
+        }
+
+        .big-msg {
+            font-size: 36px;
+            color: #f00;
+            text-shadow: 2px 2px 0 #fff;
+            margin-bottom: 20px;
+        }
+
+        /* 3. Terminal Log */
+        .terminal {
+            font-family: monospace;
+            font-size: 14px;
+            color: #0f0;
+            overflow-y: hidden;
+        }
+        .log-entry { margin-bottom: 2px; }
+        .log-error { color: #f00; }
+        .log-sys { color: #0ff; }
+
+        /* 4. Webcam Placeholder */
+        .webcam-box {
+            grid-column: 3;
+            grid-row: 1;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .rec-dot {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 15px;
+            height: 15px;
+            background: red;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        .silhouette {
+            font-size: 80px;
+            color: #333;
+            filter: blur(5px);
+        }
+
+        /* 5. Progress Bars */
+        .progress-container {
+            margin-top: 10px;
+        }
+        .bar-label { font-size: 16px; margin-bottom: 2px; display: flex; justify-content: space-between;}
+        .bar-bg { background: #333; height: 20px; border: 1px solid #555; }
+        .bar-fill { height: 100%; background: repeating-linear-gradient(45deg, #f00, #f00 10px, #900 10px, #900 20px); width: 0%; transition: width 0.2s; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            5% { opacity: 0.8; }
+            10% { opacity: 0.9; }
+            100% { opacity: 0.9; }
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px); }
+            25% { transform: translate(-2px, -2px); }
+            50% { transform: translate(2px, -1px); }
+            75% { transform: translate(-1px, 2px); }
+            100% { transform: translate(1px, -1px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* DECRYPTION KEYPAD */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .key {
+            background: #333;
+            border: 1px solid #f00;
+            color: #f00;
+            padding: 10px;
+            text-align: center;
+            font-size: 20px;
+            cursor: not-allowed;
+        }
+        .key:hover { background: #500; }
+
+    </style>
+</head>
+<body>
+
+    <div id="safe-mode-banner">⚠ EDUCATIONAL DEMO: Simulating "Hollywood Style" Malware. No data is actually being stolen. ⚠</div>
+
+    <!-- Matrix Background -->
+    <canvas id="matrix"></canvas>
+    <div class="crt-overlay"></div>
+
+    <div class="chaos-grid">
+        
+        <!-- TOP LEFT: USER INFO (DOXXING SIMULATION) -->
+        <div class="window">
+            <h2>TARGET_IDENTITY</h2>
+            <div class="id-box" id="userInfo">
+                DETECTING USER...<br>
+            </div>
+        </div>
+
+        <!-- TOP RIGHT: WEBCAM (FAKE) -->
+        <div class="window webcam-box alert">
+            <div class="rec-dot"></div>
+            <div style="position: absolute; top: 10px; right: 10px; color: red; font-weight: bold;">REC</div>
+            <div class="silhouette">?</div>
+            <div style="position: absolute; bottom: 10px; font-size: 12px; color: #fff;">CAM_SRC: HACKED_DEVICE_01</div>
+        </div>
+
+        <!-- CENTER: MAIN THREAT -->
+        <div class="window central-threat">
+            <div class="skull-art">
+      _____
+     /     \
+    | () () |
+     \  ^  /
+      |||||
+      |||||
+            </div>
+            <div class="big-msg">GAME OVER</div>
+            <p style="color: #fff; font-size: 20px;">YOUR DIGITAL LIFE IS NOW MINE.</p>
+            
+            <div class="progress-container">
+                <div class="bar-label">
+                    <span>UPLOADING BROWSER HISTORY</span>
+                    <span id="pct1">0%</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" id="bar1"></div></div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="bar-label">
+                    <span>ENCRYPTING PHOTOS</span>
+                    <span id="pct2">0%</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" id="bar2"></div></div>
+            </div>
+
+            <div class="keypad">
+                <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+                <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+                <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+                <div class="key" style="grid-column: 1/-1; font-weight: bold;" onclick="alert('ACCESS DENIED: You cannot brute force this.')">ENTER DECRYPTION KEY</div>
+            </div>
+        </div>
+
+        <!-- LEFT: ROLLING TERMINAL -->
+        <div class="window terminal" id="term1">
+            <h2>SYSTEM_LOG</h2>
+        </div>
+
+        <!-- RIGHT: NETWORK ACTIVITY -->
+        <div class="window" style="overflow: hidden;">
+            <h2>NETWORK_BREACH</h2>
+            <div id="netTraffic" style="font-size: 12px; line-height: 1.2; color: #0ff;"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. MATRIX RAIN EFFECT ---
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789Z';
+        const alphabet = katakana + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const fontSize = 16;
+        const columns = canvas.width/fontSize;
+        const drops = [];
+
+        for(let x = 0; x < columns; x++) drops[x] = 1;
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Trail effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0'; // Green text
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                drops[i]++;
+            }
+            requestAnimationFrame(drawMatrix);
+        }
+        drawMatrix();
+
+
+        // --- 2. REAL USER DATA (DOXXING SIMULATION) ---
+        // This pulls safe, publicly available data from the browser to scare the user
+        const infoBox = document.getElementById('userInfo');
+        const platform = navigator.platform;
+        const lang = navigator.language;
+        const cores = navigator.hardwareConcurrency || "UNKNOWN";
+        const userAgent = navigator.userAgent.substring(0, 30) + "...";
+        
+        setTimeout(() => {
+            infoBox.innerHTML = `
+                <span style="color:#f00">TARGET ACQUIRED</span><br>
+                OS: <span class="scary-data">${platform}</span><br>
+                LANG: <span class="scary-data">${lang.toUpperCase()}</span><br>
+                CORES: <span class="scary-data">${cores}</span><br>
+                AGENT: <span class="scary-data" style="font-size:12px">${userAgent}</span><br>
+                IP: <span class="scary-data blink">EXPOSED</span>
+            `;
+        }, 1000);
+
+
+        // --- 3. PROGRESS BARS ---
+        function runProgress(barId, pctId, speed) {
+            let width = 0;
+            const bar = document.getElementById(barId);
+            const txt = document.getElementById(pctId);
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    width = 0; // Loop it to be annoying
+                } else {
+                    width++; 
+                    bar.style.width = width + '%';
+                    txt.innerText = width + '%';
+                    // Change color based on percentage
+                    if(width > 80) bar.style.background = '#f00';
+                    else bar.style.background = 'repeating-linear-gradient(45deg, #f00, #f00 10px, #900 10px, #900 20px)';
+                }
+            }, speed);
+        }
+        runProgress('bar1', 'pct1', 50); // Fast
+        runProgress('bar2', 'pct2', 120); // Slow
+
+
+        // --- 4. TERMINAL LOG GENERATOR ---
+        const terminal = document.getElementById('term1');
+        const logs = [
+            "ROOT_ACCESS_GRANTED",
+            "BYPASSING_FIREWALL...",
+            "DOWNLOADING_CONTACTS.DB...",
+            "CAMERA_ACCESSED_SUCCESS",
+            "MICROPHONE_LISTENING...",
+            "KEYLOGGER_INSTALLED",
+            "SENDING_DATA_TO_REMOTE_SERVER",
+            "ENCRYPTING_HDD_SECTOR_1...",
+            "ENCRYPTING_HDD_SECTOR_2...",
+            "ERROR: USER_CANNOT_ESCAPE",
+            "DELETING SYSTEM32..."
+        ];
+
+        function addLog() {
+            const p = document.createElement('div');
+            p.classList.add('log-entry');
+            const rand = Math.random();
+            if(rand > 0.7) {
+                p.classList.add('log-error');
+                p.innerText = "[CRITICAL] " + logs[Math.floor(Math.random() * logs.length)];
+            } else {
+                p.classList.add('log-sys');
+                p.innerText = "> " + logs[Math.floor(Math.random() * logs.length)];
+            }
+            terminal.appendChild(p);
+            terminal.scrollTop = terminal.scrollHeight;
+            if(terminal.childElementCount > 20) terminal.removeChild(terminal.firstChild);
+        }
+        setInterval(addLog, 200);
+
+
+        // --- 5. FAKE NETWORK TRAFFIC ---
+        const netDiv = document.getElementById('netTraffic');
+        setInterval(() => {
+            const ip = `${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+            const port = Math.floor(Math.random() * 65535);
+            const line = document.createElement('div');
+            line.innerText = `OUTBOUND -> ${ip}:${port} [${Math.floor(Math.random()*5000)}kb]`;
+            netDiv.prepend(line);
+            if(netDiv.childElementCount > 15) netDiv.removeChild(netDiv.lastChild);
+        }, 100);
+
+        // --- 6. AUDIO SIMULATION (Beeping on click) ---
+        // Just to add interactivity
+        document.body.addEventListener('click', () => {
+            document.body.style.background = '#100';
+            setTimeout(() => { document.body.style.background = '#000'; }, 50);
+        });
+
+    </script>
+</body>
+</html>
