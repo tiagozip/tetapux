@@ -42,6 +42,7 @@
       flex-direction: column;
       justify-content: center;
       position: relative;
+      user-select: none;
       animation: bodyenter 1s;
     }
 
@@ -186,6 +187,7 @@
       font-size: 1rem;
       border-radius: 4px;
       outline: none;
+      user-select: auto;
     }
 
     input[type="text"]:focus {
@@ -387,6 +389,30 @@
       startTimer(doublesTime, "timer-doubles");
       startTimer(destructTime, "timer-destruct");
     };
+
+    document.querySelector(".decrypt-link").addEventListener("click", () => {
+      const codeInput = document.querySelector("input[type='text']");
+      const code = codeInput.value.trim();
+
+      if (code.length === 32) {
+        alert("Decryption successful! Your files have been restored.");
+      } else {
+        codeInput.style.borderColor = "red";
+        document.querySelector(".decrypt-link").style.color = "red";
+        document.querySelector(".decrypt-link").innerText = "Invalid code";
+        document.querySelector(".decrypt-link").style.pointerEvents = "none";
+        document.querySelector(".decrypt-link").style.textDecoration = "none";
+
+        codeInput.focus();
+        setInterval(() => {
+          codeInput.style.borderColor = "";
+          document.querySelector(".decrypt-link").style.color = "#4378c0";
+          document.querySelector(".decrypt-link").innerText = "Decrypt files";
+          document.querySelector(".decrypt-link").style.pointerEvents = "auto";
+          document.querySelector(".decrypt-link").style.textDecoration = "underline";
+        }, 1500);
+      }
+    });
   </script>
 </body>
 
