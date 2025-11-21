@@ -42,9 +42,22 @@
       flex-direction: column;
       justify-content: center;
       position: relative;
+      animation: bodyenter 1s;
     }
 
-    /* --- Scanline & CRT Effects --- */
+    @keyframes bodyenter {
+      from {
+        opacity: 0;
+        filter: blur(10px);
+        transform: scale(.99);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .crt-overlay {
       position: fixed;
       top: 0;
