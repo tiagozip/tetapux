@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SECURITY ALERT SIMULATION</title>
+  <style>
+    /* RESET & BASIC SETUP */
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      /* Prevent text selection to mimic kiosk mode */
+      cursor: default;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+      /* Prevent scrolling */
+      color: #00ff00;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* EDUCATIONAL DISCLAIMER - CANNOT BE REMOVED */
+    #edu-disclaimer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      color: white;
+      opacity: .3;
+      text-align: center;
+      font-family: sans-serif;
+      font-weight: 100;
+      font-size: 11px;
+      padding: 10px;
+      z-index: 10000;
+    }
+
+    /* BACKGROUND GLITCH EFFECTS */
+    .bg-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.1;
+      z-index: 0;
+      word-wrap: break-word;
+      font-size: 12px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* MAIN CONTAINER */
+    .alert-box {
+      position: relative;
+      width: 800px;
+      max-width: 95%;
+      background: #1a0000;
+      /* Dark Red Background */
+      border: 4px solid #ff0000;
+      box-shadow: 0 0 50px #ff0000, inset 0 0 50px #500000;
+      z-index: 10;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+      animation: borderPulse 0.5s infinite alternate;
+    }
+
+    /* HEADER */
+    .header {
+      grid-column: 1 / -1;
+      background: #ff0000;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      animation: flashHeader 0.8s infinite;
+      letter-spacing: 2px;
+    }
+
+    /* LEFT COLUMN - IMAGERY */
+    .icon-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ff3333;
+      padding: 10px;
+      background: #000;
+    }
+
+    .skull {
+      font-size: 80px;
+      color: red;
+      animation: shake 0.2s infinite;
+    }
+
+    .status-text {
+      margin-top: 10px;
+      color: red;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* RIGHT COLUMN - TEXT CONTENT */
+    .content-area {
+      color: #fff;
+    }
+
+    h2 {
+      color: #ff3333;
+      margin-top: 0;
+      text-transform: uppercase;
+      font-size: 22px;
+      text-shadow: 2px 2px 0px #000;
+    }
+
+    .scary-details {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .highlight {
+      background: #ff0000;
+      color: #fff;
+      padding: 2px 5px;
+      font-weight: bold;
+    }
+
+    /* FAKE TERMINAL */
+    .terminal {
+      background: #000;
+      border: 1px solid #333;
+      height: 120px;
+      overflow: hidden;
+      padding: 10px;
+      font-size: 11px;
+      color: #00ff00;
+      margin-bottom: 15px;
+      font-family: monospace;
+      position: relative;
+    }
+
+    .terminal::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    /* ACTION BUTTONS */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: not-allowed;
+      /* Shows the user they have no control */
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: #ff0000;
+      color: #fff;
+      border: 2px solid #fff;
+      animation: pulseBtn 1s infinite;
+    }
+
+    .btn-primary:hover {
+      background: #cc0000;
+    }
+
+    /* TIMER */
+    .timer-box {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 18px;
+      color: yellow;
+    }
+
+    /* MODAL OVERLAY (fake popup) */
+    .overlay-popup {
+      position: absolute;
+      top: 20%;
+      left: 60%;
+      width: 300px;
+      background: #cecece;
+      border: 2px solid #fff;
+      box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.8);
+      z-index: 20;
+      color: #000;
+      font-family: sans-serif;
+      padding: 5px;
+      animation: jitter 3s infinite;
+    }
+
+    .popup-header {
+      background: linear-gradient(to right, #000080, #1084d0);
+      color: white;
+      padding: 2px 5px;
+      font-weight: bold;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .popup-body {
+      padding: 15px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .popup-body strong {
+      color: red;
+      font-size: 16px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes borderPulse {
+      0% {
+        box-shadow: 0 0 20px #ff0000;
+        border-color: #aa0000;
+      }
+
+      100% {
+        box-shadow: 0 0 60px #ff0000;
+        border-color: #ff0000;
+      }
+    }
+
+    @keyframes flashHeader {
+
+      0%,
+      100% {
+        background: #ff0000;
+        color: white;
+      }
+
+      50% {
+        background: #fff;
+        color: #ff0000;
+      }
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translate(1px, 1px) rotate(0deg);
+      }
+
+      10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+      }
+
+      20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+      }
+
+      30% {
+        transform: translate(3px, 2px) rotate(0deg);
+      }
+
+      40% {
+        transform: translate(1px, -1px) rotate(1deg);
+      }
+
+      50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+      }
+
+      60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+      }
+
+      70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+      }
+
+      80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+      }
+
+      90% {
+        transform: translate(1px, 2px) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+      }
+    }
+
+    @keyframes pulseBtn {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes jitter {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      2% {
+        transform: translate(-2px, 2px);
+      }
+
+      4% {
+        transform: translate(2px, -2px);
+      }
+
+      6% {
+        transform: translate(0, 0);
+      }
+
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- EDUCATIONAL DISCLAIMER -->
+  <div id="edu-disclaimer">
+    This is a simulated phishing template. No actual malware is present. Do not use for malicious purposes.
+  </div>
+
+  <!-- Background decorative code -->
+  <div class="bg-text" id="bgText"></div>
+
+  <!-- MAIN SCAREWARE WINDOW -->
+  <div class="alert-box">
+    <div class="header">
+      ⚠ SYSTEM CRITICAL FAILURE DETECTED ⚠
+    </div>
+
+    <div class="icon-area">
+      <div class="skull">☠</div>
+      <div class="status-text">
+        THREAT LEVEL: CRITICAL<br>
+        ERROR: 0x80040201<br>
+        IP: EXPOSED
+      </div>
+    </div>
+
+    <div class="content-area">
+      <h2>Immediate Action Required</h2>
+      <p class="scary-details">
+        Microsoft Windows has detected <strong>(17)</strong> suspicious rootkits on your system. Your personal data,
+        banking information, and webcam are currently being transmitted to a remote server.
+      </p>
+      <p class="scary-details">
+        <span class="highlight">DO NOT CLOSE THIS WINDOW</span> or your hard drive will be permanently erased to prevent
+        virus propagation.
+      </p>
+
+      <div class="terminal" id="consoleLog">
+        > SYSTEM_CHECK_INIT...<br>
+        > SCANNING C:/WINDOWS/SYSTEM32...<br>
+      </div>
+
+      <div class="timer-box">
+        DELETION IMMINENT IN: <span id="timer" style="color:red; font-weight:900; font-size: 24px;">01:59</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-primary"
+          onclick="alert('This is a simulation. In a real attack, clicking this might download real malware.')">
+          REMOVE ALL THREATS NOW
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP WINDOW -->
+  <div class="overlay-popup">
+    <div class="popup-header">
+      <span>SecurityCenter.exe</span>
+      <span>X</span>
+    </div>
+    <div class="popup-body">
+      <strong>UNAUTHORIZED ACCESS!</strong>
+      Connection from IP 192.168.X.X attempted to access 'passwords.txt'.<br><br>
+      <button onclick="alert('Educational Demo: Scammers use popups to create layer overload.')">Block
+        Connection</button>
+    </div>
+  </div>
+
+  <script>
+    /* 
+       SCARY TEXT GENERATOR 
+       Generates random "hacking" jargon for the background and terminal
+    */
+    const logs = [
+      "Trojan.Win32.Inject detected...",
+      "Encrypting file system...",
+      "Uploading personal_data.zip (45%)...",
+      "Firewall breached at Port 443...",
+      "Rootkit installation complete...",
+      "Memory dump failed: 0xFF34A...",
+      "Keylogger active...",
+      "Webcam access: GRANTED...",
+      "Sending banking tokens to remote host...",
+      "Critical Service Halted: svchost.exe..."
+    ];
+
+    const terminal = document.getElementById('consoleLog');
+    const bgText = document.getElementById('bgText');
+
+    // Infinite scroll for terminal
+    setInterval(() => {
+      const p = document.createElement('div');
+      p.textContent = "> " + logs[Math.floor(Math.random() * logs.length)];
+      p.style.color = Math.random() > 0.8 ? "red" : "#00ff00"; // Occasional red error
+      terminal.appendChild(p);
+      terminal.scrollTop = terminal.scrollHeight;
+
+      // Keep DOM light
+      if (terminal.childElementCount > 20) {
+        terminal.removeChild(terminal.firstChild);
+      }
+    }, 300);
+
+    // Fill background with gibberish
+    function generateBackground() {
+      let text = "";
+      for (let i = 0; i < 2000; i++) {
+        text += Math.random().toString(16).substr(2, 8) + " ";
+      }
+      bgText.textContent = text;
+    }
+    generateBackground();
+
+    /* 
+       COUNTDOWN TIMER 
+       Creates urgency
+    */
+    let time = 119; // 1 minute 59 seconds
+    const timerElement = document.getElementById('timer');
+
+    setInterval(() => {
+      if (time > 0) {
+        time--;
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        timerElement.textContent =
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        // Make it flash faster as time runs out
+        if (time < 10) {
+          timerElement.style.textDecoration = "blink";
+          document.body.style.backgroundColor = (time % 2 === 0) ? "#1a0000" : "#000";
+        }
+      } else {
+        timerElement.textContent = "SYSTEM PURGE STARTED";
+        // Stop flashing at end
+        document.body.style.backgroundColor = "#000";
+      }
+    }, 1000);
+
+    /* 
+       INTERACTION BLOCKER 
+       (Purely visual prevention of right click, standard in these scams)
+    */
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+  </script>
+</body>
+
+</html>
