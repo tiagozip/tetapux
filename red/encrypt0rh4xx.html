@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulation: Ransomware Lock</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Krub:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #000000;
+      --text-red: #ff0f0f;
+      /* Vibrant red */
+      --text-white: #e0e0e0;
+      --text-grey: #a0a0a0;
+      --text-blue: #3b82f6;
+      --text-yellow: #eab308;
+      --font-header: 'Instrument Serif', serif;
+      --font-body: 'Krub', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* --- Scanline & CRT Effects --- */
+    .crt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+    }
+
+    /* --- Layout --- */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 40px 5vw;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 60px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* --- Left Column --- */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    h1 {
+      font-family: var(--font-header);
+      font-weight: 400;
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--text-red);
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+      letter-spacing: -1px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      gap: 20px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: var(--text-white);
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-family: var(--font-header);
+      font-size: 2.5rem;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    .email-section {
+      margin-top: 10px;
+    }
+
+    .email-label {
+      font-family: var(--font-header);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .email-address {
+      font-family: var(--font-body);
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      color: #dcdcdc;
+    }
+
+    .decryption-wrapper {
+      margin-top: 20px;
+    }
+
+    .input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .input-label {
+      font-family: var(--font-header);
+      font-size: 1.5rem;
+    }
+
+    .decrypt-link {
+      color: #4378c0;
+      text-decoration: underline;
+      cursor: pointer;
+      font-family: var(--font-header);
+      font-size: 1.5rem;
+      transition: color 0.2s;
+    }
+
+    .decrypt-link:hover {
+      color: #6aa5f7;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: transparent;
+      border: 1px solid #444;
+      padding: 15px;
+      color: white;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #666;
+    }
+
+    input::placeholder {
+      color: #555;
+    }
+
+    /* --- Right Column --- */
+    .right-col {
+      padding-top: 10px;
+    }
+
+    .info-block {
+      margin-bottom: 25px;
+    }
+
+    .info-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #cccccc;
+      margin-bottom: 15px;
+      font-weight: 300;
+    }
+
+    .warning-text {
+      color: #d6d6d6;
+    }
+
+    .highlight-red {
+      color: var(--text-red);
+      font-weight: 400;
+    }
+
+    /* --- Footer --- */
+    .simulation-footer {
+      text-align: center;
+      opacity: .3;
+      font-family: var(--font-header);
+      font-weight: 100;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 40px 20px;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+
+      .email-address {
+        font-size: 1.4rem;
+        word-break: break-all;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Visual Effects -->
+  <div class="crt-overlay"></div>
+
+  <div class="container">
+    <!-- Left Column -->
+    <div class="left-col">
+      <h1>Your files have been encrypted and uploaded to our dark web servers.</h1>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">Price to decrypt</span>
+          <span class="stat-value">$20,000</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Doubles in</span>
+          <span class="stat-value" id="timer-doubles">23:45:36</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Self-destructs</span>
+          <span class="stat-value" id="timer-destruct">48:45:36</span>
+        </div>
+      </div>
+
+      <div class="email-section">
+        <span class="email-label">Email for instructions to decrypt:</span>
+        <div class="email-address">9rbymx7a@proton.me</div>
+      </div>
+
+      <div class="decryption-wrapper">
+        <div class="input-header">
+          <span class="input-label">Decryption code:</span>
+          <a class="decrypt-link">Decrypt files</a>
+        </div>
+        <input type="text" placeholder="Type your 32-character decryption code...">
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-col">
+      <div class="info-block">
+        <div class="info-title">Ooops, your important files are encrypted.</div>
+        <p>
+          If you see this text, then your files are no longer accessible because they have been encrypted with
+          military-grade technology. Perhaps you are busy looking for a way to recover your files, but do not waste your
+          time. Nobody can recover your files without our decryption service.
+        </p>
+      </div>
+
+      <div class="info-block">
+        <p>We guarantee that you can recover all your files safely and easily.</p>
+        <p>
+          If you do not pay within 24 hours, the price of <strong>20 000$</strong> to decrypt your files will double. If
+          you do not pay within 48 hours, you will no longer be able to decrypt them and all information will be sold in
+          the dark web. There is no way to prevent this.
+        </p>
+        <p class="warning-text">
+          <span class="highlight-red">WARNING:</span> Any attempt to turn off the computer or remove the software will
+          result in the immediate destruction of your files.
+        </p>
+      </div>
+
+      <div class="info-block">
+        <div class="info-title">How to decrypt your files:</div>
+        <p>
+          Send an email to the address on the left with another personal device to obtain instructions on how to pay and
+          get in contact with us. We will provide you with all instructions and clarifications.
+        </p>
+        <p>
+          Once we send you the decryption code, type it in the box.
+        </p>
+
+        <div class="simulation-footer">
+          SIMULATION ONLY. FILES NOT ACTUALLY ENCRYPTED. INSTRUCTONS EMAIL IS NOT REAL.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to handle the countdown timers
+    function startTimer(duration, displayId) {
+      let timer = duration, hours, minutes, seconds;
+
+      setInterval(() => {
+        hours = parseInt(timer / 3600, 10);
+        minutes = parseInt((timer % 3600) / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        document.getElementById(displayId).textContent = hours + ":" + minutes + ":" + seconds;
+
+        if (--timer < 0) {
+          timer = 0;
+        }
+      }, 1000);
+    }
+
+    window.onload = () => {
+      // 23 hours 45 mins 36 seconds in seconds
+      const doublesTime = (23 * 3600) + (45 * 60) + 36;
+      // 48 hours 45 mins 36 seconds in seconds
+      const destructTime = (48 * 3600) + (45 * 60) + 36;
+
+      startTimer(doublesTime, "timer-doubles");
+      startTimer(destructTime, "timer-destruct");
+    };
+  </script>
+</body>
+
+</html>
