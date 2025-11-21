@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRITICAL SYSTEM ALERT</title>
+  <style>
+    /* --- RESET & BASE STYLES --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000;
+      color: #ff0000;
+      font-family: 'Courier New', Courier, monospace;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* --- EDUCATIONAL DISCLAIMER (Fixed Top) --- */
+    #edu-banner {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-family: sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      z-index: 9999;
+      border-bottom: 2px solid white;
+    }
+
+    /* --- MAIN CONTAINER --- */
+    .content-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      background: radial-gradient(circle, rgba(20, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 90%);
+    }
+
+    .modal {
+      width: 90%;
+      max-width: 1000px;
+      border: 4px solid #ff0000;
+      background-color: #0a0000;
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* --- VISUAL EFFECTS (Scanlines & Glitch) --- */
+    body::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 2;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    @keyframes glitch {
+      0% {
+        transform: translate(0)
+      }
+
+      20% {
+        transform: translate(-2px, 2px)
+      }
+
+      40% {
+        transform: translate(-2px, -2px)
+      }
+
+      60% {
+        transform: translate(2px, 2px)
+      }
+
+      80% {
+        transform: translate(2px, -2px)
+      }
+
+      100% {
+        transform: translate(0)
+      }
+    }
+
+    .glitch-text {
+      animation: glitch 0.5s infinite;
+      text-shadow: 2px 0 #fff, -2px 0 #00ff00;
+    }
+
+    /* --- LEFT COLUMN: LOCK & TIMER --- */
+    .left-col {
+      text-align: center;
+      border-right: 2px solid #330000;
+      padding-right: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .lock-icon {
+      font-size: 120px;
+      margin-bottom: 20px;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        text-shadow: 0 0 10px red;
+        transform: scale(1);
+      }
+
+      to {
+        text-shadow: 0 0 30px red;
+        transform: scale(1.05);
+      }
+    }
+
+    .timer-box {
+      background: #220000;
+      border: 1px solid red;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .timer-label {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .countdown {
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #fff;
+    }
+
+    /* --- RIGHT COLUMN: INFORMATION --- */
+    .right-col {
+      padding-left: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      border-bottom: 2px solid red;
+      padding-bottom: 10px;
+      line-height: 1;
+    }
+
+    .alert-box {
+      background-color: #ff0000;
+      color: black;
+      font-weight: bold;
+      padding: 10px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      text-align: center;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    p {
+      margin-bottom: 15px;
+      line-height: 1.4;
+      font-size: 1.1rem;
+    }
+
+    .highlight {
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .terminal-log {
+      background: #000;
+      border: 1px solid #333;
+      height: 150px;
+      overflow: hidden;
+      padding: 10px;
+      font-size: 0.8rem;
+      color: #0f0;
+      /* Matrix green for contrast in logs */
+      font-family: monospace;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    /* --- BUTTONS --- */
+    .btn-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid red;
+      background: transparent;
+      color: red;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: red;
+      color: black;
+      box-shadow: 0 0 20px red;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .modal {
+        grid-template-columns: 1fr;
+      }
+
+      .left-col {
+        border-right: none;
+        border-bottom: 2px solid #330000;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- DISCLAIMER BANNER -->
+  <div id="edu-banner">
+    ⚠️ DEMONSTRATION / EDUCATIONAL PURPOSE ONLY. YOUR FILES ARE SAFE. THIS IS NOT REAL MALWARE. ⚠️
+  </div>
+
+  <div class="content-wrapper">
+    <div class="modal">
+      <!-- Left Side -->
+      <div class="left-col">
+        <div class="lock-icon">🔒</div>
+        <h2 style="color:white;">YOUR PERSONAL ID</h2>
+        <p style="font-size: 0.9rem; margin-top:10px; word-break: break-all;">843-921-FDA-291-KEY</p>
+
+        <div class="timer-box">
+          <div class="timer-label">DATA DELETION COMMENCES IN:</div>
+          <div class="countdown" id="countdown">47:59:59</div>
+        </div>
+        <p style="margin-top: 20px; font-size: 0.8rem; color: #888;">
+          IP DETECTED: <span style="color:red" id="ip-addr">192.168.X.X</span><br>
+          OS: WINDOWS (COMPROMISED)
+        </p>
+      </div>
+
+      <!-- Right Side -->
+      <div class="right-col">
+        <h1 class="glitch-text">ALL FILES ENCRYPTED</h1>
+
+        <div class="alert-box">
+          DO NOT CLOSE THIS WINDOW
+        </div>
+
+        <p>
+          <span class="highlight">WHAT HAPPENED?</span><br>
+          Your computer was infected with military-grade ransomware. All your documents, photos, databases, and other
+          important files have been encrypted with a strong key.
+        </p>
+
+        <p>
+          <span class="highlight">CAN I RECOVER MY FILES?</span><br>
+          The private decryption key is stored on our secret internet server and nobody can decrypt your files until you
+          pay and obtain the private key.
+        </p>
+
+        <!-- Fake Terminal Output -->
+        <div class="terminal-log" id="terminal">
+          > SYSTEM_CHECK_INIT...<br>
+          > ROOT_ACCESS: GRANTED<br>
+        </div>
+
+        <p style="font-size: 0.9rem;">
+          To receive your decryption key, send <strong>$500 USD</strong> in Bitcoin to the address below.
+        </p>
+
+        <div class="btn-container">
+          <button class="btn"
+            onclick="alert('DEMO ENDED: In a real scenario, clicking this would lead to a payment gateway.')">I WANT TO
+            PAY</button>
+          <button class="btn"
+            onclick="alert('DENIED. In a real scenario, this button would do nothing or increase the price.')">DECRYPT
+            FOR FREE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. SCARY COUNTDOWN TIMER ---
+    // Starts at 48 hours
+    let time = 48 * 60 * 60;
+    const countdownEl = document.getElementById('countdown');
+
+    setInterval(() => {
+      const hours = Math.floor(time / 3600);
+      const minutes = Math.floor((time % 3600) / 60);
+      const seconds = time % 60;
+
+      // Format with leading zeros
+      countdownEl.innerText =
+        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+      if (time > 0) {
+        time--;
+      } else {
+        countdownEl.innerText = "00:00:00";
+        countdownEl.style.color = "red";
+        countdownEl.classList.add('glitch-text');
+      }
+    }, 1000);
+
+    // --- 2. FAKE TERMINAL LOG ---
+    // Adds scary looking file paths being "encrypted"
+    const terminal = document.getElementById('terminal');
+    const fileExtensions = ['.jpg', '.doc', '.xls', '.zip', '.mp4', '.pdf', '.db'];
+    const directories = ['/User/Documents/', '/System32/', '/Program Files/', '/User/Pictures/Family/'];
+
+    function addLog() {
+      const dir = directories[Math.floor(Math.random() * directories.length)];
+      const ext = fileExtensions[Math.floor(Math.random() * fileExtensions.length)];
+      const randomNum = Math.floor(Math.random() * 9999);
+
+      const newLine = document.createElement('div');
+      newLine.innerHTML = `> ENCRYPTING: ${dir}file_${randomNum}${ext} ... <span style="color:red">[LOCKED]</span>`;
+
+      terminal.appendChild(newLine);
+      terminal.scrollTop = terminal.scrollHeight; // Auto scroll to bottom
+    }
+
+    // Add a new log line every 200ms to 800ms
+    setInterval(() => {
+      addLog();
+    }, 400);
+
+    // --- 3. FAKE IP FETCHER ---
+    // Does not actually fetch real IP for privacy, just randomizes the last digit
+    const ipEl = document.getElementById('ip-addr');
+    ipEl.innerText = `192.168.0.${Math.floor(Math.random() * 255)}`;
+
+    // --- 4. AUDIO (Optional Click Interaction) ---
+    // Browsers block auto-play audio. We add a click listener to the body
+    // to start a scary low hum if the user interacts with the page.
+    let audioCtx;
+    document.body.addEventListener('click', () => {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // Simple low frequency oscillator
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.type = 'sawtooth';
+        oscillator.frequency.setValueAtTime(50, audioCtx.currentTime); // Low drone
+        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); // Very quiet
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start();
+      }
+    });
+  </script>
+</body>
+
+</html>

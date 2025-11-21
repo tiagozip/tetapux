@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RANSOMWARE SIMULATION</title>
+  <style>
+    /* --- RESET & CORE SETTINGS --- */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #110000;
+      /* Deep blood red/black */
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- EDUCATIONAL DISCLAIMER (NON-REMOVABLE) --- */
+    #edu-banner {
+      color: white;
+      text-align: center;
+      font-weight: 100;
+      font-size: 9px;
+      padding: 2px;
+      z-index: 99999;
+      font-family: monospace;
+      opacity: .3;
+    }
+
+    /* --- MAIN LAYOUT --- */
+    .ransom-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      position: relative;
+    }
+
+    /* --- LEFT SIDEBAR (PAYMENT & TIMER) --- */
+    .sidebar {
+      background: #800000;
+      /* Dark Red */
+      padding: 20px;
+      border-right: 5px solid #ff0000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+    }
+
+    .lock-icon {
+      font-size: 100px;
+      margin-bottom: 20px;
+      animation: lockPulse 2s infinite;
+    }
+
+    .timer-label {
+      font-size: 14px;
+      margin-top: 20px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .timer {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      background: #000;
+      padding: 10px;
+      border: 2px solid #ff0000;
+      margin: 5px 0 20px 0;
+      letter-spacing: 2px;
+      animation: blinkRed 1s infinite;
+    }
+
+    .payment-box {
+      background: #fff;
+      color: #000;
+      padding: 15px;
+      width: 100%;
+      text-align: center;
+      border: 3px dashed #000;
+    }
+
+    .btc-address {
+      background: #eee;
+      font-family: monospace;
+      font-size: 12px;
+      padding: 5px;
+      border: 1px solid #aaa;
+      word-break: break-all;
+      margin: 10px 0;
+      user-select: all;
+      /* Allow them to select this to feel "real" */
+    }
+
+    /* --- RIGHT CONTENT (FILES & MESSAGE) --- */
+    .main-content {
+      padding: 40px;
+      background: linear-gradient(135deg, #000 0%, #1a0505 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Glitchy Header */
+    h1.glitch {
+      font-size: 48px;
+      font-weight: 900;
+      text-transform: uppercase;
+      position: relative;
+      color: #fff;
+      margin: 0 0 20px 0;
+    }
+
+    h1.glitch::before,
+    h1.glitch::after {
+      content: "YOUR FILES ARE ENCRYPTED";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a0505;
+    }
+
+    h1.glitch::before {
+      left: 2px;
+      text-shadow: -1px 0 red;
+      clip: rect(24px, 550px, 90px, 0);
+      animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+    }
+
+    h1.glitch::after {
+      left: -2px;
+      text-shadow: -1px 0 blue;
+      clip: rect(85px, 550px, 140px, 0);
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+
+    .message-body {
+      font-size: 18px;
+      line-height: 1.5;
+      max-width: 800px;
+      margin-bottom: 30px;
+    }
+
+    .highlight {
+      background-color: #ff0000;
+      color: white;
+      padding: 0 5px;
+      font-weight: bold;
+    }
+
+    /* SCROLLING FILE LIST */
+    .file-list-container {
+      border: 2px solid #ff0000;
+      background: #000;
+      color: #00ff00;
+      font-family: monospace;
+      height: 200px;
+      overflow: hidden;
+      padding: 10px;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .file-list-container::before {
+      content: "ENCRYPTION LOG:";
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #ff0000;
+      color: #fff;
+      padding: 2px 5px;
+      font-weight: bold;
+    }
+
+    .scan-line {
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 0, 0, 0.3);
+      position: absolute;
+      z-index: 50;
+      animation: scan 3s linear infinite;
+      pointer-events: none;
+    }
+
+    /* --- ANIMATIONS --- */
+    @keyframes blinkRed {
+      50% {
+        color: #ff0000;
+        border-color: #fff;
+      }
+    }
+
+    @keyframes lockPulse {
+      0% {
+        transform: scale(1);
+        text-shadow: 0 0 10px #000;
+      }
+
+      50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 30px red;
+      }
+
+      100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px #000;
+      }
+    }
+
+    @keyframes glitch-anim-1 {
+      0% {
+        clip: rect(20px, 9999px, 15px, 0);
+      }
+
+      20% {
+        clip: rect(50px, 9999px, 80px, 0);
+      }
+
+      40% {
+        clip: rect(10px, 9999px, 90px, 0);
+      }
+
+      60% {
+        clip: rect(60px, 9999px, 10px, 0);
+      }
+
+      80% {
+        clip: rect(30px, 9999px, 50px, 0);
+      }
+
+      100% {
+        clip: rect(70px, 9999px, 20px, 0);
+      }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% {
+        clip: rect(80px, 9999px, 10px, 0);
+      }
+
+      20% {
+        clip: rect(10px, 9999px, 90px, 0);
+      }
+
+      40% {
+        clip: rect(50px, 9999px, 30px, 0);
+      }
+
+      60% {
+        clip: rect(20px, 9999px, 60px, 0);
+      }
+
+      80% {
+        clip: rect(90px, 9999px, 40px, 0);
+      }
+
+      100% {
+        clip: rect(30px, 9999px, 80px, 0);
+      }
+    }
+
+    @keyframes scan {
+      0% {
+        top: 0%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="edu-banner">
+    This is a fake ransomware interface. No files are actually encrypted.
+  </div>
+
+  <div class="ransom-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="lock-icon">🔒</div>
+
+      <div class="timer-label">Payment Required In:</div>
+      <div class="timer" id="countdown">47:59:59</div>
+
+      <div class="timer-label">Files Lost In:</div>
+      <div class="timer" style="color:red; font-size:20px">71:59:59</div>
+
+      <div class="payment-box">
+        <h3>SEND BITCOIN</h3>
+        <p>Send <strong>$1,500 USD</strong> worth of Bitcoin to this address:</p>
+        <div class="btc-address">1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</div>
+        <button
+          style="margin-top:10px; width:100%; padding:10px; background:red; color:white; border:none; font-weight:bold; cursor: pointer;"
+          onclick="alert('Simulation: In a real attack, this checks the blockchain for payment.')">CHECK
+          PAYMENT</button>
+      </div>
+    </aside>
+
+    <!-- RIGHT CONTENT -->
+    <main class="main-content">
+      <div class="scan-line"></div>
+      <h1 class="glitch">YOUR FILES ARE ENCRYPTED</h1>
+
+      <div class="message-body">
+        <p><strong>Ooops, your important files are encrypted.</strong></p>
+        <p>If you see this text, then your files are no longer accessible because they have been encrypted. Perhaps you
+          are busy looking for a way to recover your files, but do not waste your time. Nobody can recover your files
+          without our decryption service.</p>
+        <p>We guarantee that you can recover all your files safely and easily. All you need to do is submit the payment
+          and purchase the decryption key.</p>
+        <p><span class="highlight">WARNING:</span> Any attempt to turn off the computer or remove the software will
+          result in the <strong>immediate destruction</strong> of your private key.</p>
+      </div>
+
+      <div class="file-list-container" id="fileLog">
+        <!-- Javascript will populate this -->
+        <div style="margin-top: 20px;"></div>
+      </div>
+
+      <div style="margin-top: 20px; font-size: 12px; color: #aaa;">
+        Server ID: <span style="color:white">UID-8842-XJ9</span> | Connection: <span style="color:green">ESTABLISHED
+          (Tor)</span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // --- SIMULATED FILE ENCRYPTION LOG ---
+    const filenames = [
+      "passwords.txt", "family_vacation.jpg", "tax_returns_2023.pdf",
+      "resume.docx", "crypto_wallet.dat", "backup_codes.txt",
+      "project_alpha_source.zip", "wedding_photos.rar", "bank_statement.pdf",
+      "contacts_export.csv", "private_key.pem", "work_email_archive.pst"
+    ];
+
+    const extensions = [".locked", ".enc", ".crypted", ".no_access"];
+    const fileLog = document.getElementById('fileLog');
+
+    function addLogEntry() {
+      const file = filenames[Math.floor(Math.random() * filenames.length)];
+      const ext = extensions[Math.floor(Math.random() * extensions.length)];
+      const div = document.createElement('div');
+
+      // Random directory path simulation
+      const path = Math.random() > 0.5 ? "C:\\Users\\Admin\\Documents\\" : "D:\\Backups\\Personal\\";
+
+      div.textContent = `ENCRYPTING: ${path}${file} => ${file}${ext}`;
+      div.style.borderBottom = "1px solid #330000";
+
+      fileLog.appendChild(div);
+      fileLog.scrollTop = fileLog.scrollHeight;
+
+      // Keep DOM light
+      if (fileLog.childElementCount > 50) {
+        fileLog.removeChild(fileLog.children[1]); // Keep header
+      }
+    }
+
+    // Fast scrolling effect
+    setInterval(addLogEntry, 150);
+
+
+    // --- COUNTDOWN TIMER ---
+    // Starts at 47:59:59
+    let totalSeconds = 48 * 3600 - 1;
+    const timerEl = document.getElementById('countdown');
+
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        timerEl.innerText =
+          `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+    }, 1000);
+
+
+    // --- ANTI-INTERACTION ---
+    // Prevent right click to simulate "Lockout"
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Block common key combos (visual only, cannot block system keys)
+    document.onkeydown = (e) => {
+      if (e.keyCode == 123) { return false; } // F12
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Shift+I
+    }
+
+  </script>
+</body>
+
+</html>
