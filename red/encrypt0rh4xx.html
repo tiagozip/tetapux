@@ -412,6 +412,37 @@
         }, 1500);
       }
     });
+
+    document.body.addEventListener("click", () => {
+      var elem = document.documentElement;
+
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    });
+
+    window.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+    document.body.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        return;
+      }
+    });
+
+
   </script>
 </body>
 
