@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Player Clone</title>
+  <style>
+    :root {
+      --primary-blue: #3ea6ff;
+      --opera-red: #fa1e4e;
+      /* Just in case needed */
+      --install-teal: #409d9d;
+      --install-teal-hover: #2f7a7a;
+      --bg-overlay: rgba(0, 0, 0, 0.7);
+      --control-bg: rgba(0, 0, 0, 0.6);
+      --text-white: #ffffff;
+      --text-grey: #aaaaaa;
+      --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      /* Prevent text selection like a real app */
+    }
+
+    body {
+      background-color: #000;
+      color: var(--text-white);
+      font-family: var(--font-main);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Main Video Container */
+    .video-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* --- Top Controls --- */
+    .top-bar {
+      padding: 20px;
+      display: flex;
+      gap: 15px;
+      z-index: 10;
+    }
+
+    .circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.1s ease;
+    }
+
+    .circle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-close {
+      background-color: rgba(255, 255, 255, 0.2);
+      /* Greyish glass */
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-close svg {
+      stroke: white;
+      width: 20px;
+      height: 20px;
+    }
+
+    .btn-like {
+      background-color: #1877f2;
+      /* FB Blue */
+    }
+
+    .btn-like svg {
+      fill: white;
+      width: 20px;
+      height: 20px;
+    }
+
+    /* --- Center Modal --- */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      /* Dimming the video behind */
+      z-index: 20;
+    }
+
+    .modal {
+      background: white;
+      color: #333;
+      width: 400px;
+      max-width: 90%;
+      padding: 24px;
+      border-radius: 4px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .modal h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #000;
+    }
+
+    .modal p {
+      font-size: 15px;
+      line-height: 1.4;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .modal p strong {
+      font-weight: 700;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-install {
+      background: none;
+      border: none;
+      color: var(--install-teal);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-install:hover {
+      background: rgba(64, 157, 157, 0.1);
+      color: var(--install-teal-hover);
+    }
+
+    /* --- Bottom Controls --- */
+    .bottom-bar {
+      padding: 0 20px 15px 20px;
+      /* Left/Right padding, bottom padding */
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+      z-index: 10;
+    }
+
+    /* Progress Bar Area */
+    .progress-container {
+      width: 100%;
+      height: 15px;
+      /* Hit area height */
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-blue);
+      width: 1.8%;
+      /* Matches 00:02 / 1:52:46 roughly */
+      position: relative;
+    }
+
+    /* The little dot at the end of the blue line */
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: -3.5px;
+      /* Center vertically relative to 3px height */
+      width: 10px;
+      height: 10px;
+      background: var(--primary-blue);
+      border-radius: 50%;
+      opacity: 0;
+      /* Hidden unless hovered usually, but let's mimic image */
+      transition: opacity 0.2s;
+    }
+
+    .progress-container:hover .progress-fill::after {
+      opacity: 1;
+    }
+
+    /* Controls Row */
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+    .left-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .right-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+      color: white;
+    }
+
+    .icon-btn:hover {
+      opacity: 1;
+    }
+
+    .icon-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    .time-display {
+      font-size: 13px;
+      font-weight: 400;
+      color: #ddd;
+    }
+
+    /* Utility for hiding elements on very small screens if needed */
+    @media (max-width: 500px) {
+      .time-display {
+        font-size: 11px;
+      }
+
+      .modal {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="video-container" id="videoContainer">
+
+    <!-- Top Left Controls -->
+    <div class="top-bar">
+      <button class="circle-btn btn-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <button class="circle-btn btn-like" aria-label="Like">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
+          </path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Center Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <h2>Attention</h2>
+        <p>We recommended to install the latest <strong>Opera GX</strong> app and continue watching...</p>
+        <div class="modal-actions">
+          <button class="btn-install" onclick="closeModal()">INSTALL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-bar">
+      <!-- Progress Bar -->
+      <div class="progress-container" id="progressBar">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Icons Row -->
+      <div class="controls-row">
+        <div class="left-controls">
+          <button class="icon-btn" id="playPauseBtn">
+            <svg viewBox="0 0 24 24" id="playIcon">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </button>
+          <span class="time-display">00:02 / 1:52:46</span>
+        </div>
+
+        <div class="right-controls">
+          <!-- Settings Gear -->
+          <button class="icon-btn">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+              </path>
+            </svg>
+          </button>
+          <!-- Mini Player / PiP -->
+          <button class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <rect x="2" y="2" width="20" height="20" rx="2" ry="2" stroke-width="2"></rect>
+              <rect x="12" y="12" width="7" height="7" fill="white"></rect>
+            </svg>
+          </button>
+          <!-- Expand -->
+          <button class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+          </button>
+          <!-- Volume -->
+          <button class="icon-btn">
+            <svg viewBox="0 0 24 24">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Interactive Logic ---
+
+    // 1. Install Button Mock Action
+    function closeModal() {
+      const modal = document.getElementById('modalOverlay');
+      // Animate out
+      modal.style.transition = 'opacity 0.3s ease';
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        // Auto play video for effect
+        togglePlay(true);
+      }, 300);
+    }
+
+    // 2. Play/Pause Toggle
+    const playBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    let isPlaying = false;
+
+    const iconPathPlay = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+    const iconPathPause = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+
+    function togglePlay(forcePlay = false) {
+      if (forcePlay) isPlaying = false; // flip logic below
+
+      if (isPlaying) {
+        // Switch to Play
+        playIcon.innerHTML = iconPathPlay;
+        isPlaying = false;
+      } else {
+        // Switch to Pause
+        playIcon.innerHTML = iconPathPause;
+        isPlaying = true;
+      }
+    }
+
+    playBtn.addEventListener('click', () => togglePlay());
+
+    // 3. Progress Bar Interaction
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const percentage = Math.min(Math.max((clickX / width) * 100, 0), 100);
+
+      progressFill.style.width = percentage + '%';
+    });
+
+    // 4. Keyboard shortcuts (Space to play/pause)
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlay();
+      }
+    });
+  </script>
+</body>
+
+</html>
