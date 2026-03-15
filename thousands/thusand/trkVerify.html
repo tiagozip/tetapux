@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Just a moment...</title>
+  <style>
+    :root {
+      --brand-blue: #2c7be5;
+      --brand-blue-glow: rgba(44, 123, 229, 0.4);
+      --success-green: #00d27a;
+      --error-red: #e63757;
+      --light-border: #e3ebf6;
+      --bg-color: #f8fafd;
+      --text-main: #12263f;
+      --text-muted: #6e84a3;
+      --robot-main: #ffffff;
+      --robot-shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #000; /* Fallback */
+    }
+
+    /* =========================================
+       BACKGROUND IFRAME & OVERLAY
+       ========================================= */
+    .bg-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      filter: blur(12px) brightness(1.2);
+      z-index: 1;
+      pointer-events: none;
+      transform: scale(1.05); /* Prevents blur edge bleed */
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4); /* Darkens the background */
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* =========================================
+       MAIN UI CONTAINER
+       ========================================= */
+    .main-container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 30px;
+    }
+
+    /* =========================================
+       ROBOT ILLUSTRATION
+       ========================================= */
+    .robot-illustration {
+      position: relative;
+      width: 200px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .robot-body {
+      width: 140px;
+      height: 90px;
+      background: var(--robot-main);
+      border-radius: 40px;
+      box-shadow: 0 10px 25px var(--robot-shadow), inset 0 -4px 10px rgba(0,0,0,0.05);
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .robot-ears {
+      position: absolute;
+      width: 160px;
+      height: 25px;
+      background: #e3ebf6;
+      border-radius: 20px;
+      z-index: 1;
+    }
+
+    .robot-visor {
+      width: 100px;
+      height: 35px;
+      background-color: #12263f;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
+    }
+
+    .visor-laser {
+      position: absolute;
+      top: 0;
+      left: -30%;
+      width: 40px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--brand-blue), transparent);
+      box-shadow: 0 0 15px var(--brand-blue);
+      animation: scan 2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+    }
+
+    .visor-laser.success {
+      background: linear-gradient(90deg, transparent, var(--success-green), transparent);
+      box-shadow: 0 0 15px var(--success-green);
+      animation: none; left: 0; width: 100%; opacity: 0.8;
+    }
+
+    .visor-laser.error {
+      background: linear-gradient(90deg, transparent, var(--error-red), transparent);
+      box-shadow: 0 0 15px var(--error-red);
+      animation: none; left: 0; width: 100%; opacity: 0.8;
+    }
+
+    @keyframes scan {
+      0% { left: -40%; }
+      100% { left: 100%; }
+    }
+
+    .thruster {
+      width: 40px;
+      height: 10px;
+      background: var(--brand-blue-glow);
+      border-radius: 50%;
+      margin-top: 10px;
+      filter: blur(4px);
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* =========================================
+       SPEECH BUBBLE
+       ========================================= */
+    .speech-bubble {
+      position: absolute;
+      background: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--light-border);
+      width: 250px;
+      text-align: center;
+      top: -85px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.8) translateY(10px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+    }
+
+    .speech-bubble.visible {
+      transform: translateX(-50%) scale(1) translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-right: 1px solid var(--light-border);
+      border-bottom: 1px solid var(--light-border);
+    }
+
+    .speech-bubble p {
+      margin: 0;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* =========================================
+       CAPTCHA CONTAINER (EXPANDING)
+       ========================================= */
+    .captcha-container {
+      background-color: #ffffff;
+      border: 1px solid var(--light-border);
+      border-radius: 8px;
+      width: 340px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      height: 74px; /* Default collapsed height */
+      opacity: 0; /* Starts invisible for preloader fade-in */
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      min-height: 74px;
+      border-bottom: 1px solid transparent;
+      transition: border-bottom 0.3s ease;
+    }
+
+    .captcha-container.active .header-row {
+      border-bottom: 1px solid var(--light-border);
+      background-color: #fbfdff;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .checkbox-wrapper.clickable {
+      cursor: pointer;
+    }
+
+    .checkmark-box {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #cbd5e1;
+      background-color: #fff;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s ease;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .checkbox-wrapper.clickable:hover .checkmark-box {
+      border-color: var(--text-muted);
+    }
+
+    .captcha-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-main);
+      user-select: none;
+    }
+
+    .ddos-guard-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      border-left: 1px solid var(--light-border);
+      padding-left: 15px;
+      flex-shrink: 0;
+    }
+
+    .ddos-guard-logo svg {
+      fill: var(--text-muted);
+      width: 20px;
+    }
+
+    .logo-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* Checkmark States & Spinners */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top-color: var(--brand-blue);
+      border-right-color: var(--brand-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .checkmark-box.thinking {
+      border-color: transparent;
+      background-color: transparent;
+    }
+    .checkmark-box.thinking .spinner { display: block; }
+
+    .checkmark-box.success {
+      border-color: var(--success-green);
+      background-color: var(--success-green);
+    }
+    .checkmark-box.error {
+      border-color: var(--error-red);
+      background-color: var(--error-red);
+    }
+
+    .svg-icon {
+      display: none; width: 18px; height: 18px;
+      stroke: white; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .checkmark-box.success .check-icon { display: block; }
+    .checkmark-box.error .cross-icon { display: block; }
+
+    .check-icon path, .cross-icon path {
+      stroke-dasharray: 24; stroke-dashoffset: 24;
+      animation: draw 0.4s ease forwards;
+    }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    /* =========================================
+       EXPANDED INSTRUCTIONS (VERIFY WINDOW)
+       ========================================= */
+    .verify-window {
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease 0.2s; /* Delays fade-in slightly */
+      display: none;
+    }
+
+    .captcha-container.active .verify-window {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .verify-main {
+      color: var(--text-main);
+      font-size: 14px;
+    }
+
+    .verify-main p { margin: 0 0 15px 0; }
+
+    .verify-main ol {
+      background: var(--bg-color);
+      padding: 15px 15px 15px 35px;
+      border-radius: 8px;
+      border: 1px solid var(--light-border);
+      margin-bottom: 20px;
+    }
+    .verify-main li { margin-bottom: 8px; }
+    .verify-main li:last-child { margin-bottom: 0; }
+
+    .verify-main code {
+      display: block;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: monospace;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-size: 12px;
+    }
+
+    .btn-primary {
+      background-color: var(--brand-blue);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #2364c0;
+    }
+
+    /* Steps Utility Classes */
+    .step-text { display: none; }
+    .step-text.active { display: block; }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .secure-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--success-green);
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(0, 210, 122, 0.1);
+      padding: 4px 12px;
+      border-radius: 50px;
+    }
+    
+    .secure-badge svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .description-text {
+      font-size: 12px;
+      color: #94a3b8; /* Lighter text to look good against dark overlay */
+      text-align: center;
+      max-width: 420px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Blurred Background -->
+  <iframe class="bg-iframe" src="https://example.com/" tabindex="-1"></iframe>
+  <div class="bg-overlay"></div>
+
+  <div class="main-container">
+    
+    <!-- Robot Section -->
+    <div class="robot-illustration">
+      <div class="speech-bubble" id="speech-bubble">
+        <p id="speech-text">Running security checks...</p>
+      </div>
+      <div class="robot-ears"></div>
+      <div class="robot-body">
+        <div class="robot-visor">
+          <div class="visor-laser" id="visor-laser"></div>
+        </div>
+      </div>
+      <div class="thruster"></div>
+    </div>
+
+    <!-- Expanding Captcha Box -->
+    <div class="captcha-container" id="checkbox-window">
+      
+      <!-- Top Row (Always visible) -->
+      <div class="header-row">
+        <div class="checkbox-wrapper" id="captcha-btn">
+          <div class="checkmark-box thinking" id="checkmark-box">
+            <div class="spinner"></div>
+            <svg class="svg-icon check-icon" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17L4 12" /></svg>
+            <svg class="svg-icon cross-icon" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18" /><path d="M6 6L18 18" /></svg>
+          </div>
+          <div class="captcha-text">
+            <span class="step-text active" id="text-step0">Verifying your connection...</span>
+            <span class="step-text" id="text-step1">Verify you are human</span>
+            <span class="step-text" id="text-step2">Awaiting verification...</span>
+            <span class="step-text" id="text-step3">Verifying...</span>
+          </div>
+        </div>
+
+        <div class="ddos-guard-logo">
+          <svg viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0L2 4V14C2 22.28 8.21 28.91 12 30C15.79 28.91 22 22.28 22 14V4L12 0Z" />
+            <path d="M12.5 18H10.5V11H12.5V18Z" fill="white" />
+            <path d="M16.5 18H14.5V8H16.5V18Z" fill="white" />
+            <path d="M8.5 18H6.5V14H8.5V18Z" fill="white" />
+          </svg>
+          <div class="logo-text">DDOS-GUARD</div>
+        </div>
+      </div>
+
+      <!-- Expanded Row (Instructions) -->
+      <div class="verify-window" id="verify-window">
+        <main class="verify-main">
+          <p style="font-size: 16px; font-weight: 600;">To better prove you are not a robot, please:</p>
+          <ol>
+            <li>Go to <b>discord.com</b></li>
+            <li>Log in to your account</li>
+            <li>Confirm your devices are <b>happy</b></li>
+          </ol>
+          <p>
+            You will observe and agree:
+            <code id="ray-id-code">BotGuard verification (Ray ID: Generating...)</code>
+          </p>
+          <button id="verify-button" class="btn-primary">Verify Confirmation</button>
+        </main>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+
+  </div>
+
+  <script>
+    /* =========================================
+       TOKEN INJECTION (ON LOAD)
+       ========================================= */
+    function generateToken(length) {
+      const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+      return result;
+    }
+
+    const currentUrl = window.location.href.split("?")[0];
+    const timestamp = Math.floor(Date.now() / 1000);
+    const token = generateToken(80);
+    const random = generateToken(20);
+    const param = `__botguard_id=${token}-${timestamp}-1.2.4.6-${random}`;
+    
+    if (!window.location.search.includes("__cf_chl_tk=")) {
+      window.history.replaceState({}, "", currentUrl + "?" + param);
+    }
+
+    /* Generate Realistic Ray ID */
+    const rayId = generateToken(16).toLowerCase();
+    document.getElementById("ray-id-code").innerText = `BotGuard verification (Ray ID: ${rayId})`;
+
+    /* =========================================
+       DOM ELEMENTS & STATE LOGIC
+       ========================================= */
+    const checkboxWindow = document.getElementById("checkbox-window");
+    const captchaBtn = document.getElementById("captcha-btn");
+    const checkmarkBox = document.getElementById("checkmark-box");
+    const verifyButton = document.getElementById("verify-button");
+    const speechBubble = document.getElementById("speech-bubble");
+    const speechText = document.getElementById("speech-text");
+    const visorLaser = document.getElementById("visor-laser");
+
+    const textStep0 = document.getElementById("text-step0");
+    const textStep1 = document.getElementById("text-step1");
+    const textStep2 = document.getElementById("text-step2");
+    const textStep3 = document.getElementById("text-step3");
+
+    let isProcessing = false;
+
+    function switchText(activeEl) {
+      [textStep0, textStep1, textStep2, textStep3].forEach(el => el.classList.remove("active"));
+      activeEl.classList.add("active");
+    }
+
+    function showBubble(text) {
+      speechText.innerHTML = text;
+      speechBubble.classList.add("visible");
+    }
+
+    /* --- INITIALIZATION SEQUENCE --- */
+    document.addEventListener("DOMContentLoaded", function () {
+      
+      // 1. Show container (fade in)
+      setTimeout(() => {
+        checkboxWindow.style.opacity = 1;
+        showBubble("Running security checks...");
+      }, 300);
+
+      // 2. Preloader finishes -> Show Checkbox (Step 1)
+      setTimeout(() => {
+        checkmarkBox.classList.remove("thinking");
+        switchText(textStep1);
+        captchaBtn.classList.add("clickable");
+        
+        speechBubble.classList.remove("visible");
+        setTimeout(() => showBubble("Please click below to verify."), 400);
+
+      }, 2500);
+    });
+
+    /* --- USER CLICKS CHECKBOX (Step 2 - Expand Window) --- */
+    captchaBtn.addEventListener("click", function () {
+      if (!captchaBtn.classList.contains("clickable") || isProcessing) return;
+      isProcessing = true;
+      captchaBtn.classList.remove("clickable");
+
+      // Show spinner, update text
+      checkmarkBox.classList.add("thinking");
+      switchText(textStep2);
+      
+      speechBubble.classList.remove("visible");
+
+      setTimeout(() => {
+        // Expand the window
+        checkboxWindow.style.width = "480px";
+        checkboxWindow.style.height = "400px"; 
+        checkboxWindow.classList.add("active");
+
+        setTimeout(() => showBubble("Manual verification required."), 500);
+      }, 600);
+    });
+
+    /* --- USER CLICKS VERIFY BUTTON (Step 3 - Final Notification) --- */
+    verifyButton.addEventListener("click", function () {
+      // Shrink the window back
+      checkboxWindow.classList.remove("active");
+      checkboxWindow.style.height = "74px";
+      speechBubble.classList.remove("visible");
+
+      setTimeout(() => {
+        checkboxWindow.style.width = "340px";
+        switchText(textStep3);
+
+        setTimeout(() => {
+          // Trigger the final prompt
+          showBubble(`Click <strong>Allow</strong> above to complete verification.`);
+          
+          Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              // Success State
+              checkmarkBox.className = "checkmark-box success";
+              visorLaser.className = "visor-laser success";
+              switchText(textStep1);
+              textStep1.innerText = "Verification complete";
+              showBubble(`Verification successful.<br><strong>Thank you!</strong>`);
+              
+              // Optional: Redirect
+              // setTimeout(() => window.location.reload(), 2000);
+
+            } else {
+              // Failed State
+              checkmarkBox.className = "checkmark-box error";
+              visorLaser.className = "visor-laser error";
+              switchText(textStep1);
+              textStep1.innerText = "Verification failed";
+              showBubble(`Verification failed.<br><strong>Please reload the page.</strong>`);
+            }
+          });
+        }, 1000);
+      }, 500);
+    });
+  </script>
+</body>
+</html>
