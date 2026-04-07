@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRISM // SUBJECT IDENTIFIED</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05080f;
+      --surface: rgba(10,16,28,0.9);
+      --border: rgba(0,180,255,0.12);
+      --cyan: #00b4ff;
+      --cyan-dim: rgba(0,180,255,0.08);
+      --red: #ff2d55;
+      --red-dim: rgba(255,45,85,0.1);
+      --green: #30d158;
+      --yellow: #ffd60a;
+      --text: #d0d8e8;
+      --text-dim: #4a5568;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,180,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,180,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .scanline {
+      position: fixed;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,180,255,0.15), transparent);
+      animation: scanDown 4s linear infinite;
+      pointer-events: none;
+      z-index: 200;
+    }
+    @keyframes scanDown { from { top: -2px; } to { top: 100%; } }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 10;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .prism-logo {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 3px;
+    }
+    .classification {
+      background: var(--red-dim);
+      color: var(--red);
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      animation: blink 2s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0.3; } }
+    .header-right {
+      display: flex;
+      gap: 20px;
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+    .header-right span { display: flex; align-items: center; gap: 6px; }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,45,85,0.5); } 50% { box-shadow: 0 0 0 4px rgba(255,45,85,0); } }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 1px;
+      height: calc(100vh - 42px);
+      background: rgba(0,180,255,0.05);
+    }
+
+    .panel {
+      background: var(--surface);
+      padding: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(5px);
+    }
+    .panel-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      background: var(--cyan);
+      border-radius: 50%;
+    }
+
+    .subject-panel { grid-column: 1; }
+    .subject-photo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #1a2a40, #0d1520);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .subject-photo::after {
+      content: "SCANNING";
+      position: absolute;
+      bottom: -1px;
+      left: -1px;
+      right: -1px;
+      background: rgba(0,180,255,0.2);
+      font-size: 8px;
+      text-align: center;
+      color: var(--cyan);
+      padding: 1px;
+      letter-spacing: 2px;
+    }
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .data-label { color: var(--text-dim); }
+    .data-value { color: var(--text); text-align: right; max-width: 60%; word-break: break-all; }
+    .data-value.threat { color: var(--red); font-weight: 700; }
+
+    .network-panel { grid-column: 2; }
+    .packet-log {
+      flex: 1;
+      overflow: hidden;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .pkt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pkt-in { color: var(--green); }
+    .pkt-out { color: var(--cyan); }
+    .pkt-flag { color: var(--red); }
+    .pkt-dns { color: var(--yellow); }
+
+    .activity-panel { grid-column: 3; }
+    .webcam-box {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .webcam-box::before {
+      content: "WEBCAM FEED — ACCESS GRANTED";
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      font-size: 8px;
+      color: var(--red);
+      letter-spacing: 1px;
+      z-index: 2;
+    }
+    .webcam-box::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+      pointer-events: none;
+    }
+    .webcam-static {
+      width: 100%;
+      height: 100%;
+    }
+    .rec-badge {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      color: var(--red);
+      font-weight: 700;
+      z-index: 2;
+    }
+    .rec-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: blink 1s step-end infinite;
+    }
+
+    .mic-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      background: var(--red-dim);
+      border: 1px solid rgba(255,45,85,0.2);
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--red);
+    }
+    .mic-bars {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 14px;
+    }
+    .mic-bar {
+      width: 3px;
+      background: var(--red);
+      border-radius: 1px;
+      animation: micPulse 0.5s infinite alternate;
+    }
+    @keyframes micPulse { from { height: 3px; } to { height: var(--h); } }
+
+    .keylog-section {
+      flex: 1;
+      overflow: hidden;
+    }
+    .keylog-output {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--yellow);
+      word-break: break-all;
+    }
+
+    .bottom-bar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+    .bottom-bar .active-ops { color: var(--red); }
+
+    @media (max-width: 800px) {
+      .dashboard { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+      .panel { min-height: 250px; }
+      html, body { overflow: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="scanline"></div>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="prism-logo">PRISM</div>
+      <div class="classification">TOP SECRET // SI // ORCON // NOFORN</div>
+    </div>
+    <div class="header-right">
+      <span><div class="live-dot"></div> LIVE INTERCEPT</span>
+      <span id="clock">00:00:00 UTC</span>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="panel subject-panel">
+      <div class="panel-title">Subject Profile</div>
+      <div class="subject-photo">👤</div>
+      <div id="subjectData"></div>
+    </div>
+
+    <div class="panel network-panel">
+      <div class="panel-title">Network Intercept</div>
+      <div class="packet-log" id="packetLog"></div>
+    </div>
+
+    <div class="panel activity-panel">
+      <div class="panel-title">Device Access</div>
+      <div class="webcam-box">
+        <canvas class="webcam-static" id="staticCanvas"></canvas>
+        <div class="rec-badge">REC</div>
+      </div>
+      <div class="mic-indicator">
+        <div class="mic-bars">
+          <div class="mic-bar" style="--h:8px;animation-delay:0s"></div>
+          <div class="mic-bar" style="--h:14px;animation-delay:0.1s"></div>
+          <div class="mic-bar" style="--h:10px;animation-delay:0.2s"></div>
+          <div class="mic-bar" style="--h:12px;animation-delay:0.05s"></div>
+          <div class="mic-bar" style="--h:6px;animation-delay:0.15s"></div>
+        </div>
+        MICROPHONE — ACTIVE
+      </div>
+      <div class="keylog-section">
+        <div class="panel-title">Keystroke Log</div>
+        <div class="keylog-output" id="keylog"></div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>UPSTREAM: GOOGLE | APPLE | META | MICROSOFT | AMAZON</span>
+      <span class="active-ops" id="activeOps">ACTIVE SURVEILLANCE: 1 SUBJECT</span>
+      <span id="sessionId">SESSION: —</span>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      document.getElementById("clock").textContent = new Date().toUTCString().split(" ")[4] + " UTC";
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    document.getElementById("sessionId").textContent = "SESSION: " + Math.random().toString(36).slice(2, 14).toUpperCase();
+
+    const browser = navigator.userAgent;
+    const platform = navigator.platform || "Unknown";
+    const lang = navigator.language;
+    const screen = `${window.screen.width}x${window.screen.height}`;
+    const cores = navigator.hardwareConcurrency || "?";
+    const ram = navigator.deviceMemory || "?";
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const gpu = (() => { try { const c=document.createElement("canvas"); const g=c.getContext("webgl")||c.getContext("experimental-webgl"); const e=g.getExtension("WEBGL_debug_renderer_info"); return e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):"Unknown"; } catch(e){return "Unknown";} })();
+    const connection = navigator.connection ? navigator.connection.effectiveType : "Unknown";
+
+    const ip = `${Math.floor(Math.random()*223+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+
+    const subjectFields = [
+      ["IP Address", ip],
+      ["Platform", platform],
+      ["Screen", screen],
+      ["CPU Cores", cores],
+      ["RAM", ram + "GB"],
+      ["GPU", gpu],
+      ["Timezone", tz],
+      ["Language", lang],
+      ["Network", connection],
+      ["Threat Level", "ELEVATED"],
+    ];
+
+    const dataEl = document.getElementById("subjectData");
+    subjectFields.forEach(([label, value]) => {
+      const row = document.createElement("div");
+      row.className = "data-row";
+      row.innerHTML = `<span class="data-label">${label}</span><span class="data-value${label==='Threat Level'?' threat':''}">${value}</span>`;
+      dataEl.appendChild(row);
+    });
+
+    const domains = ["google.com","facebook.com","instagram.com","twitter.com","reddit.com","youtube.com","amazon.com","netflix.com","discord.com","github.com","tiktok.com","whatsapp.com","linkedin.com","chatgpt.com","mail.google.com","outlook.com"];
+    const protocols = ["HTTPS","TLS1.3","QUIC","DNS","WSS"];
+    const packetLog = document.getElementById("packetLog");
+
+    function addPacket() {
+      const domain = domains[Math.floor(Math.random()*domains.length)];
+      const proto = protocols[Math.floor(Math.random()*protocols.length)];
+      const size = Math.floor(Math.random()*4000+100);
+      const types = ["pkt-in","pkt-out","pkt-dns","pkt-flag"];
+      const weights = [0.35, 0.35, 0.2, 0.1];
+      let r = Math.random(), cumul = 0, cls = "pkt-in";
+      for (let i = 0; i < weights.length; i++) {
+        cumul += weights[i];
+        if (r < cumul) { cls = types[i]; break; }
+      }
+
+      const time = new Date().toLocaleTimeString([], {hour12:false});
+      const line = document.createElement("div");
+      line.className = "pkt " + cls;
+
+      if (cls === "pkt-flag") {
+        line.textContent = `[${time}] ⚠ FLAGGED: ${domain} — suspicious pattern detected (${size}B)`;
+      } else if (cls === "pkt-dns") {
+        line.textContent = `[${time}] DNS ${domain} → ${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+      } else {
+        const dir = cls === "pkt-in" ? ">>>" : "<<<";
+        line.textContent = `[${time}] ${proto} ${dir} ${domain} ${size}B`;
+      }
+
+      packetLog.appendChild(line);
+      if (packetLog.children.length > 60) packetLog.firstChild.remove();
+      packetLog.scrollTop = packetLog.scrollHeight;
+    }
+
+    for (let i = 0; i < 15; i++) addPacket();
+    setInterval(addPacket, 800 + Math.random() * 600);
+
+    const canvas = document.getElementById("staticCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 320;
+    canvas.height = 240;
+
+    function drawStatic() {
+      const imageData = ctx.createImageData(canvas.width, canvas.height);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const v = Math.random() * 40;
+        imageData.data[i] = v;
+        imageData.data[i+1] = v;
+        imageData.data[i+2] = v;
+        imageData.data[i+3] = 255;
+      }
+      ctx.putImageData(imageData, 0, 0);
+      requestAnimationFrame(drawStatic);
+    }
+    drawStatic();
+
+    const keylog = document.getElementById("keylog");
+    const keyPhrases = [
+      "hey are you coming to","the meeting is at 3pm","password123","can you send me the","I just transferred $","my social security number is","dont tell anyone but","the code to the safe","checking my bank account","flight confirmation number"];
+    let phraseIdx = 0;
+    let charIdx = 0;
+
+    function typeKeystroke() {
+      const phrase = keyPhrases[phraseIdx % keyPhrases.length];
+      if (charIdx < phrase.length) {
+        keylog.textContent += phrase[charIdx];
+        charIdx++;
+      } else {
+        keylog.textContent += " ";
+        phraseIdx++;
+        charIdx = 0;
+      }
+      if (keylog.textContent.length > 500) {
+        keylog.textContent = keylog.textContent.slice(-300);
+      }
+      setTimeout(typeKeystroke, 80 + Math.random() * 200);
+    }
+    setTimeout(typeKeystroke, 1500);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

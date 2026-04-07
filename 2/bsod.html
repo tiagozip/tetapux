@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your PC ran into a problem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@200;300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      cursor: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: #0078d7;
+      font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, sans-serif;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bsod {
+      max-width: 800px;
+      width: 90%;
+      padding: 40px;
+      opacity: 0;
+      animation: fadeIn 0.4s ease-out 0.3s forwards;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .frown {
+      font-size: 120px;
+      font-weight: 200;
+      line-height: 1;
+      margin-bottom: 20px;
+      letter-spacing: -4px;
+    }
+    .main-text {
+      font-size: 28px;
+      font-weight: 300;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .sub-text {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    .progress-section {
+      margin-bottom: 30px;
+    }
+    .percent {
+      font-size: 18px;
+      font-weight: 300;
+      margin-bottom: 6px;
+    }
+    .stop-code {
+      font-size: 11px;
+      font-weight: 300;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+    .qr-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .qr-box {
+      width: 90px;
+      height: 90px;
+      background: white;
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+    }
+    .qr-box svg { width: 100%; height: 100%; }
+    .qr-text {
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.7;
+      opacity: 0.85;
+    }
+    .qr-text b { font-weight: 400; }
+
+    .overlay-black {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spinner-ring {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .boot-screen {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .boot-screen .win-logo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      width: 60px;
+      height: 60px;
+    }
+    .win-logo div {
+      background: white;
+      border-radius: 1px;
+    }
+    .boot-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .boot-dots span {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: bootDot 1.8s infinite;
+      opacity: 0;
+    }
+    .boot-dots span:nth-child(1) { animation-delay: 0s; }
+    .boot-dots span:nth-child(2) { animation-delay: 0.15s; }
+    .boot-dots span:nth-child(3) { animation-delay: 0.3s; }
+    .boot-dots span:nth-child(4) { animation-delay: 0.45s; }
+    .boot-dots span:nth-child(5) { animation-delay: 0.6s; }
+    @keyframes bootDot {
+      0%, 80%, 100% { opacity: 0; transform: scale(0.6); }
+      40% { opacity: 1; transform: scale(1); }
+    }
+
+    .second-bsod {
+      position: fixed;
+      inset: 0;
+      background: #0078d7;
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .second-bsod .inner {
+      max-width: 700px;
+      width: 100%;
+    }
+    .second-bsod .frown { font-size: 100px; }
+    .second-bsod .main-text { font-size: 24px; }
+
+    @media (max-width: 600px) {
+      .frown { font-size: 80px; }
+      .main-text { font-size: 22px; }
+      .qr-section { flex-direction: column; align-items: center; text-align: center; }
+      .bsod { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay-black" id="initOverlay">
+    <div class="spinner-ring"></div>
+  </div>
+
+  <div class="bsod" id="mainBsod">
+    <div class="frown">:(</div>
+    <div class="main-text">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
+    <div class="progress-section">
+      <div class="percent"><span id="pct">0</span>% complete</div>
+    </div>
+    <div class="qr-section">
+      <div class="qr-box">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="30" height="30" fill="black"/>
+          <rect x="5" y="5" width="20" height="20" fill="white"/>
+          <rect x="8" y="8" width="14" height="14" fill="black"/>
+          <rect x="70" y="0" width="30" height="30" fill="black"/>
+          <rect x="75" y="5" width="20" height="20" fill="white"/>
+          <rect x="78" y="8" width="14" height="14" fill="black"/>
+          <rect x="0" y="70" width="30" height="30" fill="black"/>
+          <rect x="5" y="75" width="20" height="20" fill="white"/>
+          <rect x="8" y="78" width="14" height="14" fill="black"/>
+          <rect x="35" y="0" width="5" height="5" fill="black"/>
+          <rect x="45" y="0" width="5" height="5" fill="black"/>
+          <rect x="55" y="0" width="5" height="5" fill="black"/>
+          <rect x="35" y="10" width="5" height="5" fill="black"/>
+          <rect x="50" y="10" width="5" height="5" fill="black"/>
+          <rect x="60" y="10" width="5" height="5" fill="black"/>
+          <rect x="35" y="20" width="5" height="5" fill="black"/>
+          <rect x="45" y="20" width="5" height="5" fill="black"/>
+          <rect x="35" y="35" width="5" height="5" fill="black"/>
+          <rect x="45" y="35" width="5" height="5" fill="black"/>
+          <rect x="55" y="35" width="5" height="5" fill="black"/>
+          <rect x="70" y="35" width="5" height="5" fill="black"/>
+          <rect x="85" y="35" width="5" height="5" fill="black"/>
+          <rect x="40" y="45" width="5" height="5" fill="black"/>
+          <rect x="55" y="45" width="5" height="5" fill="black"/>
+          <rect x="65" y="45" width="5" height="5" fill="black"/>
+          <rect x="80" y="45" width="5" height="5" fill="black"/>
+          <rect x="35" y="55" width="5" height="5" fill="black"/>
+          <rect x="50" y="55" width="5" height="5" fill="black"/>
+          <rect x="60" y="55" width="5" height="5" fill="black"/>
+          <rect x="75" y="55" width="5" height="5" fill="black"/>
+          <rect x="90" y="55" width="5" height="5" fill="black"/>
+          <rect x="0" y="35" width="5" height="5" fill="black"/>
+          <rect x="10" y="35" width="5" height="5" fill="black"/>
+          <rect x="20" y="35" width="5" height="5" fill="black"/>
+          <rect x="0" y="45" width="5" height="5" fill="black"/>
+          <rect x="15" y="45" width="5" height="5" fill="black"/>
+          <rect x="25" y="45" width="5" height="5" fill="black"/>
+          <rect x="0" y="55" width="5" height="5" fill="black"/>
+          <rect x="10" y="55" width="5" height="5" fill="black"/>
+          <rect x="20" y="55" width="5" height="5" fill="black"/>
+          <rect x="40" y="70" width="5" height="5" fill="black"/>
+          <rect x="50" y="75" width="5" height="5" fill="black"/>
+          <rect x="60" y="70" width="5" height="5" fill="black"/>
+          <rect x="70" y="80" width="5" height="5" fill="black"/>
+          <rect x="80" y="70" width="5" height="5" fill="black"/>
+          <rect x="90" y="75" width="5" height="5" fill="black"/>
+          <rect x="75" y="90" width="5" height="5" fill="black"/>
+          <rect x="85" y="85" width="5" height="5" fill="black"/>
+          <rect x="95" y="90" width="5" height="5" fill="black"/>
+        </svg>
+      </div>
+      <div class="qr-text">
+        For more information about this issue and possible fixes, visit<br>
+        <b>https://www.windows.com/stopcode</b><br><br>
+        If you call a support person, give them this info:<br>
+        Stop code: <span id="stopCode">CRITICAL_PROCESS_DIED</span><br>
+        What failed: <span id="whatFailed">ntoskrnl.exe</span>
+      </div>
+    </div>
+    <div class="stop-code" id="dumpInfo"></div>
+  </div>
+
+  <div class="boot-screen" id="bootScreen">
+    <div class="win-logo">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="boot-dots">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="second-bsod" id="secondBsod">
+    <div class="inner">
+      <div class="frown">:(</div>
+      <div class="main-text">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
+      <div class="progress-section" style="margin-top:20px;">
+        <div class="percent"><span id="pct2">0</span>% complete</div>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="stop-code">Stop code: KERNEL_SECURITY_CHECK_FAILURE</div>
+        <div class="stop-code">What failed: ci.dll</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const stopCodes = [
+      "CRITICAL_PROCESS_DIED",
+      "SYSTEM_THREAD_EXCEPTION_NOT_HANDLED",
+      "IRQL_NOT_LESS_OR_EQUAL",
+      "KERNEL_SECURITY_CHECK_FAILURE",
+      "PAGE_FAULT_IN_NONPAGED_AREA",
+      "SYSTEM_SERVICE_EXCEPTION",
+      "UNEXPECTED_KERNEL_MODE_TRAP",
+      "KMODE_EXCEPTION_NOT_HANDLED"
+    ];
+    const drivers = [
+      "ntoskrnl.exe", "win32kfull.sys", "dxgkrnl.sys",
+      "nvlddmkm.sys", "tcpip.sys", "ntfs.sys", "Wdf01000.sys",
+      "CLASSPNP.SYS", "fltMgr.sys", "ci.dll"
+    ];
+
+    document.getElementById("stopCode").textContent = stopCodes[Math.floor(Math.random() * stopCodes.length)];
+    document.getElementById("whatFailed").textContent = drivers[Math.floor(Math.random() * drivers.length)];
+
+    setTimeout(() => {
+      document.getElementById("initOverlay").style.opacity = "0";
+      document.getElementById("initOverlay").style.transition = "opacity 0.3s";
+      setTimeout(() => document.getElementById("initOverlay").style.display = "none", 300);
+    }, 1200);
+
+    let pct = 0;
+    const pctEl = document.getElementById("pct");
+    const dumpEl = document.getElementById("dumpInfo");
+    const speeds = [];
+    for (let i = 0; i <= 100; i++) {
+      if (i < 15) speeds.push(80 + Math.random() * 120);
+      else if (i < 30) speeds.push(200 + Math.random() * 400);
+      else if (i < 70) speeds.push(100 + Math.random() * 200);
+      else if (i < 90) speeds.push(300 + Math.random() * 600);
+      else speeds.push(150 + Math.random() * 250);
+    }
+
+    function tick() {
+      if (pct >= 100) {
+        dumpEl.textContent = "Memory dump complete. Initiating restart...";
+        setTimeout(showBoot, 2000);
+        return;
+      }
+      pctEl.textContent = pct;
+      if (pct === 28) dumpEl.textContent = "Dumping physical memory to disk...";
+      if (pct === 55) dumpEl.textContent = "Physical memory dump: 55% ...";
+      if (pct === 82) dumpEl.textContent = "Physical memory dump: 82% ...";
+      pct++;
+      setTimeout(tick, speeds[pct] || 200);
+    }
+    setTimeout(tick, 1800);
+
+    function showBoot() {
+      document.getElementById("mainBsod").style.display = "none";
+      const boot = document.getElementById("bootScreen");
+      boot.style.display = "flex";
+      setTimeout(() => {
+        boot.style.display = "none";
+        showSecondBsod();
+      }, 4500);
+    }
+
+    function showSecondBsod() {
+      const sb = document.getElementById("secondBsod");
+      sb.style.display = "flex";
+      let p2 = 0;
+      const p2El = document.getElementById("pct2");
+      function tick2() {
+        if (p2 >= 100) return;
+        p2++;
+        p2El.textContent = p2;
+        const delay = p2 < 20 ? 60 : p2 < 50 ? 150 : p2 < 80 ? 300 : 100;
+        setTimeout(tick2, delay + Math.random() * 100);
+      }
+      setTimeout(tick2, 800);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (["F5","F11","F12","Escape"].includes(e.key) || (e.ctrlKey && e.key === "w")) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener("contextmenu", e => e.preventDefault());
+
+    if (document.documentElement.requestFullscreen) {
+      document.addEventListener("click", () => {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }, { once: true });
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

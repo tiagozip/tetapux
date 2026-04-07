@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airport WiFi — Connect to Internet</title>
+  <style>
+    :root {
+      --blue: #0057b8;
+      --blue-hover: #004a9e;
+      --bg: #f0f2f5;
+      --card: #fff;
+      --text: #1a1a2e;
+      --text-secondary: #666;
+      --border: #e0e0e0;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .portal-header {
+      background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 100%);
+      padding: 0;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .airport-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .logo-text { font-size: 16px; font-weight: 600; }
+    .logo-sub { font-size: 11px; opacity: 0.7; }
+    .lang-select {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(0,87,184,0.3), rgba(0,0,0,0.5)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='2' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E");
+      padding: 36px 24px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero-banner h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero-banner p {
+      font-size: 14px;
+      opacity: 0.8;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .main { max-width: 500px; margin: -30px auto 40px; padding: 0 16px; position: relative; z-index: 1; }
+
+    .wifi-card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 8px 30px rgba(0,0,0,0.04);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .plan-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .plan-tab {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .plan-tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      font-weight: 600;
+    }
+    .plan-tab:hover { background: #f8f9fa; }
+
+    .plan-content { padding: 24px; }
+    .plan-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: var(--text-secondary);
+    }
+    .plan-feature::before {
+      content: "✓";
+      color: #22c55e;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .plan-price {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 16px 0 4px;
+    }
+    .plan-price span { font-size: 14px; font-weight: 400; color: var(--text-secondary); }
+    .plan-price-sub {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .form-section h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .form-section p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--text);
+      background: #fafafa;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0,87,184,0.1);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .connect-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.15s;
+      margin-top: 8px;
+    }
+    .connect-btn:hover { background: var(--blue-hover); }
+
+    .social-login {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .social-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .social-btn:hover { background: #f5f5f5; }
+
+    .terms {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    .terms a { color: var(--blue); text-decoration: none; }
+
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .powered-by {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 24px;
+    }
+
+    .connected-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .connected-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+    }
+    .connected-card .icon { font-size: 48px; margin-bottom: 12px; }
+    .connected-card h2 { font-size: 20px; margin-bottom: 6px; }
+    .connected-card p { font-size: 13px; color: var(--text-secondary); }
+
+    @media (max-width: 500px) {
+      .hero-banner h1 { font-size: 20px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="portal-header">
+    <div class="header-top">
+      <div class="airport-logo">
+        <div class="logo-icon">✈️</div>
+        <div>
+          <div class="logo-text" id="airportName">Hartsfield-Jackson International</div>
+          <div class="logo-sub">Guest WiFi Network</div>
+        </div>
+      </div>
+      <div class="lang-select">🌐 English</div>
+    </div>
+    <div class="hero-banner">
+      <h1>Welcome to Free Airport WiFi</h1>
+      <p>Connect to the internet by signing in with your email or social account below.</p>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="wifi-card">
+      <div class="plan-tabs">
+        <div class="plan-tab active" data-plan="free">Basic (Free)</div>
+        <div class="plan-tab" data-plan="premium">Premium</div>
+      </div>
+
+      <div class="plan-content" id="freePlan">
+        <div class="plan-feature">Up to 5 Mbps download speed</div>
+        <div class="plan-feature">2 hour session</div>
+        <div class="plan-feature">Email and social media access</div>
+
+        <div class="divider">Sign in to connect</div>
+
+        <div class="social-login">
+          <button class="social-btn" onclick="alert('Tetapux demo.')">G Google</button>
+          <button class="social-btn" onclick="alert('Tetapux demo.')">f Facebook</button>
+        </div>
+
+        <div class="form-section">
+          <h3>Or use email</h3>
+          <p>We'll send you a confirmation to verify your identity.</p>
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" placeholder="John Smith" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" placeholder="you@example.com" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Phone number (optional)</label>
+            <input type="tel" placeholder="+1 (555) 000-0000" autocomplete="off">
+          </div>
+          <button class="connect-btn" id="connectBtn">Connect to WiFi</button>
+        </div>
+      </div>
+
+      <div class="plan-content" id="premiumPlan" style="display:none;">
+        <div class="plan-feature">Up to 100 Mbps download speed</div>
+        <div class="plan-feature">Unlimited session time</div>
+        <div class="plan-feature">Streaming and video calls</div>
+        <div class="plan-feature">Priority bandwidth</div>
+        <div class="plan-price">$7.99 <span>/ day</span></div>
+        <div class="plan-price-sub">One-time payment, no subscription</div>
+        <div class="form-section">
+          <div class="form-group">
+            <label>Card number</label>
+            <input type="text" placeholder="1234 5678 9012 3456" autocomplete="off" maxlength="19">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expiry</label>
+              <input type="text" placeholder="MM / YY" autocomplete="off" maxlength="7">
+            </div>
+            <div class="form-group">
+              <label>CVC</label>
+              <input type="text" placeholder="123" autocomplete="off" maxlength="4">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email for receipt</label>
+            <input type="email" placeholder="you@example.com" autocomplete="off">
+          </div>
+          <button class="connect-btn" id="premiumBtn">Pay & Connect</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="terms">
+      By connecting, you agree to the <a href="#">Terms of Service</a> and <a href="#">Acceptable Use Policy</a>.<br>
+      Your browsing activity may be monitored for security purposes.
+    </div>
+
+    <div class="trust-badges">
+      <div class="trust-badge">🔒 256-bit encryption</div>
+      <div class="trust-badge">✓ GDPR compliant</div>
+      <div class="trust-badge">🛡️ SOC 2 certified</div>
+    </div>
+
+    <div class="powered-by">Powered by AeroConnect WiFi Solutions</div>
+  </div>
+
+  <div class="connected-overlay" id="connectedOverlay">
+    <div class="connected-card">
+      <div class="icon">✅</div>
+      <h2>You're connected!</h2>
+      <p>This is a Tetapux educational demo. In reality, captive portals like this harvest personal data.</p>
+    </div>
+  </div>
+
+  <script>
+    const airports = [
+      "Hartsfield-Jackson International",
+      "Los Angeles International",
+      "O'Hare International",
+      "Dallas/Fort Worth International",
+      "Denver International",
+      "John F. Kennedy International",
+      "San Francisco International",
+      "Seattle-Tacoma International",
+      "Orlando International",
+      "Miami International",
+      "London Heathrow",
+      "Charles de Gaulle",
+      "Frankfurt Airport",
+      "Amsterdam Schiphol"
+    ];
+    document.getElementById("airportName").textContent = airports[Math.floor(Math.random() * airports.length)];
+
+    const tabs = document.querySelectorAll(".plan-tab");
+    const freePlan = document.getElementById("freePlan");
+    const premiumPlan = document.getElementById("premiumPlan");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        if (tab.dataset.plan === "free") {
+          freePlan.style.display = "";
+          premiumPlan.style.display = "none";
+        } else {
+          freePlan.style.display = "none";
+          premiumPlan.style.display = "";
+        }
+      });
+    });
+
+    function handleConnect(btn) {
+      btn.addEventListener("click", () => {
+        btn.textContent = "Connecting...";
+        btn.disabled = true;
+        setTimeout(() => {
+          document.getElementById("connectedOverlay").style.display = "flex";
+        }, 2000);
+      });
+    }
+    handleConnect(document.getElementById("connectBtn"));
+    handleConnect(document.getElementById("premiumBtn"));
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

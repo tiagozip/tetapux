@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solana Airdrop Checker — Claim Unclaimed Tokens</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sol-purple: #9945ff;
+      --sol-green: #14f195;
+      --sol-blue: #00c2ff;
+      --bg: #0f0f1a;
+      --card: rgba(20,20,40,0.8);
+      --border: rgba(153,69,255,0.2);
+      --text: #e8e8f0;
+      --text-dim: #6a6a80;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Space Grotesk", -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(153,69,255,0.15), transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(20,241,149,0.1), transparent 50%);
+      pointer-events: none;
+    }
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(153,69,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(153,69,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .logo-ring {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sol-purple), var(--sol-green));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-ring-inner {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+    .logo span {
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--sol-purple), var(--sol-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header p {
+      font-size: 15px;
+      color: var(--text-dim);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      backdrop-filter: blur(10px);
+    }
+    .stat {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border: none; }
+    .stat .val {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .stat .val.green { color: var(--sol-green); }
+    .stat .val.purple { color: var(--sol-purple); }
+    .stat .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+    .checker-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 24px;
+    }
+    .checker-card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .wallet-input {
+      flex: 1;
+      padding: 14px 16px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+    }
+    .wallet-input:focus { outline: none; border-color: var(--sol-purple); box-shadow: 0 0 0 3px rgba(153,69,255,0.2); }
+    .wallet-input::placeholder { color: var(--text-dim); }
+    .check-btn {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, var(--sol-purple), #7b3fe4);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.1s, box-shadow 0.2s;
+    }
+    .check-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(153,69,255,0.3); }
+    .check-btn:disabled { opacity: 0.5; cursor: wait; }
+
+    .results {
+      display: none;
+      margin-top: 24px;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+
+    .scan-log {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(153,69,255,0.1);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 20px;
+      max-height: 160px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    .scan-log .ok { color: var(--sol-green); }
+    .scan-log .info { color: var(--sol-blue); }
+    .scan-log .found { color: #ff6b6b; font-weight: 500; }
+
+    .token-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .token-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .token-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .token-info { flex: 1; }
+    .token-name { font-size: 14px; font-weight: 600; }
+    .token-amount { font-size: 12px; color: var(--text-dim); font-family: "JetBrains Mono", monospace; }
+    .token-value {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--sol-green);
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(153,69,255,0.1), rgba(20,241,149,0.1));
+      border: 1px solid rgba(20,241,149,0.3);
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .total-label { font-size: 14px; font-weight: 600; }
+    .total-value {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--sol-green);
+    }
+
+    .claim-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--sol-green), #0dd47a);
+      color: #0f0f1a;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .claim-btn:hover { transform: translateY(-1px); }
+
+    .live-claims {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+    .live-claims h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .claim-feed {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      max-height: 180px;
+      overflow: hidden;
+    }
+    .claim-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      animation: fadeIn 0.3s;
+    }
+    .claim-entry .addr { color: var(--text-dim); }
+    .claim-entry .amt { color: var(--sol-green); font-weight: 500; }
+
+    @media (max-width: 600px) {
+      .stats-bar { flex-direction: column; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat:last-child { border: none; }
+      .input-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="grid-bg"></div>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-ring"><div class="logo-ring-inner"></div></div>
+        <span>SolDrop Checker</span>
+      </div>
+      <p>Check any Solana wallet for unclaimed airdrops, retroactive rewards, and governance tokens from 40+ protocols.</p>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="val green" id="totalClaimed">$14.2M</div>
+        <div class="label">Total Claimed</div>
+      </div>
+      <div class="stat">
+        <div class="val purple" id="walletsChecked">892,431</div>
+        <div class="label">Wallets Checked</div>
+      </div>
+      <div class="stat">
+        <div class="val" id="protocols">43</div>
+        <div class="label">Protocols</div>
+      </div>
+    </div>
+
+    <div class="checker-card">
+      <h2>Check your wallet</h2>
+      <div class="input-row">
+        <input class="wallet-input" id="walletInput" placeholder="Enter Solana wallet address..." maxlength="44">
+        <button class="check-btn" id="checkBtn">Check Airdrops</button>
+      </div>
+      <div class="results" id="results">
+        <div class="scan-log" id="scanLog"></div>
+        <div class="token-list" id="tokenList"></div>
+        <div class="total-row">
+          <span class="total-label">Total unclaimed value</span>
+          <span class="total-value" id="totalValue">$0.00</span>
+        </div>
+        <button class="claim-btn" id="claimBtn">Connect Wallet & Claim All</button>
+      </div>
+    </div>
+
+    <div class="live-claims">
+      <h3>Live claims feed</h3>
+      <div class="claim-feed" id="claimFeed"></div>
+    </div>
+  </div>
+
+  <script>
+    const tokens = [
+      { name: "Jupiter", symbol: "JUP", icon: "🪐", color: "#c5a44e" },
+      { name: "Tensor", symbol: "TNSR", icon: "🔷", color: "#00c2ff" },
+      { name: "Marinade", symbol: "MNDE", icon: "🧂", color: "#5ac8fa" },
+      { name: "Jito", symbol: "JTO", icon: "⚡", color: "#9945ff" },
+      { name: "Pyth", symbol: "PYTH", icon: "🐍", color: "#6366f1" },
+      { name: "Drift", symbol: "DRIFT", icon: "🌊", color: "#00d4aa" },
+      { name: "Parcl", symbol: "PRCL", icon: "🏠", color: "#ff6b6b" },
+      { name: "Kamino", symbol: "KMNO", icon: "🏦", color: "#f59e0b" },
+    ];
+
+    function randomAddr() {
+      const chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+      let r = "";
+      for (let i = 0; i < 44; i++) r += chars[Math.floor(Math.random() * chars.length)];
+      return r;
+    }
+
+    const feed = document.getElementById("claimFeed");
+    function addClaimEntry() {
+      const addr = randomAddr();
+      const token = tokens[Math.floor(Math.random() * tokens.length)];
+      const amount = (Math.random() * 5000 + 200).toFixed(0);
+      const entry = document.createElement("div");
+      entry.className = "claim-entry";
+      entry.innerHTML = `<span class="addr">${addr.slice(0,4)}...${addr.slice(-4)}</span><span class="amt">+${Number(amount).toLocaleString()} ${token.symbol}</span>`;
+      feed.prepend(entry);
+      if (feed.children.length > 15) feed.lastChild.remove();
+    }
+    for (let i = 0; i < 8; i++) addClaimEntry();
+    setInterval(addClaimEntry, 3000 + Math.random() * 2000);
+
+    let walletsNum = 892431;
+    setInterval(() => {
+      walletsNum += Math.floor(Math.random() * 3) + 1;
+      document.getElementById("walletsChecked").textContent = walletsNum.toLocaleString();
+    }, 4000);
+
+    const checkBtn = document.getElementById("checkBtn");
+    const walletInput = document.getElementById("walletInput");
+    const results = document.getElementById("results");
+    const scanLog = document.getElementById("scanLog");
+    const tokenList = document.getElementById("tokenList");
+
+    checkBtn.addEventListener("click", () => {
+      const addr = walletInput.value.trim();
+      if (addr.length < 20) {
+        walletInput.style.borderColor = "#ff6b6b";
+        setTimeout(() => walletInput.style.borderColor = "", 1500);
+        return;
+      }
+
+      checkBtn.disabled = true;
+      checkBtn.textContent = "Scanning...";
+      results.style.display = "block";
+      scanLog.innerHTML = "";
+      tokenList.innerHTML = "";
+      document.getElementById("totalValue").textContent = "$0.00";
+
+      const protocols = ["Jupiter Exchange","Tensor","Marinade Finance","Jito","Pyth Network","Drift Protocol","Parcl","Kamino Finance","Raydium","Orca","Meteora","Sanctum","MarginFi","Zeta Markets"];
+      let i = 0;
+      const foundTokens = [];
+
+      function scanNext() {
+        if (i >= protocols.length) {
+          finishScan(foundTokens);
+          return;
+        }
+        const proto = protocols[i];
+        const found = Math.random() > 0.6;
+        const line = document.createElement("div");
+
+        if (found) {
+          const token = tokens[foundTokens.length % tokens.length];
+          const amount = Math.floor(Math.random() * 8000 + 500);
+          const price = (Math.random() * 3 + 0.2).toFixed(2);
+          foundTokens.push({ ...token, amount, price, value: amount * price });
+          line.innerHTML = `<span class="found">[FOUND]</span> ${proto}: ${amount.toLocaleString()} ${token.symbol} ($${(amount * price).toFixed(2)})`;
+        } else {
+          line.innerHTML = `<span class="ok">[OK]</span> ${proto}: no unclaimed tokens`;
+        }
+        scanLog.appendChild(line);
+        scanLog.scrollTop = scanLog.scrollHeight;
+        i++;
+        setTimeout(scanNext, 200 + Math.random() * 300);
+      }
+
+      setTimeout(scanNext, 400);
+    });
+
+    function finishScan(found) {
+      const done = document.createElement("div");
+      done.innerHTML = `<span class="info">[DONE]</span> Scan complete. Found ${found.length} unclaimed airdrops.`;
+      scanLog.appendChild(done);
+
+      let total = 0;
+      found.forEach(t => {
+        total += t.value;
+        const row = document.createElement("div");
+        row.className = "token-row";
+        row.innerHTML = `
+          <div class="token-icon" style="background:${t.color}">${t.icon}</div>
+          <div class="token-info">
+            <div class="token-name">${t.name} (${t.symbol})</div>
+            <div class="token-amount">${t.amount.toLocaleString()} tokens @ $${t.price}</div>
+          </div>
+          <div class="token-value">$${t.value.toFixed(2)}</div>
+        `;
+        tokenList.appendChild(row);
+      });
+
+      document.getElementById("totalValue").textContent = `$${total.toFixed(2)}`;
+      checkBtn.textContent = "Check Airdrops";
+      checkBtn.disabled = false;
+    }
+
+    document.getElementById("claimBtn").addEventListener("click", () => {
+      alert("This is a Tetapux demo. Nothing was sent. In a real scam, this would drain your wallet.");
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

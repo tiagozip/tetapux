@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify — Unusual Activity Detected</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #1db954;
+      --green-hover: #1ed760;
+      --bg: #121212;
+      --card: #181818;
+      --card-hover: #282828;
+      --text: #fff;
+      --text-sub: #a7a7a7;
+      --text-dim: #6a6a6a;
+      --danger: #e91429;
+      --radius: 8px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: #000;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #282828;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .topbar svg { fill: #fff; flex-shrink: 0; }
+    .topbar span { font-weight: 700; font-size: 15px; }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 32px 20px; }
+
+    .alert-card {
+      background: linear-gradient(135deg, #2a0a0a 0%, #1a0505 100%);
+      border: 1px solid rgba(233,20,41,0.3);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .alert-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--danger);
+    }
+    .alert-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(233,20,41,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 22px;
+    }
+    .alert-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .alert-card p {
+      color: var(--text-sub);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .detail-item {
+      background: rgba(255,255,255,0.04);
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .detail-item .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .detail-item .value {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .detail-item .value.danger { color: var(--danger); }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+      margin-top: 8px;
+    }
+
+    .activity-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 28px; }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .activity-item:hover { background: var(--card-hover); }
+    .track-art {
+      width: 44px;
+      height: 44px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .track-info { flex: 1; min-width: 0; }
+    .track-name {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-artist {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .track-time {
+      font-size: 12px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .track-flag {
+      font-size: 11px;
+      color: var(--danger);
+      background: rgba(233,20,41,0.1);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .session-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .session-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .session-info { flex: 1; }
+    .session-info .name { font-size: 14px; font-weight: 500; }
+    .session-info .meta { font-size: 12px; color: var(--text-sub); }
+    .session-badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .badge-active { background: rgba(233,20,41,0.15); color: var(--danger); }
+    .badge-you { background: rgba(29,185,84,0.15); color: var(--green); }
+
+    .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+    .btn {
+      padding: 14px;
+      border-radius: 500px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      text-align: center;
+      transition: transform 0.1s, background 0.15s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--danger); color: #fff; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-secondary:hover { border-color: #fff; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 400px;
+      width: 100%;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal svg { display: block; margin: 0 auto 16px; }
+    .modal h2 { text-align: center; font-size: 20px; margin-bottom: 8px; }
+    .modal p { text-align: center; color: var(--text-sub); font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
+    .modal input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 12px;
+    }
+    .modal input:focus { outline: none; border-color: var(--green); }
+    .modal input::placeholder { color: var(--text-dim); }
+
+    @media (max-width: 500px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .container { padding: 20px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381C8.64 5.801 15.72 6.001 20.1 8.82c.54.3.72 1.02.42 1.56-.299.421-1.02.599-1.439.3z"/></svg>
+    <span>Spotify</span>
+  </div>
+
+  <div class="container">
+    <div class="alert-card">
+      <div class="alert-icon">⚠️</div>
+      <h1>Unusual activity on your account</h1>
+      <p>We detected sign-ins and listening activity from an unrecognized device in a different country. If this wasn't you, your account may be compromised.</p>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="label">Location</div>
+          <div class="value danger" id="location">Kyiv, Ukraine</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Device</div>
+          <div class="value">Samsung Galaxy S24</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">First seen</div>
+          <div class="value" id="firstSeen">—</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Songs played</div>
+          <div class="value danger">47 tracks</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Suspicious listening activity</div>
+    <div class="activity-list" id="activityList"></div>
+
+    <div class="section-title">Active sessions</div>
+    <div class="session-card">
+      <div class="session-icon">📱</div>
+      <div class="session-info">
+        <div class="name">Samsung Galaxy S24</div>
+        <div class="meta" id="sessionLocation">Kyiv, Ukraine · Active now</div>
+      </div>
+      <span class="session-badge badge-active">Unknown</span>
+    </div>
+    <div class="session-card">
+      <div class="session-icon">💻</div>
+      <div class="session-info">
+        <div class="name">Web Player · Chrome</div>
+        <div class="meta">Your current session</div>
+      </div>
+      <span class="session-badge badge-you">You</span>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="secureBtn">Secure my account</button>
+      <button class="btn btn-secondary" id="dismissBtn">This was me</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381C8.64 5.801 15.72 6.001 20.1 8.82c.54.3.72 1.02.42 1.56-.299.421-1.02.599-1.439.3z"/></svg>
+      <h2>Verify your identity</h2>
+      <p>To secure your account and sign out all other devices, please confirm your Spotify credentials.</p>
+      <input type="email" placeholder="Email or username" autocomplete="off">
+      <input type="password" placeholder="Password" autocomplete="off">
+      <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="this.textContent='Securing...';this.disabled=true;setTimeout(()=>{document.getElementById('modal').style.display='none';this.textContent='Secure account';this.disabled=false;alert('This is a Tetapux demo. Nothing was sent.');},2000)">Secure account</button>
+    </div>
+  </div>
+
+  <script>
+    const tracks = [
+      { name: "Калинка-Малинка (Remix)", artist: "DJ Blyatman", art: "🎵", color: "#e91429" },
+      { name: "Я тебя люблю", artist: "Ruki Vverh!", art: "💔", color: "#8b5cf6" },
+      { name: "Moskau", artist: "Genghis Khan", art: "🏰", color: "#f59e0b" },
+      { name: "Катюша (Hardstyle)", artist: "Unknown Artist", art: "🎶", color: "#ef4444" },
+      { name: "Три полоски", artist: "Хардбасс школа", art: "👟", color: "#22c55e" },
+      { name: "В клубе", artist: "Ленинград", art: "🎤", color: "#3b82f6" },
+      { name: "Дискотека из 90-х", artist: "Various", art: "💃", color: "#ec4899" },
+      { name: "Нет ничего лучше", artist: "Звери", art: "🎸", color: "#f97316" },
+    ];
+
+    const list = document.getElementById("activityList");
+    const now = new Date();
+
+    tracks.forEach((track, i) => {
+      const time = new Date(now - (i * 12 + Math.floor(Math.random() * 10)) * 60000);
+      const timeStr = time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const item = document.createElement("div");
+      item.className = "activity-item";
+      item.innerHTML = `
+        <div class="track-art" style="background:${track.color}">${track.art}</div>
+        <div class="track-info">
+          <div class="track-name">${track.name}</div>
+          <div class="track-artist">${track.artist}</div>
+        </div>
+        <span class="track-flag">Not you</span>
+        <div class="track-time">${timeStr}</div>
+      `;
+      list.appendChild(item);
+    });
+
+    const firstSeen = new Date(now - 3 * 3600000);
+    document.getElementById("firstSeen").textContent = firstSeen.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+
+    document.getElementById("secureBtn").addEventListener("click", () => {
+      document.getElementById("modal").style.display = "flex";
+    });
+
+    document.getElementById("modal").addEventListener("click", (e) => {
+      if (e.target === document.getElementById("modal")) {
+        document.getElementById("modal").style.display = "none";
+      }
+    });
+
+    document.getElementById("dismissBtn").addEventListener("click", () => {
+      alert("This is a Tetapux demo.");
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
