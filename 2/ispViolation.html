@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISP Notice — Bandwidth Violation Detected</title>
+  <style>
+    :root { --blue: #0066cc; --red: #d32f2f; --bg: #f5f5f5; --card: #fff; --text: #333; --dim: #777; --border: #e0e0e0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    .isp-header { background: linear-gradient(135deg, #1a237e, #0d47a1); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .isp-logo { display: flex; align-items: center; gap: 10px; color: #fff; }
+    .isp-logo-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .isp-logo-text { font-size: 16px; font-weight: 700; }
+    .isp-logo-sub { font-size: 10px; opacity: 0.7; }
+    .isp-header-right { color: rgba(255,255,255,0.7); font-size: 12px; }
+
+    .container { max-width: 700px; margin: 24px auto; padding: 0 16px; }
+    .alert-banner { background: linear-gradient(135deg, #b71c1c, #c62828); color: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
+    .alert-banner .icon { font-size: 28px; flex-shrink: 0; }
+    .alert-banner h2 { font-size: 18px; margin-bottom: 4px; }
+    .alert-banner p { font-size: 13px; opacity: 0.9; line-height: 1.5; }
+
+    .card { background: var(--card); border-radius: 10px; border: 1px solid var(--border); margin-bottom: 16px; overflow: hidden; }
+    .card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
+    .card-body { padding: 18px; }
+
+    .usage-bar-container { margin-bottom: 16px; }
+    .usage-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+    .usage-bar { height: 12px; background: #e8e8e8; border-radius: 6px; overflow: hidden; position: relative; }
+    .usage-bar-fill { height: 100%; border-radius: 6px; transition: width 2s ease-out; }
+    .usage-bar-limit { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--red); }
+
+    .speed-test { display: flex; gap: 16px; margin-top: 12px; }
+    .speed-gauge { flex: 1; text-align: center; padding: 16px; background: #f8f8f8; border-radius: 8px; border: 1px solid var(--border); }
+    .speed-value { font-size: 28px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+    .speed-unit { font-size: 12px; color: var(--dim); }
+    .speed-label { font-size: 11px; color: var(--dim); margin-top: 4px; }
+    .speed-value.throttled { color: var(--red); }
+
+    .info-table { width: 100%; }
+    .info-table tr { border-bottom: 1px solid #f0f0f0; }
+    .info-table td { padding: 8px 0; font-size: 13px; }
+    .info-table td:first-child { color: var(--dim); width: 140px; }
+
+    .countdown-box { text-align: center; padding: 16px; background: #fff8f8; border: 1px solid rgba(211,47,47,0.15); border-radius: 8px; margin-top: 12px; }
+    .countdown-label { font-size: 12px; color: var(--red); font-weight: 600; margin-bottom: 4px; }
+    .countdown-value { font-size: 24px; font-weight: 700; color: var(--red); font-variant-numeric: tabular-nums; }
+
+    .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+    .btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; text-align: center; }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--border); }
+
+    .log-output { font-family: "Consolas", monospace; font-size: 11px; background: #1a1a2e; color: #a0a0b0; padding: 12px; border-radius: 6px; max-height: 150px; overflow-y: auto; line-height: 1.6; }
+    .log-output .warn { color: #ffcc00; }
+    .log-output .err { color: #ff4444; }
+    .log-output .ok { color: #44ff44; }
+
+    @media (max-width: 500px) { .speed-test { flex-direction: column; } .btn-row { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="isp-header">
+    <div class="isp-logo">
+      <div class="isp-logo-icon">📡</div>
+      <div><div class="isp-logo-text" id="ispName">NetConnect</div><div class="isp-logo-sub">Internet Service Provider</div></div>
+    </div>
+    <div class="isp-header-right">Account Portal</div>
+  </div>
+
+  <div class="container">
+    <div class="alert-banner">
+      <div class="icon">⚠️</div>
+      <div>
+        <h2>Bandwidth Violation — Service Restricted</h2>
+        <p>Your account has exceeded the acceptable use threshold. Your connection has been temporarily throttled to 0.5 Mbps. Verify your identity to restore full speed.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Bandwidth Usage — Current Billing Cycle</div>
+      <div class="card-body">
+        <div class="usage-bar-container">
+          <div class="usage-bar-label"><span>Used: <b id="usedLabel">0 GB</b></span><span>Plan limit: 1,000 GB</span></div>
+          <div class="usage-bar"><div class="usage-bar-fill" id="usageFill" style="width:0%;background:linear-gradient(90deg,#4caf50,#ff9800,#f44336);"></div><div class="usage-bar-limit" style="left:100%;"></div></div>
+        </div>
+        <div class="speed-test">
+          <div class="speed-gauge"><div class="speed-value throttled" id="dlSpeed">0.5</div><div class="speed-unit">Mbps</div><div class="speed-label">Download (throttled)</div></div>
+          <div class="speed-gauge"><div class="speed-value throttled" id="ulSpeed">0.1</div><div class="speed-unit">Mbps</div><div class="speed-label">Upload (throttled)</div></div>
+          <div class="speed-gauge"><div class="speed-value">247</div><div class="speed-unit">ms</div><div class="speed-label">Latency</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Violation Details</div>
+      <div class="card-body">
+        <table class="info-table">
+          <tr><td>Account</td><td id="acctNum">—</td></tr>
+          <tr><td>IP Address</td><td id="ipAddr">—</td></tr>
+          <tr><td>Violation Type</td><td style="color:var(--red);font-weight:600;">Excessive bandwidth consumption</td></tr>
+          <tr><td>Data Used</td><td id="dataUsed">—</td></tr>
+          <tr><td>Plan Limit</td><td>1,000 GB / month</td></tr>
+          <tr><td>Overage</td><td id="overage" style="color:var(--red);font-weight:600;">—</td></tr>
+          <tr><td>Status</td><td style="color:var(--red);">THROTTLED — 0.5 Mbps cap</td></tr>
+        </table>
+        <div class="countdown-box">
+          <div class="countdown-label">Full service resumes in</div>
+          <div class="countdown-value" id="countdown">--:--:--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Network Activity Log</div>
+      <div class="card-body">
+        <div class="log-output" id="netLog"></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="alert('This is a Tetapux demo.')">Verify Identity & Restore Speed</button>
+      <button class="btn btn-secondary" onclick="alert('This is a Tetapux demo.')">Upgrade Plan</button>
+    </div>
+  </div>
+
+  <script>
+    const isps = ["NetConnect","FiberStream","SpeedLink","TotalNet","MegaBand","SwiftFiber","UltraNet","PrimeLine"];
+    document.getElementById("ispName").textContent = isps[Math.floor(Math.random()*isps.length)];
+    document.getElementById("acctNum").textContent = "ACC-"+Math.floor(Math.random()*900000+100000);
+    const ip=`${Math.floor(Math.random()*223+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+    document.getElementById("ipAddr").textContent=ip;
+    const used=Math.floor(Math.random()*800+1200);
+    document.getElementById("dataUsed").textContent=used+" GB";
+    document.getElementById("overage").textContent="+"+(used-1000)+" GB over limit";
+    document.getElementById("usedLabel").textContent=used+" GB";
+    setTimeout(()=>{document.getElementById("usageFill").style.width=Math.min(used/1000*100,100)+"%";},300);
+
+    let secs=Math.floor(Math.random()*7200+3600);
+    setInterval(()=>{secs--;if(secs<0)secs=0;const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;document.getElementById("countdown").textContent=[h,m,s].map(v=>String(v).padStart(2,"0")).join(":");},1000);
+
+    const logEl=document.getElementById("netLog");
+    const logMsgs=[
+      {t:"warn",m:`[POLICY] Throttle applied: ${ip} → 0.5 Mbps cap`},
+      {t:"err",m:`[ALERT] Bandwidth exceeded: ${used}GB / 1000GB limit`},
+      {t:"",m:`[NET] TCP connection to 142.250.80.46:443 (google.com)`},
+      {t:"",m:`[NET] DNS query: cdn.example.com → 104.18.22.53`},
+      {t:"warn",m:`[POLICY] P2P traffic detected — flagged`},
+      {t:"",m:`[NET] TLS 1.3 handshake with 151.101.1.140`},
+      {t:"err",m:`[THROTTLE] Download speed capped: 0.48 Mbps`},
+      {t:"",m:`[NET] HTTP/2 stream to api.spotify.com`},
+      {t:"warn",m:`[DPI] Streaming traffic: Netflix — deprioritized`},
+      {t:"",m:`[NET] UDP 1194 → VPN traffic detected`},
+      {t:"err",m:`[BLOCK] VPN connection attempt blocked per AUP`},
+    ];
+    let logIdx=0;
+    function addLog(){
+      const msg=logMsgs[logIdx%logMsgs.length];
+      const time=new Date().toLocaleTimeString([],{hour12:false});
+      const line=document.createElement("div");
+      line.className=msg.t;
+      line.textContent=`[${time}] ${msg.m}`;
+      logEl.appendChild(line);
+      if(logEl.children.length>30)logEl.firstChild.remove();
+      logEl.scrollTop=logEl.scrollHeight;
+      logIdx++;
+    }
+    for(let i=0;i<6;i++)addLog();
+    setInterval(addLog,2500);
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
