@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram — Verify your identity</title>
+  <style>
+    :root {
+      --bg: #000;
+      --surface: #121212;
+      --surface2: #1a1a1a;
+      --border: #262626;
+      --text: #f5f5f5;
+      --text-secondary: #a8a8a8;
+      --blue: #0095f6;
+      --blue-hover: #1877f2;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+    }
+    .container { max-width: 400px; width: 100%; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px 28px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .ig-logo {
+      font-family: "Segoe Script", "Brush Script MT", cursive;
+      font-size: 36px;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    .lock-icon {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--text);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 16px;
+    }
+
+    .card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .feature-list {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .feature-item:last-child { border: none; }
+    .feature-item .icon { font-size: 20px; flex-shrink: 0; }
+    .feature-item .text { color: var(--text-secondary); line-height: 1.4; }
+    .feature-item .text b { color: var(--text); }
+
+    .form-group { margin-bottom: 10px; }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font);
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--text-secondary);
+    }
+    .form-group input::placeholder { color: #666; }
+
+    .btn-blue {
+      width: 100%;
+      padding: 12px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      margin-top: 6px;
+      transition: background 0.15s;
+    }
+    .btn-blue:hover { background: var(--blue-hover); }
+    .btn-blue:disabled { opacity: 0.4; cursor: default; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 18px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .fb-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      text-decoration: none;
+    }
+
+    .verify-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .verify-badge .check {
+      width: 18px;
+      height: 18px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .step-dot.active { background: var(--blue); }
+
+    .bottom-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .bottom-card a {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .footer-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #555;
+    }
+    .footer-links a { color: #555; text-decoration: none; margin: 0 6px; }
+
+    .phase { display: none; }
+    .phase.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="ig-logo">Instagram</div>
+
+      <div class="phase active" id="phase1">
+        <div class="lock-icon">🔒</div>
+        <h2>Verify your identity to get verified</h2>
+        <p>You've been selected to apply for Instagram's verified badge. Complete identity verification to confirm your account.</p>
+
+        <div class="verify-badge">
+          <div class="check">✓</div>
+          You're eligible for verification
+        </div>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <span class="icon">✅</span>
+            <div class="text"><b>Blue checkmark</b> displayed on your profile</div>
+          </div>
+          <div class="feature-item">
+            <span class="icon">📈</span>
+            <div class="text"><b>Increased reach</b> — verified accounts get priority in search and explore</div>
+          </div>
+          <div class="feature-item">
+            <span class="icon">🛡️</span>
+            <div class="text"><b>Impersonation protection</b> — Meta actively monitors for fake accounts</div>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step-dot active"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+
+        <button class="btn-blue" id="startBtn">Start Verification</button>
+      </div>
+
+      <div class="phase" id="phase2">
+        <h2>Confirm your account</h2>
+        <p>Enter your Instagram credentials to verify account ownership.</p>
+
+        <div class="steps">
+          <div class="step-dot active"></div>
+          <div class="step-dot active"></div>
+          <div class="step-dot"></div>
+        </div>
+
+        <div class="form-group">
+          <input type="text" placeholder="Username or email" id="igUser" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <input type="password" placeholder="Password" id="igPass" autocomplete="off">
+        </div>
+        <button class="btn-blue" id="loginBtn">Log In</button>
+
+        <div class="divider">OR</div>
+
+        <a class="fb-login" onclick="alert('Tetapux demo.')">
+          <span style="font-size:18px">f</span> Log in with Facebook
+        </a>
+      </div>
+
+      <div class="phase" id="phase3">
+        <h2>Verification submitted</h2>
+        <p>Your application for the verified badge has been submitted. This is a Tetapux demo — nothing was actually sent.</p>
+        <div class="steps">
+          <div class="step-dot active"></div>
+          <div class="step-dot active"></div>
+          <div class="step-dot active"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-card">
+      <span style="font-size:14px;color:var(--text-secondary)">Don't have an account? </span>
+      <a href="#">Sign up</a>
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Meta</a>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Help</a>
+      <a href="#">API</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+
+  <script>
+    const phases = document.querySelectorAll(".phase");
+    function showPhase(n) { phases.forEach((p, i) => p.classList.toggle("active", i === n)); }
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+      showPhase(1);
+      document.getElementById("igUser").focus();
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const btn = document.getElementById("loginBtn");
+      btn.textContent = "Verifying...";
+      btn.disabled = true;
+      setTimeout(() => {
+        showPhase(2);
+      }, 2000);
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

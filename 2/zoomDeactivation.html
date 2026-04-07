@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoom — Account Deactivation Notice</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: #f6f6f6; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
+    .zoom-bar { background: #2d8cff; padding: 12px 24px; display: flex; align-items: center; gap: 10px; }
+    .zoom-bar svg { fill: #fff; }
+    .zoom-bar span { color: #fff; font-size: 18px; font-weight: 700; }
+    .email-wrap { max-width: 580px; width: 100%; margin: 32px auto; padding: 0 16px; }
+    .email-card { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden; }
+    .email-hero { background: linear-gradient(135deg, #2d8cff, #0b5ed7); padding: 32px; text-align: center; color: #fff; }
+    .email-hero .icon { font-size: 48px; margin-bottom: 12px; }
+    .email-hero h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .email-hero p { font-size: 14px; opacity: 0.9; }
+    .email-body { padding: 28px 32px; }
+    .email-body p { font-size: 14px; line-height: 1.7; color: #555; margin-bottom: 14px; }
+    .email-body b { color: #333; }
+    .info-box { background: #fff8f0; border-left: 3px solid #ff9800; padding: 14px; border-radius: 4px; margin: 16px 0; font-size: 13px; color: #795548; line-height: 1.5; }
+    .detail-table { width: 100%; margin: 16px 0; font-size: 13px; border-collapse: collapse; }
+    .detail-table td { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .detail-table td:first-child { color: #999; width: 140px; }
+    .btn-blue { display: block; width: 100%; padding: 14px; background: #2d8cff; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; text-align: center; margin: 8px 0; transition: background .15s; }
+    .btn-blue:hover { background: #1a73e8; }
+    .btn-outline { display: block; width: 100%; padding: 12px; background: #fff; color: #555; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: inherit; text-align: center; }
+    .email-footer { padding: 20px 32px; text-align: center; font-size: 11px; color: #aaa; border-top: 1px solid #f0f0f0; line-height: 1.6; }
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-box { background: #fff; border-radius: 10px; padding: 28px; max-width: 380px; width: 100%; }
+    .modal-box h2 { font-size: 18px; margin-bottom: 6px; }
+    .modal-box p { font-size: 13px; color: #777; margin-bottom: 16px; }
+    .modal-box input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 10px; }
+    .modal-box input:focus { outline: none; border-color: #2d8cff; }
+    @media (max-width: 500px) { .email-body { padding: 20px 16px; } .email-footer { padding: 16px; } }
+  </style>
+</head>
+<body>
+  <div class="zoom-bar">
+    <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="white"/><path d="M8 9.5v5a1 1 0 001 1h4a1 1 0 001-1v-2l2.4 1.8a.5.5 0 00.8-.4v-3.8a.5.5 0 00-.8-.4L14 11.5v-2a1 1 0 00-1-1H9a1 1 0 00-1 1z" fill="#2d8cff"/></svg>
+    <span>Zoom</span>
+  </div>
+
+  <div class="email-wrap">
+    <div class="email-card">
+      <div class="email-hero">
+        <div class="icon">🔒</div>
+        <h1>Account Deactivation Notice</h1>
+        <p>Action required within 24 hours</p>
+      </div>
+      <div class="email-body">
+        <p>Hi there,</p>
+        <p>We're writing to inform you that your Zoom account has been flagged for <b>deactivation</b> due to a violation of our Terms of Service.</p>
+        <div class="info-box">
+          <b>Reason:</b> Your account was accessed from an unauthorized third-party application that violates Zoom's API terms. This may indicate your credentials have been compromised.
+        </div>
+        <p>If you believe this is an error, you must verify your account within <b>24 hours</b> to prevent permanent deactivation. All scheduled meetings, recordings, and contacts will be permanently deleted.</p>
+        <table class="detail-table">
+          <tr><td>Account</td><td id="acctEmail">user@example.com</td></tr>
+          <tr><td>Violation</td><td>Unauthorized API access (Section 4.2)</td></tr>
+          <tr><td>Detected</td><td id="detectTime">—</td></tr>
+          <tr><td>Status</td><td style="color:#d32f2f;font-weight:600;">Pending Deactivation</td></tr>
+          <tr><td>Meetings at risk</td><td id="meetCount">—</td></tr>
+        </table>
+        <button class="btn-blue" id="verifyBtn">Verify Account</button>
+        <button class="btn-outline" onclick="alert('Tetapux demo.')">This wasn't me</button>
+      </div>
+      <div class="email-footer">
+        This email was sent by Zoom Video Communications, Inc.<br>
+        55 Almaden Boulevard, 6th Floor, San Jose, CA 95113<br>
+        <a href="#" style="color:#2d8cff;text-decoration:none;">Unsubscribe</a> · <a href="#" style="color:#2d8cff;text-decoration:none;">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modal">
+    <div class="modal-box">
+      <h2>Verify your Zoom account</h2>
+      <p>Confirm your credentials to prevent account deactivation.</p>
+      <input type="email" placeholder="Email address" autocomplete="off">
+      <input type="password" placeholder="Password" autocomplete="off">
+      <button class="btn-blue" onclick="this.textContent='Verifying...';this.disabled=true;setTimeout(()=>{document.getElementById('modal').style.display='none';this.textContent='Verify';this.disabled=false;alert('Tetapux demo. Nothing was sent.');},2000)">Verify</button>
+    </div>
+  </div>
+
+  <script>
+    const now = new Date();
+    document.getElementById("detectTime").textContent = new Date(now - 3600000*2).toLocaleString();
+    document.getElementById("meetCount").textContent = Math.floor(Math.random()*20+5) + " upcoming meetings";
+    document.getElementById("verifyBtn").addEventListener("click", () => {
+      document.getElementById("modal").style.display = "flex";
+    });
+    document.getElementById("modal").addEventListener("click", e => {
+      if (e.target === document.getElementById("modal")) document.getElementById("modal").style.display = "none";
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

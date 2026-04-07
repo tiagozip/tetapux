@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your device has been compromised</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: rgba(255,45,85,0.15);
+      --red: #ff2d55;
+      --text: #e0e0e8;
+      --text-dim: #555;
+      --mono: "SF Mono", "Menlo", "Consolas", monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 560px;
+      width: 100%;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; } }
+
+    .alert-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .shield-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: rgba(255,45,85,0.1);
+      border: 2px solid rgba(255,45,85,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      animation: pulseShield 2s infinite;
+    }
+    @keyframes pulseShield {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,45,85,0.2); }
+      50% { box-shadow: 0 0 0 12px rgba(255,45,85,0); }
+    }
+    .alert-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .alert-header p {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .alert-header .source {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,45,85,0.08);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--red);
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .evidence-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .evidence-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid var(--bg);
+    }
+    .timeline-item:last-child::before { background: var(--text-dim); }
+    .timeline-time {
+      font-size: 10px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+    }
+    .timeline-event { color: var(--text); }
+    .timeline-event b { color: var(--red); font-weight: 600; }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .access-item {
+      padding: 10px;
+      background: rgba(255,45,85,0.04);
+      border: 1px solid rgba(255,45,85,0.08);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .access-item .icon { font-size: 18px; }
+    .access-item .label { color: var(--text-dim); font-size: 10px; }
+    .access-item .status { color: var(--red); font-weight: 600; font-size: 11px; }
+
+    .device-info {
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    .device-info .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .device-info .lbl { color: var(--text-dim); }
+
+    .action-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .emergency-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 10px;
+      transition: filter 0.15s;
+    }
+    .emergency-btn:hover { filter: brightness(1.1); }
+    .secondary-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .footer-text {
+      margin-top: 16px;
+      font-size: 10px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    @media (max-width: 500px) {
+      .access-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="alert-header">
+      <div class="shield-icon">🛡️</div>
+      <h1>Your device has been compromised</h1>
+      <p>We have detected indicators consistent with NSO Group's Pegasus spyware on your device. Immediate action is required.</p>
+      <div class="source">Detected by Amnesty International Security Lab</div>
+    </div>
+
+    <div class="evidence-card">
+      <h3>Infection Timeline</h3>
+      <div class="timeline" id="timeline"></div>
+    </div>
+
+    <div class="evidence-card">
+      <h3>Spyware Access Level</h3>
+      <div class="access-grid">
+        <div class="access-item"><span class="icon">📷</span><div><div class="status">COMPROMISED</div><div class="label">Camera (front + rear)</div></div></div>
+        <div class="access-item"><span class="icon">🎤</span><div><div class="status">COMPROMISED</div><div class="label">Microphone</div></div></div>
+        <div class="access-item"><span class="icon">📍</span><div><div class="status">COMPROMISED</div><div class="label">GPS Location</div></div></div>
+        <div class="access-item"><span class="icon">💬</span><div><div class="status">COMPROMISED</div><div class="label">Messages / Calls</div></div></div>
+        <div class="access-item"><span class="icon">🔑</span><div><div class="status">COMPROMISED</div><div class="label">Passwords / Keychain</div></div></div>
+        <div class="access-item"><span class="icon">📁</span><div><div class="status">COMPROMISED</div><div class="label">Files / Photos</div></div></div>
+      </div>
+    </div>
+
+    <div class="evidence-card">
+      <h3>Your Device Fingerprint</h3>
+      <div class="device-info" id="deviceInfo"></div>
+    </div>
+
+    <div class="action-section">
+      <button class="emergency-btn" onclick="alert('This is a Tetapux demo.')">Emergency: Secure Device Now</button>
+      <button class="secondary-btn" onclick="alert('This is a Tetapux demo.')">Download forensic report</button>
+    </div>
+    <div class="footer-text">
+      This alert was generated by the Amnesty International Mobile Verification Toolkit (MVT)<br>
+      For real Pegasus detection: <span style="color:var(--red)">github.com/mvt-project/mvt</span>
+    </div>
+  </div>
+
+  <script>
+    const now = new Date();
+    const events = [
+      { offset: -72, text: "Zero-click exploit delivered via <b>iMessage</b> (CVE-2023-41064)" },
+      { offset: -71.5, text: "Kernel exploit chain executed — <b>root access gained</b>" },
+      { offset: -71, text: "Pegasus implant installed to <b>/private/var/tmp/.pgs</b>" },
+      { offset: -48, text: "First data exfiltration: <b>contacts, call logs, SMS</b>" },
+      { offset: -24, text: "Microphone activated for <b>3 hours 14 minutes</b>" },
+      { offset: -12, text: "Camera capture: <b>47 images</b> taken silently" },
+      { offset: -6, text: "WhatsApp / Signal message database <b>exfiltrated</b>" },
+      { offset: -1, text: "Location beacon active — pinging every <b>15 minutes</b>" },
+      { offset: 0, text: "Anomaly detected by <b>MVT scan</b> — infection confirmed" },
+    ];
+
+    const timeline = document.getElementById("timeline");
+    events.forEach(e => {
+      const time = new Date(now.getTime() + e.offset * 3600000);
+      const div = document.createElement("div");
+      div.className = "timeline-item";
+      div.innerHTML = `<div class="timeline-time">${time.toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}</div><div class="timeline-event">${e.text}</div>`;
+      timeline.appendChild(div);
+    });
+
+    const platform = navigator.platform || "Unknown";
+    const ua = navigator.userAgent;
+    const screen = `${window.screen.width}x${window.screen.height}`;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const lang = navigator.language;
+    const cores = navigator.hardwareConcurrency || "?";
+
+    const info = document.getElementById("deviceInfo");
+    const fields = [
+      ["Platform", platform],
+      ["User Agent", ua.length > 60 ? ua.slice(0, 60) + "..." : ua],
+      ["Screen", screen],
+      ["Timezone", tz],
+      ["Language", lang],
+      ["CPU Cores", cores],
+      ["Infection ID", "PGS-" + Math.random().toString(36).slice(2, 10).toUpperCase()],
+    ];
+    fields.forEach(([l, v]) => {
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `<span class="lbl">${l}</span><span>${v}</span>`;
+      info.appendChild(row);
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
