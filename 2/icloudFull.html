@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iCloud — Storage Almost Full</title>
+  <style>
+    :root {
+      --blue: #007aff;
+      --blue-hover: #0056cc;
+      --red: #ff3b30;
+      --bg: #f2f2f7;
+      --card: #fff;
+      --text: #1c1c1e;
+      --text-secondary: #8e8e93;
+      --border: rgba(60,60,67,0.12);
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav svg { fill: var(--text); }
+    .nav span { font-size: 17px; font-weight: 600; }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 20px 16px 40px; }
+
+    .storage-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .storage-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .cloud-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #5ac8fa, #007aff);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .storage-header h1 { font-size: 22px; font-weight: 700; }
+    .storage-header p { font-size: 13px; color: var(--text-secondary); }
+
+    .bar-container {
+      height: 10px;
+      background: #e5e5ea;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 1.5s ease-out;
+    }
+    .bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .breakdown {
+      display: flex;
+      gap: 0;
+      margin: 20px 0 0;
+    }
+    .breakdown-item {
+      flex: 1;
+      text-align: center;
+      padding: 12px 0;
+      border-right: 0.5px solid var(--border);
+    }
+    .breakdown-item:last-child { border: none; }
+    .breakdown-item .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .breakdown-item .size { font-size: 16px; font-weight: 600; display: block; margin-top: 4px; }
+    .breakdown-item .label { font-size: 11px; color: var(--text-secondary); }
+
+    .warning-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .warning-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,59,48,0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .warning-card h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .warning-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+    .countdown-text {
+      font-size: 13px;
+      color: var(--red);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .photo-section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .photo-section h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .photo-thumb {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      position: relative;
+    }
+    .photo-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255,59,48,0.08);
+    }
+    .photo-count {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .photo-count b { color: var(--red); }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 0.5px solid var(--border);
+      cursor: pointer;
+      transition: background 0.1s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .action-row:last-child { border: none; }
+    .action-row:active { background: #e5e5ea; }
+    .action-label { font-size: 15px; }
+    .action-label.primary { color: var(--blue); font-weight: 500; }
+    .action-label.danger { color: var(--red); font-weight: 500; }
+    .action-arrow { color: var(--text-secondary); font-size: 18px; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      padding: 20px;
+    }
+    .modal-sheet {
+      background: var(--card);
+      border-radius: 14px;
+      max-width: 380px;
+      width: 100%;
+      overflow: hidden;
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-sheet .header {
+      padding: 20px 20px 0;
+      text-align: center;
+    }
+    .modal-sheet .header h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+    .modal-sheet .header p { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+    .modal-sheet .fields { padding: 16px 20px; }
+    .modal-sheet input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .modal-sheet input:focus { outline: none; border-color: var(--blue); }
+    .modal-btns { border-top: 0.5px solid var(--border); }
+    .modal-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      text-align: center;
+      font-size: 17px;
+      font-family: var(--font);
+      background: none;
+      border: none;
+      border-bottom: 0.5px solid var(--border);
+      cursor: pointer;
+      color: var(--blue);
+      font-weight: 500;
+    }
+    .modal-btn:last-child { border: none; color: var(--text-secondary); }
+    .modal-btn:active { background: #e5e5ea; }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000;
+        --card: #1c1c1e;
+        --text: #fff;
+        --text-secondary: #98989d;
+        --border: rgba(84,84,88,0.65);
+      }
+      .nav { background: rgba(28,28,30,0.72); }
+      .action-row:active { background: #2c2c2e; }
+      .modal-btn:active { background: #2c2c2e; }
+      .modal-sheet input { background: #2c2c2e; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 0a6 6 0 0 0-5.97 5.34C1.72 6.08 0 8.17 0 10.75 0 13.65 2.35 16 5.25 16h9.5C17.65 16 20 13.65 20 10.75c0-2.58-1.72-4.67-3.97-5.41A6.01 6.01 0 0 0 10 0z"/></svg>
+    <span>iCloud</span>
+  </div>
+
+  <div class="container">
+    <div class="storage-card">
+      <div class="storage-header">
+        <div class="cloud-icon">☁️</div>
+        <div>
+          <h1>iCloud Storage</h1>
+          <p>4.97 GB of 5 GB used</p>
+        </div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-fill" id="barFill" style="width:0%;background:linear-gradient(90deg,#ff3b30,#ff6b6b);"></div>
+      </div>
+      <div class="bar-labels">
+        <span id="usedLabel">0 GB</span>
+        <span>5 GB</span>
+      </div>
+      <div class="breakdown">
+        <div class="breakdown-item">
+          <span class="label"><span class="dot" style="background:#ff9500"></span>Photos</span>
+          <span class="size">2.8 GB</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="label"><span class="dot" style="background:#007aff"></span>Backup</span>
+          <span class="size">1.4 GB</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="label"><span class="dot" style="background:#5856d6"></span>Mail</span>
+          <span class="size">480 MB</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="label"><span class="dot" style="background:#8e8e93"></span>Other</span>
+          <span class="size">290 MB</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warning-icon">⚠️</div>
+      <div>
+        <h2>Your iCloud is almost full</h2>
+        <p>New photos, videos, and backups can no longer be saved. Your 12,847 photos and 3 device backups are at risk of being permanently deleted.</p>
+        <div class="countdown-text" id="countdown">Automatic cleanup in 23:59:59</div>
+      </div>
+    </div>
+
+    <div class="photo-section">
+      <h3>Photos at risk of deletion (12,847)</h3>
+      <div class="photo-grid" id="photoGrid"></div>
+      <div class="photo-count">Showing 16 of <b>12,847</b> photos that may be permanently deleted</div>
+    </div>
+
+    <div class="actions">
+      <a class="action-row" id="upgradeBtn">
+        <span class="action-label primary">Upgrade to iCloud+ (50 GB)</span>
+        <span class="action-arrow">›</span>
+      </a>
+      <a class="action-row" id="verifyBtn">
+        <span class="action-label primary">Verify account to keep data</span>
+        <span class="action-arrow">›</span>
+      </a>
+      <a class="action-row">
+        <span class="action-label">Manage Storage</span>
+        <span class="action-arrow">›</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-sheet">
+      <div class="header">
+        <h2>Sign in with Apple ID</h2>
+        <p>Verify your identity to prevent automatic data cleanup</p>
+      </div>
+      <div class="fields">
+        <input type="email" placeholder="Apple ID" autocomplete="off" id="appleId">
+        <input type="password" placeholder="Password" autocomplete="off" id="applePw">
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn" id="signInBtn">Sign In</button>
+        <button class="modal-btn" onclick="document.getElementById('modal').style.display='none'">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const photos = ["🌅","🏔️","🐕","👨‍👩‍👧","🎂","🌊","✈️","🎄","🌸","👶","🏠","🎓","🐱","🌇","🎃","❄️"];
+    const colors = ["#2c2c2e","#3a3a3c","#1c1c1e","#2c2c2e","#48484a","#3a3a3c","#2c2c2e","#1c1c1e","#3a3a3c","#48484a","#2c2c2e","#3a3a3c","#1c1c1e","#48484a","#3a3a3c","#2c2c2e"];
+    const grid = document.getElementById("photoGrid");
+    photos.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "photo-thumb";
+      div.style.background = colors[i];
+      div.textContent = p;
+      grid.appendChild(div);
+    });
+
+    setTimeout(() => {
+      document.getElementById("barFill").style.width = "99.4%";
+      document.getElementById("usedLabel").textContent = "4.97 GB";
+    }, 300);
+
+    let secs = 86399;
+    const cdEl = document.getElementById("countdown");
+    setInterval(() => {
+      secs--;
+      if (secs < 0) secs = 0;
+      const h = Math.floor(secs / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const s = secs % 60;
+      cdEl.textContent = `Automatic cleanup in ${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    }, 1000);
+
+    document.getElementById("verifyBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("modal").style.display = "flex";
+    });
+    document.getElementById("upgradeBtn").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("modal").style.display = "flex";
+    });
+
+    document.getElementById("signInBtn").addEventListener("click", () => {
+      const btn = document.getElementById("signInBtn");
+      btn.textContent = "Verifying...";
+      btn.disabled = true;
+      setTimeout(() => {
+        document.getElementById("modal").style.display = "none";
+        btn.textContent = "Sign In";
+        btn.disabled = false;
+        document.getElementById("appleId").value = "";
+        document.getElementById("applePw").value = "";
+        alert("This is a Tetapux demo. Nothing was sent.");
+      }, 2000);
+    });
+
+    document.getElementById("modal").addEventListener("click", (e) => {
+      if (e.target === document.getElementById("modal")) {
+        document.getElementById("modal").style.display = "none";
+      }
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

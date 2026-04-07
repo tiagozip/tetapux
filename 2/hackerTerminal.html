@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>root@kali:~#</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #0f0;
+      --dim-green: #0a0;
+      --red: #ff3333;
+      --yellow: #ffcc00;
+      --cyan: #0ff;
+      --bg: #0c0c0c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--green);
+      font-family: "JetBrains Mono", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      cursor: none;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 1px,
+        rgba(0,0,0,0.15) 1px,
+        rgba(0,0,0,0.15) 3px
+      );
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .crt-flicker {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 101;
+      animation: flicker 0.05s infinite;
+      opacity: 0.03;
+      background: white;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.02; }
+      50% { opacity: 0.04; }
+      100% { opacity: 0.02; }
+    }
+
+    .vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    #terminal {
+      padding: 12px 16px;
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 1;
+    }
+    #terminal::-webkit-scrollbar { display: none; }
+
+    .line { white-space: pre-wrap; word-break: break-all; min-height: 1.4em; }
+    .prompt { color: var(--red); }
+    .cmd { color: #fff; }
+    .info { color: var(--cyan); }
+    .warn { color: var(--yellow); }
+    .err { color: var(--red); }
+    .success { color: var(--green); }
+    .dim { color: #555; }
+    .highlight { color: #fff; background: var(--red); padding: 0 3px; }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--green);
+      animation: blink 0.7s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .progress-bar {
+      display: inline-block;
+    }
+    .bar-fill { color: var(--green); }
+    .bar-empty { color: #333; }
+
+    .banner { color: var(--red); font-weight: 700; font-size: 11px; }
+
+    @media (max-width: 600px) {
+      html, body { font-size: 11px; }
+      #terminal { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="crt-flicker"></div>
+  <div class="vignette"></div>
+  <div id="terminal"></div>
+
+  <script>
+    const T = document.getElementById("terminal");
+    let cursorEl = null;
+
+    function scrollBottom() {
+      T.scrollTop = T.scrollHeight;
+    }
+
+    function addLine(html, cls) {
+      if (cursorEl) { cursorEl.remove(); cursorEl = null; }
+      const div = document.createElement("div");
+      div.className = "line" + (cls ? " " + cls : "");
+      div.innerHTML = html;
+      T.appendChild(div);
+      scrollBottom();
+    }
+
+    function showCursor() {
+      if (cursorEl) return;
+      cursorEl = document.createElement("span");
+      cursorEl.className = "cursor";
+      T.appendChild(cursorEl);
+      scrollBottom();
+    }
+
+    function typeText(text, cls, speed) {
+      return new Promise(resolve => {
+        if (cursorEl) { cursorEl.remove(); cursorEl = null; }
+        const div = document.createElement("div");
+        div.className = "line" + (cls ? " " + cls : "");
+        T.appendChild(div);
+        let i = 0;
+        const base = speed || 25;
+        function next() {
+          if (i < text.length) {
+            div.textContent += text[i];
+            i++;
+            scrollBottom();
+            setTimeout(next, base + Math.random() * base * 0.8);
+          } else {
+            resolve();
+          }
+        }
+        next();
+      });
+    }
+
+    function typeHTML(html, cls, speed) {
+      return new Promise(resolve => {
+        if (cursorEl) { cursorEl.remove(); cursorEl = null; }
+        const div = document.createElement("div");
+        div.className = "line" + (cls ? " " + cls : "");
+        T.appendChild(div);
+        let i = 0;
+        const base = speed || 25;
+        const tmp = document.createElement("span");
+        tmp.innerHTML = html;
+        const raw = tmp.textContent;
+        function next() {
+          if (i < raw.length) {
+            i++;
+            div.innerHTML = html.substring(0, findHTMLIndex(html, i));
+            scrollBottom();
+            setTimeout(next, base + Math.random() * base * 0.6);
+          } else {
+            div.innerHTML = html;
+            resolve();
+          }
+        }
+        function findHTMLIndex(h, charCount) {
+          let count = 0;
+          let inTag = false;
+          for (let j = 0; j < h.length; j++) {
+            if (h[j] === '<') inTag = true;
+            if (!inTag) count++;
+            if (h[j] === '>') inTag = false;
+            if (count >= charCount) return j + 1;
+          }
+          return h.length;
+        }
+        next();
+      });
+    }
+
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function progressBar(label, duration, steps) {
+      return new Promise(resolve => {
+        const div = document.createElement("div");
+        div.className = "line";
+        T.appendChild(div);
+        let step = 0;
+        const total = steps || 40;
+        const interval = duration / total;
+        function tick() {
+          step++;
+          const pct = Math.round((step / total) * 100);
+          const filled = "█".repeat(step);
+          const empty = "░".repeat(total - step);
+          div.innerHTML = `${label} [<span class="bar-fill">${filled}</span><span class="bar-empty">${empty}</span>] ${pct}%`;
+          scrollBottom();
+          if (step < total) {
+            setTimeout(tick, interval + Math.random() * 50);
+          } else {
+            resolve();
+          }
+        }
+        tick();
+      });
+    }
+
+    function rapidDump(lines, delay) {
+      return new Promise(resolve => {
+        let i = 0;
+        function next() {
+          if (i < lines.length) {
+            addLine(lines[i][0], lines[i][1]);
+            i++;
+            setTimeout(next, delay || 60);
+          } else resolve();
+        }
+        next();
+      });
+    }
+
+    const browser = navigator.userAgent;
+    const platform = navigator.platform || "Unknown";
+    const lang = navigator.language;
+    const cores = navigator.hardwareConcurrency || "?";
+    const ram = navigator.deviceMemory || "?";
+    const screen = `${window.screen.width}x${window.screen.height}`;
+    const gpu = (() => {
+      try {
+        const c = document.createElement("canvas");
+        const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+        const ext = gl.getExtension("WEBGL_debug_renderer_info");
+        return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "Unknown";
+      } catch(e) { return "Unknown"; }
+    })();
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const plugins = Array.from(navigator.plugins || []).map(p => p.name).slice(0, 5);
+    const connection = navigator.connection ? `${navigator.connection.effectiveType} (~${navigator.connection.downlink}Mbps)` : "Unknown";
+
+    const banner = [
+      "  ██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗ ",
+      "  ██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗",
+      "  ███████║███████║██║     █████╔╝ █████╗  ██║  ██║",
+      "  ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██║  ██║",
+      "  ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██████╔╝",
+      "  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═════╝ "
+    ];
+
+    const fakeFiles = [
+      "Documents/passwords.xlsx", "Documents/tax_return_2025.pdf",
+      "Documents/bank_statements/", "Pictures/selfies/IMG_4821.jpg",
+      "Pictures/private/", "Desktop/crypto_wallet_backup.json",
+      "Desktop/work_vpn_config.ovpn", "Downloads/passport_scan.pdf",
+      ".ssh/id_rsa", ".ssh/id_rsa.pub", ".aws/credentials",
+      ".config/discord/Local Storage/", "AppData/Roaming/Mozilla/Firefox/Profiles/",
+      "AppData/Local/Google/Chrome/User Data/Default/Login Data",
+      "AppData/Local/Google/Chrome/User Data/Default/Cookies",
+      ".bash_history", ".zsh_history", "Documents/resume_2025.docx",
+      "Documents/contracts/NDA_signed.pdf", ".env", ".npmrc"
+    ];
+
+    const fakeIPs = () => `${Math.floor(Math.random()*223+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+    const fakePorts = [22, 80, 443, 3389, 5900, 8080, 3306, 5432, 27017, 6379];
+
+    async function run() {
+      for (const line of banner) {
+        addLine(line, "banner");
+      }
+      addLine("", "");
+      await wait(600);
+
+      await typeText("[*] Initializing payload... ", "warn", 30);
+      await wait(400);
+      addLine('<span class="success">[OK]</span> Payload active', "");
+      await wait(300);
+
+      await typeText("[*] Establishing reverse shell...", "warn", 30);
+      await wait(500);
+      addLine(`<span class="success">[+]</span> Connection established: ${fakeIPs()}:4444 -> target`, "");
+      await wait(200);
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># whoami`, "");
+      await wait(300);
+      addLine("root", "success");
+      await wait(400);
+
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># ./enum_target.sh`, "");
+      await wait(600);
+      addLine("", "");
+      addLine("═══════════════════════════════════════════", "dim");
+      addLine("  TARGET SYSTEM ENUMERATION", "info");
+      addLine("═══════════════════════════════════════════", "dim");
+      await wait(200);
+
+      const sysInfo = [
+        [`  Platform     : ${platform}`, ""],
+        [`  User-Agent   : ${browser}`, ""],
+        [`  Language     : ${lang}`, ""],
+        [`  Timezone     : ${tz}`, ""],
+        [`  Screen       : ${screen}`, ""],
+        [`  CPU Cores    : ${cores}`, ""],
+        [`  RAM          : ${ram}GB`, ""],
+        [`  GPU          : ${gpu}`, ""],
+        [`  Network      : ${connection}`, ""],
+      ];
+      if (plugins.length > 0) {
+        sysInfo.push([`  Plugins      : ${plugins.join(", ")}`, ""]);
+      }
+
+      await rapidDump(sysInfo, 120);
+      addLine("═══════════════════════════════════════════", "dim");
+      await wait(500);
+
+      addLine("", "");
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># nmap -sV -O ${fakeIPs()}`, "");
+      await wait(400);
+      addLine(`Starting Nmap 7.94 ( https://nmap.org ) at ${new Date().toISOString().split("T")[0]}`, "dim");
+      await wait(300);
+
+      const ports = fakePorts.sort(() => Math.random() - 0.5).slice(0, 5);
+      const services = { 22: "ssh OpenSSH 9.2", 80: "http Apache 2.4.57", 443: "https nginx 1.24", 3389: "ms-wbt-server", 5900: "vnc", 8080: "http-proxy", 3306: "mysql 8.0", 5432: "postgresql 15.3", 27017: "mongodb", 6379: "redis 7.0" };
+      for (const port of ports) {
+        await wait(150);
+        addLine(`  <span class="success">${String(port).padEnd(6)}</span> open  ${services[port] || "unknown"}`, "");
+      }
+      await wait(300);
+      addLine(`Nmap done: 1 IP address (1 host up) scanned in 4.28 seconds`, "dim");
+      await wait(600);
+
+      addLine("", "");
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># ./harvest_credentials.py`, "");
+      await wait(400);
+      addLine('<span class="warn">[!] Extracting saved credentials from browser stores...</span>', "");
+      await progressBar("  Chrome Login Data  ", 2000, 30);
+      await progressBar("  Firefox Profiles   ", 1500, 30);
+      await progressBar("  Cookies/Sessions   ", 1800, 30);
+      addLine(`<span class="success">[+] Harvested 247 credentials, 1,832 cookies, 94 sessions</span>`, "");
+      await wait(500);
+
+      addLine("", "");
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># find / -type f -name "*.pdf" -o -name "*.xlsx" -o -name "*.doc*" -o -name "*.jpg" 2>/dev/null | head -20`, "");
+      await wait(300);
+
+      for (let i = 0; i < fakeFiles.length; i++) {
+        await wait(80);
+        const isJuicy = fakeFiles[i].includes("password") || fakeFiles[i].includes("crypto") || fakeFiles[i].includes("ssh") || fakeFiles[i].includes(".env");
+        addLine(isJuicy ? `<span class="highlight"> ${fakeFiles[i]} </span>` : `  ${fakeFiles[i]}`, "");
+      }
+      await wait(600);
+
+      addLine("", "");
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># ./exfiltrate.sh --compress --encrypt`, "");
+      await wait(300);
+      addLine('<span class="warn">[!] Compressing target data...</span>', "");
+      await progressBar("  Archiving files    ", 3000, 40);
+      addLine(`<span class="dim">  Archive size: ${(Math.random() * 500 + 200).toFixed(1)}MB</span>`, "");
+      await wait(300);
+
+      addLine('<span class="warn">[!] Encrypting archive with AES-256...</span>', "");
+      await progressBar("  Encrypting         ", 1500, 30);
+      addLine('<span class="success">[+] Encryption complete</span>', "");
+      await wait(300);
+
+      addLine('<span class="err">[!] Uploading to C2 server...</span>', "");
+      const uploadSize = (Math.random() * 400 + 150).toFixed(0);
+      await progressBar(`  Upload (${uploadSize}MB)    `, 4000, 40);
+      addLine(`<span class="success">[+] Exfiltration complete: ${uploadSize}MB transferred to ${fakeIPs()}:8443</span>`, "");
+      await wait(500);
+
+      addLine("", "");
+      addLine(`<span class="prompt">root@kali</span>:<span class="info">~</span># ./cover_tracks.sh`, "");
+      await wait(400);
+      addLine("  [*] Clearing auth logs...", "dim");
+      await wait(200);
+      addLine("  [*] Removing bash history...", "dim");
+      await wait(200);
+      addLine("  [*] Timestomping modified files...", "dim");
+      await wait(200);
+      addLine("  [*] Clearing event logs...", "dim");
+      await wait(300);
+      addLine('<span class="success">[+] Tracks cleared. Session clean.</span>', "");
+
+      await wait(800);
+      addLine("", "");
+      addLine("═══════════════════════════════════════════", "err");
+      addLine("  OPERATION COMPLETE", "err");
+      addLine("  All target data has been exfiltrated.", "err");
+      addLine("═══════════════════════════════════════════", "err");
+
+      await wait(500);
+      addLine("", "");
+      showCursor();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(run, 400);
+    });
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

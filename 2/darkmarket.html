@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydraMarket — Onion Service</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0e12;
+      --surface: #16161c;
+      --surface-hover: #1e1e26;
+      --border: #2a2a35;
+      --green: #2ecc40;
+      --green-dim: rgba(46,204,64,0.15);
+      --red: #e74c3c;
+      --yellow: #f1c40f;
+      --purple: #9b59b6;
+      --text: #ccc;
+      --text-dim: #666;
+      --font: "Inter", -apple-system, sans-serif;
+      --mono: "IBM Plex Mono", monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .onion-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-dim);
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .onion-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+    }
+    .circuit-info {
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .topbar-right { display: flex; gap: 16px; }
+    .topbar-right a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .topbar-right a:hover { color: var(--text); }
+
+    .nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-size: 18px;
+      font-weight: 600;
+      padding: 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-brand span { color: var(--green); }
+    .nav-links { display: flex; gap: 0; }
+    .nav-link {
+      padding: 14px 16px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 13px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--text); border-bottom-color: var(--green); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .balance {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--yellow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 20px;
+    }
+
+    .sidebar { display: flex; flex-direction: column; gap: 4px; }
+    .cat-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.1s;
+      display: flex;
+      justify-content: space-between;
+    }
+    .cat-item:hover { background: var(--surface); color: var(--text); }
+    .cat-item.active { background: var(--green-dim); color: var(--green); }
+    .cat-count { font-size: 11px; opacity: 0.6; }
+
+    .listings { display: flex; flex-direction: column; gap: 12px; }
+    .listing {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      transition: border-color 0.15s;
+      cursor: pointer;
+    }
+    .listing:hover { border-color: var(--green); }
+    .listing-img {
+      width: 80px;
+      height: 80px;
+      background: #1a1a22;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .listing-info { flex: 1; min-width: 0; }
+    .listing-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .listing-vendor {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .listing-vendor b { color: var(--green); font-weight: 500; }
+    .listing-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-dim);
+    }
+    .listing-price {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .price-btc {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--yellow);
+    }
+    .price-usd {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    .listing-stars { margin-top: 6px; font-size: 11px; color: var(--yellow); }
+    .listing-sales { font-size: 11px; color: var(--text-dim); }
+
+    .trust-level {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .trust-high { background: var(--green-dim); color: var(--green); }
+    .trust-mid { background: rgba(241,196,15,0.15); color: var(--yellow); }
+
+    .pgp-notice {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      text-align: center;
+      margin-top: 8px;
+    }
+    .pgp-notice b { color: var(--green); }
+
+    @media (max-width: 700px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+      .nav-links { display: none; }
+      .circuit-info { display: none; }
+      .topbar-right { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="onion-badge">Connected via Tor</div>
+      <div class="circuit-info" id="circuit">Circuit: Guard → Relay → Exit (3 hops)</div>
+    </div>
+    <div class="topbar-right">
+      <a>PGP Keys</a>
+      <a>Mirrors</a>
+      <a>Canary</a>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-brand">🐍 <span>Hydra</span>Market</div>
+    <div class="nav-links">
+      <a class="nav-link active">Browse</a>
+      <a class="nav-link">Vendors</a>
+      <a class="nav-link">Orders</a>
+      <a class="nav-link">Disputes</a>
+      <a class="nav-link">Forums</a>
+    </div>
+    <div class="nav-right">
+      <div class="balance">₿ <span id="btcBal">0.04821</span></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="listings" id="listings"></div>
+  </div>
+
+  <div class="pgp-notice">
+    <b>⚠ VERIFY PGP SIGNATURES</b> — Always verify vendor PGP keys before transacting. Never use direct deposit.
+  </div>
+
+  <script>
+    const categories = [
+      { name: "Digital Goods", count: 1847, active: true },
+      { name: "Fraud", count: 923 },
+      { name: "Guides & Tutorials", count: 412 },
+      { name: "Hacking", count: 678 },
+      { name: "Hosting", count: 156 },
+      { name: "Counterfeit", count: 334 },
+      { name: "Software", count: 891 },
+      { name: "Services", count: 267 },
+      { name: "Other", count: 445 },
+    ];
+
+    const sidebar = document.getElementById("sidebar");
+    categories.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "cat-item" + (c.active ? " active" : "");
+      div.innerHTML = `<span>${c.name}</span><span class="cat-count">${c.count}</span>`;
+      sidebar.appendChild(div);
+    });
+
+    const vendors = ["SilkTrader", "CryptKing", "NullByte", "Ph4ntom", "ZeroDay", "DarkForge", "ByteGhost", "ShadowVault"];
+    const trustLevels = [
+      { cls: "trust-high", label: "Trusted" },
+      { cls: "trust-mid", label: "Verified" },
+    ];
+
+    const products = [
+      { emoji: "🔑", title: "Premium Netflix/Spotify/Disney+ Combo x50", tags: ["Accounts","Combo","Fresh"], minPrice: 15, maxPrice: 45 },
+      { emoji: "💳", title: "Fullz Pack — SSN + DOB + Address (US)", tags: ["Fraud","Identity","US"], minPrice: 30, maxPrice: 120 },
+      { emoji: "📧", title: "1M Email:Pass Combolist (2026 Fresh)", tags: ["Database","Combo","Cracked"], minPrice: 25, maxPrice: 80 },
+      { emoji: "🛡️", title: "0-Day Windows RCE Exploit (Unpatched)", tags: ["Exploit","Windows","0day"], minPrice: 5000, maxPrice: 15000 },
+      { emoji: "🌐", title: "Bulletproof Hosting — No Logs, No KYC", tags: ["Hosting","Offshore","VPS"], minPrice: 50, maxPrice: 200 },
+      { emoji: "📱", title: "Android RAT — Full Device Control v4.2", tags: ["Malware","Android","RAT"], minPrice: 300, maxPrice: 900 },
+      { emoji: "🎓", title: "Complete Carding Tutorial 2026 (Updated)", tags: ["Guide","Carding","Beginner"], minPrice: 10, maxPrice: 50 },
+      { emoji: "🔐", title: "Stolen Corporate VPN Credentials x25", tags: ["Access","Corporate","VPN"], minPrice: 200, maxPrice: 800 },
+      { emoji: "📄", title: "High-Quality Scanned Passport Template (EU)", tags: ["Counterfeit","Documents","EU"], minPrice: 80, maxPrice: 250 },
+      { emoji: "⛏️", title: "Cryptominer Botnet Builder + Panel", tags: ["Malware","Crypto","Builder"], minPrice: 150, maxPrice: 500 },
+      { emoji: "🔓", title: "WiFi Pineapple Config + MitM Toolkit", tags: ["Hardware","WiFi","MitM"], minPrice: 40, maxPrice: 120 },
+      { emoji: "💰", title: "BTC Tumbling Service — 1% Fee, No Logs", tags: ["Service","Bitcoin","Privacy"], minPrice: 0, maxPrice: 0 },
+    ];
+
+    const listingsEl = document.getElementById("listings");
+    const btcPrice = 67000 + Math.random() * 3000;
+
+    products.forEach(p => {
+      const vendor = vendors[Math.floor(Math.random() * vendors.length)];
+      const trust = trustLevels[Math.floor(Math.random() * trustLevels.length)];
+      const usd = p.minPrice + Math.random() * (p.maxPrice - p.minPrice);
+      const btc = usd / btcPrice;
+      const stars = (3.5 + Math.random() * 1.5).toFixed(1);
+      const sales = Math.floor(Math.random() * 500 + 20);
+
+      const div = document.createElement("div");
+      div.className = "listing";
+      div.onclick = () => alert("This is a Tetapux demo. This is not a real marketplace.");
+      div.innerHTML = `
+        <div class="listing-img">${p.emoji}</div>
+        <div class="listing-info">
+          <div class="listing-title">${p.title}</div>
+          <div class="listing-vendor">by <b>${vendor}</b> <span class="trust-level ${trust.cls}">${trust.label}</span></div>
+          <div class="listing-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        </div>
+        <div class="listing-price">
+          <div class="price-btc">${p.minPrice === 0 ? "1% fee" : "₿" + btc.toFixed(5)}</div>
+          <div class="price-usd">${p.minPrice === 0 ? "Variable" : "~$" + Math.round(usd)}</div>
+          <div class="listing-stars">${"★".repeat(Math.round(parseFloat(stars)))}${"☆".repeat(5 - Math.round(parseFloat(stars)))} ${stars}</div>
+          <div class="listing-sales">${sales} sold</div>
+        </div>
+      `;
+      listingsEl.appendChild(div);
+    });
+
+    const countries = ["DE","NL","US","RO","CH","SE","FI","IS"];
+    const c1 = countries[Math.floor(Math.random() * countries.length)];
+    let c2 = c1;
+    while (c2 === c1) c2 = countries[Math.floor(Math.random() * countries.length)];
+    let c3 = c2;
+    while (c3 === c2 || c3 === c1) c3 = countries[Math.floor(Math.random() * countries.length)];
+    document.getElementById("circuit").textContent = `Circuit: ${c1} → ${c2} → ${c3} (3 hops)`;
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
