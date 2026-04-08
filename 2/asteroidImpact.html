@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NASA/JPL CNEOS — IMPACT WARNING</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --border: #1f2937;
+      --red: #ef4444;
+      --red-dim: rgba(239,68,68,0.1);
+      --orange: #f59e0b;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --text: #e5e7eb;
+      --dim: #6b7280;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 13px;
+    }
+    .topbar {
+      background: var(--red);
+      color: #fff;
+      padding: 8px 20px;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-align: center;
+      animation: alertPulse 1.5s infinite;
+    }
+    @keyframes alertPulse { 50% { background: #b91c1c; } }
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .nasa-logo {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+    .nasa-logo span { color: var(--red); }
+    .header-sub {
+      font-size: 11px;
+      color: var(--dim);
+      border-left: 1px solid var(--border);
+      padding-left: 16px;
+    }
+    .live-badge {
+      background: var(--red-dim);
+      color: var(--red);
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .live-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0.3; } }
+
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-body { padding: 16px; }
+    .full-width { grid-column: 1 / -1; }
+
+    .countdown {
+      text-align: center;
+      padding: 24px;
+    }
+    .countdown-label { font-size: 12px; color: var(--red); font-weight: 600; letter-spacing: 2px; margin-bottom: 12px; }
+    .countdown-digits {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 48px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 4px;
+    }
+    .countdown-sub { font-size: 11px; color: var(--dim); margin-top: 6px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+      border-radius: 8px;
+    }
+    .stat-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .stat-value { font-family: "JetBrains Mono", monospace; font-size: 18px; font-weight: 600; }
+    .stat-value.red { color: var(--red); }
+    .stat-value.orange { color: var(--orange); }
+
+    .orbit-canvas {
+      width: 100%;
+      height: 250px;
+      background: #000;
+      border-radius: 6px;
+    }
+
+    .impact-zones {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .zone {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .zone-prob {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 600;
+    }
+    .zone-prob.high { color: var(--red); }
+    .zone-prob.med { color: var(--orange); }
+
+    .evac-levels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .evac {
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .evac.active { background: var(--red); color: #fff; animation: alertPulse 1s infinite; }
+    .evac.standby { background: rgba(245,158,11,0.15); color: var(--orange); }
+    .evac.clear { background: rgba(34,197,94,0.15); color: var(--green); }
+
+    .log-feed {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      max-height: 200px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    .log-feed::-webkit-scrollbar { width: 4px; }
+    .log-feed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .log-entry { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-time { color: var(--dim); }
+    .log-warn { color: var(--orange); }
+    .log-crit { color: var(--red); }
+    .log-info { color: var(--blue); }
+
+    @media (max-width: 700px) {
+      .main { grid-template-columns: 1fr; }
+      .countdown-digits { font-size: 32px; }
+      .evac-levels { grid-template-columns: 1fr; }
+      .header-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">⚠ PLANETARY DEFENSE COORDINATION OFFICE — LEVEL 5 ALERT — NOT A DRILL ⚠</div>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="nasa-logo"><span>NASA</span>/JPL</div>
+      <div class="header-sub">Center for Near-Earth Object Studies (CNEOS)<br>Sentry Impact Monitoring System</div>
+    </div>
+    <div class="live-badge">REAL-TIME TRACKING</div>
+  </div>
+
+  <div class="main">
+    <div class="card full-width">
+      <div class="card-header">
+        <span>Estimated Time to Impact</span>
+        <span style="color:var(--red)">TORINO SCALE: 10</span>
+      </div>
+      <div class="countdown">
+        <div class="countdown-label">TIME REMAINING</div>
+        <div class="countdown-digits" id="countdown">00:00:00:00</div>
+        <div class="countdown-sub">days : hours : minutes : seconds</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Object Parameters</div>
+      <div class="card-body">
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="stat-label">Designation</div>
+            <div class="stat-value" id="designation">2026 AA₁</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Diameter</div>
+            <div class="stat-value red">~12.4 km</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Velocity</div>
+            <div class="stat-value orange" id="velocity">28.7 km/s</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Impact Probability</div>
+            <div class="stat-value red">99.97%</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Energy (Mt TNT)</div>
+            <div class="stat-value red">~1.4 × 10⁸</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Distance</div>
+            <div class="stat-value" id="distance">0.0031 AU</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Impact Probability Corridor</div>
+      <div class="card-body">
+        <div class="impact-zones">
+          <div class="zone"><span>North Atlantic Ocean</span><span class="zone-prob high">41.2%</span></div>
+          <div class="zone"><span>Western Europe</span><span class="zone-prob high">23.8%</span></div>
+          <div class="zone"><span>Eastern United States</span><span class="zone-prob med">18.4%</span></div>
+          <div class="zone"><span>North Africa</span><span class="zone-prob med">11.2%</span></div>
+          <div class="zone"><span>South America (north)</span><span class="zone-prob" style="color:var(--dim)">5.4%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Orbital Visualization</div>
+      <div class="card-body" style="padding:0;">
+        <canvas class="orbit-canvas" id="orbitCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Emergency Response Status</div>
+      <div class="card-body">
+        <div class="evac-levels">
+          <div class="evac active">EVACUATION<br>ACTIVE</div>
+          <div class="evac active">MARTIAL LAW<br>DECLARED</div>
+          <div class="evac standby">DART II<br>LAUNCHED</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card full-width">
+      <div class="card-header">
+        <span>System Log</span>
+        <span id="logCount" style="color:var(--dim)">0 events</span>
+      </div>
+      <div class="card-body">
+        <div class="log-feed" id="logFeed"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let deadline = Date.now() + (3 * 24 * 60 * 60 + 7 * 60 * 60 + 42 * 60 + 18) * 1000;
+
+    function updateCountdown() {
+      let diff = Math.max(0, deadline - Date.now());
+      deadline -= Math.random() * 200;
+      const d = Math.floor(diff / 86400000);
+      diff %= 86400000;
+      const h = Math.floor(diff / 3600000);
+      diff %= 3600000;
+      const m = Math.floor(diff / 60000);
+      diff %= 60000;
+      const s = Math.floor(diff / 1000);
+      document.getElementById("countdown").textContent =
+        String(d).padStart(2,"0") + ":" +
+        String(h).padStart(2,"0") + ":" +
+        String(m).padStart(2,"0") + ":" +
+        String(s).padStart(2,"0");
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    let dist = 0.0031;
+    setInterval(() => {
+      dist -= 0.0000001 + Math.random() * 0.0000002;
+      if (dist < 0) dist = 0;
+      document.getElementById("distance").textContent = dist.toFixed(7) + " AU";
+      const vel = (28.7 + Math.random() * 0.4 - 0.2).toFixed(1);
+      document.getElementById("velocity").textContent = vel + " km/s";
+    }, 3000);
+
+    const canvas = document.getElementById("orbitCanvas");
+    const ctx = canvas.getContext("2d");
+    let angle = 0;
+    let asteroidAngle = 3.8;
+
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = canvas.offsetHeight * 2;
+      ctx.scale(2, 2);
+    }
+    resizeCanvas();
+
+    function drawOrbit() {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = "#ffd60a";
+      ctx.beginPath();
+      ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(59,130,246,0.2)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 80, 78, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      angle += 0.005;
+      const ex = cx + Math.cos(angle) * 80;
+      const ey = cy + Math.sin(angle) * 78;
+      ctx.fillStyle = "#3b82f6";
+      ctx.beginPath();
+      ctx.arc(ex, ey, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(59,130,246,0.3)";
+      ctx.font = "9px Inter, sans-serif";
+      ctx.fillText("Earth", ex + 8, ey + 3);
+
+      ctx.strokeStyle = "rgba(239,68,68,0.25)";
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.ellipse(cx - 20, cy + 10, 140, 100, 0.3, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      asteroidAngle += 0.003;
+      const ax = (cx - 20) + Math.cos(asteroidAngle) * 140;
+      const ay = (cy + 10) + Math.sin(asteroidAngle) * 100;
+      ctx.fillStyle = "#ef4444";
+      ctx.beginPath();
+      ctx.arc(ax, ay, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(239,68,68,0.4)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ex, ey);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const dx = ex - ax;
+      const dy = ey - ay;
+      const midX = (ax + ex) / 2;
+      const midY = (ay + ey) / 2;
+      const distKm = Math.sqrt(dx*dx + dy*dy) * 1000;
+      ctx.fillStyle = "rgba(239,68,68,0.6)";
+      ctx.font = "9px JetBrains Mono, monospace";
+      ctx.fillText(distKm.toFixed(0) + " Mm", midX + 4, midY - 4);
+
+      ctx.fillStyle = "rgba(239,68,68,0.4)";
+      ctx.fillText("2026 AA₁", ax + 8, ay + 3);
+
+      requestAnimationFrame(drawOrbit);
+    }
+    drawOrbit();
+
+    const logFeed = document.getElementById("logFeed");
+    let logCount = 0;
+    const logTemplates = [
+      ["info", "Sentry recalculation complete — impact probability updated"],
+      ["warn", "DART II deflection burn #{n} — trajectory deviation: {d}°"],
+      ["crit", "Impact corridor shifted {dir} — updated zones published"],
+      ["info", "Deep Space Network tracking lock confirmed — Goldstone"],
+      ["warn", "Seismic pre-impact modeling updated — magnitude {m} expected"],
+      ["crit", "FEMA Zone A evacuation order expanded — {pop}M affected"],
+      ["info", "ESA Hera probe telemetry received — object rotation: {r}h"],
+      ["warn", "Atmospheric entry heating model revised — {t}K surface temp"],
+      ["crit", "UN Security Council emergency session #{n} — resolution pending"],
+      ["info", "Arecibo backup array online — tracking redundancy confirmed"],
+      ["crit", "Tsunami modeling: {h}m wave height at Atlantic coastlines"],
+      ["warn", "Nuclear winter probability updated: {p}% (12-month model)"],
+    ];
+
+    function addLog() {
+      const tpl = logTemplates[Math.floor(Math.random() * logTemplates.length)];
+      const time = new Date().toLocaleTimeString([], {hour12: false});
+      let text = tpl[1]
+        .replace("{n}", Math.floor(Math.random() * 12 + 1))
+        .replace("{d}", (Math.random() * 0.05).toFixed(4))
+        .replace("{dir}", ["northward", "southward", "eastward"][Math.floor(Math.random()*3)])
+        .replace("{m}", (7.5 + Math.random() * 2.5).toFixed(1))
+        .replace("{pop}", Math.floor(Math.random() * 200 + 50))
+        .replace("{r}", (Math.random() * 8 + 2).toFixed(2))
+        .replace("{t}", Math.floor(Math.random() * 5000 + 10000))
+        .replace("{h}", Math.floor(Math.random() * 300 + 50))
+        .replace("{p}", Math.floor(Math.random() * 40 + 30));
+
+      const div = document.createElement("div");
+      div.className = "log-entry";
+      div.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${tpl[0]}">${text}</span>`;
+      logFeed.appendChild(div);
+      logFeed.scrollTop = logFeed.scrollHeight;
+      if (logFeed.children.length > 50) logFeed.firstChild.remove();
+      logCount++;
+      document.getElementById("logCount").textContent = logCount + " events";
+    }
+
+    for (let i = 0; i < 8; i++) addLog();
+    setInterval(addLog, 3000 + Math.random() * 2000);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

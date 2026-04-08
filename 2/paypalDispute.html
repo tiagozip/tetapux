@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Action Required: Unauthorized Transaction — PayPal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f5f7fa;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: #2c2e2f;
+    }
+    .email-wrap {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .pp-header {
+      background: #003087;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pp-logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .pp-logo span { color: #009cde; }
+    .pp-header-right { color: rgba(255,255,255,0.6); font-size: 11px; }
+    .body { padding: 28px 24px; }
+    .body h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; }
+    .body p { font-size: 14px; line-height: 1.65; color: #545d68; margin-bottom: 12px; }
+    .tx-card {
+      background: #fef3f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 18px;
+      margin: 18px 0;
+    }
+    .tx-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #b91c1c;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .tx-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+    .tx-label { color: #6b7280; }
+    .tx-value { font-weight: 500; color: #1f2937; text-align: right; }
+    .tx-value.red { color: #dc2626; font-weight: 700; }
+    .tx-divider { border: none; border-top: 1px solid #fecaca; margin: 8px 0; }
+    .btn-dispute {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: #0070ba;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 18px 0;
+      transition: background 0.15s;
+    }
+    .btn-dispute:hover { background: #005ea6; }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: none;
+      border: 1px solid #d1d5db;
+      border-radius: 24px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #0070ba;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #1e40af;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 16px 0; }
+    .small { font-size: 12px; color: #9ca3af; line-height: 1.5; }
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 16px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: #9ca3af;
+      line-height: 1.6;
+    }
+    .footer a { color: #0070ba; text-decoration: none; }
+
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .modal-top {
+      background: #003087;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    .modal-top .pp-logo { font-size: 20px; }
+    .modal-body { padding: 24px 20px; }
+    .modal-body h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .modal-body .sub { font-size: 13px; color: #6b7280; margin-bottom: 18px; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 5px; color: #374151; }
+    .fg input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .fg input:focus { outline: none; border-color: #0070ba; box-shadow: 0 0 0 3px rgba(0,112,186,0.1); }
+    .modal .btn-dispute { margin: 8px 0 0; }
+    .modal-footer-link {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 12px;
+      color: #0070ba;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrap">
+    <div class="pp-header">
+      <div class="pp-logo">Pay<span>Pal</span></div>
+      <div class="pp-header-right">Security Notice</div>
+    </div>
+    <div class="body">
+      <h2>Unauthorized transaction on your account</h2>
+      <p>We noticed a transaction on your PayPal account that you may not have authorized. If you did not make this purchase, please dispute it immediately to prevent further charges.</p>
+
+      <div class="tx-card">
+        <div class="tx-card-title">Transaction Details</div>
+        <div class="tx-row"><span class="tx-label">Merchant</span><span class="tx-value" id="merchant">—</span></div>
+        <div class="tx-row"><span class="tx-label">Category</span><span class="tx-value">Digital Goods</span></div>
+        <div class="tx-row"><span class="tx-label">Date</span><span class="tx-value" id="txDate">—</span></div>
+        <div class="tx-row"><span class="tx-label">Transaction ID</span><span class="tx-value" id="txId" style="font-family:monospace;font-size:11px">—</span></div>
+        <hr class="tx-divider">
+        <div class="tx-row"><span class="tx-label">Amount</span><span class="tx-value red" id="txAmount">—</span></div>
+        <div class="tx-row"><span class="tx-label">Status</span><span class="tx-value red">Completed</span></div>
+      </div>
+
+      <div class="info-box">
+        If this transaction was not authorized by you, you may be eligible for PayPal Buyer Protection. Please file a dispute within 180 days of the transaction date.
+      </div>
+
+      <button class="btn-dispute" onclick="openModal()">Dispute this transaction</button>
+      <button class="btn-secondary" onclick="openModal()">I recognize this transaction</button>
+
+      <hr class="divider">
+      <p class="small">This email was sent to you because a potentially unauthorized transaction was detected on your account. PayPal will never ask you for your full credit card number, bank account, or Social Security number in an email.</p>
+    </div>
+    <div class="footer">
+      PayPal, Inc. · 2211 North First Street · San Jose, CA 95131<br>
+      <a>Help Center</a> · <a>Security Center</a> · <a>Unsubscribe</a>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-top">
+        <div class="pp-logo">Pay<span>Pal</span></div>
+      </div>
+      <div class="modal-body">
+        <h3>Verify your identity</h3>
+        <div class="sub">To file a dispute, please confirm your PayPal login.</div>
+        <div class="fg">
+          <label>Email or phone number</label>
+          <input type="text" placeholder="email or phone" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" placeholder="password" autocomplete="off" />
+        </div>
+        <button class="btn-dispute" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Log In</button>
+      </div>
+      <div class="modal-footer-link" onclick="document.getElementById('modal').style.display='none'">Cancel</div>
+    </div>
+  </div>
+
+  <script>
+    const merchants = ["STEAMGAMES*Purchase","CRYPTO-EXCHANGE.CO","BINANCE*Deposit","APPLE.COM/BILL","DIGITALOCEAN*Cloud","ALIEXPRESS*Order"];
+    const amounts = ["$487.99","$1,249.00","$299.95","$742.50","$189.00","$2,100.00"];
+    const m = Math.floor(Math.random()*merchants.length);
+    document.getElementById("merchant").textContent = merchants[m];
+    document.getElementById("txAmount").textContent = amounts[Math.floor(Math.random()*amounts.length)];
+    const d = new Date(); d.setHours(d.getHours() - Math.floor(Math.random()*4+1));
+    document.getElementById("txDate").textContent = d.toLocaleString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",hour12:true});
+    document.getElementById("txId").textContent = Array.from({length:17},()=>"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random()*36)]).join("");
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

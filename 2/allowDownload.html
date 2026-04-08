@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Ready</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #121212;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .container {
+      max-width: 420px;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+    .file-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #2196f3, #1565c0);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .filename {
+      font-family: monospace;
+      font-size: 14px;
+      color: #2196f3;
+      background: rgba(33,150,243,0.1);
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    .file-info {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #888;
+    }
+    .download-btn {
+      width: 100%;
+      padding: 14px;
+      background: #2196f3;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-bottom: 12px;
+    }
+    .download-btn:hover { background: #1976d2; }
+    .download-btn:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+    }
+    .progress-wrap {
+      display: none;
+      margin-bottom: 16px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #2196f3;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: #888;
+    }
+    .verify-step {
+      display: none;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+    .verify-step p {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .verify-step .arrow {
+      font-size: 24px;
+      animation: bounce 0.8s infinite;
+      display: inline-block;
+    }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .verify-step .small { font-size: 11px; color: #666; margin-top: 8px; }
+    .fail { color: #f44336; font-size: 13px; display: none; margin-top: 12px; }
+    .scan-result {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #4caf50;
+      margin-bottom: 16px;
+    }
+    .scan-result::before {
+      content: "✓";
+      width: 16px;
+      height: 16px;
+      background: rgba(76,175,80,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    @media (max-width: 480px) {
+      .container { padding: 16px; }
+      h1 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="file-icon">📁</div>
+    <h1>Your download is ready</h1>
+    <div class="filename" id="filename">setup_v4.2.1_x64.exe</div>
+    <div class="file-info">
+      <span>Size: 47.3 MB</span>
+      <span>Type: Application</span>
+    </div>
+    <div class="scan-result">Scanned by VirusTotal — No threats found</div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">Preparing download...</div>
+    </div>
+
+    <button class="download-btn" id="dlBtn" onclick="startDownload()">Download Now</button>
+
+    <div class="verify-step" id="verifyStep">
+      <p>Press <b>"Allow"</b> to start your download</p>
+      <div class="arrow">⬆</div>
+      <div class="small">Required to verify you're not a bot</div>
+    </div>
+    <div class="fail" id="failMsg">Download blocked. Allow notifications to continue.</div>
+  </div>
+
+  <script>
+    const filenames = [
+      "setup_v4.2.1_x64.exe",
+      "crack_keygen_2026.zip",
+      "mod_menu_v3.1.apk",
+      "premium_unlocker.exe",
+      "free_activation_tool.zip",
+    ];
+    document.getElementById("filename").textContent = filenames[Math.floor(Math.random() * filenames.length)];
+
+    function startDownload() {
+      const btn = document.getElementById("dlBtn");
+      const progress = document.getElementById("progressWrap");
+      const fill = document.getElementById("progressFill");
+      const text = document.getElementById("progressText");
+
+      btn.disabled = true;
+      btn.textContent = "Preparing...";
+      progress.style.display = "block";
+
+      let pct = 0;
+      const interval = setInterval(() => {
+        pct += Math.random() * 8 + 2;
+        if (pct > 73) pct = 73;
+        fill.style.width = pct + "%";
+        text.textContent = `Downloading... ${Math.floor(pct)}%`;
+        if (pct >= 73) {
+          clearInterval(interval);
+          text.textContent = "Verification required to complete download...";
+          document.getElementById("verifyStep").style.display = "block";
+
+          Notification.requestPermission().then(p => {
+            if (p === "granted") {
+              document.getElementById("verifyStep").style.display = "none";
+              fill.style.width = "100%";
+              text.textContent = "Download complete!";
+              btn.textContent = "Downloaded";
+              new Notification("Download Complete", {
+                body: "Your file is ready. Tap to open.",
+              });
+            } else {
+              document.getElementById("verifyStep").style.display = "none";
+              document.getElementById("failMsg").style.display = "block";
+              text.textContent = "Download paused";
+              btn.textContent = "Retry";
+              btn.disabled = false;
+            }
+          });
+        }
+      }, 200);
+    }
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

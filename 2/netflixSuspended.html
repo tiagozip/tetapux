@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix — Account Suspended</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      color: #fff;
+    }
+    .nf-header {
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nf-logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #e50914;
+      letter-spacing: -1px;
+      font-style: italic;
+    }
+    .nf-help { font-size: 13px; color: #999; cursor: pointer; }
+    .main {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .alert-icon {
+      width: 72px; height: 72px;
+      background: rgba(229,9,20,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .sub {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .issue-card {
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+    .issue-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e50914;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .issue-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+      border-bottom: 1px solid #222;
+    }
+    .issue-row:last-child { border-bottom: none; }
+    .issue-label { color: #999; }
+    .issue-value { color: #fff; font-weight: 500; }
+    .issue-value.red { color: #e50914; }
+    .countdown-box {
+      text-align: center;
+      background: rgba(229,9,20,0.08);
+      border: 1px solid rgba(229,9,20,0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .countdown-label { font-size: 11px; color: #e50914; letter-spacing: 1px; margin-bottom: 6px; }
+    .countdown {
+      font-size: 28px;
+      font-weight: 700;
+      color: #e50914;
+      font-family: monospace;
+      letter-spacing: 2px;
+    }
+    .countdown-sub { font-size: 11px; color: #666; margin-top: 4px; }
+    .btn-nf {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #e50914;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .btn-nf:hover { background: #c11119; }
+    .btn-ghost {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: none;
+      border: 1px solid #333;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 13px;
+      color: #999;
+      cursor: pointer;
+      text-align: center;
+    }
+    .small { font-size: 11px; color: #555; text-align: center; margin-top: 16px; line-height: 1.5; }
+    .nf-footer {
+      max-width: 500px;
+      margin: 40px auto 0;
+      padding: 20px;
+      border-top: 1px solid #222;
+      text-align: center;
+      font-size: 11px;
+      color: #555;
+    }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { background: #141414; border-radius: 8px; max-width: 400px; width: 100%; overflow: hidden; border: 1px solid #333; }
+    .modal-top { padding: 24px 24px 0; text-align: center; }
+    .modal-top .nf-logo { font-size: 22px; margin-bottom: 16px; display: inline-block; }
+    .modal-body { padding: 0 24px 24px; }
+    .modal-body h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; text-align: center; }
+    .modal-body .msub { font-size: 12px; color: #999; margin-bottom: 18px; text-align: center; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; color: #999; margin-bottom: 5px; }
+    .fg input { width: 100%; padding: 12px; background: #333; border: 1px solid #555; border-radius: 4px; color: #fff; font: inherit; font-size: 14px; }
+    .fg input:focus { outline: none; border-color: #e50914; }
+    .fg input::placeholder { color: #777; }
+    .modal .btn-nf { margin-top: 6px; }
+    .modal-cancel { display: block; text-align: center; padding: 14px; font-size: 12px; color: #999; cursor: pointer; border-top: 1px solid #222; }
+  </style>
+</head>
+<body>
+  <div class="nf-header">
+    <div class="nf-logo">NETFLIX</div>
+    <div class="nf-help">Help Center</div>
+  </div>
+
+  <div class="main">
+    <div class="alert-icon">⚠️</div>
+    <h1>Your account has been suspended</h1>
+    <p class="sub">We were unable to process your last payment. Your account has been temporarily suspended and your current session will end soon.</p>
+
+    <div class="issue-card">
+      <div class="issue-title">Payment Issue Details</div>
+      <div class="issue-row"><span class="issue-label">Account</span><span class="issue-value" id="email">—</span></div>
+      <div class="issue-row"><span class="issue-label">Plan</span><span class="issue-value">Premium (4K + HDR)</span></div>
+      <div class="issue-row"><span class="issue-label">Amount due</span><span class="issue-value red" id="amount">—</span></div>
+      <div class="issue-row"><span class="issue-label">Payment method</span><span class="issue-value red">Declined</span></div>
+      <div class="issue-row"><span class="issue-label">Attempts</span><span class="issue-value">3 failed</span></div>
+      <div class="issue-row"><span class="issue-label">Status</span><span class="issue-value red">Suspended</span></div>
+    </div>
+
+    <div class="countdown-box">
+      <div class="countdown-label">ACCOUNT WILL BE DELETED IN</div>
+      <div class="countdown" id="countdown">23:59:59</div>
+      <div class="countdown-sub">Update your payment method to prevent data loss</div>
+    </div>
+
+    <button class="btn-nf" onclick="openModal()">Update payment method</button>
+    <button class="btn-ghost" onclick="openModal()">Verify my account</button>
+
+    <p class="small">If you believe this is an error, please update your payment information or contact Netflix support. Your viewing history, saved lists, and account preferences will be permanently deleted if not resolved.</p>
+  </div>
+
+  <div class="nf-footer">
+    Netflix, Inc. · 121 Albright Way · Los Gatos, CA 95032<br>
+    Questions? Visit the Help Center.
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-top">
+        <div class="nf-logo">NETFLIX</div>
+      </div>
+      <div class="modal-body">
+        <h3>Verify your account</h3>
+        <div class="msub">Confirm your Netflix login to update payment</div>
+        <div class="fg">
+          <label>Email or phone number</label>
+          <input type="text" placeholder="Enter your email" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" placeholder="Enter your password" autocomplete="off" />
+        </div>
+        <button class="btn-nf" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Sign In</button>
+      </div>
+      <div class="modal-cancel" onclick="document.getElementById('modal').style.display='none'">Cancel</div>
+    </div>
+  </div>
+
+  <script>
+    const emails = ["user","john.doe","sarah.k","mike123","jessica.m"];
+    const domains = ["@gmail.com","@outlook.com","@yahoo.com","@icloud.com"];
+    document.getElementById("email").textContent =
+      emails[Math.floor(Math.random()*emails.length)] + domains[Math.floor(Math.random()*domains.length)];
+    document.getElementById("amount").textContent = "$" + (22.99).toFixed(2);
+
+    let sec = 23*3600+59*60+59;
+    function tick() {
+      if (sec<=0) return;
+      sec--;
+      const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+      document.getElementById("countdown").textContent =
+        String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+    }
+    setInterval(tick,1000);
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GLOBAL CRYPTOGRAPHIC FAILURE</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --surface: rgba(15,23,42,0.8);
+      --border: rgba(139,92,246,0.2);
+      --purple: #a78bfa;
+      --purple-bright: #c4b5fd;
+      --red: #f87171;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --text: #e2e8f0;
+      --dim: #64748b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "JetBrains Mono", monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 12px;
+    }
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .mega-alert {
+      background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 3px;
+      font-size: 13px;
+      animation: alertPulse 2s infinite;
+    }
+    @keyframes alertPulse { 50% { background: linear-gradient(90deg, #991b1b, #b91c1c, #991b1b); } }
+
+    .header {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--purple-bright);
+      letter-spacing: 1px;
+    }
+    .header h1 span { color: var(--red); }
+    .header-right { display: flex; gap: 16px; align-items: center; }
+    .live-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.5); } 50% { box-shadow: 0 0 0 6px rgba(248,113,113,0); } }
+
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+    .card-h {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--purple);
+    }
+    .card-b { padding: 14px; }
+    .full { grid-column: 1 / -1; }
+    .span2 { grid-column: span 2; }
+
+    .algo-list { display: flex; flex-direction: column; gap: 6px; }
+    .algo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .algo.cracked { background: rgba(248,113,113,0.08); }
+    .algo-name { font-weight: 500; }
+    .algo-status { font-weight: 700; font-size: 11px; }
+    .algo-status.safe { color: var(--green); }
+    .algo-status.cracking { color: var(--yellow); animation: blinkText 0.5s infinite; }
+    .algo-status.broken { color: var(--red); }
+    @keyframes blinkText { 50% { opacity: 0.4; } }
+
+    .impact-item {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .impact-icon { font-size: 18px; }
+    .impact-text { flex: 1; }
+    .impact-title { font-weight: 500; font-size: 12px; }
+    .impact-desc { color: var(--dim); font-size: 11px; margin-top: 2px; }
+    .impact-status { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+    .impact-status.down { background: rgba(248,113,113,0.15); color: var(--red); }
+    .impact-status.degraded { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+    .qubits-display {
+      text-align: center;
+      padding: 10px;
+    }
+    .qubits-num {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--purple-bright);
+    }
+    .qubits-label { color: var(--dim); font-size: 11px; margin-top: 4px; }
+    .qubits-sub {
+      color: var(--red);
+      font-size: 11px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .timeline { display: flex; flex-direction: column; gap: 10px; }
+    .tl-item {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+    .tl-time { color: var(--dim); width: 80px; flex-shrink: 0; text-align: right; }
+    .tl-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .tl-dot.red { background: var(--red); }
+    .tl-dot.yellow { background: var(--yellow); }
+    .tl-dot.purple { background: var(--purple); }
+
+    .decrypt-feed {
+      font-size: 11px;
+      max-height: 200px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    .decrypt-feed::-webkit-scrollbar { width: 3px; }
+    .decrypt-feed::-webkit-scrollbar-thumb { background: var(--border); }
+    .df-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .df-ok { color: var(--green); }
+    .df-fail { color: var(--red); }
+
+    @media (max-width: 800px) {
+      .main { grid-template-columns: 1fr; }
+      .span2, .full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="mega-alert">
+    ⚠ Q-DAY — GLOBAL CRYPTOGRAPHIC INFRASTRUCTURE COMPROMISED ⚠
+  </div>
+
+  <div class="header">
+    <h1>CERT/CC <span>ADVISORY</span> — QUANTUM CRYPTANALYTIC EVENT</h1>
+    <div class="header-right">
+      <span style="color:var(--dim)">CVE-2026-00000</span>
+      <div class="live-dot"></div>
+      <span style="color:var(--red);font-weight:600">ACTIVE INCIDENT</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <div class="card-h">Cryptographic Status</div>
+      <div class="card-b">
+        <div class="algo-list" id="algoList"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Quantum Computer</div>
+      <div class="card-b">
+        <div class="qubits-display">
+          <div class="qubits-num" id="qubits">4,096</div>
+          <div class="qubits-label">Logical Qubits (error-corrected)</div>
+          <div class="qubits-sub" id="qubitsSub">Sufficient for RSA-4096 factoring via Shor's algorithm</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Cascade Failures</div>
+      <div class="card-b">
+        <div id="impacts"></div>
+      </div>
+    </div>
+
+    <div class="card span2">
+      <div class="card-h">Live Decryption Feed</div>
+      <div class="card-b">
+        <div class="decrypt-feed" id="decryptFeed"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Incident Timeline</div>
+      <div class="card-b">
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const algos = [
+      { name: "RSA-2048", status: "broken", delay: 0 },
+      { name: "RSA-4096", status: "broken", delay: 2000 },
+      { name: "ECDSA P-256", status: "broken", delay: 4000 },
+      { name: "ECDSA P-384", status: "broken", delay: 6000 },
+      { name: "Ed25519", status: "broken", delay: 8000 },
+      { name: "DH-2048", status: "broken", delay: 10000 },
+      { name: "AES-128", status: "cracking", delay: 12000 },
+      { name: "AES-256", status: "safe", delay: 0 },
+      { name: "CRYSTALS-Kyber", status: "safe", delay: 0 },
+      { name: "SPHINCS+", status: "safe", delay: 0 },
+    ];
+
+    const algoList = document.getElementById("algoList");
+    const algoEls = [];
+
+    algos.forEach((a, i) => {
+      const div = document.createElement("div");
+      div.className = "algo" + (a.status === "broken" && a.delay === 0 ? " cracked" : "");
+      const initialStatus = a.delay > 0 ? (a.status === "broken" ? "safe" : a.status) : a.status;
+      div.innerHTML = `<span class="algo-name">${a.name}</span><span class="algo-status ${initialStatus}">${initialStatus.toUpperCase()}</span>`;
+      algoList.appendChild(div);
+      algoEls.push(div);
+
+      if (a.delay > 0 && a.status === "broken") {
+        setTimeout(() => {
+          div.querySelector(".algo-status").className = "algo-status cracking";
+          div.querySelector(".algo-status").textContent = "CRACKING...";
+        }, a.delay - 1500);
+
+        setTimeout(() => {
+          div.classList.add("cracked");
+          div.querySelector(".algo-status").className = "algo-status broken";
+          div.querySelector(".algo-status").textContent = "BROKEN";
+        }, a.delay);
+      }
+    });
+
+    const impacts = [
+      { icon: "🏦", title: "Global Banking (SWIFT)", desc: "TLS certificates invalid — transactions halted", status: "down" },
+      { icon: "🌐", title: "HTTPS / Web PKI", desc: "All certificate authorities compromised", status: "down" },
+      { icon: "📧", title: "Email (S/MIME, PGP)", desc: "Encrypted communications readable in plaintext", status: "down" },
+      { icon: "🔐", title: "SSH / VPN", desc: "Key exchange broken — tunnels compromised", status: "down" },
+      { icon: "₿", title: "Cryptocurrency", desc: "ECDSA wallets vulnerable — mass drainage", status: "down" },
+      { icon: "🏥", title: "Healthcare Systems", desc: "Patient records exposed — HIPAA void", status: "degraded" },
+      { icon: "🛰️", title: "Military / Gov Comms", desc: "Classified channels downgraded to UNCLASSIFIED", status: "down" },
+    ];
+
+    const impactsEl = document.getElementById("impacts");
+    impacts.forEach((imp, i) => {
+      setTimeout(() => {
+        const div = document.createElement("div");
+        div.className = "impact-item";
+        div.innerHTML = `
+          <div class="impact-icon">${imp.icon}</div>
+          <div class="impact-text">
+            <div class="impact-title">${imp.title}</div>
+            <div class="impact-desc">${imp.desc}</div>
+          </div>
+          <div class="impact-status ${imp.status}">${imp.status.toUpperCase()}</div>
+        `;
+        impactsEl.appendChild(div);
+      }, 1000 + i * 1500);
+    });
+
+    const decryptFeed = document.getElementById("decryptFeed");
+    const targets = [
+      "SWIFT interbank message", "DoD classified cable", "Bitcoin wallet seed",
+      "NHS patient record", "WhatsApp session key", "AWS root credential",
+      "Signal protocol session", "Passport PKI certificate", "Banking API token",
+      "VPN tunnel key", "HTTPS session (google.com)", "SSH private key",
+      "Nuclear C3 channel", "Ethereum contract key", "DoE research data",
+    ];
+
+    function addDecrypt() {
+      const target = targets[Math.floor(Math.random() * targets.length)];
+      const keyBits = [2048, 4096, 256, 384][Math.floor(Math.random() * 4)];
+      const time = (Math.random() * 2 + 0.1).toFixed(2);
+      const ok = Math.random() > 0.1;
+
+      const div = document.createElement("div");
+      div.className = "df-line";
+      const ts = new Date().toLocaleTimeString([], {hour12: false});
+      div.innerHTML = ok
+        ? `[${ts}] <span class="df-fail">DECRYPTED</span> ${target} (${keyBits}-bit) in ${time}s`
+        : `[${ts}] <span class="df-ok">RESISTANT</span> ${target} (post-quantum) — key intact`;
+      decryptFeed.appendChild(div);
+      decryptFeed.scrollTop = decryptFeed.scrollHeight;
+      if (decryptFeed.children.length > 60) decryptFeed.firstChild.remove();
+    }
+
+    for (let i = 0; i < 6; i++) addDecrypt();
+    setInterval(addDecrypt, 1500 + Math.random() * 1000);
+
+    const timelineData = [
+      { time: "06:14 UTC", color: "purple", text: "Unknown quantum system detected running Shor's algorithm at scale" },
+      { time: "06:18 UTC", color: "red", text: "First RSA-2048 factorization confirmed — 4.2 seconds" },
+      { time: "06:23 UTC", color: "red", text: "Let's Encrypt emergency CRL — 300M certificates revoked" },
+      { time: "06:31 UTC", color: "yellow", text: "CISA issues Emergency Directive 26-01 — all .gov sites offline" },
+      { time: "06:45 UTC", color: "red", text: "Major exchanges halt trading — ECDSA wallet drainage detected" },
+      { time: "07:02 UTC", color: "red", text: "SWIFT network shutdown — global interbank transfers frozen" },
+      { time: "07:15 UTC", color: "yellow", text: "NSA declassifies post-quantum migration plan — years too late" },
+      { time: "07:30 UTC", color: "red", text: "Pentagon confirms military comms compromised — DEFCON 2" },
+    ];
+
+    const timeline = document.getElementById("timeline");
+    timelineData.forEach((item, i) => {
+      setTimeout(() => {
+        const div = document.createElement("div");
+        div.className = "tl-item";
+        div.innerHTML = `
+          <span class="tl-time">${item.time}</span>
+          <div class="tl-dot ${item.color}"></div>
+          <span>${item.text}</span>
+        `;
+        timeline.appendChild(div);
+      }, 500 + i * 2000);
+    });
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

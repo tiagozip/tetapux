@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepTrace — Match Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #18181b;
+      --border: #27272a;
+      --red: #ef4444;
+      --red-dim: rgba(239,68,68,0.1);
+      --orange: #f97316;
+      --blue: #3b82f6;
+      --text: #fafafa;
+      --dim: #71717a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-brand span { color: var(--red); }
+    .nav-right { display: flex; gap: 16px; align-items: center; font-size: 12px; color: var(--dim); }
+
+    .alert-banner {
+      background: var(--red-dim);
+      border-bottom: 1px solid rgba(239,68,68,0.2);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .alert-badge {
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+    }
+
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .match-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .match-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .match-header h1 span { color: var(--red); }
+    .match-header p { color: var(--dim); font-size: 14px; }
+
+    .scan-result {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .face-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .face-box {
+      background: #000;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .face-box canvas { width: 100%; height: 100%; }
+    .face-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.8);
+      padding: 6px;
+      font-size: 10px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .face-label.real { color: var(--blue); }
+    .face-label.fake { color: var(--red); }
+    .match-indicator {
+      text-align: center;
+    }
+    .match-pct {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--red);
+    }
+    .match-label { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+    .scan-animation {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      animation: scanY 2s linear infinite;
+    }
+    @keyframes scanY { from { top: 0; } to { top: 100%; } }
+    .corner { position: absolute; width: 16px; height: 16px; border-color: var(--red); border-style: solid; border-width: 0; }
+    .corner.tl { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; }
+    .corner.tr { top: 8px; right: 8px; border-top-width: 2px; border-right-width: 2px; }
+    .corner.bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-left-width: 2px; }
+    .corner.br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .detail-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .detail-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .detail-value { font-size: 14px; font-weight: 600; }
+    .detail-value.red { color: var(--red); }
+    .detail-value.orange { color: var(--orange); }
+
+    .found-list {
+      margin-top: 20px;
+    }
+    .found-list h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .found-count {
+      background: var(--red-dim);
+      color: var(--red);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .found-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      animation: itemIn 0.5s ease-out;
+    }
+    @keyframes itemIn { from { opacity: 0; transform: translateY(6px); } }
+    .found-thumb {
+      width: 50px;
+      height: 50px;
+      background: #222;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .found-info { flex: 1; }
+    .found-title { font-size: 13px; font-weight: 500; }
+    .found-meta { font-size: 11px; color: var(--dim); margin-top: 2px; }
+    .found-danger {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      background: var(--red-dim);
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .action-bar {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .action-btn.primary { background: var(--red); border-color: var(--red); }
+    .action-btn:hover { opacity: 0.85; }
+
+    @media (max-width: 600px) {
+      .face-grid { grid-template-columns: 1fr; }
+      .details-grid { grid-template-columns: 1fr; }
+      .match-pct { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="nav-brand">🔍 Deep<span>Trace</span></div>
+    <div class="nav-right">
+      <span>Scan ID: <span id="scanId">—</span></span>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <div class="alert-banner">
+    <span class="alert-badge">CRITICAL</span>
+    Your facial biometrics were found in 47 deepfake media files across 12 platforms
+  </div>
+
+  <div class="main">
+    <div class="match-header">
+      <h1>Deepfake <span>Match Detected</span></h1>
+      <p>Your face has been identified in synthetic media generated without your consent</p>
+    </div>
+
+    <div class="scan-result">
+      <div class="face-grid">
+        <div class="face-box">
+          <canvas id="realFace"></canvas>
+          <div class="scan-animation">
+            <div class="scan-line"></div>
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+          </div>
+          <div class="face-label real">SOURCE — YOUR WEBCAM</div>
+        </div>
+
+        <div class="match-indicator">
+          <div class="match-pct" id="matchPct">0%</div>
+          <div class="match-label">FACIAL MATCH</div>
+        </div>
+
+        <div class="face-box">
+          <canvas id="fakeFace"></canvas>
+          <div class="scan-animation">
+            <div class="scan-line" style="animation-delay:1s"></div>
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+          </div>
+          <div class="face-label fake">DEEPFAKE — SYNTHETIC</div>
+        </div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-card"><div class="detail-label">Files Found</div><div class="detail-value red">47 media files</div></div>
+        <div class="detail-card"><div class="detail-label">Platforms</div><div class="detail-value orange">12 websites</div></div>
+        <div class="detail-card"><div class="detail-label">First Seen</div><div class="detail-value" id="firstSeen">—</div></div>
+        <div class="detail-card"><div class="detail-label">Estimated Views</div><div class="detail-value red" id="views">—</div></div>
+      </div>
+    </div>
+
+    <div class="found-list">
+      <h3>Detected Content <span class="found-count" id="foundCount">0 items</span></h3>
+      <div id="foundItems"></div>
+    </div>
+
+    <div class="action-bar">
+      <button class="action-btn primary" onclick="alert('This is a Tetapux demo. DeepTrace is not a real service.')">Request Takedown</button>
+      <button class="action-btn" onclick="alert('This is a Tetapux demo.')">Download Report</button>
+      <button class="action-btn" onclick="alert('This is a Tetapux demo.')">Legal Resources</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("scanId").textContent = "DT-" + Math.random().toString(36).slice(2,10).toUpperCase();
+
+    function updateClock() {
+      document.getElementById("clock").textContent = new Date().toLocaleTimeString([], {hour12: false});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const past = new Date();
+    past.setDate(past.getDate() - Math.floor(Math.random() * 180 + 30));
+    document.getElementById("firstSeen").textContent = past.toLocaleDateString("en-US", {year:"numeric", month:"short", day:"numeric"});
+    document.getElementById("views").textContent = (Math.floor(Math.random() * 900000 + 100000)).toLocaleString();
+
+    function drawFace(canvasId, tint) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      canvas.width = 256;
+      canvas.height = 256;
+
+      function render() {
+        const data = ctx.createImageData(canvas.width, canvas.height);
+        for (let i = 0; i < data.data.length; i += 4) {
+          const v = Math.random() * 25 + 15;
+          data.data[i] = v + tint[0];
+          data.data[i+1] = v + tint[1];
+          data.data[i+2] = v + tint[2];
+          data.data[i+3] = 255;
+        }
+        ctx.putImageData(data, 0, 0);
+
+        ctx.strokeStyle = `rgba(${tint[0] + 100},${tint[1] + 100},${tint[2] + 100},0.3)`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(128, 110, 50, 65, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(108, 100, 6, 0, Math.PI * 2);
+        ctx.arc(148, 100, 6, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(118, 115);
+        ctx.lineTo(128, 125);
+        ctx.lineTo(138, 115);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(128, 140, 15, 0.1, Math.PI - 0.1);
+        ctx.stroke();
+
+        requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    drawFace("realFace", [0, 0, 15]);
+    drawFace("fakeFace", [15, 0, 0]);
+
+    let pct = 0;
+    const pctEl = document.getElementById("matchPct");
+    function animatePct() {
+      if (pct >= 97.3) { pctEl.textContent = "97.3%"; return; }
+      pct += Math.random() * 3 + 0.5;
+      if (pct > 97.3) pct = 97.3;
+      pctEl.textContent = pct.toFixed(1) + "%";
+      setTimeout(animatePct, 50);
+    }
+    setTimeout(animatePct, 1000);
+
+    const platforms = [
+      { icon: "🎬", name: "Synthetic video — adult content platform", meta: "Duration: 4:32 • Uploaded 3 weeks ago", danger: "EXPLICIT" },
+      { icon: "📸", name: "Face-swapped images — social media", meta: "12 images • Shared 892 times", danger: "NON-CONSENSUAL" },
+      { icon: "🎭", name: "Impersonation video — financial scam", meta: "Duration: 1:15 • Used in phishing campaign", danger: "FRAUD" },
+      { icon: "📱", name: "Manipulated video — messaging apps", meta: "Forwarded to ~4,000 users", danger: "VIRAL" },
+      { icon: "🌐", name: "Face-swap gallery — anonymous forum", meta: "47 views • Posted 2 months ago", danger: "EXPLICIT" },
+      { icon: "🎥", name: "Synthetic interview — news impersonation", meta: "Duration: 8:41 • 12K views on YouTube", danger: "MISINFO" },
+      { icon: "💬", name: "AI voice clone — phone scam recording", meta: "Audio: 0:45 • Used in vishing attack", danger: "FRAUD" },
+    ];
+
+    const foundItems = document.getElementById("foundItems");
+    let itemCount = 0;
+
+    function addFoundItem() {
+      if (itemCount >= platforms.length) return;
+      const p = platforms[itemCount];
+      const div = document.createElement("div");
+      div.className = "found-item";
+      div.innerHTML = `
+        <div class="found-thumb">${p.icon}</div>
+        <div class="found-info">
+          <div class="found-title">${p.name}</div>
+          <div class="found-meta">${p.meta}</div>
+        </div>
+        <div class="found-danger">${p.danger}</div>
+      `;
+      foundItems.appendChild(div);
+      itemCount++;
+      document.getElementById("foundCount").textContent = itemCount + " items";
+    }
+
+    let idx = 0;
+    function revealItems() {
+      addFoundItem();
+      idx++;
+      if (idx < platforms.length) setTimeout(revealItems, 1500 + Math.random() * 1000);
+    }
+    setTimeout(revealItems, 3000);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

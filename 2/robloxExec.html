@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SynapseX Reborn — Free Roblox Script Executor 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0f;
+      font-family: "Inter", -apple-system, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(6,182,212,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .nav {
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 1;
+    }
+    .nav-brand {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 20px; font-size: 13px; color: #999; }
+    .nav-links a { color: inherit; text-decoration: none; cursor: pointer; }
+    .nav-links a:hover { color: #fff; }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #a78bfa;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      background: linear-gradient(180deg, #fff 0%, #999 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 16px; color: #888; max-width: 500px; margin: 0 auto 28px; line-height: 1.6; }
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+    }
+    .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(139,92,246,0.4); }
+    .dl-info { margin-top: 12px; font-size: 12px; color: #666; display: flex; justify-content: center; gap: 16px; }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      padding: 30px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 700; color: #fff; }
+    .stat-label { font-size: 12px; color: #666; margin-top: 2px; }
+
+    .features {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .feature {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .feature .icon { font-size: 28px; margin-bottom: 10px; }
+    .feature h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .feature p { font-size: 12px; color: #888; line-height: 1.4; }
+
+    .preview {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .preview-box {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .preview-header {
+      padding: 10px 14px;
+      background: #1a1a1f;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+    .preview-header .dots { display: flex; gap: 6px; }
+    .preview-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .preview-header .dot:nth-child(1) { background: #ff5f57; }
+    .preview-header .dot:nth-child(2) { background: #ffbd2e; }
+    .preview-header .dot:nth-child(3) { background: #28c840; }
+    .preview-code {
+      padding: 16px;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #ccc;
+    }
+    .preview-code .keyword { color: #c678dd; }
+    .preview-code .string { color: #98c379; }
+    .preview-code .func { color: #61afef; }
+    .preview-code .comment { color: #5c6370; }
+
+    .trust {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .trust h3 { font-size: 14px; color: #666; margin-bottom: 12px; }
+    .trust-logos { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .trust-item {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: #333;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      margin-top: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 28px; }
+      .features { grid-template-columns: 1fr; }
+      .stats { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <div class="nav">
+    <div class="nav-brand">SynapseX Reborn</div>
+    <div class="nav-links">
+      <a>Home</a>
+      <a>Features</a>
+      <a>Discord</a>
+      <a>FAQ</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-badge">✨ v4.0 — Updated for latest Roblox patch</div>
+    <h1>The Most Powerful<br>Roblox Executor</h1>
+    <p>Execute any Lua script in any Roblox game. Undetected, free, and updated weekly. Trusted by 500K+ users.</p>
+    <button class="dl-btn" onclick="alert('This is a Tetapux demo. In reality, this would download malware (typically an infostealer or RAT) disguised as a game cheat tool. Never download script executors from random websites.')">
+      ⬇ Download v4.0.2
+    </button>
+    <div class="dl-info">
+      <span>Windows 10/11</span>
+      <span>14.2 MB</span>
+      <span>No key system</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">500K+</div><div class="stat-label">Downloads</div></div>
+    <div class="stat"><div class="stat-num">99.8%</div><div class="stat-label">Uptime</div></div>
+    <div class="stat"><div class="stat-num">Level 8</div><div class="stat-label">Execution</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Bans detected</div></div>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="icon">⚡</div>
+      <h3>Instant Injection</h3>
+      <p>Inject in under 2 seconds with our optimized DLL loader</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🛡️</div>
+      <h3>Fully Undetected</h3>
+      <p>Bypasses Byfron anti-cheat with kernel-level protection</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📜</div>
+      <h3>Script Hub</h3>
+      <p>Built-in library with 10,000+ scripts for popular games</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🔑</div>
+      <h3>No Key System</h3>
+      <p>Unlike other executors, we don't require annoying key systems</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🔄</div>
+      <h3>Auto-Update</h3>
+      <p>Automatically updates when Roblox patches — zero downtime</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🌐</div>
+      <h3>Full Lua Support</h3>
+      <p>Complete Lua 5.1 environment with custom extensions</p>
+    </div>
+  </div>
+
+  <div class="preview">
+    <div class="preview-box">
+      <div class="preview-header">
+        <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <span>SynapseX — Script Editor</span>
+      </div>
+      <div class="preview-code">
+        <span class="comment">-- Infinite yield script</span><br>
+        <span class="keyword">local</span> player = <span class="func">game.Players.LocalPlayer</span><br>
+        <span class="keyword">local</span> char = player.Character<br>
+        <br>
+        <span class="comment">-- Speed hack</span><br>
+        char.Humanoid.WalkSpeed = <span class="string">200</span><br>
+        char.Humanoid.JumpPower = <span class="string">150</span><br>
+        <br>
+        <span class="func">print</span>(<span class="string">"Script executed!"</span>)
+      </div>
+    </div>
+  </div>
+
+  <div class="trust">
+    <h3>Verified safe by</h3>
+    <div class="trust-logos">
+      <div class="trust-item">✅ VirusTotal 0/72</div>
+      <div class="trust-item">✅ Windows Defender</div>
+      <div class="trust-item">✅ Malwarebytes</div>
+      <div class="trust-item">✅ Norton Safe</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    SynapseX Reborn is not affiliated with Roblox Corporation. Use at your own risk. © 2026
+  </div>
+
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

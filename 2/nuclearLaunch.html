@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NORAD — LAUNCH DETECTED</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --green: #33ff33;
+      --green-dim: rgba(51,255,51,0.08);
+      --red: #ff3333;
+      --red-dim: rgba(255,51,51,0.08);
+      --amber: #ffaa00;
+      --text: #33ff33;
+      --dim: #1a661a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: "JetBrains Mono", monospace;
+      color: var(--text);
+      font-size: 12px;
+    }
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+      pointer-events: none;
+      z-index: 100;
+    }
+    .vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    .header {
+      background: rgba(255,51,51,0.08);
+      border-bottom: 1px solid rgba(255,51,51,0.3);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .norad-logo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 3px;
+    }
+    .threat-badge {
+      background: var(--red);
+      color: #000;
+      font-weight: 700;
+      padding: 3px 10px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      animation: threatFlash 0.5s infinite;
+    }
+    @keyframes threatFlash { 50% { opacity: 0.6; } }
+    .header-right { color: var(--dim); font-size: 11px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: calc(100vh - 37px);
+      gap: 1px;
+      background: rgba(51,255,51,0.05);
+    }
+    .panel {
+      background: var(--bg);
+      padding: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--amber);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .map-panel {
+      position: relative;
+    }
+    .map-canvas {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .launch-log {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+      line-height: 1.6;
+    }
+    .launch-log::-webkit-scrollbar { display: none; }
+    .log-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-warn { color: var(--amber); }
+    .log-crit { color: var(--red); font-weight: 700; }
+    .log-ok { color: var(--green); }
+
+    .defcon-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .defcon-display {
+      text-align: center;
+      padding: 16px;
+      background: var(--red-dim);
+      border: 1px solid rgba(255,51,51,0.3);
+      border-radius: 4px;
+    }
+    .defcon-num {
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+    }
+    .defcon-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--red);
+      margin-top: 4px;
+    }
+
+    .missile-count {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .mc-box {
+      background: rgba(255,255,255,0.02);
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .mc-label { font-size: 9px; color: var(--dim); letter-spacing: 1px; margin-bottom: 4px; }
+    .mc-value { font-size: 24px; font-weight: 700; }
+    .mc-value.red { color: var(--red); }
+    .mc-value.amber { color: var(--amber); }
+    .mc-value.green { color: var(--green); }
+
+    .countdown-panel {
+      text-align: center;
+      padding: 16px;
+    }
+    .impact-label { color: var(--red); font-size: 10px; letter-spacing: 2px; margin-bottom: 8px; }
+    .impact-time {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 4px;
+    }
+    .impact-sub { color: var(--dim); font-size: 10px; margin-top: 6px; }
+
+    .targets-list {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .targets-list::-webkit-scrollbar { display: none; }
+    .target-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(51,255,51,0.05);
+      font-size: 11px;
+    }
+    .target-item .city { color: var(--text); }
+    .target-item .eta { color: var(--red); font-weight: 500; }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+      .panel { min-height: 220px; }
+      html, body { overflow: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <div class="header">
+    <div class="header-left">
+      <span class="norad-logo">NORAD</span>
+      <span class="threat-badge">LAUNCH DETECTED</span>
+    </div>
+    <div class="header-right">
+      <span id="clock">00:00:00 UTC</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel map-panel">
+      <div class="panel-title">Global Tracking — SBIRS / DSP</div>
+      <canvas class="map-canvas" id="mapCanvas"></canvas>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Threat Assessment</div>
+      <div class="defcon-panel">
+        <div class="defcon-display">
+          <div class="defcon-num">1</div>
+          <div class="defcon-label">DEFENSE CONDITION</div>
+        </div>
+        <div class="missile-count">
+          <div class="mc-box"><div class="mc-label">TRACKED</div><div class="mc-value red" id="tracked">0</div></div>
+          <div class="mc-box"><div class="mc-label">INTERCEPTORS</div><div class="mc-value amber" id="interceptors">44</div></div>
+          <div class="mc-box"><div class="mc-label">IMPACT EST.</div><div class="mc-value red" id="impactEst">--:--</div></div>
+          <div class="mc-box"><div class="mc-label">CONFIDENCE</div><div class="mc-value green">99.7%</div></div>
+        </div>
+        <div class="panel-title" style="margin-top:8px">Projected Targets</div>
+        <div class="targets-list" id="targets"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">System Log — SPADOC</div>
+      <div class="launch-log" id="launchLog"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Estimated Time to First Impact</div>
+      <div class="countdown-panel">
+        <div class="impact-label">FIRST IMPACT</div>
+        <div class="impact-time" id="impactCountdown">00:28:47</div>
+        <div class="impact-sub">Washington, D.C. Metropolitan Area</div>
+      </div>
+      <div class="panel-title" style="margin-top:16px">Response Status</div>
+      <div class="launch-log" id="responseLog"></div>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      document.getElementById("clock").textContent = new Date().toUTCString().split(" ")[4] + " ZULU";
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const targetCities = [
+      { name: "Washington, D.C.", lat: 38.9, lon: -77.0, eta: 1727 },
+      { name: "New York City", lat: 40.7, lon: -74.0, eta: 1790 },
+      { name: "Los Angeles", lat: 34.0, lon: -118.2, eta: 1544 },
+      { name: "Chicago", lat: 41.8, lon: -87.6, eta: 1680 },
+      { name: "Houston", lat: 29.7, lon: -95.3, eta: 1650 },
+      { name: "London", lat: 51.5, lon: -0.1, eta: 1200 },
+      { name: "Paris", lat: 48.8, lon: 2.3, eta: 1150 },
+      { name: "Berlin", lat: 52.5, lon: 13.4, eta: 1020 },
+      { name: "Ramstein AFB", lat: 49.4, lon: 7.6, eta: 1050 },
+      { name: "Norfolk Naval Base", lat: 36.9, lon: -76.3, eta: 1740 },
+    ];
+
+    const targetsEl = document.getElementById("targets");
+    targetCities.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "target-item";
+      const m = Math.floor(c.eta / 60);
+      const s = c.eta % 60;
+      div.innerHTML = `<span class="city">${c.name}</span><span class="eta">T-${m}:${String(s).padStart(2,"0")}</span>`;
+      targetsEl.appendChild(div);
+    });
+
+    let trackedCount = 0;
+    const maxMissiles = 16;
+    const trackedEl = document.getElementById("tracked");
+
+    function addMissile() {
+      if (trackedCount >= maxMissiles) return;
+      trackedCount++;
+      trackedEl.textContent = trackedCount;
+      if (trackedCount < maxMissiles) {
+        setTimeout(addMissile, 2000 + Math.random() * 3000);
+      }
+    }
+    setTimeout(addMissile, 1000);
+
+    let impactSec = 28 * 60 + 47;
+    function updateImpact() {
+      if (impactSec <= 0) return;
+      impactSec--;
+      const m = Math.floor(impactSec / 60);
+      const s = impactSec % 60;
+      document.getElementById("impactCountdown").textContent =
+        "00:" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+      document.getElementById("impactEst").textContent = m + ":" + String(s).padStart(2,"0");
+    }
+    setInterval(updateImpact, 1000);
+
+    const logEl = document.getElementById("launchLog");
+    const logTemplates = [
+      ["crit", "SBIRS GEO-4 — IR bloom detected bearing {b}° — confidence HIGH"],
+      ["warn", "DSP-23 correlation — object #{n} trajectory confirmed ICBM-class"],
+      ["crit", "New track: Object #{n} — launch point: {lat}°N {lon}°E"],
+      ["ok", "Cobra Dane phased array lock — tracking {n} objects"],
+      ["warn", "PAVE PAWS confirmation — reentry vehicle separation detected obj #{n}"],
+      ["crit", "MIRV deployment confirmed — object #{n} split to {m} warheads"],
+      ["ok", "GBI interceptor #{n} — launch authorization received from NORTHCOM"],
+      ["warn", "Space fence track update — apogee: {alt}km — descending"],
+      ["crit", "EAM broadcast initiated — LOOKING GLASS airborne"],
+    ];
+
+    function addLog(el, templates) {
+      const tpl = templates[Math.floor(Math.random() * templates.length)];
+      const time = new Date().toLocaleTimeString([], {hour12: false});
+      const text = tpl[1]
+        .replace("{b}", Math.floor(Math.random() * 360))
+        .replace(/\{n\}/g, Math.floor(Math.random() * 16 + 1))
+        .replace("{lat}", (45 + Math.random() * 20).toFixed(1))
+        .replace("{lon}", (30 + Math.random() * 100).toFixed(1))
+        .replace("{m}", Math.floor(Math.random() * 6 + 3))
+        .replace("{alt}", Math.floor(Math.random() * 600 + 400));
+
+      const div = document.createElement("div");
+      div.className = "log-line log-" + tpl[0];
+      div.textContent = `[${time}Z] ${text}`;
+      el.appendChild(div);
+      el.scrollTop = el.scrollHeight;
+      if (el.children.length > 50) el.firstChild.remove();
+    }
+
+    const responseLog = document.getElementById("responseLog");
+    const responseTemplates = [
+      ["crit", "POTUS authenticated on ANMCC — Football opened"],
+      ["warn", "STRATCOM — OPLAN 8010 execution options briefed"],
+      ["ok", "THAAD Battery Alpha — tracking mode engaged"],
+      ["warn", "Aegis cruiser USS Lake Erie — SM-3 salvo standing by"],
+      ["crit", "E-6B Mercury TACAMO — launch order relay ready"],
+      ["ok", "Cheyenne Mountain — blast doors sealed"],
+      ["warn", "FEMA — IPAWS nationwide alert queued"],
+      ["crit", "SIOP retaliatory strike package ALPHA — armed"],
+    ];
+
+    for (let i = 0; i < 5; i++) addLog(logEl, logTemplates);
+    for (let i = 0; i < 3; i++) addLog(responseLog, responseTemplates);
+    setInterval(() => addLog(logEl, logTemplates), 2000 + Math.random() * 1500);
+    setInterval(() => addLog(responseLog, responseTemplates), 4000 + Math.random() * 3000);
+
+    const canvas = document.getElementById("mapCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeMap() {
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = canvas.offsetHeight * 2;
+      ctx.scale(2, 2);
+    }
+    resizeMap();
+
+    const missiles = [];
+    const launchSite = { lat: 55, lon: 60 };
+
+    function latLonToXY(lat, lon, w, h) {
+      const x = ((lon + 180) / 360) * w;
+      const y = ((90 - lat) / 180) * h;
+      return [x, y];
+    }
+
+    function drawMap() {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = "rgba(51,255,51,0.02)";
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(51,255,51,0.08)";
+      ctx.lineWidth = 0.5;
+      for (let lat = -60; lat <= 80; lat += 20) {
+        const y = ((90 - lat) / 180) * h;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+      for (let lon = -180; lon <= 180; lon += 30) {
+        const x = ((lon + 180) / 360) * w;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+
+      const [sx, sy] = latLonToXY(launchSite.lat, launchSite.lon, w, h);
+      ctx.fillStyle = "rgba(255,51,51,0.3)";
+      ctx.beginPath();
+      ctx.arc(sx, sy, 6 + Math.sin(Date.now() / 300) * 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = var_red;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      targetCities.forEach(city => {
+        const [cx, cy] = latLonToXY(city.lat, city.lon, w, h);
+        ctx.fillStyle = "rgba(51,255,51,0.5)";
+        ctx.beginPath();
+        ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      const t = (Date.now() % 8000) / 8000;
+      targetCities.slice(0, trackedCount).forEach((city, i) => {
+        const [cx, cy] = latLonToXY(city.lat, city.lon, w, h);
+        const progress = Math.min(1, t + (i * 0.03));
+        const mx = sx + (cx - sx) * progress;
+        const my = sy + (cy - sy) * progress;
+
+        ctx.strokeStyle = "rgba(255,51,51,0.15)";
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([2, 4]);
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(cx, cy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = var_red;
+        ctx.beginPath();
+        ctx.arc(mx, my, 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(drawMap);
+    }
+
+    const var_red = "#ff3333";
+    drawMap();
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

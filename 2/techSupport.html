@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows Defender — Threat Detected</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: "Segoe UI", -apple-system, sans-serif;
+    }
+    body { cursor: not-allowed; }
+    .bg-blur {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0078d4, #005a9e);
+      filter: blur(10px);
+      opacity: 0.3;
+    }
+    .warning-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10;
+    }
+    .warning-box {
+      background: #fff;
+      border-radius: 4px;
+      max-width: 540px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+      animation: shake 0.5s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .wb-header {
+      background: #c0392b;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+    .wb-header .shield { font-size: 24px; }
+    .wb-header h2 { font-size: 14px; font-weight: 600; }
+    .wb-body {
+      padding: 24px;
+      color: #333;
+    }
+    .wb-body .alert-icon {
+      text-align: center;
+      font-size: 48px;
+      margin-bottom: 14px;
+    }
+    .wb-body h3 {
+      font-size: 18px;
+      text-align: center;
+      color: #c0392b;
+      margin-bottom: 10px;
+    }
+    .wb-body p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #555;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .threat-list {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 12px;
+      margin: 14px 0;
+      font-size: 12px;
+      font-family: Consolas, monospace;
+      color: #c0392b;
+      line-height: 1.8;
+    }
+    .info-table {
+      width: 100%;
+      font-size: 12px;
+      margin: 14px 0;
+      border-collapse: collapse;
+    }
+    .info-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .info-table td:first-child { color: #888; width: 120px; }
+    .phone-box {
+      background: #c0392b;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      margin: 16px 0;
+      color: #fff;
+    }
+    .phone-box .label { font-size: 12px; opacity: 0.8; margin-bottom: 4px; }
+    .phone-number {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+    .phone-box .sub { font-size: 11px; opacity: 0.7; margin-top: 6px; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn-warn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-danger { background: #c0392b; color: #fff; }
+    .btn-danger:hover { background: #a93226; }
+    .btn-grey { background: #e0e0e0; color: #555; }
+    .dont-close {
+      text-align: center;
+      font-size: 11px;
+      color: #c0392b;
+      font-weight: 600;
+      margin-top: 12px;
+      animation: blinkText 1s infinite;
+    }
+    @keyframes blinkText { 50% { opacity: 0.5; } }
+    .scan-bar {
+      margin: 12px 0;
+    }
+    .scan-progress {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .scan-fill {
+      height: 100%;
+      background: #c0392b;
+      border-radius: 3px;
+      animation: scanAnim 3s ease-in-out infinite;
+    }
+    @keyframes scanAnim {
+      0% { width: 0%; }
+      50% { width: 85%; }
+      100% { width: 100%; }
+    }
+    .scan-label { font-size: 11px; color: #888; margin-top: 4px; text-align: center; }
+    @media (max-width: 500px) {
+      .phone-number { font-size: 22px; }
+      .wb-body h3 { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blur"></div>
+  <div class="warning-screen">
+    <div class="warning-box">
+      <div class="wb-header">
+        <span class="shield">🛡️</span>
+        <h2>Windows Defender — Critical Threat Detected</h2>
+      </div>
+      <div class="wb-body">
+        <div class="alert-icon">⚠️</div>
+        <h3>Your computer has been compromised!</h3>
+        <p>Windows Defender has detected suspicious activity. Your personal data, banking information, and passwords may be at risk. <b>Do not close this window.</b></p>
+
+        <div class="threat-list" id="threats">
+          ⚠ Trojan:Win32/Emotet.G!MTB — CRITICAL<br>
+          ⚠ Spyware:Win32/KeyLogger — HIGH<br>
+          ⚠ Backdoor:Win32/CobaltStrike — CRITICAL<br>
+          ⚠ Infostealer:Win32/RedLine — HIGH
+        </div>
+
+        <div class="scan-bar">
+          <div class="scan-progress"><div class="scan-fill"></div></div>
+          <div class="scan-label">Scanning system... <span id="scanCount">0</span> threats found</div>
+        </div>
+
+        <table class="info-table">
+          <tr><td>IP Address</td><td id="ip">—</td></tr>
+          <tr><td>Location</td><td id="loc">—</td></tr>
+          <tr><td>ISP</td><td id="isp">—</td></tr>
+          <tr><td>Threat Level</td><td style="color:#c0392b;font-weight:600">CRITICAL</td></tr>
+          <tr><td>Error Code</td><td id="errorCode">—</td></tr>
+        </table>
+
+        <div class="phone-box">
+          <div class="label">Call Microsoft Support Immediately</div>
+          <div class="phone-number">1-888-<span id="fakeNum">555-0199</span></div>
+          <div class="sub">Toll-free · Available 24/7 · Microsoft Certified Technicians</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-warn btn-danger" onclick="alert('This is a Tetapux demo. Tech support scams use fake virus warnings to trick you into calling a phone number. The \'technicians\' will ask for remote access to your computer and charge hundreds of dollars for fake repairs. Microsoft will never show a phone number in an error message.')">Call Support Now</button>
+          <button class="btn-warn btn-grey" onclick="alert('This is a Tetapux demo of a tech support scam.')">Run Quick Scan</button>
+        </div>
+
+        <div class="dont-close">⚠ DO NOT CLOSE THIS WINDOW — Your data is at risk ⚠</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("ip").textContent =
+      Math.floor(Math.random()*223+1)+"."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255);
+    document.getElementById("errorCode").textContent = "DT00" + Math.floor(Math.random()*9000+1000) + "E";
+
+    const isps = ["Comcast Xfinity","AT&T Internet","Verizon Fios","Spectrum","Cox Communications","CenturyLink"];
+    document.getElementById("isp").textContent = isps[Math.floor(Math.random()*isps.length)];
+
+    document.getElementById("loc").textContent = Intl.DateTimeFormat().resolvedOptions().timeZone.replace("_"," ");
+
+    document.getElementById("fakeNum").textContent =
+      Math.floor(Math.random()*900+100) + "-" + String(Math.floor(Math.random()*10000)).padStart(4,"0");
+
+    let threats = 4;
+    setInterval(() => {
+      threats += Math.floor(Math.random()*3+1);
+      document.getElementById("scanCount").textContent = threats;
+    }, 3000);
+
+    document.addEventListener("keydown", e => {
+      if (["Escape","F5"].includes(e.key)) e.preventDefault();
+    });
+    document.addEventListener("contextmenu", e => e.preventDefault());
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function beep() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.value = 800;
+      gain.gain.value = 0.05;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      setTimeout(() => { gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); setTimeout(() => osc.stop(), 100); }, 200);
+    }
+    document.addEventListener("click", () => {
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      beep();
+    }, { once: true });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

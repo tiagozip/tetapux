@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOD // CLASSIFIED // EYES ONLY</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Courier+Prime&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f4f0e8;
+      --ink: #1a1a1a;
+      --redact: #000;
+      --stamp-red: #c0392b;
+      --stamp-blue: #2c3e50;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #2c2c2c;
+      font-family: "Courier Prime", "Courier New", monospace;
+      min-height: 100vh;
+      padding: 30px;
+    }
+    .toolbar {
+      max-width: 800px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #888;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 12px; }
+    .class-badge {
+      background: #c0392b;
+      color: #fff;
+      padding: 4px 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      font-size: 10px;
+    }
+    .doc-id { color: #666; }
+    .document {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 60px 70px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+      position: relative;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+    .document::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .header-block {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #333;
+    }
+    .header-block h1 {
+      font-size: 13px;
+      letter-spacing: 4px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .header-block h2 {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: #555;
+      font-weight: 400;
+    }
+    .classification-header {
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--stamp-red);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 12px;
+    }
+    .meta-table td {
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      vertical-align: top;
+    }
+    .meta-table .label { font-weight: 600; width: 140px; background: rgba(0,0,0,0.03); }
+    .redacted {
+      background: var(--redact);
+      color: var(--redact);
+      padding: 0 4px;
+      border-radius: 2px;
+      user-select: none;
+      cursor: default;
+      transition: all 0.2s;
+    }
+    .redacted:hover {
+      background: #333;
+      color: #333;
+    }
+    .redacted-line {
+      display: block;
+      background: var(--redact);
+      height: 1.5em;
+      margin: 4px 0;
+      border-radius: 2px;
+    }
+    .redacted-block {
+      background: var(--redact);
+      height: 80px;
+      margin: 12px 0;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .redacted-block span {
+      color: #333;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+    .stamp {
+      position: absolute;
+      font-size: 42px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      opacity: 0.15;
+      pointer-events: none;
+      text-transform: uppercase;
+    }
+    .stamp-ts {
+      top: 120px;
+      right: 60px;
+      transform: rotate(-18deg);
+      color: var(--stamp-red);
+      border: 4px solid var(--stamp-red);
+      padding: 4px 16px;
+    }
+    .stamp-eyes {
+      bottom: 200px;
+      left: 40px;
+      transform: rotate(12deg);
+      color: var(--stamp-blue);
+      font-size: 28px;
+      border: 3px solid var(--stamp-blue);
+      padding: 4px 12px;
+    }
+    p { margin-bottom: 14px; }
+    .section-title {
+      font-weight: 600;
+      text-decoration: underline;
+      margin: 20px 0 10px;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+    .footnote {
+      font-size: 11px;
+      color: #666;
+      border-top: 1px solid #ccc;
+      margin-top: 30px;
+      padding-top: 12px;
+    }
+    .sig-block {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .sig { border-top: 1px solid #333; padding-top: 6px; font-size: 12px; }
+    .sig .name { font-weight: 600; }
+    .page-num {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 11px;
+      color: #999;
+    }
+    .coffee-stain {
+      position: absolute;
+      top: 80px;
+      right: 90px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 3px solid rgba(139,90,43,0.15);
+      pointer-events: none;
+    }
+    .paper-clip {
+      position: absolute;
+      top: -8px;
+      left: 60px;
+      width: 30px;
+      height: 60px;
+      border: 2px solid #aaa;
+      border-radius: 0 0 15px 15px;
+      border-top: none;
+    }
+    .paper-clip::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: 4px;
+      width: 18px;
+      height: 35px;
+      border: 2px solid #aaa;
+      border-radius: 0 0 10px 10px;
+      border-top: none;
+    }
+    .warning-box {
+      border: 2px solid var(--stamp-red);
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 12px;
+      text-align: center;
+      letter-spacing: 1px;
+      color: var(--stamp-red);
+    }
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .document { padding: 30px 24px; }
+      .stamp { font-size: 28px; }
+      .sig-block { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span class="class-badge">TOP SECRET // SCI</span>
+      <span class="doc-id" id="docId">DOC-1947-████-RW</span>
+    </div>
+    <span>Page 1 of 1</span>
+  </div>
+
+  <div class="document">
+    <div class="paper-clip"></div>
+    <div class="coffee-stain"></div>
+    <div class="stamp stamp-ts">TOP SECRET</div>
+    <div class="stamp stamp-eyes">EYES ONLY</div>
+
+    <div class="header-block">
+      <h1>DEPARTMENT OF DEFENSE</h1>
+      <h2>DEFENSE INTELLIGENCE AGENCY</h2>
+    </div>
+
+    <div class="classification-header">
+      TOP SECRET // SENSITIVE COMPARTMENTED INFORMATION<br>
+      SPECIAL ACCESS PROGRAM — "LOOKING GLASS"
+    </div>
+
+    <table class="meta-table">
+      <tr><td class="label">DATE</td><td>07 JULY 1947</td></tr>
+      <tr><td class="label">FROM</td><td>Col. <span class="redacted">████████████</span>, USAF Intelligence</td></tr>
+      <tr><td class="label">TO</td><td>Director, <span class="redacted">████████</span></td></tr>
+      <tr><td class="label">SUBJECT</td><td>Recovery Operation — Grid Ref. 33°52'N 106°40'W</td></tr>
+      <tr><td class="label">CLASSIFICATION</td><td>TOP SECRET // MAJIC // EYES ONLY</td></tr>
+      <tr><td class="label">COPY</td><td><span id="copyNum">1</span> of 4</td></tr>
+    </table>
+
+    <div class="section-title">1. SUMMARY</div>
+    <p>On 02 July 1947, rancher <span class="redacted">██████ ██████</span> reported debris of unknown origin on property approximately 75 miles northwest of Roswell, New Mexico. Recovery team ALPHA-7 was dispatched at <span class="redacted">████</span> hours. Upon arrival, personnel confirmed the presence of <span class="redacted">███████████████████████████████</span> along with structural material of a type not consistent with any known aircraft or weather apparatus.</p>
+
+    <div class="section-title">2. PHYSICAL EVIDENCE</div>
+    <p>The debris field extended approximately <span class="redacted">████</span> yards in a northwest-southeast orientation. Materials recovered include:</p>
+    <p style="padding-left: 20px;">
+      (a) Metallic foil-like substance — extremely lightweight, returns to original shape when deformed. Resists temperatures in excess of <span class="redacted">████</span>°F.<br>
+      (b) Structural I-beams bearing <span class="redacted">████████████████████</span> markings of unknown script.<br>
+      (c) <span class="redacted-line"></span>
+      (d) <span class="redacted-line"></span>
+    </p>
+
+    <div class="warning-box">
+      BIOLOGICAL MATERIAL — RESTRICTED ACCESS<br>
+      AUTHORIZED PERSONNEL ONLY — CLEARANCE LEVEL COSMIC
+    </div>
+
+    <div class="section-title">3. BIOLOGICAL FINDINGS</div>
+    <p>At a secondary site approximately <span class="redacted">████</span> miles from the main debris field, recovery personnel located <span class="redacted">████</span> entities. Entities measured approximately 3'6" to 4'0" in height. Skin coloration <span class="redacted">████████</span>. Cranial structure disproportionately large relative to body mass. Three entities were non-viable upon recovery. One entity exhibited <span class="redacted">█████████████████████████████████████████</span>.</p>
+
+    <div class="redacted-block"><span>[ PHOTOGRAPH REMOVED — SEE ATTACHMENT C ]</span></div>
+
+    <p>Medical examination by Dr. <span class="redacted">████████</span> at <span class="redacted">████████</span> AFB determined that internal organ structure does not correspond to any known terrestrial biology. Of particular note: <span class="redacted-line"></span><span class="redacted-line"></span></p>
+
+    <div class="section-title">4. RECOMMENDED ACTION</div>
+    <p>It is the recommendation of this office that:</p>
+    <p style="padding-left: 20px;">
+      (a) All recovered material be transferred to <span class="redacted">████████████</span> for further analysis under Project <span class="redacted">████████</span>.<br>
+      (b) A cover story involving a standard weather balloon be disseminated to local press immediately.<br>
+      (c) All military personnel involved in recovery operations be debriefed and reminded of their oath under <span class="redacted">████████</span>.<br>
+      (d) <span class="redacted-line"></span>
+    </p>
+
+    <div class="section-title">5. ADDITIONAL NOTES</div>
+    <p>The surviving entity has been <span class="redacted">██████████████████████████████████████</span>. Communication attempts via <span class="redacted">████████</span> have yielded <span class="redacted">████████████████████</span>. The entity appears to respond to <span class="redacted">██████████████████████████████████████████████████████████████</span>.</p>
+
+    <p>It is the assessment of this officer that the implications of this recovery, if disclosed to the public, would <span class="redacted">████████████████████████████████████████████████████████████████████████████████████████████████</span>.</p>
+
+    <div class="sig-block">
+      <div class="sig">
+        <div class="name">Col. <span class="redacted">████████████</span></div>
+        <div>USAF Intelligence Division</div>
+      </div>
+      <div class="sig">
+        <div class="name">Witnessed: Maj. <span class="redacted">██████████</span></div>
+        <div>509th Bomb Group</div>
+      </div>
+    </div>
+
+    <div class="footnote">
+      DISTRIBUTION: Copy 1 — <span class="redacted">████████</span> | Copy 2 — DIA Archives | Copy 3 — <span class="redacted">████████</span> | Copy 4 — DESTROYED<br>
+      DESTRUCTION NOTICE: This document is to be destroyed by burning when no longer required. Unauthorized disclosure subject to penalties under 18 U.S.C. §798.
+    </div>
+
+    <div class="page-num">— Page 1 of 1 — TOP SECRET // MAJIC —</div>
+  </div>
+
+  <script>
+    document.getElementById("copyNum").textContent = Math.floor(Math.random() * 4) + 1;
+    const id = "DOC-1947-" + Math.random().toString(36).slice(2,6).toUpperCase() + "-RW";
+    document.getElementById("docId").textContent = id;
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

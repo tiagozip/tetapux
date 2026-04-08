@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMERGENCY ALERT</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: "Courier New", Courier, monospace;
+    }
+    .eas-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .color-bars {
+      display: flex;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .bar { flex: 1; }
+
+    .alert-body {
+      flex: 1;
+      background: #1a0000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      position: relative;
+    }
+
+    .eas-header {
+      background: #cc0000;
+      color: #fff;
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      animation: headerFlash 1s infinite;
+    }
+    @keyframes headerFlash {
+      0%, 100% { background: #cc0000; }
+      50% { background: #990000; }
+    }
+
+    .eas-content {
+      width: 100%;
+      max-width: 700px;
+      background: #000;
+      border: 2px solid #cc0000;
+      border-top: none;
+      padding: 20px 24px;
+      color: #ff3333;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .eas-line {
+      opacity: 0;
+      animation: revealLine 0.3s forwards;
+    }
+
+    @keyframes revealLine {
+      to { opacity: 1; }
+    }
+
+    .eas-footer {
+      width: 100%;
+      max-width: 700px;
+      background: #cc0000;
+      padding: 8px 20px;
+      text-align: center;
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .scroll-text {
+      position: fixed;
+      bottom: 30px;
+      left: 0;
+      right: 0;
+      background: #cc0000;
+      color: #fff;
+      padding: 8px 0;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .scroll-inner {
+      display: inline-block;
+      animation: scrollText 25s linear infinite;
+    }
+    @keyframes scrollText {
+      from { transform: translateX(100vw); }
+      to { transform: translateX(-100%); }
+    }
+
+    .static-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .timestamp {
+      color: #666;
+      font-size: 12px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .diamond {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: #cc0000;
+      transform: rotate(45deg);
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 600px) {
+      .eas-header { font-size: 16px; letter-spacing: 1px; }
+      .eas-content { font-size: 13px; padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="eas-screen">
+    <div class="color-bars">
+      <div class="bar" style="background:#fff"></div>
+      <div class="bar" style="background:#ff0"></div>
+      <div class="bar" style="background:#0ff"></div>
+      <div class="bar" style="background:#0f0"></div>
+      <div class="bar" style="background:#f0f"></div>
+      <div class="bar" style="background:#f00"></div>
+      <div class="bar" style="background:#00f"></div>
+      <div class="bar" style="background:#000"></div>
+    </div>
+
+    <div class="alert-body">
+      <div class="eas-header" id="header">
+        <span class="diamond"></span> EMERGENCY ALERT SYSTEM <span class="diamond"></span>
+      </div>
+
+      <div class="eas-content" id="content"></div>
+
+      <div class="eas-footer">
+        EAS — AUTHORIZED BY THE FEDERAL COMMUNICATIONS COMMISSION
+      </div>
+
+      <div class="timestamp" id="timestamp"></div>
+    </div>
+
+    <div class="color-bars">
+      <div class="bar" style="background:#fff"></div>
+      <div class="bar" style="background:#ff0"></div>
+      <div class="bar" style="background:#0ff"></div>
+      <div class="bar" style="background:#0f0"></div>
+      <div class="bar" style="background:#f0f"></div>
+      <div class="bar" style="background:#f00"></div>
+      <div class="bar" style="background:#00f"></div>
+      <div class="bar" style="background:#000"></div>
+    </div>
+  </div>
+
+  <div class="scroll-text">
+    <span class="scroll-inner" id="scrollText"></span>
+  </div>
+
+  <canvas class="static-overlay" id="static"></canvas>
+
+  <script>
+    const alerts = [
+      {
+        type: "CIVIL DANGER WARNING",
+        origin: "THE UNITED STATES GOVERNMENT",
+        lines: [
+          "THE FOLLOWING MESSAGE IS TRANSMITTED AT THE REQUEST OF THE UNITED STATES GOVERNMENT.",
+          "",
+          "THIS IS NOT A TEST.",
+          "",
+          "A CIVIL DANGER WARNING HAS BEEN ISSUED FOR THE ENTIRE CONTINENTAL UNITED STATES.",
+          "",
+          "ALL RESIDENTS ARE ADVISED TO SHELTER IN PLACE IMMEDIATELY.",
+          "DO NOT GO OUTSIDE.",
+          "DO NOT ATTEMPT TO CONTACT EMERGENCY SERVICES UNLESS THERE IS AN IMMEDIATE THREAT TO LIFE.",
+          "",
+          "CLOSE AND LOCK ALL DOORS AND WINDOWS.",
+          "MOVE TO AN INTERIOR ROOM ON THE LOWEST FLOOR.",
+          "STAY AWAY FROM WINDOWS.",
+          "",
+          "DO NOT LOOK AT THE SKY.",
+          "",
+          "FURTHER INSTRUCTIONS WILL FOLLOW.",
+          "REMAIN CALM. THIS MESSAGE WILL REPEAT.",
+        ],
+        scroll: "⚠ CIVIL DANGER WARNING ⚠ — SHELTER IN PLACE — DO NOT GO OUTSIDE — DO NOT LOOK AT THE SKY — AWAIT FURTHER INSTRUCTIONS — THIS IS NOT A TEST — THIS IS NOT A TEST — "
+      },
+    ];
+
+    const alert = alerts[0];
+    const content = document.getElementById("content");
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playEASTone() {
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc1.type = "sine";
+      osc2.type = "sine";
+      osc1.frequency.value = 853;
+      osc2.frequency.value = 960;
+      gain.gain.value = 0.15;
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc1.start();
+      osc2.start();
+      setTimeout(() => {
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        setTimeout(() => { osc1.stop(); osc2.stop(); }, 100);
+      }, 3000);
+    }
+
+    document.addEventListener("click", () => {
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      playEASTone();
+    }, { once: true });
+
+    let lineIdx = 0;
+    function revealLine() {
+      if (lineIdx >= alert.lines.length) return;
+      const div = document.createElement("div");
+      div.className = "eas-line";
+      div.style.animationDelay = "0s";
+      div.textContent = alert.lines[lineIdx] || "\u00A0";
+
+      if (alert.lines[lineIdx] === "DO NOT LOOK AT THE SKY.") {
+        div.style.color = "#fff";
+        div.style.fontWeight = "bold";
+        div.style.fontSize = "18px";
+      }
+
+      content.appendChild(div);
+      content.scrollTop = content.scrollHeight;
+      lineIdx++;
+      const delay = alert.lines[lineIdx - 1] === "" ? 400 : alert.lines[lineIdx - 1].includes("NOT A TEST") ? 2000 : 800;
+      setTimeout(revealLine, delay);
+    }
+
+    setTimeout(revealLine, 2000);
+
+    document.getElementById("scrollText").textContent = alert.scroll.repeat(3);
+
+    const now = new Date();
+    document.getElementById("timestamp").textContent =
+      `ISSUED: ${now.toLocaleDateString("en-US", {weekday:"long", year:"numeric", month:"long", day:"numeric"})} — ${now.toLocaleTimeString([], {hour12:true})} LOCAL TIME`;
+
+    const canvas = document.getElementById("static");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let staticOn = false;
+    setInterval(() => {
+      if (Math.random() > 0.95 && !staticOn) {
+        staticOn = true;
+        canvas.style.opacity = "0.15";
+        setTimeout(() => { canvas.style.opacity = "0"; staticOn = false; }, 200 + Math.random() * 300);
+      }
+    }, 1000);
+
+    function drawStatic() {
+      if (staticOn) {
+        const data = ctx.createImageData(canvas.width, canvas.height);
+        for (let i = 0; i < data.data.length; i += 4) {
+          const v = Math.random() * 255;
+          data.data[i] = v;
+          data.data[i+1] = v;
+          data.data[i+2] = v;
+          data.data[i+3] = 255;
+        }
+        ctx.putImageData(data, 0, 0);
+      }
+      requestAnimationFrame(drawStatic);
+    }
+    drawStatic();
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

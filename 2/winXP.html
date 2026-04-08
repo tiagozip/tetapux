@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Computer</title>
+  <style>
+    @font-face {
+      font-family: "Tahoma";
+      src: local("Tahoma"), local("Segoe UI");
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: Tahoma, "Segoe UI", sans-serif;
+      font-size: 11px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background: #3a6ea5;
+      cursor: default;
+    }
+    .desktop {
+      height: calc(100% - 30px);
+      position: relative;
+      background: linear-gradient(135deg, #3a6ea5 0%, #245997 50%, #1f4d8c 100%);
+    }
+    .desktop-icon {
+      position: absolute;
+      width: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .desktop-icon:hover { background: rgba(0,0,255,0.15); }
+    .desktop-icon img, .desktop-icon .ico {
+      width: 32px;
+      height: 32px;
+      font-size: 28px;
+      line-height: 32px;
+      text-align: center;
+    }
+    .desktop-icon span {
+      color: #fff;
+      text-align: center;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: linear-gradient(to bottom, #3168d5 0%, #2456c7 3%, #1941a5 50%, #1941a5 50%, #1640a0 97%, #0f3490 100%);
+      display: flex;
+      align-items: center;
+      padding: 0 2px;
+      z-index: 10000;
+    }
+    .start-btn {
+      background: linear-gradient(to bottom, #3c8f3c 0%, #3c8f3c 3%, #2d7b2d 50%, #2d7b2d 50%, #277027 97%, #1f5f1f 100%);
+      border: none;
+      color: #fff;
+      font: bold 11px Tahoma, sans-serif;
+      padding: 2px 12px 2px 6px;
+      height: 24px;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    }
+    .start-btn .win-flag { font-size: 16px; }
+    .tray {
+      margin-left: auto;
+      background: linear-gradient(to bottom, #0f8ae1 0%, #1084d8 50%, #0b73c4 100%);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #fff;
+      border-left: 1px solid #0a5ca8;
+    }
+
+    .win-dialog {
+      position: absolute;
+      background: #ece9d8;
+      border: 2px solid #0054e3;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+      min-width: 300px;
+      z-index: 1000;
+      animation: dialogIn 0.15s ease-out;
+    }
+    @keyframes dialogIn { from { transform: scale(0.9); opacity: 0; } }
+    .win-titlebar {
+      background: linear-gradient(to bottom, #0058ee 0%, #3a8cf4 8%, #0054e3 93%, #0048d4 100%);
+      color: #fff;
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 6px 6px 0 0;
+      font-weight: bold;
+      font-size: 12px;
+      cursor: move;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+    .titlebar-btns { display: flex; gap: 2px; }
+    .titlebar-btn {
+      width: 21px;
+      height: 21px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 3px;
+      background: linear-gradient(to bottom, #558ae1, #2a6ad4);
+      color: #fff;
+      font-size: 12px;
+      line-height: 19px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .titlebar-btn:hover { background: linear-gradient(to bottom, #6a9de8, #3a7ae4); }
+    .titlebar-btn.close { background: linear-gradient(to bottom, #e17458, #c44430); }
+    .titlebar-btn.close:hover { background: linear-gradient(to bottom, #f08070, #d45540); }
+    .win-body {
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .win-icon { font-size: 32px; flex-shrink: 0; }
+    .win-text { flex: 1; }
+    .win-text p { margin-bottom: 6px; line-height: 1.4; }
+    .win-text b { font-weight: bold; }
+    .win-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 8px 16px 12px;
+      background: #ece9d8;
+    }
+    .win-btn {
+      padding: 3px 20px;
+      background: #ece9d8;
+      border: 1px solid #003c74;
+      border-radius: 3px;
+      font: 11px Tahoma, sans-serif;
+      cursor: pointer;
+      box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #aaa inset;
+    }
+    .win-btn:hover { background: #ddd9c8; }
+    .win-btn:active { box-shadow: -1px -1px 0 #fff inset, 1px 1px 0 #aaa inset; }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      background: #fff;
+      border: 1px solid #7b9cc0;
+      margin-top: 8px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: repeating-linear-gradient(90deg, #36c736 0px, #36c736 8px, #34bd34 8px, #34bd34 10px);
+      transition: width 0.3s;
+    }
+
+    @media (max-width: 600px) {
+      .win-dialog { min-width: 260px; max-width: 95vw; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desktop" id="desktop">
+    <div class="desktop-icon" style="top:16px;left:16px">
+      <div class="ico">🖥️</div>
+      <span>My Computer</span>
+    </div>
+    <div class="desktop-icon" style="top:16px;left:96px">
+      <div class="ico">🗑️</div>
+      <span>Recycle Bin</span>
+    </div>
+    <div class="desktop-icon" style="top:100px;left:16px">
+      <div class="ico">🌐</div>
+      <span>Internet Explorer</span>
+    </div>
+    <div class="desktop-icon" style="top:100px;left:96px">
+      <div class="ico">📁</div>
+      <span>My Documents</span>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <button class="start-btn">
+      <span class="win-flag">⊞</span> start
+    </button>
+    <div class="tray">
+      <span>🔊</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <script>
+    const desktop = document.getElementById("desktop");
+    let dialogZ = 1001;
+    let dialogCount = 0;
+    const maxDialogs = 60;
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent = now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit', hour12:true});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const errorMessages = [
+      { title: "Error", icon: "⚠️", text: "Windows has detected a problem and needs to close this program.", buttons: ["OK"] },
+      { title: "Critical Error", icon: "❌", text: "An unknown error has occurred.\n\nError code: 0x000000{code}\n\nPlease contact your system administrator.", buttons: ["OK", "Details"] },
+      { title: "Warning", icon: "⚠️", text: "Your computer is running low on memory. Save your files and close programs.", buttons: ["OK"] },
+      { title: "Internet Explorer", icon: "🌐", text: "Internet Explorer has encountered a problem and needs to close. We are sorry for the inconvenience.", buttons: ["Send Report", "Don't Send"] },
+      { title: "System Error", icon: "❌", text: "A fatal exception 0E has occurred at 0028:C0034B03. The current application will be terminated.", buttons: ["Close"] },
+      { title: "Windows Security Alert", icon: "🛡️", text: "Firewall has blocked this program from accepting connections from the Internet.", buttons: ["Keep Blocking", "Unblock"] },
+      { title: "Error Deleting File", icon: "❌", text: "Cannot delete file: It is being used by another person or program.", buttons: ["Try Again", "Cancel"] },
+      { title: "Low Disk Space", icon: "⚠️", text: "You are running very low on disk space on Local Disk (C:). Click here to see if you can free space.", buttons: ["OK"] },
+      { title: "End Program", icon: "⚠️", text: "This program is not responding.\n\nTo return to Windows and check the status of the program, click Cancel.", buttons: ["End Now", "Cancel"] },
+      { title: "Virus Alert!", icon: "🛡️", text: "A virus has been detected on your computer!\n\nThreat: Trojan.Win32.Generic\nFile: C:\\WINDOWS\\system32\\svchost.exe", buttons: ["Remove", "Ignore"] },
+      { title: "Windows Update", icon: "🔄", text: "New updates are ready to install. Do you want to install them now? Your computer will restart after installing.", buttons: ["Install Now", "Later"] },
+      { title: "Explorer.EXE", icon: "❌", text: "This application has failed to start because KERNEL32.dll was not found.", buttons: ["OK"] },
+      { title: "Rundll32", icon: "❌", text: "Error loading C:\\WINDOWS\\system32\\{dll}.dll\nThe specified module could not be found.", buttons: ["OK"] },
+      { title: "SVCHOST.EXE", icon: "❌", text: "The instruction at \"0x{addr}\" referenced memory at \"0x00000000\". The memory could not be \"read\".", buttons: ["OK", "Cancel"] },
+    ];
+
+    const dlls = ["mshtml", "browseui", "shdocvw", "urlmon", "wininet", "shell32", "comctl32", "comdlg32"];
+
+    function randomHex(len) {
+      return Array.from({length: len}, () => "0123456789ABCDEF"[Math.floor(Math.random()*16)]).join("");
+    }
+
+    function spawnDialog() {
+      if (dialogCount >= maxDialogs) return;
+      dialogCount++;
+
+      const tmpl = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+      const text = tmpl.text
+        .replace("{code}", randomHex(8))
+        .replace("{dll}", dlls[Math.floor(Math.random() * dlls.length)])
+        .replace("{addr}", "0x" + randomHex(8));
+
+      const dialog = document.createElement("div");
+      dialog.className = "win-dialog";
+      dialog.style.left = (30 + Math.random() * (window.innerWidth - 400)) + "px";
+      dialog.style.top = (20 + Math.random() * (window.innerHeight - 250)) + "px";
+      dialog.style.zIndex = dialogZ++;
+
+      dialog.innerHTML = `
+        <div class="win-titlebar">
+          <span>${tmpl.title}</span>
+          <div class="titlebar-btns">
+            <div class="titlebar-btn close" onclick="spawnMore(this)">×</div>
+          </div>
+        </div>
+        <div class="win-body">
+          <div class="win-icon">${tmpl.icon}</div>
+          <div class="win-text">
+            <p>${text.replace(/\n/g, '<br>')}</p>
+          </div>
+        </div>
+        <div class="win-buttons">
+          ${tmpl.buttons.map(b => `<button class="win-btn" onclick="spawnMore(this)">${b}</button>`).join("")}
+        </div>
+      `;
+
+      dialog.addEventListener("mousedown", () => {
+        dialog.style.zIndex = dialogZ++;
+      });
+
+      let isDragging = false;
+      let dragX, dragY;
+      const titlebar = dialog.querySelector(".win-titlebar");
+      titlebar.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        dragX = e.clientX - dialog.offsetLeft;
+        dragY = e.clientY - dialog.offsetTop;
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (isDragging) {
+          dialog.style.left = (e.clientX - dragX) + "px";
+          dialog.style.top = (e.clientY - dragY) + "px";
+        }
+      });
+      document.addEventListener("mouseup", () => { isDragging = false; });
+
+      desktop.appendChild(dialog);
+    }
+
+    window.spawnMore = function(el) {
+      setTimeout(spawnDialog, 100);
+      setTimeout(spawnDialog, 300);
+      setTimeout(spawnDialog, 600);
+    };
+
+    setTimeout(spawnDialog, 1500);
+    setTimeout(spawnDialog, 3000);
+    setTimeout(spawnDialog, 4000);
+
+    let interval = 3000;
+    function autoSpawn() {
+      spawnDialog();
+      interval = Math.max(300, interval * 0.85);
+      setTimeout(autoSpawn, interval);
+    }
+    setTimeout(autoSpawn, 5000);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
