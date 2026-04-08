@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slack — Workspace Data Export Ready</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1d21;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: #d1d2d3;
+    }
+    .wrap {
+      max-width: 540px;
+      margin: 0 auto;
+      background: #222529;
+      border: 1px solid #383a3d;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .slack-header {
+      background: #4a154b;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slack-icon {
+      width: 32px; height: 32px;
+      display: grid;
+      grid-template: 1fr 1fr / 1fr 1fr;
+      gap: 3px;
+    }
+    .slack-icon div:nth-child(1) { background: #36c5f0; border-radius: 2px; }
+    .slack-icon div:nth-child(2) { background: #2eb67d; border-radius: 2px; }
+    .slack-icon div:nth-child(3) { background: #ecb22e; border-radius: 2px; }
+    .slack-icon div:nth-child(4) { background: #e01e5a; border-radius: 2px; }
+    .slack-name { color: #fff; font-size: 16px; font-weight: 600; }
+    .body { padding: 28px 24px; }
+    .body h2 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+    .body p { font-size: 14px; line-height: 1.6; color: #ababad; margin-bottom: 12px; }
+    .export-card {
+      background: #2c2d31;
+      border: 1px solid #383a3d;
+      border-radius: 8px;
+      padding: 18px;
+      margin: 18px 0;
+    }
+    .export-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+    .export-label { color: #ababad; }
+    .export-value { color: #fff; font-weight: 500; }
+    .export-divider { border: none; border-top: 1px solid #383a3d; margin: 8px 0; }
+    .file-list {
+      margin: 14px 0;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: #2c2d31;
+      border: 1px solid #383a3d;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    .file-icon { font-size: 18px; }
+    .file-name { color: #1d9bd1; flex: 1; }
+    .file-size { color: #ababad; font-size: 11px; }
+    .warn-box {
+      background: rgba(224,30,90,0.1);
+      border: 1px solid rgba(224,30,90,0.3);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #e01e5a;
+      line-height: 1.5;
+      margin: 14px 0;
+    }
+    .btn-slack {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #4a154b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn-slack:hover { background: #611f69; }
+    .btn-outline {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: 1px solid #383a3d;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 13px;
+      color: #1d9bd1;
+      cursor: pointer;
+      text-align: center;
+    }
+    .small { font-size: 11px; color: #616061; line-height: 1.5; margin-top: 14px; }
+    .footer {
+      background: #1a1d21;
+      border-top: 1px solid #383a3d;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: #616061;
+    }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { background: #222529; border: 1px solid #383a3d; border-radius: 12px; max-width: 380px; width: 100%; overflow: hidden; }
+    .modal-top { background: #4a154b; padding: 16px 20px; display: flex; align-items: center; gap: 10px; }
+    .modal-top span { color: #fff; font-size: 14px; font-weight: 600; }
+    .modal-body { padding: 20px; }
+    .modal-body h3 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .modal-body .sub { font-size: 12px; color: #ababad; margin-bottom: 16px; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 5px; color: #d1d2d3; }
+    .fg input { width: 100%; padding: 9px 12px; background: #1a1d21; border: 1px solid #383a3d; border-radius: 6px; color: #fff; font: inherit; font-size: 13px; }
+    .fg input:focus { outline: none; border-color: #4a154b; }
+    .modal .btn-slack { margin-top: 4px; }
+    .modal-cancel { display: block; text-align: center; padding: 12px; font-size: 12px; color: #1d9bd1; cursor: pointer; border-top: 1px solid #383a3d; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="slack-header">
+      <div class="slack-icon"><div></div><div></div><div></div><div></div></div>
+      <div class="slack-name">Slack</div>
+    </div>
+    <div class="body">
+      <h2>Your workspace data export is ready</h2>
+      <p>Hi there,</p>
+      <p>The data export for your Slack workspace has been completed. The export was requested by a workspace admin and includes all messages, files, and user data.</p>
+
+      <div class="export-card">
+        <div class="export-row"><span class="export-label">Workspace</span><span class="export-value" id="workspace">—</span></div>
+        <div class="export-row"><span class="export-label">Requested by</span><span class="export-value" id="requester">—</span></div>
+        <div class="export-row"><span class="export-label">Date</span><span class="export-value" id="exportDate">—</span></div>
+        <div class="export-row"><span class="export-label">Export type</span><span class="export-value">Full workspace (Corporate)</span></div>
+        <hr class="export-divider">
+        <div class="export-row"><span class="export-label">Total messages</span><span class="export-value" id="msgCount">—</span></div>
+        <div class="export-row"><span class="export-label">Total files</span><span class="export-value" id="fileCount">—</span></div>
+        <div class="export-row"><span class="export-label">Members included</span><span class="export-value" id="memberCount">—</span></div>
+      </div>
+
+      <div class="file-list">
+        <div class="file-item"><span class="file-icon">📦</span><span class="file-name">messages-export.zip</span><span class="file-size" id="msgSize">—</span></div>
+        <div class="file-item"><span class="file-icon">📦</span><span class="file-name">files-and-uploads.zip</span><span class="file-size" id="fileSize">—</span></div>
+        <div class="file-item"><span class="file-icon">📄</span><span class="file-name">user-directory.csv</span><span class="file-size">48 KB</span></div>
+      </div>
+
+      <div class="warn-box">
+        ⚠️ If you did <b>not</b> request this export, your workspace admin account may be compromised. Review your account security immediately.
+      </div>
+
+      <button class="btn-slack" onclick="openModal()">Download export files</button>
+      <button class="btn-outline" onclick="openModal()">I didn't request this</button>
+
+      <p class="small">This download link will expire in 7 days. For security, you'll need to verify your identity before downloading.</p>
+    </div>
+    <div class="footer">Slack Technologies, LLC · 500 Howard Street · San Francisco, CA 94105</div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-top">
+        <div class="slack-icon" style="width:24px;height:24px;gap:2px"><div></div><div></div><div></div><div></div></div>
+        <span>Verify your identity</span>
+      </div>
+      <div class="modal-body">
+        <h3>Sign in to Slack</h3>
+        <div class="sub">Confirm your credentials to access this export.</div>
+        <div class="fg">
+          <label>Email address</label>
+          <input type="text" placeholder="name@work-email.com" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" placeholder="password" autocomplete="off" />
+        </div>
+        <button class="btn-slack" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Sign In</button>
+      </div>
+      <div class="modal-cancel" onclick="document.getElementById('modal').style.display='none'">Cancel</div>
+    </div>
+  </div>
+
+  <script>
+    const workspaces = ["Acme Corp","TechStartup Inc","GlobalFinance","DevTeam HQ","CloudOps","MegaCorp"];
+    const names = ["admin@","it-admin@","cto@","devops@","hr-admin@"];
+    const ws = workspaces[Math.floor(Math.random()*workspaces.length)];
+    document.getElementById("workspace").textContent = ws;
+    document.getElementById("requester").textContent = names[Math.floor(Math.random()*names.length)] + ws.toLowerCase().replace(/\s+/g,"") + ".com";
+    const d = new Date(); d.setHours(d.getHours()-Math.floor(Math.random()*6+1));
+    document.getElementById("exportDate").textContent = d.toLocaleString("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",hour12:true});
+    document.getElementById("msgCount").textContent = (Math.floor(Math.random()*400+100)*1000).toLocaleString();
+    document.getElementById("fileCount").textContent = (Math.floor(Math.random()*30+5)*1000).toLocaleString();
+    document.getElementById("memberCount").textContent = Math.floor(Math.random()*400+50);
+    document.getElementById("msgSize").textContent = (Math.random()*4+1).toFixed(1) + " GB";
+    document.getElementById("fileSize").textContent = (Math.random()*8+2).toFixed(1) + " GB";
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn — New message from recruiter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f3f2ef;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: rgba(0,0,0,0.9);
+    }
+    .wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+    }
+    .li-header {
+      background: #fff;
+      padding: 16px 24px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .li-logo {
+      width: 84px;
+      height: 21px;
+      background: #0a66c2;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .body { padding: 24px; }
+    .msg-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .msg-header {
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+    }
+    .avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #0a66c2, #004182);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .sender-info h3 { font-size: 15px; font-weight: 600; }
+    .sender-info .title { font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 2px; }
+    .sender-info .time { font-size: 11px; color: rgba(0,0,0,0.4); margin-top: 4px; }
+    .recruiter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #e8f0fe;
+      color: #0a66c2;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 4px;
+    }
+    .msg-body {
+      padding: 0 16px 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(0,0,0,0.7);
+    }
+    .msg-body p { margin-bottom: 10px; }
+    .job-card {
+      background: #f3f2ef;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0;
+    }
+    .job-card h4 { font-size: 14px; font-weight: 600; color: #0a66c2; margin-bottom: 6px; }
+    .job-detail { font-size: 12px; color: rgba(0,0,0,0.6); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+    .comp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .comp-logo {
+      width: 36px; height: 36px;
+      background: #e8e8e8;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .comp-name { font-size: 13px; font-weight: 600; }
+    .salary-tag {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+    .btn-li {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #0a66c2;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn-li:hover { background: #004182; }
+    .btn-ghost {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: 1px solid #0a66c2;
+      border-radius: 24px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0a66c2;
+      cursor: pointer;
+      text-align: center;
+    }
+    .small { font-size: 11px; color: rgba(0,0,0,0.4); line-height: 1.5; margin-top: 16px; }
+    .footer {
+      background: #f3f2ef;
+      border-top: 1px solid #e0e0e0;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: rgba(0,0,0,0.4);
+    }
+    .footer a { color: #0a66c2; text-decoration: none; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { background: #fff; border-radius: 12px; max-width: 380px; width: 100%; overflow: hidden; }
+    .modal-top { padding: 20px 20px 0; text-align: center; }
+    .modal-top .li-logo { margin: 0 auto 16px; width: 100px; height: 26px; font-size: 14px; }
+    .modal-body { padding: 0 20px 20px; }
+    .modal-body h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; text-align: center; }
+    .modal-body .sub { font-size: 13px; color: rgba(0,0,0,0.6); margin-bottom: 16px; text-align: center; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+    .fg input { width: 100%; padding: 10px 12px; border: 1px solid #c0c0c0; border-radius: 4px; font: inherit; font-size: 14px; }
+    .fg input:focus { outline: none; border-color: #0a66c2; }
+    .modal .btn-li { margin-top: 4px; }
+    .modal-cancel { display: block; text-align: center; padding: 12px; font-size: 12px; color: #0a66c2; cursor: pointer; border-top: 1px solid #e0e0e0; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="li-header">
+      <div class="li-logo">LinkedIn</div>
+    </div>
+    <div class="body">
+      <div class="msg-card">
+        <div class="msg-header">
+          <div class="avatar" id="avatarInit">—</div>
+          <div class="sender-info">
+            <h3 id="recruiterName">—</h3>
+            <div class="title" id="recruiterTitle">—</div>
+            <div class="recruiter-badge">✦ LinkedIn Recruiter</div>
+            <div class="time" id="msgTime">—</div>
+          </div>
+        </div>
+        <div class="msg-body" id="msgBody"></div>
+      </div>
+
+      <button class="btn-li" onclick="openModal()">Reply to message</button>
+      <button class="btn-ghost" onclick="openModal()">View full conversation</button>
+
+      <p class="small">You're receiving this because you have messaging notifications turned on. <a href="#" style="color:#0a66c2;text-decoration:none">Unsubscribe</a></p>
+    </div>
+    <div class="footer">
+      LinkedIn Corporation · 1000 W. Maude Ave · Sunnyvale, CA 94085<br>
+      <a>Help</a> · <a>Privacy</a> · <a>Unsubscribe</a>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-top">
+        <div class="li-logo">LinkedIn</div>
+      </div>
+      <div class="modal-body">
+        <h3>Sign in</h3>
+        <div class="sub">Sign in to reply to this message</div>
+        <div class="fg">
+          <label>Email or phone</label>
+          <input type="text" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" autocomplete="off" />
+        </div>
+        <button class="btn-li" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Sign in</button>
+      </div>
+      <div class="modal-cancel" onclick="document.getElementById('modal').style.display='none'">Cancel</div>
+    </div>
+  </div>
+
+  <script>
+    const recruiters = [
+      { name: "Sarah Chen", title: "Senior Technical Recruiter at Google", init: "SC" },
+      { name: "James Morrison", title: "Engineering Talent Lead at Meta", init: "JM" },
+      { name: "Priya Patel", title: "Staff Recruiter at Apple", init: "PP" },
+      { name: "David Kim", title: "Head of Engineering Recruiting at Stripe", init: "DK" },
+      { name: "Emma Larsson", title: "Technical Sourcer at OpenAI", init: "EL" },
+    ];
+    const companies = [
+      { name: "Google", emoji: "🔍", role: "Senior Software Engineer, Infrastructure", loc: "Mountain View, CA (Hybrid)", salary: "$280K - $420K" },
+      { name: "Meta", emoji: "Ⓜ️", role: "Staff Engineer, Reality Labs", loc: "Menlo Park, CA (Remote OK)", salary: "$300K - $480K" },
+      { name: "Apple", emoji: "🍎", role: "ML Engineer, Siri & AI", loc: "Cupertino, CA", salary: "$250K - $400K" },
+      { name: "Stripe", emoji: "💳", role: "Backend Engineer, Payments Core", loc: "San Francisco, CA (Remote)", salary: "$240K - $380K" },
+      { name: "OpenAI", emoji: "🤖", role: "Research Engineer, Alignment", loc: "San Francisco, CA", salary: "$350K - $550K" },
+    ];
+    const r = Math.floor(Math.random()*recruiters.length);
+    const rec = recruiters[r];
+    const comp = companies[r];
+
+    document.getElementById("avatarInit").textContent = rec.init;
+    document.getElementById("recruiterName").textContent = rec.name;
+    document.getElementById("recruiterTitle").textContent = rec.title;
+
+    const t = new Date(); t.setHours(t.getHours()-Math.floor(Math.random()*4+1));
+    document.getElementById("msgTime").textContent = t.toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit",hour12:true});
+
+    document.getElementById("msgBody").innerHTML = `
+      <p>Hi there,</p>
+      <p>I came across your profile and I'm really impressed by your background. I have an exciting opportunity that I think would be a great fit for you.</p>
+      <div class="job-card">
+        <div class="comp-row">
+          <div class="comp-logo">${comp.emoji}</div>
+          <div class="comp-name">${comp.name}</div>
+        </div>
+        <h4>${comp.role}</h4>
+        <div class="job-detail">📍 ${comp.loc}</div>
+        <div class="job-detail">🏢 Full-time</div>
+        <div class="salary-tag">💰 ${comp.salary} total comp</div>
+      </div>
+      <p>The team is growing fast and we're specifically looking for someone with your skill set. Would you be open to a quick chat this week?</p>
+      <p>Looking forward to hearing from you!</p>
+      <p>${rec.name}</p>
+    `;
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

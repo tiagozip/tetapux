@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FBI — Your device has been locked</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #111;
+      font-family: "Inter", -apple-system, sans-serif;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: not-allowed;
+    }
+    .lockscreen {
+      width: 100%;
+      max-width: 680px;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+      animation: lockIn 0.5s ease-out;
+      margin: 20px;
+    }
+    @keyframes lockIn { from { transform: scale(0.95); opacity: 0; } }
+
+    .top-bar {
+      background: #003478;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .badge {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(145deg, #c8a84e, #a07b20);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 3px solid #d4b458;
+      position: relative;
+    }
+    .badge-inner {
+      font-size: 14px;
+      color: #003478;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .top-text {
+      color: #fff;
+    }
+    .top-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .top-text h2 {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.7;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .red-stripe {
+      background: #c0392b;
+      color: #fff;
+      text-align: center;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      padding: 24px;
+      color: #222;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .content h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: #c0392b;
+    }
+    .content p { margin-bottom: 10px; }
+    .violations {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+    .violation {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 12px;
+    }
+    .violation:last-child { border-bottom: none; }
+    .v-code { color: #c0392b; font-weight: 600; width: 120px; flex-shrink: 0; }
+    .device-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: 11px;
+      font-family: monospace;
+    }
+    .device-info span { color: #666; }
+    .device-info b { color: #222; }
+    .timer-section {
+      text-align: center;
+      margin: 20px 0;
+      padding: 16px;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      border-radius: 6px;
+    }
+    .timer-label { font-size: 12px; color: #666; margin-bottom: 6px; }
+    .timer {
+      font-size: 36px;
+      font-weight: 700;
+      color: #c0392b;
+      font-family: monospace;
+      letter-spacing: 2px;
+    }
+    .timer-warn { font-size: 11px; color: #999; margin-top: 6px; }
+    .pay-section {
+      text-align: center;
+      margin-top: 16px;
+    }
+    .pay-btn {
+      display: inline-block;
+      background: #c0392b;
+      color: #fff;
+      padding: 12px 40px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .pay-btn:hover { background: #a93226; }
+    .pay-note {
+      font-size: 10px;
+      color: #999;
+      margin-top: 8px;
+    }
+    .webcam-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #1a1a1a;
+      padding: 12px;
+      border-radius: 4px;
+      margin: 14px 0;
+    }
+    .webcam-box {
+      width: 80px;
+      height: 60px;
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 3px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .webcam-box canvas { width: 100%; height: 100%; }
+    .rec-dot {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 6px;
+      height: 6px;
+      background: #c0392b;
+      border-radius: 50%;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .webcam-text {
+      color: #999;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .webcam-text b { color: #c0392b; }
+
+    @media (max-width: 600px) {
+      .lockscreen { margin: 10px; border-radius: 0; }
+      .top-bar { padding: 10px 14px; }
+      .badge { width: 44px; height: 44px; }
+      .badge-inner { font-size: 10px; }
+      .top-text h1 { font-size: 14px; }
+      .content { padding: 16px; }
+      .device-info { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lockscreen">
+    <div class="top-bar">
+      <div class="badge">
+        <div class="badge-inner">FBI</div>
+      </div>
+      <div class="top-text">
+        <h1>FEDERAL BUREAU OF INVESTIGATION</h1>
+        <h2>CYBER DIVISION — INTERNET CRIME COMPLAINT CENTER (IC3)</h2>
+      </div>
+    </div>
+
+    <div class="red-stripe">YOUR DEVICE HAS BEEN LOCKED</div>
+
+    <div class="content">
+      <h3>ATTENTION: Illegal Activity Detected</h3>
+      <p>This device has been locked by the Federal Bureau of Investigation in accordance with federal law. Our automated detection system has identified suspicious activity originating from your IP address.</p>
+
+      <div class="webcam-section">
+        <div class="webcam-box">
+          <canvas id="webcamCanvas"></canvas>
+          <div class="rec-dot"></div>
+        </div>
+        <div class="webcam-text">
+          <b>Your photo has been recorded</b> and stored in the FBI Cyber Crime database. Your identity has been partially verified through facial recognition.
+        </div>
+      </div>
+
+      <div class="violations">
+        <div class="violation"><span class="v-code">18 U.S.C. § 1030</span><span>Unauthorized access to computer systems</span></div>
+        <div class="violation"><span class="v-code">18 U.S.C. § 2252</span><span>Distribution of prohibited digital content</span></div>
+        <div class="violation"><span class="v-code">17 U.S.C. § 506</span><span>Criminal copyright infringement</span></div>
+        <div class="violation"><span class="v-code">18 U.S.C. § 1028</span><span>Identity theft and fraud</span></div>
+      </div>
+
+      <p><b>Device fingerprint captured:</b></p>
+      <div class="device-info" id="deviceInfo">
+        <span>Loading...</span>
+      </div>
+
+      <div class="timer-section">
+        <div class="timer-label">Time remaining to resolve this matter:</div>
+        <div class="timer" id="timer">47:59:59</div>
+        <div class="timer-warn">Failure to comply will result in permanent device lock and case referral to federal court</div>
+      </div>
+
+      <div class="pay-section">
+        <button class="pay-btn" onclick="alert('This is a Tetapux demo. The FBI does not lock computers or demand payment. This is a common scam.')">Pay Fine — $500.00</button>
+        <div class="pay-note">Payment via cryptocurrency only. Case # FBI-<span id="caseNum"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ip = `${Math.floor(Math.random()*223+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+    const info = document.getElementById("deviceInfo");
+    info.innerHTML = `
+      <span>IP Address: <b>${ip}</b></span>
+      <span>Platform: <b>${navigator.platform}</b></span>
+      <span>Browser: <b>${navigator.userAgent.split(')')[0].split('(')[1] || "Unknown"}</b></span>
+      <span>Language: <b>${navigator.language}</b></span>
+      <span>Screen: <b>${screen.width}x${screen.height}</b></span>
+      <span>Timezone: <b>${Intl.DateTimeFormat().resolvedOptions().timeZone}</b></span>
+    `;
+
+    document.getElementById("caseNum").textContent =
+      "IC3-" + new Date().getFullYear() + "-" + Math.random().toString(36).slice(2,8).toUpperCase();
+
+    let seconds = 47 * 3600 + 59 * 60 + 59;
+    const timerEl = document.getElementById("timer");
+    function updateTimer() {
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      timerEl.textContent = String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+      if (seconds > 0) seconds--;
+    }
+    setInterval(updateTimer, 1000);
+
+    const canvas = document.getElementById("webcamCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 160;
+    canvas.height = 120;
+
+    function drawStatic() {
+      const data = ctx.createImageData(canvas.width, canvas.height);
+      for (let i = 0; i < data.data.length; i += 4) {
+        const v = Math.random() * 30;
+        data.data[i] = v + 10;
+        data.data[i+1] = v;
+        data.data[i+2] = v;
+        data.data[i+3] = 255;
+      }
+      ctx.putImageData(data, 0, 0);
+      requestAnimationFrame(drawStatic);
+    }
+    drawStatic();
+
+    document.addEventListener("keydown", (e) => {
+      if (["F5","Escape"].includes(e.key) || (e.ctrlKey && e.key === "w")) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

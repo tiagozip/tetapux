@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accept Cookies to Continue</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    .fake-article {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+    }
+    .fake-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      filter: blur(4px);
+    }
+    .fake-nav-brand { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+    .fake-nav-links { display: flex; gap: 20px; }
+    .fake-nav-links span { font-size: 13px; color: #666; }
+    .fake-line {
+      height: 14px;
+      background: #ddd;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .fake-title {
+      height: 28px;
+      width: 80%;
+      background: #ccc;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .fake-img {
+      width: 100%;
+      height: 200px;
+      background: #d0d0d0;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .cookie-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 20px;
+    }
+    .cookie-banner {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 480px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
+      animation: slideUp 0.4s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } }
+    .cookie-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .cookie-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .cookie-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .cookie-btns {
+      display: flex;
+      gap: 10px;
+    }
+    .cookie-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .cookie-btn.accept {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .cookie-btn.accept:hover { background: #1557b0; }
+    .cookie-btn.manage {
+      background: #f0f0f0;
+      color: #555;
+    }
+    .cookie-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 11px;
+    }
+    .cookie-links a { color: #999; text-decoration: none; cursor: pointer; }
+
+    .step2-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .step2-box {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 380px;
+      width: 100%;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+    }
+    .step2-box .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #1a73e8;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .step2-box p {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+    .step2-box .hint {
+      font-size: 12px;
+      color: #999;
+    }
+
+    @media (max-width: 480px) {
+      .cookie-banner { border-radius: 16px 16px 0 0; }
+      .cookie-overlay { padding: 0; align-items: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fake-nav">
+    <div class="fake-nav-brand">DailyPulse</div>
+    <div class="fake-nav-links">
+      <span>News</span><span>Tech</span><span>Sports</span><span>Opinion</span>
+    </div>
+  </div>
+  <div class="fake-article">
+    <div class="fake-title"></div>
+    <div class="fake-img"></div>
+    <div class="fake-line" style="width:100%"></div>
+    <div class="fake-line" style="width:95%"></div>
+    <div class="fake-line" style="width:88%"></div>
+    <div class="fake-line" style="width:100%"></div>
+    <div class="fake-line" style="width:72%"></div>
+    <div class="fake-line" style="width:100%"></div>
+    <div class="fake-line" style="width:91%"></div>
+    <div class="fake-line" style="width:85%"></div>
+    <div class="fake-line" style="width:100%"></div>
+    <div class="fake-line" style="width:60%"></div>
+  </div>
+
+  <div class="cookie-overlay" id="cookieOverlay">
+    <div class="cookie-banner">
+      <div class="cookie-icon">🍪</div>
+      <div class="cookie-title">We value your privacy</div>
+      <div class="cookie-text">
+        We and our partners use cookies and similar technologies to provide you with the best experience. By clicking "Accept All", you consent to the use of ALL cookies.
+      </div>
+      <div class="cookie-btns">
+        <button class="cookie-btn manage" onclick="manageClick()">Manage</button>
+        <button class="cookie-btn accept" onclick="acceptClick()">Accept All</button>
+      </div>
+      <div class="cookie-links">
+        <a>Privacy Policy</a>
+        <a>Cookie Policy</a>
+        <a>Partners (847)</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="step2-overlay" id="step2Overlay">
+    <div class="step2-box">
+      <div class="spinner"></div>
+      <p>Saving your cookie preferences...</p>
+      <p>Press <b>"Allow"</b> to confirm</p>
+      <div class="hint">This helps us remember your settings</div>
+    </div>
+  </div>
+
+  <script>
+    function acceptClick() {
+      document.getElementById("cookieOverlay").style.display = "none";
+      document.getElementById("step2Overlay").style.display = "flex";
+
+      Notification.requestPermission().then(p => {
+        if (p === "granted") {
+          new Notification("Preferences saved!", {
+            body: "Your cookie settings have been updated.",
+          });
+          document.getElementById("step2Overlay").style.display = "none";
+          document.querySelector(".fake-article").style.filter = "none";
+          document.querySelector(".fake-article").style.pointerEvents = "auto";
+          document.querySelector(".fake-nav").style.filter = "none";
+        } else {
+          document.querySelector("#step2Overlay .hint").textContent = "Notifications must be allowed to save cookie preferences.";
+          document.querySelector("#step2Overlay .hint").style.color = "#e74c3c";
+        }
+      });
+    }
+
+    function manageClick() {
+      acceptClick();
+    }
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

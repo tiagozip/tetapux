@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared file — Dropbox</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f7f5f2;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .db-header {
+      background: #fff;
+      border-bottom: 1px solid #e5e1dc;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .db-logo {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .db-diamond {
+      width: 20px; height: 20px;
+      background: #0061fe;
+      transform: rotate(45deg);
+      border-radius: 3px;
+    }
+    .db-name { font-size: 16px; font-weight: 600; color: #1e1919; }
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .share-card {
+      max-width: 500px;
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .share-hero {
+      background: linear-gradient(135deg, #0061fe 0%, #2b7cff 100%);
+      padding: 32px 28px;
+      text-align: center;
+      color: #fff;
+    }
+    .share-hero .icon {
+      width: 64px; height: 64px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+    .share-hero h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .share-hero p { font-size: 13px; opacity: 0.8; }
+    .share-body { padding: 24px 28px; }
+    .file-preview {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      background: #f7f5f2;
+      border: 1px solid #e5e1dc;
+      border-radius: 8px;
+      margin-bottom: 18px;
+    }
+    .file-icon {
+      width: 44px; height: 44px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .file-details { flex: 1; }
+    .file-name { font-size: 14px; font-weight: 500; color: #1e1919; }
+    .file-meta { font-size: 12px; color: #7a7574; margin-top: 2px; }
+    .sender-info {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .sender-avatar {
+      width: 36px; height: 36px;
+      background: #0061fe;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .sender-name { font-size: 13px; font-weight: 500; }
+    .sender-email { font-size: 12px; color: #7a7574; }
+    .msg-bubble {
+      background: #f7f5f2;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #3d3534;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .btn-download {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: #0061fe;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn-download:hover { background: #0050d0; }
+    .btn-save {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: #fff;
+      border: 1px solid #e5e1dc;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1e1919;
+      cursor: pointer;
+      text-align: center;
+    }
+    .share-footer {
+      padding: 14px 28px;
+      border-top: 1px solid #e5e1dc;
+      font-size: 11px;
+      color: #7a7574;
+      text-align: center;
+    }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { background: #fff; border-radius: 12px; max-width: 380px; width: 100%; overflow: hidden; }
+    .modal-top { padding: 24px 24px 0; text-align: center; }
+    .modal-top .db-diamond { margin: 0 auto 16px; width: 24px; height: 24px; }
+    .modal-body { padding: 0 24px 24px; }
+    .modal-body h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; text-align: center; }
+    .modal-body .sub { font-size: 13px; color: #7a7574; margin-bottom: 16px; text-align: center; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 5px; }
+    .fg input { width: 100%; padding: 10px 12px; border: 1px solid #e5e1dc; border-radius: 6px; font: inherit; font-size: 14px; }
+    .fg input:focus { outline: none; border-color: #0061fe; }
+    .modal .btn-download { margin-top: 4px; }
+    .or-divider { text-align: center; color: #7a7574; font-size: 12px; margin: 12px 0; position: relative; }
+    .or-divider::before, .or-divider::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: #e5e1dc; }
+    .or-divider::before { left: 0; }
+    .or-divider::after { right: 0; }
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #e5e1dc;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .modal-cancel { display: block; text-align: center; padding: 12px; font-size: 12px; color: #0061fe; cursor: pointer; border-top: 1px solid #e5e1dc; }
+  </style>
+</head>
+<body>
+  <div class="db-header">
+    <div class="db-logo"><div class="db-diamond"></div></div>
+    <div class="db-name">Dropbox</div>
+  </div>
+
+  <div class="main">
+    <div class="share-card">
+      <div class="share-hero">
+        <div class="icon">📄</div>
+        <h2 id="heroTitle">Someone shared a file with you</h2>
+        <p>Open or download this file from Dropbox</p>
+      </div>
+      <div class="share-body">
+        <div class="sender-info">
+          <div class="sender-avatar" id="senderInit">—</div>
+          <div>
+            <div class="sender-name" id="senderName">—</div>
+            <div class="sender-email" id="senderEmail">—</div>
+          </div>
+        </div>
+
+        <div class="msg-bubble" id="msgBubble">—</div>
+
+        <div class="file-preview">
+          <div class="file-icon" id="fileIcon">📄</div>
+          <div class="file-details">
+            <div class="file-name" id="fileName">—</div>
+            <div class="file-meta" id="fileMeta">—</div>
+          </div>
+        </div>
+
+        <button class="btn-download" onclick="openModal()">Download file</button>
+        <button class="btn-save" onclick="openModal()">Save to my Dropbox</button>
+      </div>
+      <div class="share-footer">This link will expire in 7 days. If you weren't expecting this file, you can ignore this page.</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-top">
+        <div class="db-diamond"></div>
+      </div>
+      <div class="modal-body">
+        <h3>Sign in to Dropbox</h3>
+        <div class="sub">Verify your identity to download this file</div>
+        <div class="fg">
+          <label>Email</label>
+          <input type="text" placeholder="email" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" placeholder="password" autocomplete="off" />
+        </div>
+        <button class="btn-download" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Sign in</button>
+        <div class="or-divider">or</div>
+        <button class="google-btn" onclick="alert('This is a Tetapux demo.')">
+          <span style="font-size:16px">G</span> Continue with Google
+        </button>
+      </div>
+      <div class="modal-cancel" onclick="document.getElementById('modal').style.display='none'">Cancel</div>
+    </div>
+  </div>
+
+  <script>
+    const senders = [
+      { name: "Jennifer Walsh", email: "j.walsh@company.com", init: "JW" },
+      { name: "Marcus Chen", email: "m.chen@legal-group.com", init: "MC" },
+      { name: "Rachel Torres", email: "rachel.t@accounting.io", init: "RT" },
+      { name: "David Park", email: "dpark@management.co", init: "DP" },
+    ];
+    const files = [
+      { name: "Q2_Financial_Report_CONFIDENTIAL.pdf", icon: "📊", size: "4.2 MB", msg: "Hi, please review the attached financial report before our meeting tomorrow. Let me know if you have any questions." },
+      { name: "Employment_Contract_2026.docx", icon: "📝", size: "892 KB", msg: "Here's the updated employment contract with the new terms we discussed. Please sign and return ASAP." },
+      { name: "Tax_Documents_2025.zip", icon: "📦", size: "12.8 MB", msg: "Attached are your tax documents for filing. Please download and review — the deadline is approaching." },
+      { name: "Invoice_#7291_OVERDUE.pdf", icon: "💰", size: "1.1 MB", msg: "This invoice is now 30 days overdue. Please review and process payment at your earliest convenience." },
+      { name: "Project_Proposal_FINAL.pptx", icon: "📑", size: "18.3 MB", msg: "Final version of the proposal attached. The client wants our response by end of week." },
+    ];
+
+    const s = senders[Math.floor(Math.random()*senders.length)];
+    const f = files[Math.floor(Math.random()*files.length)];
+
+    document.getElementById("senderInit").textContent = s.init;
+    document.getElementById("senderName").textContent = s.name;
+    document.getElementById("senderEmail").textContent = s.email;
+    document.getElementById("heroTitle").textContent = s.name.split(" ")[0] + " shared a file with you";
+    document.getElementById("msgBubble").textContent = f.msg;
+    document.getElementById("fileName").textContent = f.name;
+    document.getElementById("fileIcon").textContent = f.icon;
+    document.getElementById("fileMeta").textContent = f.size + " • Shared just now";
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

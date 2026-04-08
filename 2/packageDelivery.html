@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USPS — Package Delivery Failed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f4f4f4;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+    .email-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .usps-header {
+      background: #333366;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .usps-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .usps-logo span { color: #cc0000; }
+    .eagle { font-size: 24px; }
+    .body { padding: 24px; }
+    .body h2 { font-size: 18px; font-weight: 700; color: #333366; margin-bottom: 12px; }
+    .body p { font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 12px; }
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 20px 0;
+    }
+    .status-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .status-dot {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      margin: 0 auto 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #fff;
+      font-weight: 600;
+    }
+    .status-dot.done { background: #333366; }
+    .status-dot.current { background: #cc0000; animation: pulse 1.5s infinite; }
+    .status-dot.pending { background: #ccc; }
+    @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(204,0,0,0.15); } }
+    .status-label { font-size: 10px; color: #888; }
+    .status-line {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: #ddd;
+      z-index: -1;
+    }
+    .status-line.done { background: #333366; }
+    .track-card {
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .track-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 13px;
+    }
+    .track-label { color: #888; }
+    .track-value { font-weight: 500; }
+    .track-value.red { color: #cc0000; font-weight: 600; }
+    .warn-box {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #856404;
+      line-height: 1.5;
+      margin: 16px 0;
+    }
+    .fee-box {
+      background: #f0f0f0;
+      border-radius: 6px;
+      padding: 14px;
+      text-align: center;
+      margin: 16px 0;
+    }
+    .fee-amount { font-size: 28px; font-weight: 800; color: #333366; }
+    .fee-label { font-size: 12px; color: #888; margin-top: 2px; }
+    .btn-usps {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: #333366;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .btn-usps:hover { background: #252550; }
+    .btn-outline {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+      text-align: center;
+    }
+    .timer-bar {
+      background: #fef3f2;
+      border: 1px solid #fecaca;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: #cc0000;
+      font-weight: 600;
+      margin: 14px 0;
+    }
+    .small { font-size: 11px; color: #bbb; text-align: center; margin-top: 14px; line-height: 1.5; }
+    .footer {
+      background: #f4f4f4;
+      border-top: 1px solid #e0e0e0;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+    }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { background: #fff; border-radius: 10px; max-width: 400px; width: 100%; overflow: hidden; }
+    .modal-top { background: #333366; padding: 16px 20px; text-align: center; color: #fff; font-weight: 600; font-size: 14px; }
+    .modal-body { padding: 20px; }
+    .modal-body h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .modal-body .sub { font-size: 12px; color: #888; margin-bottom: 16px; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+    .fg input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font: inherit; font-size: 13px; }
+    .fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal .btn-usps { margin-top: 6px; }
+    .modal-footer { padding: 10px 20px; border-top: 1px solid #eee; text-align: center; }
+    .modal-footer a { font-size: 12px; color: #333366; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="email-wrap">
+    <div class="usps-header">
+      <span class="eagle">🦅</span>
+      <div class="usps-logo">US<span>PS</span></div>
+    </div>
+    <div class="body">
+      <h2>Delivery attempt failed</h2>
+      <p>We attempted to deliver your package but were unable to complete the delivery due to an unpaid shipping surcharge.</p>
+
+      <div class="status-bar">
+        <div class="status-step">
+          <div class="status-dot done">✓</div>
+          <div class="status-label">Shipped</div>
+        </div>
+        <div class="status-step">
+          <div class="status-dot done">✓</div>
+          <div class="status-label">In Transit</div>
+          <div class="status-line done"></div>
+        </div>
+        <div class="status-step">
+          <div class="status-dot current">!</div>
+          <div class="status-label">Failed</div>
+          <div class="status-line"></div>
+        </div>
+        <div class="status-step">
+          <div class="status-dot pending">4</div>
+          <div class="status-label">Delivered</div>
+          <div class="status-line"></div>
+        </div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-row"><span class="track-label">Tracking #</span><span class="track-value" id="trackNum">—</span></div>
+        <div class="track-row"><span class="track-label">Origin</span><span class="track-value">Distribution Center, NJ</span></div>
+        <div class="track-row"><span class="track-label">Destination</span><span class="track-value" id="destination">—</span></div>
+        <div class="track-row"><span class="track-label">Weight</span><span class="track-value">2.4 lbs</span></div>
+        <div class="track-row"><span class="track-label">Status</span><span class="track-value red">DELIVERY FAILED — Action required</span></div>
+      </div>
+
+      <div class="warn-box">
+        ⚠️ <b>Action required:</b> A redelivery fee of $1.95 must be paid before we can attempt delivery again. If not paid within 48 hours, your package will be returned to sender.
+      </div>
+
+      <div class="fee-box">
+        <div class="fee-amount">$1.95</div>
+        <div class="fee-label">Redelivery surcharge</div>
+      </div>
+
+      <div class="timer-bar">
+        ⏰ Package will be returned in: <span id="timer">47:59:59</span>
+      </div>
+
+      <button class="btn-usps" onclick="openModal()">Pay $1.95 — Schedule Redelivery</button>
+      <button class="btn-outline" onclick="openModal()">Track my package</button>
+
+      <p class="small">USPS Tracking® allows you to track your package at every step. If you have questions, visit usps.com or call 1-800-ASK-USPS.</p>
+    </div>
+    <div class="footer">
+      United States Postal Service · 475 L'Enfant Plaza SW · Washington, DC 20260
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-top">USPS — Payment for Redelivery</div>
+      <div class="modal-body">
+        <h3>Payment Details</h3>
+        <div class="sub">Enter your card information to pay the $1.95 redelivery fee</div>
+        <div class="fg">
+          <label>Full Name</label>
+          <input type="text" placeholder="Name on card" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Card Number</label>
+          <input type="text" placeholder="1234 5678 9012 3456" autocomplete="off" maxlength="19" />
+        </div>
+        <div class="fg-row">
+          <div class="fg">
+            <label>Expiry</label>
+            <input type="text" placeholder="MM/YY" autocomplete="off" maxlength="5" />
+          </div>
+          <div class="fg">
+            <label>CVV</label>
+            <input type="text" placeholder="123" autocomplete="off" maxlength="4" />
+          </div>
+        </div>
+        <div class="fg">
+          <label>Billing Address</label>
+          <input type="text" placeholder="123 Main St, City, State" autocomplete="off" />
+        </div>
+        <button class="btn-usps" onclick="alert('This is a Tetapux demo. USPS never asks for payment via email/text for redelivery. This is a classic smishing/phishing scam that steals credit card information.')">Pay $1.95</button>
+      </div>
+      <div class="modal-footer">
+        <a onclick="document.getElementById('modal').style.display='none'">Cancel</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("trackNum").textContent = "9400 " +
+      Math.floor(Math.random()*9000+1000) + " " +
+      Math.floor(Math.random()*9000+1000) + " " +
+      Math.floor(Math.random()*9000+1000) + " " +
+      Math.floor(Math.random()*9000+1000) + " " +
+      Math.floor(Math.random()*90+10);
+
+    const cities = ["New York, NY","Los Angeles, CA","Chicago, IL","Houston, TX","Phoenix, AZ","Philadelphia, PA","San Antonio, TX","San Diego, CA","Dallas, TX","San Jose, CA"];
+    document.getElementById("destination").textContent = cities[Math.floor(Math.random()*cities.length)];
+
+    let sec = 47*3600+59*60+59;
+    setInterval(() => {
+      if (sec > 0) sec--;
+      const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+      document.getElementById("timer").textContent = String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+    }, 1000);
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

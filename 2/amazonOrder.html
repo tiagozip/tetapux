@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Amazon order has shipped</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #eaeded;
+      font-family: "Inter", Arial, sans-serif;
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: #0f1111;
+    }
+    .wrap {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .amz-header {
+      background: #232f3e;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .amz-logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .amz-logo span { color: #ff9900; }
+    .amz-smile {
+      display: inline-block;
+      width: 40px;
+      height: 4px;
+      background: #ff9900;
+      border-radius: 0 0 10px 10px;
+      margin-top: -6px;
+      margin-left: 2px;
+    }
+    .body { padding: 24px; }
+    .body h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .body .greet { font-size: 14px; color: #565959; margin-bottom: 16px; }
+    .body p { font-size: 14px; line-height: 1.6; color: #565959; margin-bottom: 12px; }
+    .order-card {
+      border: 1px solid #d5d9d9;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .order-header {
+      background: #f0f2f2;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #565959;
+    }
+    .order-header b { color: #0f1111; }
+    .order-body {
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+    }
+    .order-img {
+      width: 80px;
+      height: 80px;
+      background: #f7f8f8;
+      border: 1px solid #d5d9d9;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+    .order-info { flex: 1; }
+    .order-name { font-size: 14px; font-weight: 500; color: #007185; margin-bottom: 4px; }
+    .order-detail { font-size: 12px; color: #565959; margin-bottom: 2px; }
+    .order-price { font-size: 16px; font-weight: 700; color: #0f1111; margin-top: 6px; }
+    .ship-info {
+      background: #f0fff4;
+      border: 1px solid #b7efc5;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .ship-info .label { font-size: 13px; font-weight: 600; color: #067d3e; margin-bottom: 6px; }
+    .ship-info .track { font-family: monospace; font-size: 13px; color: #0f1111; }
+    .ship-info .addr { font-size: 12px; color: #565959; margin-top: 8px; line-height: 1.5; }
+    .warn-box {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #92400e;
+      line-height: 1.5;
+      margin: 16px 0;
+    }
+    .btn-amz {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+      border: 1px solid #a88734;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .btn-amz:hover { background: linear-gradient(to bottom, #f5d78e, #eeb933); }
+    .btn-cancel {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #d5d9d9;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 13px;
+      color: #c7511f;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+    }
+    .divider { border: none; border-top: 1px solid #d5d9d9; margin: 16px 0; }
+    .small { font-size: 11px; color: #999; line-height: 1.5; }
+    .footer {
+      background: #f0f2f2;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      border-top: 1px solid #d5d9d9;
+    }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal { background: #fff; border-radius: 8px; max-width: 380px; width: 100%; overflow: hidden; }
+    .modal-header { background: #232f3e; padding: 14px 20px; text-align: center; }
+    .modal-body { padding: 20px; }
+    .modal-body h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .modal-body .sub { font-size: 12px; color: #565959; margin-bottom: 16px; }
+    .fg { margin-bottom: 12px; }
+    .fg label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+    .fg input { width: 100%; padding: 8px 10px; border: 1px solid #a6a6a6; border-radius: 4px; font: inherit; font-size: 13px; }
+    .fg input:focus { outline: none; border-color: #e77600; box-shadow: 0 0 0 3px rgba(228,121,17,0.2); }
+    .modal .btn-amz { font-size: 13px; padding: 10px; }
+    .modal-cancel { display: block; text-align: center; padding: 10px; font-size: 12px; color: #007185; cursor: pointer; border-top: 1px solid #d5d9d9; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="amz-header">
+      <div class="amz-logo">amazon<span>.com</span></div>
+    </div>
+    <div class="body">
+      <h2>Your order has shipped!</h2>
+      <div class="greet">Hello,</div>
+      <p>Great news — your order is on its way! You can track your package using the details below.</p>
+
+      <div class="order-card">
+        <div class="order-header">
+          <span>ORDER # <b id="orderNum">—</b></span>
+          <span>Placed <span id="orderDate">—</span></span>
+        </div>
+        <div class="order-body">
+          <div class="order-img" id="orderEmoji">📦</div>
+          <div class="order-info">
+            <div class="order-name" id="orderName">—</div>
+            <div class="order-detail">Qty: 1</div>
+            <div class="order-detail" id="orderSeller">—</div>
+            <div class="order-price" id="orderPrice">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ship-info">
+        <div class="label">Estimated delivery: <span id="deliveryDate">—</span></div>
+        <div class="track">Tracking: <span id="trackNum">—</span></div>
+        <div class="addr" id="shipAddr">—</div>
+      </div>
+
+      <div class="warn-box">
+        ⚠️ <b>Didn't order this?</b> If you did not place this order, someone may have accessed your account. Cancel this order immediately and secure your account.
+      </div>
+
+      <button class="btn-amz" onclick="openModal()">Track your package</button>
+      <button class="btn-cancel" onclick="openModal()">Cancel this order</button>
+
+      <hr class="divider">
+      <p class="small">This email was sent from a notification-only address. Please do not reply. To manage your notifications, go to Notification Preferences in Your Account.</p>
+    </div>
+    <div class="footer">
+      Amazon.com, Inc. · 410 Terry Ave. N, Seattle, WA 98109
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="amz-logo">amazon<span>.com</span></div>
+      </div>
+      <div class="modal-body">
+        <h3>Sign in to your account</h3>
+        <div class="sub">Verify your identity to manage this order.</div>
+        <div class="fg">
+          <label>Email or mobile phone number</label>
+          <input type="text" autocomplete="off" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" autocomplete="off" />
+        </div>
+        <button class="btn-amz" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Sign-In</button>
+      </div>
+      <div class="modal-cancel" onclick="document.getElementById('modal').style.display='none'">Cancel</div>
+    </div>
+  </div>
+
+  <script>
+    const items = [
+      { name: "Apple MacBook Pro 16\" M4 Pro — Space Black", emoji: "💻", price: "$2,499.00", seller: "Sold by: Amazon.com" },
+      { name: "Sony PlayStation 5 Pro Console", emoji: "🎮", price: "$699.99", seller: "Sold by: Amazon.com" },
+      { name: "iPhone 16 Pro Max 256GB — Natural Titanium", emoji: "📱", price: "$1,199.00", seller: "Sold by: Apple Store" },
+      { name: "Samsung 65\" Neo QLED 8K Smart TV", emoji: "📺", price: "$3,299.99", seller: "Sold by: Samsung Direct" },
+      { name: "DJI Mavic 4 Pro Drone Combo", emoji: "🚁", price: "$2,199.00", seller: "Sold by: DJI Official" },
+    ];
+    const item = items[Math.floor(Math.random()*items.length)];
+    document.getElementById("orderName").textContent = item.name;
+    document.getElementById("orderEmoji").textContent = item.emoji;
+    document.getElementById("orderPrice").textContent = item.price;
+    document.getElementById("orderSeller").textContent = item.seller;
+
+    document.getElementById("orderNum").textContent = "114-" +
+      Math.floor(Math.random()*9000000+1000000) + "-" + Math.floor(Math.random()*9000000+1000000);
+
+    const placed = new Date(); placed.setDate(placed.getDate() - 1);
+    document.getElementById("orderDate").textContent = placed.toLocaleDateString("en-US",{month:"short",day:"numeric"});
+
+    const delivery = new Date(); delivery.setDate(delivery.getDate() + Math.floor(Math.random()*3+2));
+    document.getElementById("deliveryDate").textContent = delivery.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+
+    document.getElementById("trackNum").textContent = "TBA" + Math.floor(Math.random()*900000000+100000000);
+
+    const streets = ["123 Main St","456 Oak Ave","789 Elm Dr","321 Pine Rd","654 Maple Ln"];
+    const cities = ["Seattle, WA 98101","Portland, OR 97201","San Francisco, CA 94102","Los Angeles, CA 90001","Austin, TX 78701"];
+    document.getElementById("shipAddr").textContent = "Shipping to: " +
+      streets[Math.floor(Math.random()*streets.length)] + ", " +
+      cities[Math.floor(Math.random()*cities.length)];
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

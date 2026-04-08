@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wake up...</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #00ff41;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 16px;
+      cursor: none;
+    }
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.25;
+    }
+    #terminal {
+      position: relative;
+      z-index: 1;
+      padding: 40px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 700px;
+    }
+    .line {
+      min-height: 1.5em;
+      white-space: pre-wrap;
+      opacity: 0;
+      animation: fadeIn 0.3s forwards;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background: #00ff41;
+      animation: blink 0.6s step-end infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .red { color: #ff3333; }
+    .dim { color: #005500; }
+    .white { color: #ffffff; }
+    .choice {
+      display: inline-block;
+      padding: 8px 20px;
+      margin: 8px 12px 8px 0;
+      border: 1px solid #00ff41;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0;
+      animation: fadeIn 0.5s 0.5s forwards;
+    }
+    .choice:hover { background: #00ff41; color: #000; }
+    .choice.red-pill { border-color: #ff3333; color: #ff3333; }
+    .choice.red-pill:hover { background: #ff3333; color: #000; }
+    .choice.blue-pill { border-color: #4488ff; color: #4488ff; }
+    .choice.blue-pill:hover { background: #4488ff; color: #000; }
+    .glitch {
+      animation: glitch 0.3s linear infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 #ff0000, -2px 0 #0000ff; }
+      25% { text-shadow: -2px 0 #ff0000, 2px 0 #0000ff; }
+      50% { text-shadow: 2px 2px #ff0000, -2px -2px #0000ff; }
+      75% { text-shadow: -2px 2px #ff0000, 2px -2px #0000ff; }
+      100% { text-shadow: 2px 0 #ff0000, -2px 0 #0000ff; }
+    }
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    #phoneRing {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 80px;
+      z-index: 10;
+      display: none;
+      animation: ring 0.15s infinite alternate;
+    }
+    @keyframes ring { from { transform: translate(-50%, -50%) rotate(-8deg); } to { transform: translate(-50%, -50%) rotate(8deg); } }
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+      pointer-events: none;
+      z-index: 100;
+    }
+    @media (max-width: 600px) {
+      html, body { font-size: 13px; }
+      #terminal { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="rain"></canvas>
+  <div class="scanlines"></div>
+  <div id="phoneRing">📞</div>
+  <div id="terminal"></div>
+
+  <script>
+    const c = document.getElementById("rain");
+    const ctx = c.getContext("2d");
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+    const chars = "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ0123456789ABCDEF";
+    const fontSize = 14;
+    const columns = Math.floor(c.width / fontSize);
+    const drops = Array.from({length: columns}, () => Math.random() * -100);
+
+    function drawRain() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillStyle = "#00ff41";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillStyle = Math.random() > 0.98 ? "#fff" : "#00ff41";
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > c.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+      requestAnimationFrame(drawRain);
+    }
+    drawRain();
+
+    window.addEventListener("resize", () => { c.width = window.innerWidth; c.height = window.innerHeight; });
+
+    const T = document.getElementById("terminal");
+
+    function addLine(html, cls) {
+      const div = document.createElement("div");
+      div.className = "line" + (cls ? " " + cls : "");
+      div.innerHTML = html;
+      T.appendChild(div);
+      if (T.children.length > 30) T.children[0].remove();
+    }
+
+    function typeText(text, cls, speed) {
+      return new Promise(resolve => {
+        const div = document.createElement("div");
+        div.className = "line" + (cls ? " " + cls : "");
+        div.style.opacity = "1";
+        T.appendChild(div);
+        let i = 0;
+        const base = speed || 50;
+        function next() {
+          if (i < text.length) {
+            div.textContent += text[i];
+            i++;
+            const delay = text[i-1] === '.' ? base * 6 : text[i-1] === ',' ? base * 3 : base + Math.random() * base * 0.5;
+            setTimeout(next, delay);
+          } else resolve();
+        }
+        next();
+      });
+    }
+
+    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    function showCursor() {
+      const s = document.createElement("span");
+      s.className = "cursor";
+      T.appendChild(s);
+    }
+
+    function clearTerminal() {
+      T.innerHTML = "";
+    }
+
+    function screenFlash() {
+      return new Promise(resolve => {
+        document.body.style.background = "#00ff41";
+        setTimeout(() => { document.body.style.background = "#000"; resolve(); }, 80);
+      });
+    }
+
+    async function phase1() {
+      await wait(2000);
+      await typeText("Wake up, Neo...", "", 80);
+      await wait(3000);
+      clearTerminal();
+      await wait(1000);
+      await typeText("The Matrix has you...", "", 70);
+      await wait(3000);
+      clearTerminal();
+      await wait(1000);
+      await typeText("Follow the white rabbit.", "", 60);
+      await wait(2500);
+      clearTerminal();
+      await wait(1500);
+      await typeText("Knock, knock, Neo.", "", 80);
+      await wait(1000);
+
+      const phone = document.getElementById("phoneRing");
+      phone.style.display = "block";
+      await wait(3000);
+      phone.style.display = "none";
+      clearTerminal();
+      await wait(1000);
+
+      await phase2();
+    }
+
+    async function phase2() {
+      await typeText("You answered.", "", 60);
+      await wait(1500);
+      await typeText("", "");
+      await typeText("Do you want to know what the Matrix is?", "", 50);
+      await wait(1000);
+
+      const choiceDiv = document.createElement("div");
+      choiceDiv.className = "line";
+      choiceDiv.style.opacity = "1";
+      choiceDiv.innerHTML = `
+        <span class="choice red-pill" onclick="chooseRed()">Take the red pill</span>
+        <span class="choice blue-pill" onclick="chooseBlue()">Take the blue pill</span>
+      `;
+      T.appendChild(choiceDiv);
+    }
+
+    window.chooseBlue = async function() {
+      clearTerminal();
+      await typeText("The story ends.", "dim", 60);
+      await wait(1500);
+      await typeText("You wake up in your bed and believe whatever you want to believe.", "dim", 40);
+      await wait(2000);
+      await typeText("", "");
+      await typeText("Goodbye.", "dim", 100);
+      await wait(2000);
+      document.body.style.transition = "opacity 3s";
+      document.body.style.opacity = "0";
+    };
+
+    window.chooseRed = async function() {
+      clearTerminal();
+      await screenFlash();
+      await wait(500);
+
+      await typeText("You chose to see how deep the rabbit hole goes.", "", 40);
+      await wait(1500);
+      addLine("", "");
+      await typeText("Initiating system scan...", "dim", 30);
+      await wait(800);
+
+      const data = [
+        `Platform    : ${navigator.platform}`,
+        `User-Agent  : ${navigator.userAgent.substring(0, 60)}...`,
+        `Screen      : ${screen.width}x${screen.height}`,
+        `Language    : ${navigator.language}`,
+        `Timezone    : ${Intl.DateTimeFormat().resolvedOptions().timeZone}`,
+        `Cores       : ${navigator.hardwareConcurrency || "?"}`,
+        `Online      : ${navigator.onLine}`,
+      ];
+
+      addLine("", "");
+      addLine("╔══════════════════════════════════════════╗", "dim");
+      addLine("║  YOUR DIGITAL FINGERPRINT                ║", "dim");
+      addLine("╚══════════════════════════════════════════╝", "dim");
+
+      for (const line of data) {
+        await wait(200);
+        addLine("  " + line, "");
+      }
+
+      await wait(1500);
+      addLine("", "");
+      await typeText("We see you.", "red", 100);
+      await wait(800);
+      await typeText("We have always seen you.", "red", 60);
+      await wait(1500);
+
+      addLine("", "");
+      await typeText("There is no spoon.", "big", 80);
+      await wait(2000);
+
+      for (let i = 0; i < 3; i++) {
+        await screenFlash();
+        await wait(150);
+      }
+
+      clearTerminal();
+      await wait(1000);
+
+      const asciiRabbit = [
+        '   (\\(\\',
+        '   ( -.-)',
+        '   o_(")(") ',
+      ];
+      for (const line of asciiRabbit) addLine(line, "white");
+      await wait(800);
+      addLine("", "");
+      await typeText("Follow me.", "white", 100);
+      showCursor();
+    };
+
+    phase1();
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

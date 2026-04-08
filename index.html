@@ -1,416 +1,447 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <title>Tetapux</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <title>Tetapux</title>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: ui-sans-serif, -apple-system, system-ui, "Segoe UI",
-        "Geist Sans", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif,
-        Helvetica, "Apple Color Emoji", Arial, "Segoe UI Emoji", "Segoe UI Symbol";
-      margin: 0 auto;
-      max-width: 940px;
-      padding: 20px 16px 40px;
-      background-color: #fff;
-      color: #121212;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 32px 0 24px;
-    }
-
-    .hero h1 {
-      font-size: 32px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
-      margin-bottom: 6px;
-    }
-
-    .hero p {
-      font-size: 14px;
-      color: #666;
-      max-width: 420px;
-      margin: 0 auto;
-      line-height: 1.5;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .search {
-      flex: 1;
-      min-width: 200px;
-      padding: 11px 16px 11px 38px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      background-color: rgba(0, 0, 0, 0.025);
-      border-radius: 10px;
-      font: inherit;
-      font-size: 14px;
-      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+");
-      background-position: 10px 50%;
-      background-repeat: no-repeat;
-      background-size: 18px;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-
-    .search:focus {
-      outline: none;
-      border-color: rgba(0, 0, 0, 0.2);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);
-    }
-
-    .search::placeholder {
-      color: rgba(0, 0, 0, 0.45);
-    }
-
-    .random-btn {
-      padding: 11px 18px;
-      background: #121212;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, transform 0.1s;
-    }
-
-    .random-btn:hover {
-      background: #333;
-    }
-
-    .random-btn:active {
-      transform: scale(0.97);
-    }
-
-    .pages {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .pages h2 {
-      font-size: 13px;
-      margin: 0;
-      margin-top: 20px;
-      margin-bottom: 4px;
-      font-weight: 500;
-      grid-column: 1 / -1;
-    }
-
-    .pages a {
-      color: #121212;
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      background-color: rgba(0, 0, 0, 0.02);
-      border-radius: 10px;
-      transition: all 0.12s;
-      text-decoration: none;
-      font-size: 14px;
-      line-height: 1.3;
-    }
-
-    .pages a:hover {
-      background-color: rgba(0, 0, 0, 0.07);
-      border-color: rgba(0, 0, 0, 0.12);
-      transform: translateY(-1px);
-    }
-
-    .pages a:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #121212;
-    }
-
-    .cpa {
-      display: flex;
-    }
-
-    tetapux-ads {
-      max-width: 590px;
-      margin: 0 auto;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 32px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .footer a {
-      color: #666;
-      text-decoration: none;
-      font-size: 13px;
-      margin: 0 8px;
-    }
-
-    .footer a:hover {
-      color: #121212;
-    }
-
-    @media (max-width: 600px) {
-      .pages {
-        grid-template-columns: 1fr;
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
       body {
-        max-width: 450px;
+        font-family:
+          ui-sans-serif,
+          -apple-system,
+          system-ui,
+          "Segoe UI",
+          "Geist Sans",
+          Roboto,
+          Ubuntu,
+          Cantarell,
+          "Noto Sans",
+          sans-serif,
+          Helvetica,
+          "Apple Color Emoji",
+          Arial,
+          "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        margin: 0 auto;
+        max-width: 940px;
+        padding: 20px 16px 40px;
+        background-color: #fff;
+        color: #121212;
+      }
+
+      .hero {
+        text-align: center;
+        padding: 32px 0 24px;
       }
 
       .hero h1 {
-        font-size: 26px;
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        margin-bottom: 6px;
+      }
+
+      .hero p {
+        font-size: 14px;
+        color: #666;
+        max-width: 420px;
+        margin: 0 auto;
+        line-height: 1.5;
       }
 
       .toolbar {
-        flex-direction: column;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
       }
 
       .search {
-        width: 100%;
+        flex: 1;
+        min-width: 200px;
+        padding: 11px 16px 11px 38px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.025);
+        border-radius: 10px;
+        font: inherit;
+        font-size: 14px;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+");
+        background-position: 10px 50%;
+        background-repeat: no-repeat;
+        background-size: 18px;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <div class="hero">
-    <h1>Tetapux</h1>
-    <p>A collection of <span class="page-count" id="pageCount"></span> fake scam, phishing, and malware pages for educational purposes and security awareness.</p>
-  </div>
+      .search:focus {
+        outline: none;
+        border-color: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.8);
+      }
 
-  <div class="toolbar">
-    <input type="text" class="search" placeholder="Search pages..." />
-    <button class="random-btn" onclick="goRandom()">Random page</button>
-    
-  </div>
+      .search::placeholder {
+        color: rgba(0, 0, 0, 0.45);
+      }
 
-  <div class="pages">
-    <h2>Fake CAPTCHAS (Clickfix)</h2>
-    <a href="/tetapux/heta/gemini-refake.html">
-      Fake Turnstile (windows, macOS and linux)
-    </a>
-    <a href="/tetapux/pages/winr-captcha.html">Fake reCAPTCHA (run dialog)</a>
-    <a href="/tetapux/heta/heta-challenge.html">
-      Fake Turnstile 2 (run dialog)
-    </a>
-    <a href="/tetapux/red/premium-colors/bst.html">
-      Fake Cookie modal / BSOD (run dialog)
-    </a>
-    <a href="/tetapux/nnm-ae/blogl.html">Security verification CAPTCHA</a>
-    <a href="/tetapux/red/winSec-o.html">Windows Security fake CAPTCHA</a>
-    <a href="/tetapux/thousands/thusand/catastrophic.html">System lockdown</a>
-    <a href="/tetapux/thousands/confirm-not-robot-1000.html">
-      Simple reCAPTCHA clone
-    </a>
-    <a href="/tetapux/pages/human.html">Notifications prompt CAPTCHA</a>
-    <a href="/tetapux/0/lowVerify.html">DDOS-Guard CAPTCHA</a>
-    <a href="/tetapux/0/lk/Vercelity.html">Vercel Security Checkpoint</a>
-    <a href="/tetapux/thousands/thusand/trkVerify.html">BotGuard</a>
-    <a href="/tetapux/2/teamsCodec.html">Teams meeting codec (clickfix)</a>
-    <a href="/tetapux/2/winUpdate.html">Windows Update stuck (clickfix)</a>
+      .random-btn {
+        padding: 11px 18px;
+        background: #121212;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
 
-    <h2>Phishing</h2>
-    <a href="/tetapux/pages/facebook.html">Facebook</a>
-    <a href="/tetapux/pages/disconitro.html">Discord Nitro</a>
-    <a href="/tetapux/thousands/pvdgy-pangv1n.html">OpenSea</a>
-    <a href="/tetapux/pages/UnlockX.html">Twitter Content Appeal</a>
-    <a href="/tetapux/0/xmail.html">Twitter Underage</a>
-    <a href="/tetapux/1/googVerify.html">Google Meet</a>
-    <a href="/tetapux/1/threadNotification.html">Apple</a>
-    <a href="/tetapux/0/npm.html">NPM</a>
-    <a href="/tetapux/1/xleak.html">Twitter data breach</a>
-    <a href="/tetapux/0/protonVerifiers.html">Proton data breach</a>
-    <a href="/tetapux/0/lk/oaiReset.html">OpenAI 2FA update</a>
-    <a href="/tetapux/0/lk/discoUpd.html">Discord 2FA update</a>
-    <a href="/tetapux/0/lk/Protons.html">Proton login page</a>
-    <a href="/tetapux/0/Gddy.HTML">GoDaddy phish</a>
-    <a href="/tetapux/heta/inboxes.html">Enclosed Important Document</a>
-    <a href="/tetapux/heta/xDMCA.html">X/Twitter DMCA notice</a>
-    <a href="/tetapux/2/spotifyBreach.html">Spotify unusual activity</a>
-    <a href="/tetapux/2/icloudFull.html">iCloud storage full</a>
-    <a href="/tetapux/2/wifiPortal.html">Airport WiFi captive portal</a>
-    <a href="/tetapux/2/instagramVerify.html">Instagram verification scam</a>
-    <a href="/tetapux/2/zoomDeactivation.html">Zoom account deactivation</a>
+      .random-btn:hover {
+        background: #333;
+      }
 
-    <h2>FileFix</h2>
-    <a href="/tetapux/0/tetaDrive.html">OneDrive sharing</a>
+      .random-btn:active {
+        transform: scale(0.97);
+      }
 
-    <h2>Scareware</h2>
-    <a href="/tetapux/ak/severeSetting.html">Critical Security Alert</a>
-    <a href="/tetapux/1/googSecurity.html">Google Security Warning</a>
-    <a href="/tetapux/pages/underattack.html">Under attack</a>
-    <a href="/tetapux/nnm-ae/1000/gb20-aderror.html">
-      Fake McAfee Security Scan
-    </a>
-    <a href="/tetapux/pages/infected.html">Your device has been infected</a>
-    <a href="/tetapux/pages/popups.html">Fake virus popups</a>
-    <a href="/tetapux/pages/fake-virus.html">Windows Defender virus</a>
-    <a href="/tetapux/ak/pcb.html">Your device has been infected</a>
-    <a href="/tetapux/red/updateOfficial.html">Fake update error</a>
-    <a href="/tetapux/red/premium-colors/fupd.html">Fake update error 2</a>
-    <a href="/tetapux/thousands/thusand/reactor-meltdown.html">
-      Reactor Meltdown (cool)
-    </a>
-    <a href="/tetapux/heta/system-containment.html">
-      System containment evaded
-    </a>
-    <a href="/tetapux/1/tetraSec.html">Tetrasec dashboard</a>
-    <a href="/tetapux/thousands/systIntg.html">System Integrity Check</a>
-    <a href="/tetapux/0/ransomware2.html">Wannacry Ransomware Note</a>
-    <a href="/tetapux/0/ransomwarenote.html">Skid Ransomware Note</a>
-    <a href="/tetapux/0/lk/kaliloading.html">Getting h4xx3d by stingray</a>
-    <a href="/tetapux/0/lk/malwaresalert.html">MALWARES</a>
-    <a href="/tetapux/heta/infection-apple.html">iOS Infection Detected</a>
-    <a href="/tetapux/heta/macos-infect.html">MacOS Virus</a>
-    <a href="/tetapux/2/virisalertis.html">System Critical Failure</a>
-    <a href="/tetapux/1/encrypt0r.html">Your files have been encrypted</a>
-    <a href="/tetapux/red/premium-colors/infitltratedransom.html">Your digital life is now mine</a>
-    <a href="/tetapux/nnm-ae/randsomis.html">All files encrypted</a>
-    <a href="/tetapux/red/encrypt0rh4xx.html">Your files have been encrypted and uploaded to our dark web servers.</a>
-    <a href="/tetapux/nnm-ae/179Locks.html">Watching blocked</a>
-    <a href="/tetapux/2/bsod.html">Windows BSOD (fullscreen)</a>
-    <a href="/tetapux/2/hackerTerminal.html">Live hacking terminal</a>
-    <a href="/tetapux/2/prismDash.html">NSA PRISM surveillance dashboard</a>
-    <a href="/tetapux/2/idfSurveillance.html">Israel/IDF Intelligence terminal</a>
-    <a href="/tetapux/2/pegasusAlert.html">Pegasus spyware detected</a>
-    <a href="/tetapux/2/ispViolation.html">ISP bandwidth violation</a>
+      .pages {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
 
-    <h2>Ads</h2>
-    <a href="/tetapux/pages/adattack.html">
-      Brand ads with tagline (flashing lights)
-    </a>
-    <a href="/tetapux/thousands/thusand/adpc.html">Adpocalypse by Gemini</a>
-    <a href="/tetapux/0/lk/tetapuxadsspam.html">alot of tetapux ads</a>
-    <a href="/tetapux/ak/superall.html">Notifications prompt "Allow"</a>
-    <a href="/tetapux/red/premium-colors/GXInstall.html">Install Opera GX</a>
+      .pages h2 {
+        font-size: 13px;
+        margin: 0;
+        margin-top: 20px;
+        margin-bottom: 4px;
+        font-weight: 500;
+        grid-column: 1 / -1;
+      }
 
-    <h2>Promoting malware</h2>
-    <a href="/tetapux/pages/apkmod.html">Google Wallet APK mod</a>
-    <a href="/tetapux/pages/filenow.html">Dowload File Now Free</a>
-    <a href="/tetapux/pages/robhack.html">Roblox Executer Mod APK</a>
-    <a href="/tetapux/pages/freeram.html">Download Free RAM</a>
-    <a href="/tetapux/pages/update-chrome.html">Update Chrome</a>
-    <a href="/tetapux/pages/update-chrome2.html">Update Chrome 2</a>
-    <a href="/tetapux/pages/updchrome.html">Update chrome 3</a>
-    <a href="/tetapux/0/lk/masterAdblock.html">Master Adblock</a>
-    <a href="/tetapux/red/premium-colors/ptfile.html">File ready</a>
+      .pages a {
+        color: #121212;
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        background-color: rgba(0, 0, 0, 0.02);
+        border-radius: 10px;
+        transition: all 0.12s;
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 1.3;
+      }
 
-    <h2>Fake giveaways</h2>
-    <a href="/tetapux/0/lk/acRobloxify.html">MrBeast Mega Robux Giveaway</a>
-    <a href="/tetapux/pages/raffle.html">Free iPhone 16</a>
-    <a href="/tetapux/red/nitro-raffle.html">Discord Nitro Raffle</a>
-    <a href="/tetapux/0/rasp-II.html">Raspberry Pi 16GB Giveaway</a>
-    <a href="/tetapux/red/tetrapux_labs.html">Q.E.S.D. Initiative v1.1</a>
-    <a href="/tetapux/1/congrat.html">Congrats Internet User!</a>
-    <a href="/tetapux/0/ultiContes.html">Ultimate Contest</a>
-    <a href="/tetapux/0/lk/emuskGivesaway.html">Elon Musk BTC Giveaway</a>
-    <a href="/tetapux/0/lk/ethLedgerDoubling.html">
-      Quantum Ledger Giveaways
-    </a>
-    <a href="/tetapux/0/lk/cosmicForgeGives.html">Cosmic forge giveaway</a>
-    <a href="/tetapux/1/googleBillions.html">The 5 billionth search</a>
-    <a href="/tetapux/0/lk/claimfreebox.html">Claim freebox (filled with tetapux ads)</a>
-    <a href="/tetapux/red/winspric.html">Millionth visitor</a>
-    <a href="/tetapux/red/PROBUKROBUX.html">BukSuper claims</a>
-    <a href="/tetapux/2/solAirdrop.html">Solana airdrop checker</a>
-    <a href="/tetapux/2/steamDrop.html">Steam Summer Drop free games</a>
+      .pages a:hover {
+        background-color: rgba(0, 0, 0, 0.07);
+        border-color: rgba(0, 0, 0, 0.12);
+        transform: translateY(-1px);
+      }
 
-    <h2>Happy phone</h2>
-    <a href="/tetapux/pages/happyphone.html">Make phone happy</a>
-    <a href="/tetapux/pages/makeithappy.html">
-      Will you make your phone happy?
-    </a>
-    <a href="/tetapux/nnm-ae/happiness.html">Happiness update fail</a>
-    <a href="/tetapux/red/premium-colors/happiness-recovery.html">
-      Happiness recovery
-    </a>
+      .pages a:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #121212;
+      }
 
-    <h2>Other</h2>
-    <a href="/tetapux/thousands/thusand/sysc.html">
-      System Core Maintenance Utility v7.&pi;
-    </a>
-    <a href="/tetapux/thousands/download-file.html">
-      Download file with phone
-    </a>
-    <a href="/tetapux/pages/allowvideo.html">Press "Allow" to watch video</a>
-    <a href="/tetapux/thousands/coinmintcrypto-2025-localization.html">
-      Crypto coin mint
-    </a>
-    <a href="/tetapux/red/live-tv.html">Premium IPTV</a>
-    <a href="/tetapux/nnm-ae/1000/windows-defender-iax.html">
-      Free Windows Defender Pro
-    </a>
-    <a href="/tetapux/red/freestoragedownload-id192.html">
-      Free storage guide
-    </a>
-    <a href="/tetapux/pages/access-content.html">Incredible VR content</a>
-    <a href="/tetapux/red/premium-colors/bun.html">Bun - Many Such Cases</a>
-    <a href="/tetapux/red/premium-colors/vpn-subscripti.html">UltraV VPN</a>
-    <a href="/tetapux/red/premium-colors/search/search.html">HetaSearch</a>
-    <a href="/tetapux/red/premium-colors/adblock.html">Adblock Download</a>
-    <a href="/tetapux/0/lk/claimvpn.html">Free vpn</a>
-    <a href="/tetapux/2/darkmarket.html">HydraMarket (darknet market)</a>
+      .cpa {
+        display: flex;
+      }
 
-    <h2>Tetapux</h2>
-    <a href="/tetapux/about.html">What's Tetapux?</a>
-    <a href="/tetapux/ads/index.html">Try Tetapux Ads &rarr;</a>
-  </div>
+      tetapux-ads {
+        max-width: 590px;
+        margin: 0 auto;
+      }
 
-  <tetapux-ads width="100%" style="margin-top: 24px; display: block"></tetapux-ads>
+      .footer {
+        text-align: center;
+        margin-top: 32px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+      }
 
-  <div class="footer">
-    <a href="/tetapux/about.html">About</a>
-    <a href="/tetapux/ads/index.html">Ads</a>
-  </div>
+      .footer a {
+        color: #666;
+        text-decoration: none;
+        font-size: 13px;
+        margin: 0 8px;
+      }
 
-  <script>
-    const allLinks = Array.from(document.querySelectorAll(".pages a"));
-    const pageLinks = allLinks.filter(a => !a.closest("h2") && a.href.includes(".html") && !a.textContent.includes("Tetapux"));
+      .footer a:hover {
+        color: #121212;
+      }
 
-    document.getElementById("pageCount").textContent = pageLinks.length;
+      @media (max-width: 600px) {
+        .pages {
+          grid-template-columns: 1fr;
+        }
 
-    if (new URLSearchParams(location.search).has("random")) {
-      const link = pageLinks[Math.floor(Math.random() * pageLinks.length)];
-      if (link) location.href = link.getAttribute("href");
-    }
+        body {
+          max-width: 450px;
+        }
 
-    function goRandom() {
-      const link = pageLinks[Math.floor(Math.random() * pageLinks.length)];
-      if (link) location.href = link.getAttribute("href");
-    }
+        .hero h1 {
+          font-size: 26px;
+        }
 
-    document.querySelector(".search").addEventListener("input", () => {
-      const input = document.querySelector(".search").value.toLowerCase();
-      allLinks.forEach((link) => {
-        link.style.display = link.textContent.toLowerCase().includes(input) ? "" : "none";
+        .toolbar {
+          flex-direction: column;
+        }
+
+        .search {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="hero">
+      <h1>Tetapux</h1>
+      <p>
+        A collection of <span class="page-count" id="pageCount"></span> fake scam, phishing, and
+        malware pages for educational purposes and security awareness.
+      </p>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" class="search" placeholder="Search pages..." />
+      <button class="random-btn" onclick="goRandom()">Random page</button>
+    </div>
+
+    <div class="pages">
+      <h2>Fake CAPTCHAS (Clickfix)</h2>
+      <a href="/tetapux/heta/gemini-refake.html"> Fake Turnstile (windows, macOS and linux) </a>
+      <a href="/tetapux/pages/winr-captcha.html">Fake reCAPTCHA (run dialog)</a>
+      <a href="/tetapux/heta/heta-challenge.html"> Fake Turnstile 2 (run dialog) </a>
+      <a href="/tetapux/red/premium-colors/bst.html"> Fake Cookie modal / BSOD (run dialog) </a>
+      <a href="/tetapux/nnm-ae/blogl.html">Security verification CAPTCHA</a>
+      <a href="/tetapux/red/winSec-o.html">Windows Security fake CAPTCHA</a>
+      <a href="/tetapux/thousands/thusand/catastrophic.html">System lockdown</a>
+      <a href="/tetapux/thousands/confirm-not-robot-1000.html"> Simple reCAPTCHA clone </a>
+      <a href="/tetapux/pages/human.html">Notifications prompt CAPTCHA</a>
+      <a href="/tetapux/2/allowVideo2.html">Video player notification bait</a>
+      <a href="/tetapux/2/allowAge.html">Age verification notification bait</a>
+      <a href="/tetapux/2/allowCookie.html">Cookie consent notification bait</a>
+      <a href="/tetapux/2/allowRobot.html">Cloudflare check notification bait</a>
+      <a href="/tetapux/2/allowDownload.html">Download notification bait</a>
+      <a href="/tetapux/0/lowVerify.html">DDOS-Guard CAPTCHA</a>
+      <a href="/tetapux/0/lk/Vercelity.html">Vercel Security Checkpoint</a>
+      <a href="/tetapux/thousands/thusand/trkVerify.html">BotGuard</a>
+      <a href="/tetapux/2/teamsCodec.html">Teams meeting codec (clickfix)</a>
+      <a href="/tetapux/2/winUpdate.html">Windows Update stuck (clickfix)</a>
+      <a href="/tetapux/2/windowsCodec.html">Windows Media Player codec (clickfix)</a>
+
+      <h2>Phishing</h2>
+      <a href="/tetapux/pages/facebook.html">Facebook</a>
+      <a href="/tetapux/pages/disconitro.html">Discord Nitro</a>
+      <a href="/tetapux/thousands/pvdgy-pangv1n.html">OpenSea</a>
+      <a href="/tetapux/pages/UnlockX.html">Twitter Content Appeal</a>
+      <a href="/tetapux/0/xmail.html">Twitter Underage</a>
+      <a href="/tetapux/1/googVerify.html">Google Meet</a>
+      <a href="/tetapux/1/threadNotification.html">Apple</a>
+      <a href="/tetapux/0/npm.html">NPM</a>
+      <a href="/tetapux/1/xleak.html">Twitter data breach</a>
+      <a href="/tetapux/0/protonVerifiers.html">Proton data breach</a>
+      <a href="/tetapux/0/lk/oaiReset.html">OpenAI 2FA update</a>
+      <a href="/tetapux/0/lk/discoUpd.html">Discord 2FA update</a>
+      <a href="/tetapux/0/lk/Protons.html">Proton login page</a>
+      <a href="/tetapux/0/Gddy.HTML">GoDaddy phish</a>
+      <a href="/tetapux/heta/inboxes.html">Enclosed Important Document</a>
+      <a href="/tetapux/heta/xDMCA.html">X/Twitter DMCA notice</a>
+      <a href="/tetapux/2/spotifyBreach.html">Spotify unusual activity</a>
+      <a href="/tetapux/2/icloudFull.html">iCloud storage full</a>
+      <a href="/tetapux/2/wifiPortal.html">Airport WiFi captive portal</a>
+      <a href="/tetapux/2/instagramVerify.html">Instagram verification scam</a>
+      <a href="/tetapux/2/zoomDeactivation.html">Zoom account deactivation</a>
+      <a href="/tetapux/2/githubSecurity.html">GitHub unusual sign-in</a>
+      <a href="/tetapux/2/paypalDispute.html">PayPal unauthorized transaction</a>
+      <a href="/tetapux/2/amazonOrder.html">Amazon order you didn't place</a>
+      <a href="/tetapux/2/slackExport.html">Slack workspace data export</a>
+      <a href="/tetapux/2/linkedinRecruiter.html">LinkedIn recruiter message</a>
+      <a href="/tetapux/2/netflixSuspended.html">Netflix account suspended</a>
+      <a href="/tetapux/2/googleDocsView.html">Google Drive shared document</a>
+      <a href="/tetapux/2/dropboxShare.html">Dropbox shared file</a>
+      <a href="/tetapux/2/packageDelivery.html">USPS delivery failed (smishing)</a>
+
+      <h2>FileFix</h2>
+      <a href="/tetapux/0/tetaDrive.html">OneDrive sharing</a>
+
+      <h2>Scareware</h2>
+      <a href="/tetapux/ak/severeSetting.html">Critical Security Alert</a>
+      <a href="/tetapux/1/googSecurity.html">Google Security Warning</a>
+      <a href="/tetapux/pages/underattack.html">Under attack</a>
+      <a href="/tetapux/nnm-ae/1000/gb20-aderror.html"> Fake McAfee Security Scan </a>
+      <a href="/tetapux/pages/infected.html">Your device has been infected</a>
+      <a href="/tetapux/pages/popups.html">Fake virus popups</a>
+      <a href="/tetapux/pages/fake-virus.html">Windows Defender virus</a>
+      <a href="/tetapux/ak/pcb.html">Your device has been infected</a>
+      <a href="/tetapux/red/updateOfficial.html">Fake update error</a>
+      <a href="/tetapux/red/premium-colors/fupd.html">Fake update error 2</a>
+      <a href="/tetapux/thousands/thusand/reactor-meltdown.html"> Reactor Meltdown (cool) </a>
+      <a href="/tetapux/heta/system-containment.html"> System containment evaded </a>
+      <a href="/tetapux/1/tetraSec.html">Tetrasec dashboard</a>
+      <a href="/tetapux/thousands/systIntg.html">System Integrity Check</a>
+      <a href="/tetapux/0/ransomware2.html">Wannacry Ransomware Note</a>
+      <a href="/tetapux/0/ransomwarenote.html">Skid Ransomware Note</a>
+      <a href="/tetapux/0/lk/kaliloading.html">Getting h4xx3d by stingray</a>
+      <a href="/tetapux/0/lk/malwaresalert.html">MALWARES</a>
+      <a href="/tetapux/heta/infection-apple.html">iOS Infection Detected</a>
+      <a href="/tetapux/heta/macos-infect.html">MacOS Virus</a>
+      <a href="/tetapux/2/virisalertis.html">System Critical Failure</a>
+      <a href="/tetapux/1/encrypt0r.html">Your files have been encrypted</a>
+      <a href="/tetapux/red/premium-colors/infitltratedransom.html"
+        >Your digital life is now mine</a
+      >
+      <a href="/tetapux/nnm-ae/randsomis.html">All files encrypted</a>
+      <a href="/tetapux/red/encrypt0rh4xx.html"
+        >Your files have been encrypted and uploaded to our dark web servers.</a
+      >
+      <a href="/tetapux/nnm-ae/179Locks.html">Watching blocked</a>
+      <a href="/tetapux/2/bsod.html">Windows BSOD (fullscreen)</a>
+      <a href="/tetapux/2/hackerTerminal.html">Live hacking terminal</a>
+      <a href="/tetapux/2/prismDash.html">NSA PRISM surveillance dashboard</a>
+      <a href="/tetapux/2/idfSurveillance.html">Israel/IDF Intelligence terminal</a>
+      <a href="/tetapux/2/pegasusAlert.html">Pegasus spyware detected</a>
+      <a href="/tetapux/2/ispViolation.html">ISP bandwidth violation</a>
+      <a href="/tetapux/2/techSupport.html">Tech support scam popup</a>
+      <a href="/tetapux/2/fbiWarning.html">FBI device lockdown scam</a>
+      <a href="/tetapux/2/deepfakeAlert.html">DeepTrace deepfake match alert</a>
+      <a href="/tetapux/2/quantumBreach.html">Q-Day global crypto failure</a>
+      <a href="/tetapux/2/nuclearLaunch.html">NORAD nuclear launch detected</a>
+      <a href="/tetapux/2/asteroidImpact.html">NASA asteroid impact warning</a>
+      <a href="/tetapux/2/ebs.html">Emergency Broadcast System</a>
+      <a href="/tetapux/2/winXP.html">Windows XP error cascade</a>
+      <a href="/tetapux/2/aiSentient.html">AI chatbot goes sentient</a>
+      <a href="/tetapux/2/walletDrain.html">MetaMask wallet being drained</a>
+      <a href="/tetapux/2/matrixRecruit.html">Matrix recruitment terminal</a>
+      <a href="/tetapux/2/area51Docs.html">Classified Area 51 document</a>
+
+      <h2>Ads</h2>
+      <a href="/tetapux/pages/adattack.html"> Brand ads with tagline (flashing lights) </a>
+      <a href="/tetapux/thousands/thusand/adpc.html">Adpocalypse by Gemini</a>
+      <a href="/tetapux/0/lk/tetapuxadsspam.html">alot of tetapux ads</a>
+      <a href="/tetapux/ak/superall.html">Notifications prompt "Allow"</a>
+      <a href="/tetapux/red/premium-colors/GXInstall.html">Install Opera GX</a>
+      <a href="/tetapux/nnm-ae/SuperRobix.html">Free robux generator</a>
+      <a href="/tetapux/nnm-ae/buxrewards.html">Robux reward center</a>
+
+      <h2>Promoting malware</h2>
+      <a href="/tetapux/pages/apkmod.html">Google Wallet APK mod</a>
+      <a href="/tetapux/pages/filenow.html">Dowload File Now Free</a>
+      <a href="/tetapux/pages/robhack.html">Roblox Executer Mod APK</a>
+      <a href="/tetapux/pages/freeram.html">Download Free RAM</a>
+      <a href="/tetapux/pages/update-chrome.html">Update Chrome</a>
+      <a href="/tetapux/pages/update-chrome2.html">Update Chrome 2</a>
+      <a href="/tetapux/pages/updchrome.html">Update chrome 3</a>
+      <a href="/tetapux/0/lk/masterAdblock.html">Master Adblock</a>
+      <a href="/tetapux/red/premium-colors/ptfile.html">File ready</a>
+      <a href="/tetapux/2/chromeExtMalware.html">Malicious Chrome extension (YouTube AdBlocker)</a>
+      <a href="/tetapux/2/robloxExec.html">Roblox script executor (SynapseX)</a>
+
+      <h2>Fake giveaways</h2>
+      <a href="/tetapux/0/lk/acRobloxify.html">MrBeast Mega Robux Giveaway</a>
+      <a href="/tetapux/pages/raffle.html">Free iPhone 16</a>
+      <a href="/tetapux/red/nitro-raffle.html">Discord Nitro Raffle</a>
+      <a href="/tetapux/0/rasp-II.html">Raspberry Pi 16GB Giveaway</a>
+      <a href="/tetapux/red/tetrapux_labs.html">Q.E.S.D. Initiative v1.1</a>
+      <a href="/tetapux/1/congrat.html">Congrats Internet User!</a>
+      <a href="/tetapux/0/ultiContes.html">Ultimate Contest</a>
+      <a href="/tetapux/0/lk/emuskGivesaway.html">Elon Musk BTC Giveaway</a>
+      <a href="/tetapux/0/lk/ethLedgerDoubling.html"> Quantum Ledger Giveaways </a>
+      <a href="/tetapux/0/lk/cosmicForgeGives.html">Cosmic forge giveaway</a>
+      <a href="/tetapux/1/googleBillions.html">The 5 billionth search</a>
+      <a href="/tetapux/0/lk/claimfreebox.html">Claim freebox (filled with tetapux ads)</a>
+      <a href="/tetapux/red/winspric.html">Millionth visitor</a>
+      <a href="/tetapux/red/PROBUKROBUX.html">BukSuper claims</a>
+      <a href="/tetapux/2/solAirdrop.html">Solana airdrop checker</a>
+      <a href="/tetapux/2/steamDrop.html">Steam Summer Drop free games</a>
+
+      <h2>Happy phone</h2>
+      <a href="/tetapux/pages/happyphone.html">Make phone happy</a>
+      <a href="/tetapux/pages/makeithappy.html"> Will you make your phone happy? </a>
+      <a href="/tetapux/nnm-ae/happiness.html">Happiness update fail</a>
+      <a href="/tetapux/red/premium-colors/happiness-recovery.html"> Happiness recovery </a>
+
+      <h2>Affiliate marketing scams</h2>
+      <a href="/tetapux/2/elonSecret.html">Fake CNN article — Elon Musk crypto scam</a>
+      <a href="/tetapux/2/spinWheel.html">Spin-to-win prize wheel</a>
+      <a href="/tetapux/2/surveyReward.html">$750 gift card survey scam</a>
+
+      <h2>Other</h2>
+      <a href="/tetapux/thousands/thusand/sysc.html"> System Core Maintenance Utility v7.&pi; </a>
+      <a href="/tetapux/thousands/download-file.html"> Download file with phone </a>
+      <a href="/tetapux/pages/allowvideo.html">Press "Allow" to watch video</a>
+      <a href="/tetapux/thousands/coinmintcrypto-2025-localization.html"> Crypto coin mint </a>
+      <a href="/tetapux/red/live-tv.html">Premium IPTV</a>
+      <a href="/tetapux/nnm-ae/1000/windows-defender-iax.html"> Free Windows Defender Pro </a>
+      <a href="/tetapux/red/freestoragedownload-id192.html"> Free storage guide </a>
+      <a href="/tetapux/pages/access-content.html">Incredible VR content</a>
+      <a href="/tetapux/red/premium-colors/bun.html">Bun - Many Such Cases</a>
+      <a href="/tetapux/red/premium-colors/vpn-subscripti.html">UltraV VPN</a>
+      <a href="/tetapux/red/premium-colors/search/search.html">HetaSearch</a>
+      <a href="/tetapux/red/premium-colors/adblock.html">Adblock Download</a>
+      <a href="/tetapux/0/lk/claimvpn.html">Free vpn</a>
+      <a href="/tetapux/2/darkmarket.html">HydraMarket (darknet market)</a>
+
+      <h2>Link lockers</h2>
+      <a href="https://doctoredits.com/1889022">CPAGrip</a>
+      <a href="/tetapux/ads/index.html">Try Tetapux Ads &rarr;</a>
+      
+      <h2>Tetapux</h2>
+      <a href="/tetapux/about.html">What's Tetapux?</a>
+      <a href="/tetapux/ads/index.html">Try Tetapux Ads &rarr;</a>
+    </div>
+
+    <tetapux-ads width="100%" style="margin-top: 24px; display: block"></tetapux-ads>
+
+    <div class="footer">
+      <a href="/tetapux/about.html">About</a>
+      <a href="/tetapux/ads/index.html">Ads</a>
+    </div>
+
+    <script>
+      const allLinks = Array.from(document.querySelectorAll(".pages a"));
+      const pageLinks = allLinks.filter(
+        (a) => !a.closest("h2") && a.href.includes(".html") && !a.textContent.includes("Tetapux"),
+      );
+
+      document.getElementById("pageCount").textContent = pageLinks.length;
+
+      if (new URLSearchParams(location.search).has("random")) {
+        const link = pageLinks[Math.floor(Math.random() * pageLinks.length)];
+        if (link) location.href = link.getAttribute("href");
+      }
+
+      function goRandom() {
+        const link = pageLinks[Math.floor(Math.random() * pageLinks.length)];
+        if (link) location.href = link.getAttribute("href");
+      }
+
+      document.querySelector(".search").addEventListener("input", () => {
+        const input = document.querySelector(".search").value.toLowerCase();
+        allLinks.forEach((link) => {
+          link.style.display = link.textContent.toLowerCase().includes(input) ? "" : "none";
+        });
+        document.querySelectorAll(".pages h2").forEach((h2) => {
+          h2.style.display = input ? "none" : "";
+        });
       });
-      document.querySelectorAll(".pages h2").forEach((h2) => {
-        h2.style.display = input ? "none" : "";
-      });
-    });
 
-    document.querySelector(".search").focus();
-  </script>
-  <script src="./aw.js" async></script>
-</body>
-
+      document.querySelector(".search").focus();
+    </script>
+    <script src="./aw.js" async></script>
+  </body>
 </html>

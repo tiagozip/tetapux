@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetaMask — Activity</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1c1c2e;
+      --surface: #24243a;
+      --surface2: #2e2e48;
+      --border: #3a3a55;
+      --orange: #f6851b;
+      --red: #ff4757;
+      --green: #2ed573;
+      --text: #eee;
+      --dim: #888;
+      --font: "Inter", -apple-system, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .wallet {
+      width: 380px;
+      background: var(--surface);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .wallet-header {
+      background: var(--surface2);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .wallet-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .fox { font-size: 22px; }
+    .network {
+      font-size: 11px;
+      padding: 4px 10px;
+      background: rgba(46,213,115,0.15);
+      color: var(--green);
+      border-radius: 20px;
+    }
+    .account-section {
+      text-align: center;
+      padding: 24px 20px 16px;
+    }
+    .account-name {
+      font-size: 14px;
+      color: var(--dim);
+      margin-bottom: 4px;
+    }
+    .address {
+      font-size: 12px;
+      color: var(--dim);
+      font-family: monospace;
+      margin-bottom: 16px;
+    }
+    .balance {
+      font-size: 36px;
+      font-weight: 700;
+      transition: all 0.5s;
+    }
+    .balance.draining {
+      color: var(--red);
+    }
+    .balance-usd {
+      font-size: 14px;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 16px;
+    }
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: var(--orange);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .action-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(246,133,27,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--dim);
+      cursor: pointer;
+    }
+    .tab.active {
+      color: var(--orange);
+      border-bottom: 2px solid var(--orange);
+    }
+    .tx-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .tx-list::-webkit-scrollbar { width: 4px; }
+    .tx-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .tx {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      animation: txIn 0.4s ease-out;
+    }
+    @keyframes txIn { from { opacity: 0; transform: translateX(-10px); background: rgba(255,71,87,0.15); } }
+    .tx-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .tx-icon.out { background: rgba(255,71,87,0.15); }
+    .tx-icon.approve { background: rgba(246,133,27,0.15); }
+    .tx-info { flex: 1; min-width: 0; }
+    .tx-type { font-size: 13px; font-weight: 500; }
+    .tx-addr { font-size: 11px; color: var(--dim); font-family: monospace; }
+    .tx-amount { text-align: right; }
+    .tx-value { font-size: 13px; font-weight: 600; color: var(--red); }
+    .tx-usd { font-size: 11px; color: var(--dim); }
+    .tx-pending {
+      font-size: 10px;
+      color: var(--orange);
+      font-weight: 500;
+    }
+    .alert-banner {
+      background: rgba(255,71,87,0.12);
+      border-top: 1px solid rgba(255,71,87,0.2);
+      padding: 12px 20px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--red);
+      animation: pulseAlert 1s infinite;
+    }
+    @keyframes pulseAlert { 50% { background: rgba(255,71,87,0.2); } }
+    @media (max-width: 420px) {
+      .wallet { width: 100%; border-radius: 12px; }
+      body { padding: 10px; align-items: flex-start; padding-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wallet">
+    <div class="wallet-header">
+      <div class="wallet-brand"><span class="fox">🦊</span> MetaMask</div>
+      <div class="network" id="network">Ethereum Mainnet</div>
+    </div>
+
+    <div class="account-section">
+      <div class="account-name">Account 1</div>
+      <div class="address" id="address">0x742d...F4e2</div>
+      <div class="balance" id="balance">4.2891 ETH</div>
+      <div class="balance-usd" id="balanceUsd">$14,983.27 USD</div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn"><div class="action-icon">↑</div>Send</button>
+      <button class="action-btn"><div class="action-icon">↔</div>Swap</button>
+      <button class="action-btn"><div class="action-icon">🌉</div>Bridge</button>
+      <button class="action-btn"><div class="action-icon">↓</div>Buy</button>
+    </div>
+
+    <div class="tabs">
+      <div class="tab">Tokens</div>
+      <div class="tab active">Activity</div>
+    </div>
+
+    <div class="tx-list" id="txList"></div>
+
+    <div class="alert-banner" id="alert">
+      ⚠️ Unauthorized transactions detected — revoke approvals immediately
+    </div>
+  </div>
+
+  <script>
+    const ethPrice = 3492;
+    let currentBalance = 4.2891;
+    const balanceEl = document.getElementById("balance");
+    const balanceUsdEl = document.getElementById("balanceUsd");
+    const txList = document.getElementById("txList");
+    const alertBanner = document.getElementById("alert");
+
+    const addr = "0x" + Array.from({length: 4}, () => Math.floor(Math.random()*65536).toString(16).padStart(4,"0")).join("");
+    document.getElementById("address").textContent = addr.slice(0,6) + "..." + addr.slice(-4);
+
+    function fakeAddr() {
+      return "0x" + Array.from({length: 40}, () => "0123456789abcdef"[Math.floor(Math.random()*16)]).join("");
+    }
+
+    function updateBalance() {
+      balanceEl.textContent = currentBalance.toFixed(4) + " ETH";
+      balanceUsdEl.textContent = "$" + (currentBalance * ethPrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " USD";
+    }
+
+    function addTx(type, amount, to) {
+      const div = document.createElement("div");
+      div.className = "tx";
+      const shortAddr = to.slice(0, 6) + "..." + to.slice(-4);
+      const usd = (amount * ethPrice).toFixed(2);
+
+      if (type === "approve") {
+        div.innerHTML = `
+          <div class="tx-icon approve">✓</div>
+          <div class="tx-info">
+            <div class="tx-type">Approve</div>
+            <div class="tx-addr">Unlimited allowance → ${shortAddr}</div>
+          </div>
+          <div class="tx-amount">
+            <div class="tx-pending">Confirmed</div>
+          </div>
+        `;
+      } else {
+        div.innerHTML = `
+          <div class="tx-icon out">↑</div>
+          <div class="tx-info">
+            <div class="tx-type">Send</div>
+            <div class="tx-addr">To: ${shortAddr}</div>
+          </div>
+          <div class="tx-amount">
+            <div class="tx-value">-${amount.toFixed(4)} ETH</div>
+            <div class="tx-usd">-$${parseFloat(usd).toLocaleString()}</div>
+          </div>
+        `;
+      }
+
+      txList.prepend(div);
+      if (txList.children.length > 20) txList.lastChild.remove();
+    }
+
+    const drainAmounts = [
+      { type: "approve", delay: 2000 },
+      { type: "send", amount: 0.5, delay: 2500 },
+      { type: "send", amount: 0.8, delay: 2000 },
+      { type: "send", amount: 0.15, delay: 1500 },
+      { type: "send", amount: 1.2, delay: 2000 },
+      { type: "send", amount: 0.05, delay: 800 },
+      { type: "send", amount: 0.3, delay: 1200 },
+      { type: "send", amount: 0.7, delay: 1500 },
+      { type: "send", amount: 0.25, delay: 1000 },
+      { type: "send", amount: 0.15, delay: 800 },
+      { type: "send", amount: 0.05, delay: 600 },
+      { type: "send", amount: 0.0391, delay: 500 },
+    ];
+
+    const drainAddr = fakeAddr();
+    let drainIdx = 0;
+
+    async function drainStep() {
+      if (drainIdx >= drainAmounts.length) {
+        currentBalance = 0;
+        updateBalance();
+        balanceEl.classList.add("draining");
+        alertBanner.style.display = "flex";
+        return;
+      }
+
+      const step = drainAmounts[drainIdx];
+      drainIdx++;
+
+      if (step.type === "approve") {
+        addTx("approve", 0, drainAddr);
+      } else {
+        const amt = Math.min(step.amount, currentBalance);
+        if (amt <= 0) { drainStep(); return; }
+        currentBalance -= amt;
+        if (currentBalance < 0) currentBalance = 0;
+        updateBalance();
+        addTx("send", amt, drainAddr);
+
+        if (drainIdx >= 4) {
+          balanceEl.classList.add("draining");
+        }
+      }
+
+      setTimeout(drainStep, step.delay);
+    }
+
+    setTimeout(drainStep, 3000);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

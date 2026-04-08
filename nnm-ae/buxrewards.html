@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robux Rewards Center | Official Sync</title>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-TWH89KMQ5V"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TWH89KMQ5V');
+    </script>
+    <!-- SEO & Accessibility -->
+    <meta name="description" content="Claim your promotional Robux reward code through the official partner synchronization portal.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --rbx-blue: #00A2FF;
+            --rbx-blue-hover: #32B5FF;
+            --bg-light: #F2F4F5;
+            --card-bg: #FFFFFF;
+            --text-dark: #191B1D;
+        }
+
+        body {
+            background: var(--bg-light);
+            font-family: 'Hanken Grotesk', sans-serif;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .mono { font-family: 'JetBrains+Mono', monospace; }
+
+        /* Style A: Official Portal Elements */
+        .portal-card {
+            background: var(--card-bg);
+            border: 1px solid #B8B8B8;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .reward-highlight {
+            background: #F2F4F5;
+            border: 2px solid var(--rbx-blue);
+            border-radius: 20px;
+        }
+
+        .rbx-btn-primary {
+            background: var(--rbx-blue);
+            color: white;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 162, 255, 0.2);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+        .rbx-btn-primary:hover {
+            transform: translateY(-1px);
+            background: var(--rbx-blue-hover);
+            box-shadow: 0 6px 15px rgba(0, 162, 255, 0.3);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--rbx-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--rbx-blue);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Chat Implementation */
+        .chat-sidebar { 
+            position: fixed;
+            bottom: 0;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            z-index: 100;
+            transform: translateY(110%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #FFFFFF;
+            border: 1px solid #E3E5E7;
+            border-bottom: none;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+        }
+
+        .chat-active .chat-sidebar { transform: translateY(0); }
+
+        .chat-msg-support {
+            background: var(--rbx-blue);
+            color: white;
+            border-radius: 14px 14px 14px 0;
+            padding: 12px 16px;
+            font-size: 12px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        
+        .chat-msg-user {
+            background: #F2F4F5;
+            color: var(--text-dark);
+            border-radius: 14px 14px 0 14px;
+            align-self: flex-end;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #E3E5E7;
+        }
+
+        .quick-reply-btn {
+            border: 1px solid #E3E5E7;
+            background: #FFFFFF;
+            color: var(--text-dark);
+            font-size: 11px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .quick-reply-btn:hover { border-color: var(--rbx-blue); color: var(--rbx-blue); }
+
+        /* Exit Intent Modal */
+        #exit-intent-modal {
+            background: rgba(25, 27, 29, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Utilities */
+        .break-words { word-wrap: break-word; overflow-wrap: break-word; }
+        #chat-messages::-webkit-scrollbar, #offerContainer::-webkit-scrollbar { width: 4px; }
+        #chat-messages::-webkit-scrollbar-thumb, #offerContainer::-webkit-scrollbar-thumb { background: #B8B8B8; border-radius: 10px; }
+
+        @media (max-width: 768px) {
+            .chat-sidebar { 
+                width: 100% !important;
+                right: 0 !important;
+                height: 80vh !important;
+            }
+            .main-title { font-size: 1.75rem !important; }
+            .offer-card { padding: 14px !important; }
+            .offer-title { font-size: 13px !important; line-height: 1.3; }
+            .offer-instructions { font-size: 10px !important; line-height: 1.4; }
+        }
+
+        /* Spinner for Button state */
+        .spinner-mini {
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-top: 2px solid black;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Top Live Stats Bar -->
+    <div class="bg-white border-b border-[#B8B8B8] py-2 relative z-50">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-[#666]">
+            <div class="flex items-center gap-3">
+                <span class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div> <span id="online-count">1,842</span> Users Online</span>
+            </div>
+            <div class="flex items-center gap-2">
+                Available Stock: <span id="reward-stock" class="text-[#00A2FF] font-black">125,000</span> Robux
+            </div>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="bg-white border-b border-[#B8B8B8] p-4 relative z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-black p-1.5 rounded-sm shadow-sm flex items-center justify-center">
+                   <div class="w-5 h-5 bg-white rounded-sm"></div>
+                </div>
+                <span class="text-xl font-black tracking-tighter uppercase text-[#191B1D]">ROBLOX<span class="text-[#00A2FF]">REWARDS</span></span>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <span class="text-[10px] font-black uppercase text-[#666] tracking-widest px-3 py-1 border border-[#B8B8B8] rounded-full">Official Payout Sync</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex flex-col items-center justify-center p-4 relative z-10 w-full max-w-xl mx-auto mt-4 mb-24">
+        
+        <!-- STEP 1: USER ENTRY -->
+        <div id="step-portal" class="w-full portal-card p-8 md:p-12 relative">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2 bg-[#00A2FF15] text-[#00A2FF] px-4 py-1.5 rounded-full text-[10px] font-black uppercase mb-6 tracking-widest border border-[#00A2FF30]">
+                    <i data-lucide="info" class="w-3.5 h-3.5"></i> Limited Promotional Grant
+                </div>
+                <h1 class="main-title text-3xl md:text-4xl font-black text-[#191B1D] uppercase tracking-tighter mb-3 leading-tight italic">Claim 1,000 Robux</h1>
+                <p class="text-[#666] text-sm font-medium">Connect your Roblox account to finalize the promotional grant.</p>
+            </div>
+
+            <!-- Featured Reward Card -->
+            <div class="reward-highlight p-6 mb-8 text-center flex flex-col items-center gap-3">
+                <div class="bg-white p-4 rounded-full shadow-sm">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Robux_2019_Logo_gold.svg/960px-Robux_2019_Logo_gold.svg.png" class="w-10 h-10 object-contain">
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black text-[#191B1D] uppercase leading-none">1,000 Robux</h3>
+                    <p class="text-[10px] text-[#00A2FF] font-bold uppercase tracking-widest mt-2 italic">Standard Instant Release Bundle</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black uppercase tracking-[0.2em] text-[#666] px-1">Roblox Username</label>
+                    <div class="relative group">
+                        <i data-lucide="user" class="absolute left-4 top-4 w-5 h-5 text-[#B8B8B8] group-focus-within:text-[#00A2FF] transition-colors"></i>
+                        <input type="text" id="username" placeholder="Enter Username" class="w-full bg-[#F2F4F5] border border-[#B8B8B8] rounded-lg p-4 pl-12 text-[#191B1D] font-bold outline-none focus:border-[#00A2FF] transition-all text-lg tracking-tight" aria-label="Username">
+                    </div>
+                </div>
+
+                <button onclick="startSync()" class="rbx-btn-primary w-full py-5 rounded-lg text-lg italic mt-4">Continue to Verification</button>
+            </div>
+            
+            <p class="text-center text-[9px] text-[#999] mt-10 font-bold uppercase tracking-[0.3em]">Not affiliated with Roblox Corporation. Promotional use only.</p>
+        </div>
+
+        <!-- STEP 2: CLAIM DASHBOARD (Offer Wall) -->
+        <div id="step-claim" class="hidden w-full portal-card p-8 md:p-12 relative">
+            <div class="bg-[#00A2FF10] border-l-4 border-[#00A2FF] p-5 mb-10 rounded-lg text-left flex items-start gap-4">
+                <i data-lucide="shield-check" class="w-6 h-6 text-[#00A2FF] flex-shrink-0"></i>
+                <div>
+                    <p class="font-black text-xs text-[#00A2FF] uppercase tracking-tight italic">Synchronization Required</p>
+                    <p class="text-[11px] text-[#666] font-medium leading-relaxed mt-1 tracking-tight">To release your <span class="text-[#191B1D] font-black">1,000 Robux Grant</span>, please complete <span class="text-[#191B1D] font-black underline">one task</span> below. This verifies your account and prevents bot abuse.</p>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-black text-[#191B1D] uppercase tracking-tighter mb-2 italic">Final Verification</h2>
+                <div class="flex items-center justify-center gap-2">
+                    <div class="pulse-dot"></div>
+                    <span id="sync-status" class="text-[11px] font-black text-[#666] uppercase tracking-widest">Awaiting Verification Signal...</span>
+                </div>
+            </div>
+
+            <!-- OFFER WALL -->
+            <div id="offerContainer" class="space-y-4 text-left max-h-[450px] overflow-y-auto pr-1">
+                <div class="flex justify-center py-20"><div class="w-8 h-8 border-3 border-[#E3E5E7] border-t-[#00A2FF] rounded-full animate-spin"></div></div>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-[#E3E5E7] text-center">
+                 <p class="text-[9px] text-[#666] font-bold uppercase tracking-[0.2em] italic mb-3">Sync Session for <span id="final-user" class="text-[#191B1D] italic font-black">PLAYER</span> expires in: <span id="timer" class="text-red-500 font-black">10:00</span></p>
+                 <div class="w-full bg-[#F2F4F5] h-1.5 rounded-full overflow-hidden">
+                     <div id="timer-bar" class="bg-[#00A2FF] h-full w-full transition-all duration-1000"></div>
+                 </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: SUCCESS -->
+        <div id="step-success" class="hidden w-full portal-card p-12 text-center shadow-lg">
+            <div class="w-24 h-24 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-200">
+                <i data-lucide="check" class="w-12 h-12"></i>
+            </div>
+            <h3 class="text-3xl font-black text-[#191B1D] uppercase mb-4 tracking-tighter italic">Sync Successful!</h3>
+            <p class="text-sm text-[#666] font-medium leading-relaxed max-w-xs mx-auto">Verification accepted. Your 1,000 Robux are being synchronized with your Roblox account. Expected arrival: 10-30 mins.</p>
+            <button onclick="resetPortal()" class="mt-10 text-[10px] font-bold uppercase tracking-widest text-[#00A2FF] hover:text-[#191B1D] transition underline underline-offset-4">Return to Portal</button>
+        </div>
+    </main>
+
+    <!-- EXIT INTENT MODAL -->
+    <div id="exit-intent-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-white border border-[#B8B8B8] rounded-3xl p-8 text-center shadow-2xl">
+            <div class="bg-[#00A2FF10] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="sparkles" class="w-8 h-8 text-[#00A2FF]"></i>
+            </div>
+            <h3 class="text-2xl font-black text-[#191B1D] italic uppercase tracking-tighter mb-2">Wait! Don't Leave.</h3>
+            <p class="text-[#666] text-sm mb-8 leading-relaxed">Your 1,000 Robux grant is reserved for <span class="text-[#191B1D] font-bold">10:00</span> only. Complete 1 quick task to claim it now!</p>
+            <button onclick="closeExitModal()" class="rbx-btn-primary w-full py-4 rounded-lg text-sm italic">Return to Claim</button>
+        </div>
+    </div>
+
+    <!-- CHAT SIDEBAR -->
+    <div id="chat-container">
+        <div class="chat-sidebar">
+            <div class="p-5 bg-white border-b border-[#E3E5E7] flex justify-between items-center rounded-t-2xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_10px_#22c55e] animate-pulse"></div>
+                    <span class="text-[11px] font-black uppercase text-[#191B1D] tracking-widest">Support Agent</span>
+                </div>
+                <button onclick="toggleChat()" class="md:hidden text-[#00A2FF] text-[10px] font-black uppercase italic underline decoration-2">Close Help</button>
+            </div>
+            
+            <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-5 flex flex-col bg-[#F2F4F5]">
+                <div class="chat-msg-support">
+                    Hello! I'm here to help you get your Robux instantly. Simply complete one task on the list to authorize your sync!
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-[#E3E5E7] bg-white">
+                <p class="text-[10px] font-black text-[#999] uppercase mb-4 tracking-widest italic">Help Options:</p>
+                <div class="space-y-2.5">
+                    <button onclick="sendReply('Check my status.')" class="quick-reply-btn w-full shadow-sm">Is my sync verified yet?</button>
+                    <button onclick="sendReply('How to claim?')" class="quick-reply-btn w-full">How do I finish the verification?</button>
+                    <button onclick="sendReply('Safe?')" class="quick-reply-btn w-full">Is this safe for my account?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center text-[#999] text-[10px] pb-12 uppercase tracking-[0.3em] font-bold opacity-60 mt-auto">
+        &copy; 2026 ROBLOX REWARDS SYNC
+    </footer>
+
+    <!-- MOBILE FAB -->
+    <div id="chat-fab-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chat-tooltip" class="chat-tooltip mb-4 py-2.5 px-5 rounded-xl font-black text-[10px] whitespace-nowrap opacity-0 transition-opacity duration-700 uppercase tracking-tighter text-[#00A2FF]">Need help syncing? 👋</div>
+        <button onclick="toggleChat()" class="w-16 h-16 bg-[#00A2FF] rounded-full shadow-2xl flex items-center justify-center border-2 border-white active:scale-95 transition-all">
+            <i data-lucide="help-circle" class="w-8 h-8 text-white"></i>
+        </button>
+    </div>
+
+    <!-- Live Claims Notification -->
+    <div class="fixed bottom-6 left-6 z-40 hidden md:block">
+        <div id="notification" class="bg-white border border-[#B8B8B8] p-4 rounded-xl shadow-lg border-l-4 border-green-500 flex items-center gap-4 transform translate-y-32 transition-all duration-700 opacity-0 w-80">
+            <div class="bg-green-50 p-2.5 rounded-full text-green-500">
+                <i data-lucide="check" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-[11px] font-black text-[#191B1D] italic" id="notif-text">Player just synced 1,000 Robux</p>
+                <p class="text-[9px] text-[#999] font-bold uppercase tracking-widest mt-0.5">Successful Sync</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        let username = "";
+        let leadsFound = 0;
+        let lastClickedOfferObj = null;
+        let currentOffers = [];
+        const USER_ID = "21105";
+        const API_KEY = "829e94fb73f6aaa4d32ae99c3dbf0a58";
+
+        // Global check leads interval
+        let leadCheckInterval = null;
+
+        // Realistic Stock Management
+        let stock = 125000;
+        let online = 1842;
+        setInterval(() => {
+            online += Math.floor(Math.random() * 9) - 4; 
+            const onlineCount = document.getElementById('online-count');
+            if(onlineCount) onlineCount.innerText = online.toLocaleString();
+            
+            if(Math.random() > 0.9 && stock > 400) {
+                stock -= 400;
+                const stockCount = document.getElementById('reward-stock');
+                if(stockCount) stockCount.innerText = stock.toLocaleString();
+            }
+        }, 8000);
+
+        function startSync() {
+            username = document.getElementById('username').value.trim();
+            if(username.length < 3) return alert("Please enter a valid Roblox Username.");
+            
+            $("#step-portal").fadeOut(300, function() {
+                $("#step-claim").removeClass('hidden').hide().fadeIn(300);
+                document.getElementById('final-user').innerText = username;
+                loadOffers();
+                initPersistentTimer();
+                
+                if(!leadCheckInterval) {
+                    leadCheckInterval = setInterval(checkLeads, 15000);
+                }
+            });
+        }
+
+        function loadOffers() {
+            const feedUrl = `https://example.com/public/offers/feed.php?user_id=${USER_ID}&api_key=${API_KEY}&s1=roblox_rewards_optimized&callback=?`;
+            
+            $.getJSON(feedUrl, function(offers) {
+                currentOffers = offers.splice(0, 6);
+                let html = '';
+                
+                if(currentOffers.length > 0) {
+                    $.each(currentOffers, function(key, offer) {
+                        const isRecommended = key < 2;
+                        html += `
+                            <div class="animate-in slide-in-from-bottom duration-300" style="animation-delay: ${key*100}ms">
+                                <a href="${offer.url}" target="_blank" onclick="handleOfferClick(this, '${offer.id}')" class="group block bg-white border ${isRecommended ? 'border-[#00A2FF60]' : 'border-[#E3E5E7]'} hover:border-[#00A2FF] p-4 rounded-xl flex items-center gap-4 transition-all shadow-sm">
+                                    <div class="bg-[#00A2FF10] p-3 rounded-lg text-[#00A2FF] group-hover:bg-[#00A2FF] group-hover:text-white transition-all flex-shrink-0">
+                                        <i data-lucide="${isRecommended ? 'zap' : 'shield-check'}" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0 text-left">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <span class="block text-[13px] font-bold text-[#191B1D] uppercase tracking-tight offer-title leading-tight">${offer.anchor}</span>
+                                            ${isRecommended ? '<span class="text-[7px] bg-[#00A2FF] text-white px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">Fast Sync</span>' : ''}
+                                        </div>
+                                        <span class="block text-[11px] text-[#999] font-medium italic offer-instructions leading-snug">${offer.conversion}</span>
+                                    </div>
+                                    <div class="claim-btn-wrapper bg-[#00A2FF] text-white px-5 py-2 rounded-md text-[10px] font-black uppercase tracking-widest flex-shrink-0 group-hover:bg-black transition-colors flex items-center gap-2">
+                                        <span>Claim</span>
+                                    </div>
+                                </a>
+                            </div>`;
+                    });
+                } else {
+                    html = `
+                        <div class="text-center py-10 space-y-3">
+                            <p class="text-[#00A2FF] text-xs font-bold uppercase tracking-widest">No sync tasks found.</p>
+                            <p class="text-[#999] text-[10px] uppercase font-medium">Tasks refresh every 10-15 minutes. Try checking back soon or use a different device.</p>
+                        </div>`;
+                }
+                $("#offerContainer").html(html);
+                lucide.createIcons();
+
+                setTimeout(() => { 
+                    const tooltip = document.getElementById('chat-tooltip');
+                    if(tooltip) tooltip.style.opacity = '1'; 
+                }, 4000);
+            });
+        }
+
+        function handleOfferClick(el, offerId) {
+            trackClick(offerId);
+            const btnWrapper = el.querySelector('.claim-btn-wrapper');
+            if (btnWrapper) {
+                btnWrapper.innerHTML = `<div class="spinner-mini"></div> <span>Linking...</span>`;
+                btnWrapper.classList.remove('bg-[#00A2FF]');
+                btnWrapper.classList.add('bg-black', 'opacity-80');
+            }
+            const status = document.getElementById('sync-status');
+            if (status) {
+                status.innerText = "Awaiting verification signal...";
+                status.classList.add('text-[#00A2FF]');
+            }
+        }
+
+        function initPersistentTimer() {
+            let startTime = localStorage.getItem('rbx_sync_start');
+            const totalDuration = 600; 
+
+            if (!startTime) {
+                startTime = Date.now();
+                localStorage.setItem('rbx_sync_start', startTime);
+            }
+
+            const timerEl = document.getElementById('timer');
+            const bar = document.getElementById('timer-bar');
+            
+            function updateTimer() {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const timeLeft = Math.max(0, totalDuration - elapsed);
+
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                
+                if (timerEl) timerEl.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if (bar) bar.style.width = `${(timeLeft / totalDuration) * 100}%`;
+
+                if (timeLeft < 120) {
+                    if (timerEl) timerEl.classList.add('animate-pulse', 'text-red-400');
+                }
+
+                if (timeLeft <= 0) {
+                    if (timerEl) {
+                        timerEl.innerText = "EXPIRED";
+                        const syncStatus = document.getElementById('sync-status');
+                        if(syncStatus) syncStatus.innerHTML = `<span class="text-red-500">Session Expired. Please <a href="javascript:location.reload()" class="underline">Refresh Sync</a>.</span>`;
+                    }
+                    return;
+                }
+                requestAnimationFrame(updateTimer);
+            }
+            updateTimer();
+        }
+
+        function trackClick(offerId) {
+            lastClickedOfferObj = currentOffers.find(o => o.id == offerId);
+        }
+
+        function sendReply(msg) {
+            const chat = document.getElementById('chat-messages');
+            const u = document.createElement('div');
+            u.className = "chat-msg-user";
+            u.textContent = msg;
+            chat.appendChild(u);
+            chat.scrollTop = chat.scrollHeight;
+
+            setTimeout(() => {
+                const s = document.createElement('div');
+                s.className = "chat-msg-support";
+                
+                if (msg.includes('status')) {
+                    s.innerHTML = "🔍 Checking synchronization servers... No verification signal detected.";
+                    chat.appendChild(s);
+                    setTimeout(() => {
+                        const s2 = document.createElement('div');
+                        s2.className = "chat-msg-support";
+                        if (leadsFound > 0) {
+                            s2.innerHTML = "✅ <b>STATUS: VERIFIED!</b> Your sync token has been accepted!";
+                        } else if (lastClickedOfferObj) {
+                            s2.innerHTML = `❌ <b>STATUS: PENDING</b><br><br>I see you are working on <b>"${lastClickedOfferObj.anchor}"</b>.<br><br>Requirement: ${lastClickedOfferObj.conversion}.<br><br>Please follow the steps exactly. Once finished, keep the browser open for 60s to let the sync complete. No VPN!`;
+                        } else {
+                            s2.innerHTML = "❌ <b>STATUS: NOT STARTED</b><br><br>You haven't clicked a sync task! Choose a task on the list to authorize your 1,000 Robux grant.";
+                        }
+                        chat.appendChild(s2);
+                        chat.scrollTop = chat.scrollHeight;
+                    }, 2000);
+                } else if (msg.includes('claim') || msg.includes('How')) {
+                    s.innerHTML = "It's simple: Pick a task, follow the instructions exactly, and stay active for 60s. The synchronization will happen automatically once finished! <b>Mobile app</b> tasks verify fastest.";
+                } else if (msg.includes('Safe')) {
+                    s.innerHTML = "Yes! This is a promotional grant. We don't ask for passwords. The Robux is sent via a secure group payout method once the task is verified.";
+                } else {
+                    s.innerHTML = "💡 <b>Expert Tip:</b> If a task isn't syncing, try a different one from the list! Some tasks verify faster than others depending on your device.";
+                }
+                chat.appendChild(s);
+                chat.scrollTop = chat.scrollHeight;
+            }, 1200);
+        }
+
+        function checkLeads() {
+            $.getJSON(`https://example.com/public/external/check2.php?user_id=${USER_ID}&api_key=${API_KEY}&testing=0&callback=?`,
+                function (leads) {
+                    if (leads && leads.length > 0) {
+                        leadsFound = leads.length;
+                        clearInterval(leadCheckInterval);
+                        document.body.classList.remove('chat-active');
+                        $("#step-claim").fadeOut(300, function() {
+                            $("#step-success").removeClass('hidden').hide().fadeIn(300);
+                        });
+                        document.getElementById('chat-fab-container').classList.add('hidden');
+                        localStorage.removeItem('rbx_sync_start');
+                    }
+                });
+        }
+
+        function toggleChat() {
+            document.body.classList.toggle('chat-active');
+            const tooltip = document.getElementById('chat-tooltip');
+            if(document.body.classList.contains('chat-active') && tooltip) {
+                tooltip.style.opacity = '0';
+            }
+        }
+
+        function showNotification() {
+            const names = ['Builderman_X', 'RobuxMaster', 'LlamaFan', 'VictoryGuy', 'BloxStar', 'RobloxKing', 'Default_99', 'BloxHero'];
+            const notif = document.getElementById('notification');
+            if (notif) {
+                document.getElementById('notif-text').innerText = `${names[Math.floor(Math.random() * names.length)]} just synced 1,000 Robux`;
+                notif.classList.remove('translate-y-32', 'opacity-0');
+                setTimeout(() => notif.classList.add('translate-y-32', 'opacity-0'), 4000);
+            }
+        }
+
+        let exitModalShown = false;
+        document.addEventListener('mouseleave', (e) => {
+            if (e.clientY < 0 && !exitModalShown && document.getElementById('step-portal').classList.contains('hidden')) {
+                showExitModal();
+            }
+        });
+
+        function showExitModal() {
+            document.getElementById('exit-intent-modal').classList.remove('hidden');
+            exitModalShown = true;
+        }
+        function closeExitModal() {
+            document.getElementById('exit-intent-modal').classList.add('hidden');
+        }
+
+        function resetPortal() {
+            localStorage.removeItem('rbx_sync_start');
+            location.reload();
+        }
+
+        setTimeout(() => {
+            showNotification();
+            setInterval(showNotification, 8000);
+        }, 2000);
+    </script>
+</body>
+</html>

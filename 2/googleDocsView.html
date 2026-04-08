@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Important_Contract_Q2_2026.pdf — Google Drive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f8f9fa;
+      font-family: "Google Sans", "Roboto", -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+    .gd-header {
+      background: #fff;
+      border-bottom: 1px solid #dadce0;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 56px;
+    }
+    .gd-logo { display: flex; align-items: center; gap: 6px; }
+    .gd-logo-icon {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gd-logo-icon .tri { width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 20px solid #4285f4; position: relative; }
+    .gd-logo-text { font-size: 22px; color: #5f6368; font-weight: 400; }
+    .gd-filename {
+      margin-left: 16px;
+      font-size: 18px;
+      color: #202124;
+      font-weight: 400;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gd-actions { display: flex; gap: 8px; align-items: center; }
+    .gd-btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+    }
+    .gd-btn-dl { background: #1a73e8; color: #fff; font-weight: 500; }
+    .gd-btn-dl:hover { background: #1557b0; }
+    .gd-btn-dots { background: none; font-size: 20px; color: #5f6368; padding: 8px; }
+
+    .main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 56px);
+      padding: 20px;
+    }
+    .preview-area {
+      max-width: 700px;
+      width: 100%;
+    }
+    .pdf-page {
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      border-radius: 2px;
+      padding: 48px;
+      min-height: 500px;
+      position: relative;
+    }
+    .blur-content {
+      filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+    }
+    .blur-line {
+      height: 14px;
+      background: #ddd;
+      border-radius: 3px;
+      margin-bottom: 10px;
+    }
+    .blur-title {
+      height: 22px;
+      width: 60%;
+      background: #bbb;
+      border-radius: 3px;
+      margin-bottom: 18px;
+    }
+    .blur-para { margin-bottom: 16px; }
+    .blur-img {
+      width: 60%;
+      height: 120px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      margin: 16px auto;
+    }
+    .blur-sig {
+      margin-top: 24px;
+      display: flex;
+      gap: 40px;
+    }
+    .blur-sig-box { flex: 1; }
+    .blur-sig-line { width: 80%; height: 1px; background: #bbb; margin-top: 40px; margin-bottom: 6px; }
+    .blur-sig-name { height: 10px; width: 50%; background: #ccc; border-radius: 2px; }
+
+    .overlay-prompt {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.8);
+      z-index: 2;
+      text-align: center;
+      padding: 30px;
+    }
+    .overlay-icon {
+      width: 64px; height: 64px;
+      background: #f1f3f4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .overlay-prompt h3 { font-size: 18px; font-weight: 500; color: #202124; margin-bottom: 8px; }
+    .overlay-prompt p { font-size: 14px; color: #5f6368; line-height: 1.5; margin-bottom: 18px; max-width: 340px; }
+    .overlay-btn {
+      padding: 10px 24px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .overlay-btn:hover { background: #1557b0; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+    }
+    .modal-body { padding: 32px 24px 24px; text-align: center; }
+    .modal-body .g-logo { font-size: 24px; font-weight: 500; margin-bottom: 16px; color: #202124; }
+    .modal-body .g-logo span { font-weight: 400; }
+    .g-letter { display: inline-block; }
+    .g-letter:nth-child(1) { color: #4285f4; }
+    .g-letter:nth-child(2) { color: #ea4335; }
+    .g-letter:nth-child(3) { color: #fbbc05; }
+    .g-letter:nth-child(4) { color: #4285f4; }
+    .g-letter:nth-child(5) { color: #34a853; }
+    .g-letter:nth-child(6) { color: #ea4335; }
+    .modal-body h3 { font-size: 16px; font-weight: 400; color: #202124; margin-bottom: 4px; }
+    .modal-body .sub { font-size: 13px; color: #5f6368; margin-bottom: 20px; }
+    .fg { margin-bottom: 16px; text-align: left; }
+    .fg input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .fg input:focus { outline: none; border-color: #1a73e8; border-width: 2px; }
+    .fg .hint { font-size: 12px; color: #5f6368; margin-top: 6px; }
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px 24px;
+    }
+    .modal-actions a { font-size: 14px; color: #1a73e8; text-decoration: none; cursor: pointer; font-weight: 500; }
+    .modal-actions .overlay-btn { padding: 8px 22px; }
+
+    @media (max-width: 600px) {
+      .gd-filename { font-size: 14px; }
+      .pdf-page { padding: 24px; }
+      .gd-logo-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gd-header">
+    <div class="gd-logo">
+      <div class="gd-logo-icon"><div class="tri"></div></div>
+      <div class="gd-logo-text">Drive</div>
+    </div>
+    <div class="gd-filename" id="filename">Important_Contract_Q2_2026.pdf</div>
+    <div class="gd-actions">
+      <button class="gd-btn gd-btn-dl" onclick="openModal()">Open with Google Docs</button>
+      <button class="gd-btn gd-btn-dots">⋮</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="preview-area">
+      <div class="pdf-page">
+        <div class="blur-content">
+          <div class="blur-title"></div>
+          <div class="blur-para">
+            <div class="blur-line" style="width:100%"></div>
+            <div class="blur-line" style="width:92%"></div>
+            <div class="blur-line" style="width:85%"></div>
+            <div class="blur-line" style="width:100%"></div>
+            <div class="blur-line" style="width:68%"></div>
+          </div>
+          <div class="blur-img"></div>
+          <div class="blur-para">
+            <div class="blur-line" style="width:100%"></div>
+            <div class="blur-line" style="width:95%"></div>
+            <div class="blur-line" style="width:88%"></div>
+            <div class="blur-line" style="width:100%"></div>
+            <div class="blur-line" style="width:76%"></div>
+            <div class="blur-line" style="width:100%"></div>
+            <div class="blur-line" style="width:45%"></div>
+          </div>
+          <div class="blur-sig">
+            <div class="blur-sig-box"><div class="blur-sig-line"></div><div class="blur-sig-name"></div></div>
+            <div class="blur-sig-box"><div class="blur-sig-line"></div><div class="blur-sig-name"></div></div>
+          </div>
+        </div>
+
+        <div class="overlay-prompt" id="overlayPrompt">
+          <div class="overlay-icon">🔒</div>
+          <h3>Sign in to view this document</h3>
+          <p>The owner of this document requires you to sign in with your Google account to view or download it.</p>
+          <button class="overlay-btn" onclick="openModal()">Sign in with Google</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-body">
+        <div class="g-logo">
+          <span class="g-letter">G</span><span class="g-letter">o</span><span class="g-letter">o</span><span class="g-letter">g</span><span class="g-letter">l</span><span class="g-letter">e</span>
+        </div>
+        <h3>Sign in</h3>
+        <div class="sub">to continue to Google Drive</div>
+        <div class="fg">
+          <input type="text" placeholder="Email or phone" autocomplete="off" />
+          <div class="hint">Not your computer? Use a private browsing window.</div>
+        </div>
+        <div class="fg">
+          <input type="password" placeholder="Enter your password" autocomplete="off" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <a onclick="document.getElementById('modal').style.display='none'">Cancel</a>
+        <button class="overlay-btn" onclick="alert('This is a Tetapux demo. Nothing was sent.')">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const filenames = [
+      "Important_Contract_Q2_2026.pdf",
+      "Invoice_#48291_FINAL.pdf",
+      "Employee_Salary_Report_2026.xlsx",
+      "Confidential_NDA_Signed.pdf",
+      "Board_Meeting_Minutes.docx",
+      "Tax_Return_2025_AMENDED.pdf",
+    ];
+    const fn = filenames[Math.floor(Math.random()*filenames.length)];
+    document.getElementById("filename").textContent = fn;
+    document.title = fn + " — Google Drive";
+
+    function openModal() { document.getElementById("modal").style.display = "flex"; }
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

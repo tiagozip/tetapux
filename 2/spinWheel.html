@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Congratulations! Spin to Win!</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #1a0533 0%, #2d1b69 50%, #1a0533 100%);
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 16px;
+      top: -20px;
+      animation: confettiFall linear infinite;
+    }
+    @keyframes confettiFall {
+      to { top: 110vh; transform: rotateZ(720deg); }
+    }
+    .top-bar {
+      background: rgba(255,215,0,0.15);
+      border-bottom: 1px solid rgba(255,215,0,0.3);
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 13px;
+      color: #ffd700;
+      font-weight: 600;
+    }
+    .main {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .logo {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 10px rgba(255,215,0,0.3);
+    }
+    h1 span { color: #ffd700; }
+    .sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+    .wheel-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 0 auto 20px;
+    }
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid #ffd700;
+      box-shadow: 0 0 30px rgba(255,215,0,0.3), inset 0 0 20px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+      transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    }
+    .wheel-segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      transform-origin: 100% 100%;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 24px solid #ffd700;
+      z-index: 2;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    .spin-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      color: #1a0533;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+      transition: all 0.2s;
+      animation: pulseBtn 1.5s infinite;
+    }
+    @keyframes pulseBtn {
+      0%, 100% { box-shadow: 0 4px 20px rgba(255,215,0,0.4); }
+      50% { box-shadow: 0 4px 30px rgba(255,215,0,0.7); }
+    }
+    .spin-btn:hover { transform: scale(1.02); }
+    .spin-btn:disabled { opacity: 0.6; cursor: not-allowed; animation: none; }
+    .spins-left {
+      font-size: 13px;
+      color: #ffd700;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .timer {
+      font-size: 12px;
+      color: #ff6b6b;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    .winners {
+      margin-top: 24px;
+      text-align: left;
+    }
+    .winners h3 { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 10px; text-align: center; }
+    .winner-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      animation: winnerIn 0.5s ease-out;
+    }
+    @keyframes winnerIn { from { opacity: 0; transform: translateX(-10px); } }
+    .winner-avatar { font-size: 20px; }
+    .winner-info { flex: 1; }
+    .winner-name { font-weight: 600; font-size: 12px; }
+    .winner-prize { font-size: 11px; color: #ffd700; }
+    .winner-time { font-size: 10px; color: rgba(255,255,255,0.3); }
+
+    .win-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .win-modal {
+      background: linear-gradient(135deg, #1a0533, #2d1b69);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      max-width: 380px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      animation: winPop 0.5s ease-out;
+    }
+    @keyframes winPop { from { transform: scale(0.8); opacity: 0; } }
+    .win-modal .trophy { font-size: 56px; margin-bottom: 12px; }
+    .win-modal h2 { font-size: 22px; color: #ffd700; margin-bottom: 6px; }
+    .win-modal .prize-text { font-size: 28px; font-weight: 800; margin-bottom: 14px; }
+    .win-modal p { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 18px; line-height: 1.5; }
+    .win-modal .claim-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ffd700, #ffaa00);
+      color: #1a0533;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .win-modal .expire { font-size: 11px; color: #ff6b6b; }
+
+    @media (max-width: 400px) {
+      .wheel-container { width: 260px; height: 260px; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti" id="confetti"></div>
+
+  <div class="top-bar">🎉 You've been selected as today's lucky visitor!</div>
+
+  <div class="main">
+    <div class="logo">LOYALTY REWARDS CENTER</div>
+    <h1>Spin & <span>WIN!</span></h1>
+    <div class="sub">You have <b>3 free spins</b> to win amazing prizes</div>
+
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    </div>
+
+    <button class="spin-btn" id="spinBtn" onclick="spin()">🎰 SPIN NOW</button>
+    <div class="spins-left">Spins remaining: <span id="spinsLeft">3</span></div>
+    <div class="timer">⏰ Offer expires in: <span id="timer">04:59</span></div>
+
+    <div class="winners">
+      <h3>Recent winners near you</h3>
+      <div id="winnersList"></div>
+    </div>
+  </div>
+
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-modal">
+      <div class="trophy">🏆</div>
+      <h2>CONGRATULATIONS!</h2>
+      <div class="prize-text" id="winPrize">—</div>
+      <p>You've won! Claim your prize before it expires. Enter your shipping details on the next page to receive your reward.</p>
+      <button class="claim-btn" onclick="alert('This is a Tetapux demo. This is a classic spin-to-win scam used in affiliate marketing. The wheel is rigged, the prizes are fake, and the next page would collect your personal information or credit card for a \'shipping fee\'.')">CLAIM MY PRIZE →</button>
+      <div class="expire">Prize expires in 2:00 minutes</div>
+    </div>
+  </div>
+
+  <script>
+    const segments = [
+      { label: "iPhone 16 Pro", color: "#e74c3c" },
+      { label: "Try Again", color: "#2c3e50" },
+      { label: "$500 Gift Card", color: "#27ae60" },
+      { label: "Try Again", color: "#34495e" },
+      { label: "Samsung TV 65\"", color: "#e67e22" },
+      { label: "Try Again", color: "#2c3e50" },
+      { label: "$1000 Cash", color: "#9b59b6" },
+      { label: "Try Again", color: "#34495e" },
+      { label: "AirPods Pro", color: "#3498db" },
+      { label: "Try Again", color: "#2c3e50" },
+    ];
+
+    const canvas = document.getElementById("wheelCanvas");
+    const ctx = canvas.getContext("2d");
+    let currentAngle = 0;
+    let spinsLeft = 3;
+    let spinning = false;
+
+    function drawWheel(angle) {
+      const cx = 150, cy = 150, r = 146;
+      ctx.clearRect(0, 0, 300, 300);
+      const arc = (Math.PI * 2) / segments.length;
+
+      segments.forEach((seg, i) => {
+        const start = angle + i * arc;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, start, start + arc);
+        ctx.closePath();
+        ctx.fillStyle = seg.color;
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.15)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(start + arc / 2);
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 11px Arial";
+        ctx.textAlign = "right";
+        ctx.fillText(seg.label, r - 14, 4);
+        ctx.restore();
+      });
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffd700";
+      ctx.fill();
+      ctx.fillStyle = "#1a0533";
+      ctx.font = "bold 10px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("SPIN", cx, cy + 4);
+    }
+
+    drawWheel(0);
+
+    function spin() {
+      if (spinning || spinsLeft <= 0) return;
+      spinning = true;
+      spinsLeft--;
+      document.getElementById("spinsLeft").textContent = spinsLeft;
+      document.getElementById("spinBtn").disabled = true;
+
+      const targetIdx = spinsLeft === 0 ? 0 : (spinsLeft === 1 ? 4 : 1);
+      const arc = (Math.PI * 2) / segments.length;
+      const targetAngle = -(targetIdx * arc + arc / 2) - Math.PI / 2;
+      const fullSpins = (4 + Math.random() * 2) * Math.PI * 2;
+      const finalAngle = targetAngle + fullSpins;
+
+      let startTime = null;
+      const duration = 4000;
+
+      function animate(ts) {
+        if (!startTime) startTime = ts;
+        const elapsed = ts - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        currentAngle = eased * finalAngle;
+        drawWheel(currentAngle);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          spinning = false;
+          if (spinsLeft === 0) {
+            setTimeout(() => {
+              document.getElementById("winPrize").textContent = "🎉 iPhone 16 Pro 🎉";
+              document.getElementById("winOverlay").style.display = "flex";
+            }, 500);
+          } else {
+            document.getElementById("spinBtn").disabled = false;
+            document.getElementById("spinBtn").textContent = spinsLeft === 1 ? "🎰 LAST SPIN!" : "🎰 SPIN AGAIN";
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    let timerSec = 299;
+    setInterval(() => {
+      if (timerSec > 0) timerSec--;
+      const m = Math.floor(timerSec / 60);
+      const s = timerSec % 60;
+      document.getElementById("timer").textContent = String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+    }, 1000);
+
+    const names = ["James","Sarah","Mike","Jessica","David","Emily","Chris","Amanda","Ryan","Nicole","Tom","Lisa","Alex","Maria","John","Katie"];
+    const cities = ["New York","Los Angeles","Chicago","Houston","Phoenix","Seattle","Denver","Miami","Boston","Atlanta","Dallas","Portland"];
+    const prizes = ["iPhone 16 Pro","$500 Gift Card","Samsung TV","$1000 Cash","AirPods Pro"];
+    const times = ["Just now","1 min ago","2 min ago","3 min ago","5 min ago"];
+    const emojis = ["😄","🤩","😎","🥳","🎉","😃"];
+
+    const wl = document.getElementById("winnersList");
+    function addWinner() {
+      const div = document.createElement("div");
+      div.className = "winner-item";
+      const n = names[Math.floor(Math.random()*names.length)];
+      const c = cities[Math.floor(Math.random()*cities.length)];
+      const p = prizes[Math.floor(Math.random()*prizes.length)];
+      div.innerHTML = `
+        <div class="winner-avatar">${emojis[Math.floor(Math.random()*emojis.length)]}</div>
+        <div class="winner-info">
+          <div class="winner-name">${n} from ${c}</div>
+          <div class="winner-prize">Won: ${p}</div>
+        </div>
+        <div class="winner-time">${times[Math.floor(Math.random()*times.length)]}</div>
+      `;
+      wl.prepend(div);
+      if (wl.children.length > 5) wl.lastChild.remove();
+    }
+    for (let i = 0; i < 3; i++) addWinner();
+    setInterval(addWinner, 5000 + Math.random() * 4000);
+
+    const confettiEl = document.getElementById("confetti");
+    const confettiColors = ["#ffd700","#ff6b6b","#4ecdc4","#a78bfa","#f97316","#22d3ee"];
+    for (let i = 0; i < 30; i++) {
+      const piece = document.createElement("div");
+      piece.className = "confetti-piece";
+      piece.style.left = Math.random() * 100 + "%";
+      piece.style.background = confettiColors[Math.floor(Math.random()*confettiColors.length)];
+      piece.style.animationDuration = (3 + Math.random() * 4) + "s";
+      piece.style.animationDelay = Math.random() * 5 + "s";
+      piece.style.transform = `rotate(${Math.random()*360}deg)`;
+      confettiEl.appendChild(piece);
+    }
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

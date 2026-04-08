@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Survey — Claim Your $750 Gift Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f5f5f5;
+      font-family: "Inter", -apple-system, sans-serif;
+      min-height: 100vh;
+      color: #333;
+    }
+    .brand-bar {
+      background: #fff;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #ff6600;
+    }
+    .brand-bar .logo { font-size: 20px; font-weight: 800; color: #ff6600; }
+    .brand-bar .secure { font-size: 11px; color: #888; display: flex; align-items: center; gap: 4px; }
+    .hero-banner {
+      background: linear-gradient(135deg, #ff6600, #ff8533);
+      padding: 24px 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero-banner h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .hero-banner p { font-size: 14px; opacity: 0.9; }
+    .main {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .progress-section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #e8e8e8;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6600, #ff8533);
+      border-radius: 5px;
+      transition: width 0.5s;
+    }
+    .question-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .q-num { font-size: 11px; color: #ff6600; font-weight: 600; margin-bottom: 6px; }
+    .q-text { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .q-options { display: flex; flex-direction: column; gap: 8px; }
+    .q-option {
+      padding: 12px 16px;
+      border: 2px solid #e8e8e8;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .q-option:hover { border-color: #ff6600; background: #fff8f0; }
+    .q-option.selected { border-color: #ff6600; background: #fff0e0; }
+    .q-radio {
+      width: 18px; height: 18px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .q-option.selected .q-radio { border-color: #ff6600; }
+    .q-option.selected .q-radio::after {
+      content: "";
+      width: 10px; height: 10px;
+      background: #ff6600;
+      border-radius: 50%;
+    }
+    .reward-card {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+      color: #fff;
+      text-align: center;
+      display: none;
+    }
+    .reward-card .gift { font-size: 48px; margin-bottom: 10px; }
+    .reward-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .reward-card .amount { font-size: 36px; font-weight: 800; color: #ffd700; }
+    .reward-card p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+    .reward-card .claim-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ff6600, #ff8533);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 14px;
+      animation: pulseBtn 1.5s infinite;
+    }
+    @keyframes pulseBtn { 50% { box-shadow: 0 0 20px rgba(255,102,0,0.5); } }
+    .reward-card .expire-text { font-size: 11px; color: #ff6b6b; margin-top: 8px; font-weight: 600; }
+    .social-proof {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #888;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .social-proof .avatars { display: flex; }
+    .social-proof .av {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      border: 2px solid #fff;
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    .social-proof .av:first-child { margin-left: 0; }
+    .small { font-size: 10px; color: #bbb; text-align: center; margin-top: 12px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="brand-bar">
+    <div class="logo">RewardHub</div>
+    <div class="secure">🔒 Secure Survey</div>
+  </div>
+  <div class="hero-banner">
+    <h1>Answer 4 Questions, Get $750!</h1>
+    <p>Complete this 30-second survey to claim your exclusive reward</p>
+  </div>
+
+  <div class="main">
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>Progress</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <div class="reward-card" id="rewardCard">
+      <div class="gift">🎁</div>
+      <h3>You've qualified!</h3>
+      <div class="amount">$750.00</div>
+      <p>Your gift card is reserved and ready to claim</p>
+      <button class="claim-btn" onclick="alert('This is a Tetapux demo. Survey reward scams collect your personal information and credit card number for a \'small shipping fee\'. The gift card does not exist.')">CLAIM MY $750 GIFT CARD</button>
+      <div class="expire-text">⏰ Reserved for <span id="rewardTimer">4:59</span></div>
+      <div class="social-proof">
+        <div class="avatars">
+          <div class="av">😀</div><div class="av">😄</div><div class="av">🤩</div><div class="av">😎</div>
+        </div>
+        <span id="claimCount">2,847</span> people claimed today
+      </div>
+    </div>
+
+    <div class="small">This is a promotional offer. Gift card value subject to availability. By participating you agree to receive marketing communications. Offer limited to one per household. Must be 18+.</div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "How often do you shop online?",
+        opts: ["Daily", "Weekly", "Monthly", "Rarely"],
+      },
+      {
+        q: "Which device do you primarily use?",
+        opts: ["iPhone", "Android", "PC/Mac", "Tablet"],
+      },
+      {
+        q: "What's your age range?",
+        opts: ["18-24", "25-34", "35-44", "45+"],
+      },
+      {
+        q: "Where do you prefer to shop?",
+        opts: ["Amazon", "Walmart", "Target", "Other"],
+      },
+    ];
+
+    const container = document.getElementById("questionsContainer");
+    let currentQ = 0;
+
+    function renderQuestion(idx) {
+      container.innerHTML = "";
+      if (idx >= questions.length) {
+        showReward();
+        return;
+      }
+      const q = questions[idx];
+      const card = document.createElement("div");
+      card.className = "question-card";
+      card.innerHTML = `
+        <div class="q-num">Question ${idx+1} of ${questions.length}</div>
+        <div class="q-text">${q.q}</div>
+        <div class="q-options">
+          ${q.opts.map(o => `
+            <div class="q-option" onclick="selectOption(this, ${idx})">
+              <div class="q-radio"></div>
+              <span>${o}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
+    window.selectOption = function(el, idx) {
+      el.parentElement.querySelectorAll(".q-option").forEach(o => o.classList.remove("selected"));
+      el.classList.add("selected");
+      setTimeout(() => {
+        currentQ = idx + 1;
+        const pct = Math.round((currentQ / questions.length) * 100);
+        document.getElementById("progressFill").style.width = pct + "%";
+        document.getElementById("progressPct").textContent = pct + "%";
+        renderQuestion(currentQ);
+      }, 400);
+    };
+
+    function showReward() {
+      document.getElementById("progressFill").style.width = "100%";
+      document.getElementById("progressPct").textContent = "100%";
+      document.getElementById("rewardCard").style.display = "block";
+    }
+
+    renderQuestion(0);
+
+    let rewardSec = 299;
+    setInterval(() => {
+      if (rewardSec > 0) rewardSec--;
+      const m = Math.floor(rewardSec/60), s = rewardSec%60;
+      document.getElementById("rewardTimer").textContent = m+":"+String(s).padStart(2,"0");
+    }, 1000);
+
+    setInterval(() => {
+      const el = document.getElementById("claimCount");
+      const v = parseInt(el.textContent.replace(",",""));
+      el.textContent = (v + Math.floor(Math.random()*3+1)).toLocaleString();
+    }, 6000);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
