@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Fired After Revealing New Weight Loss "Hack" That Pharma Wants Banned — BBC Health</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #fff;
+      font-family: "Merriweather", Georgia, serif;
+      color: #222;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+    .bbc-nav {
+      background: #bb1919;
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bbc-logo {
+      font-family: "Inter", sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .bbc-links { display: flex; gap: 16px; }
+    .bbc-links a { color: rgba(255,255,255,0.8); font-family: "Inter", sans-serif; font-size: 13px; text-decoration: none; }
+    .section-bar {
+      background: #f5f5f5;
+      padding: 8px 20px;
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      color: #666;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .section-bar b { color: #bb1919; }
+    .article {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 30px 20px 50px;
+    }
+    .article .category {
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #bb1919;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .article h1 {
+      font-family: "Inter", sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .article .standfirst {
+      font-family: "Inter", sans-serif;
+      font-size: 18px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .byline {
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 24px;
+    }
+    .byline b { color: #222; }
+    .article-img {
+      width: 100%;
+      height: 260px;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-radius: 0;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      position: relative;
+    }
+    .article-img .cap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.05);
+      padding: 6px 12px;
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      color: #888;
+    }
+    .article p { margin-bottom: 18px; }
+    .article h2 {
+      font-family: "Inter", sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 28px 0 12px;
+    }
+    blockquote {
+      border-left: 4px solid #bb1919;
+      padding: 12px 20px;
+      margin: 24px 0;
+      background: #fafafa;
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .ba-card {
+      background: #f8f8f8;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      font-family: "Inter", sans-serif;
+    }
+    .ba-card .emoji { font-size: 48px; margin-bottom: 8px; }
+    .ba-card .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .ba-card .weight { font-size: 28px; font-weight: 800; }
+    .ba-card .time { font-size: 12px; color: #888; margin-top: 4px; }
+    .ba-card.after .weight { color: #1a8917; }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+    }
+    .results-table th { background: #f5f5f5; padding: 10px 14px; text-align: left; font-weight: 600; }
+    .results-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+    .results-table .green { color: #1a8917; font-weight: 600; }
+    .ad-box {
+      background: linear-gradient(135deg, #1a8917, #15700f);
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin: 32px 0;
+      text-align: center;
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      cursor: pointer;
+      position: relative;
+    }
+    .ad-box::after {
+      content: "SPONSORED";
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+    }
+    .ad-box h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .ad-box p { font-size: 14px; opacity: 0.8; margin-bottom: 14px; }
+    .ad-box .cta {
+      display: inline-block;
+      padding: 12px 32px;
+      background: #fff;
+      color: #1a8917;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .ad-box .stock { font-size: 12px; color: #ffeb3b; margin-top: 10px; font-weight: 600; }
+    .testimonial {
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+    }
+    .testimonial .stars { color: #f5a623; font-size: 16px; margin-bottom: 6px; }
+    .testimonial .tname { font-weight: 600; margin-bottom: 4px; }
+    .testimonial .verified { font-size: 11px; color: #1a8917; }
+    .bbc-footer {
+      background: #222;
+      color: #999;
+      padding: 20px;
+      text-align: center;
+      font-family: "Inter", sans-serif;
+      font-size: 11px;
+      margin-top: 40px;
+    }
+    @media (max-width: 600px) {
+      .article h1 { font-size: 24px; }
+      body { font-size: 16px; }
+      .bbc-links { display: none; }
+      .before-after { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bbc-nav">
+    <div class="bbc-logo">BBC</div>
+    <div class="bbc-links"><a>Home</a><a>News</a><a>Sport</a><a>Business</a><a>Health</a><a>Science</a></div>
+  </div>
+  <div class="section-bar"><b>Health</b> / Science & Medicine</div>
+
+  <div class="article">
+    <div class="category">Exclusive Investigation</div>
+    <h1>Doctor Fired From NHS After Revealing New Weight Loss "Hack" That Big Pharma Wants Banned</h1>
+    <div class="standfirst">A British GP claims she discovered a natural compound that causes the body to burn fat "24 hours a day" — and says pharmaceutical companies had her struck off to protect their Ozempic profits.</div>
+    <div class="byline">By <b>Dr. Claire Bennett</b>, BBC Health Correspondent · <span id="date">—</span></div>
+
+    <div class="article-img">
+      💊
+      <div class="cap">Image: The compound, derived from a Japanese root vegetable, has reportedly been used in Okinawa for centuries. (Getty Images)</div>
+    </div>
+
+    <p><strong>A former NHS doctor has gone viral</strong> after posting a TikTok video claiming she was "silenced" by the medical establishment for revealing a natural weight loss method that she says is "more effective than Ozempic, with none of the side effects."</p>
+
+    <p>Dr. Sarah Kimura, 42, who practiced as a GP in Manchester for 14 years, says she discovered the compound — a concentrated extract from the konjac root called <strong>"GlucoTrim"</strong> — while researching metabolic disorders in Japanese centenarians.</p>
+
+    <blockquote>"In my clinical observations, patients taking this extract lost an average of 2.3 stone in 8 weeks. No diet changes. No exercise. The body simply switched into what I call 'passive fat oxidation mode.' Big Pharma saw my results and panicked."</blockquote>
+
+    <h2>The Results</h2>
+
+    <p>Dr. Kimura claims she ran an informal trial with 200 patients at her practice. The results, which have <em>not</em> been peer-reviewed, reportedly showed:</p>
+
+    <table class="results-table">
+      <tr><th>Metric</th><th>Average Result (8 weeks)</th></tr>
+      <tr><td>Weight lost</td><td class="green">2.3 stone (14.6 kg)</td></tr>
+      <tr><td>Belly fat reduction</td><td class="green">47%</td></tr>
+      <tr><td>Metabolic rate increase</td><td class="green">+340%</td></tr>
+      <tr><td>Side effects reported</td><td class="green">0%</td></tr>
+      <tr><td>Patients who kept weight off (6 months)</td><td class="green">94%</td></tr>
+    </table>
+
+    <div class="before-after">
+      <div class="ba-card">
+        <div class="emoji">😔</div>
+        <div class="label">Before</div>
+        <div class="weight">16.4 st</div>
+        <div class="time">January 2026</div>
+      </div>
+      <div class="ba-card after">
+        <div class="emoji">😃</div>
+        <div class="label">After 8 weeks</div>
+        <div class="weight">14.1 st</div>
+        <div class="time">March 2026</div>
+      </div>
+    </div>
+
+    <p>"The pharmaceutical industry makes <strong>£4.2 billion per year</strong> from weight loss drugs in the UK alone," Dr. Kimura told us. "Do you really think they'd let a £29 supplement destroy that? They had my medical licence reviewed within <em>days</em> of my TikTok going viral."</p>
+
+    <div class="ad-box" onclick="alert('This is a Tetapux demo. This entire page is a fake BBC article promoting a weight loss supplement scam. The doctor, the study, and the results are fabricated. The product likely contains nothing effective, and the \'limited stock\' is fake urgency. This is a classic affiliate marketing pattern.')">
+      <h3>Try GlucoTrim — As Seen on BBC</h3>
+      <p>The Japanese root extract Dr. Kimura was fired for revealing. Now available to the public.</p>
+      <span class="cta">Get 60% Off — Limited Time →</span>
+      <div class="stock">🔥 Only <span id="stockCount">23</span> bottles remaining at this price</div>
+    </div>
+
+    <h2>The Establishment Fights Back</h2>
+
+    <p>The General Medical Council (GMC) told BBC Health that Dr. Kimura's licence was under review for "promoting unverified medical claims." Novo Nordisk, the maker of Ozempic and Wegovy, declined to comment.</p>
+
+    <p>But supporters aren't backing down. A Change.org petition titled "Reinstate Dr. Kimura" has gathered over 340,000 signatures. On social media, the hashtag #GlucoTrimGate has been viewed 80 million times.</p>
+
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="tname">Margaret H., 58 — Bristol</div>
+      <p>"I've tried everything. Slimming World. Keto. Even asked my GP about Ozempic but the waiting list was 6 months. Ordered GlucoTrim after seeing this article. Down 1.5 stone in three weeks. My knees don't hurt anymore. I'm in shock."</p>
+      <div class="verified">✓ Verified Purchase</div>
+    </div>
+
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="tname">David R., 44 — Leeds</div>
+      <p>"The wife ordered it first and I laughed at her. Then she lost a stone in two weeks and I stopped laughing. Now we both take it. I've dropped two trouser sizes. Best £29 I've ever spent."</p>
+      <div class="verified">✓ Verified Purchase</div>
+    </div>
+
+    <h2>How Does It Work?</h2>
+
+    <p>According to Dr. Kimura, the konjac root extract works by activating AMPK — an enzyme she calls the body's "master metabolic switch." When AMPK is activated, the body shifts from storing fat to burning it, even while sleeping.</p>
+
+    <p>"Your body is <em>designed</em> to burn fat," she says. "Modern processed food turned off the switch. GlucoTrim simply turns it back on. It's not a drug. It's not a stimulant. It's just giving your body what it needs."</p>
+
+    <p>NHS England issued a statement urging the public to "consult their GP before taking any supplement" and noted that "no supplement can replace a balanced diet and regular exercise."</p>
+
+    <p><em>Dr. Kimura has filed an appeal against the GMC's decision. A hearing is expected in September.</em></p>
+
+    <div class="ad-box" onclick="alert('This is a Tetapux demo of a fake advertorial weight loss scam.')">
+      <h3>⚡ Flash Sale — 60% Off GlucoTrim</h3>
+      <p>The supplement Big Pharma tried to ban. 90-day money-back guarantee.</p>
+      <span class="cta">Claim Your Discounted Bottle →</span>
+      <div class="stock">📦 Free shipping on orders placed in the next <span id="shippingTimer">14:59</span></div>
+    </div>
+  </div>
+
+  <div class="bbc-footer">
+    © 2026 BBC. The BBC is not responsible for the content of external sites. Read about our approach to external linking.<br>
+    Terms of Use | Privacy Policy | Cookies | Accessibility Help
+  </div>
+
+  <script>
+    document.getElementById("date").textContent = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+
+    let stock = 23;
+    setInterval(() => {
+      if (stock > 5 && Math.random() > 0.5) stock--;
+      document.getElementById("stockCount").textContent = stock;
+    }, 7000);
+
+    let shipSec = 14*60+59;
+    setInterval(() => {
+      if (shipSec > 0) shipSec--;
+      const m=Math.floor(shipSec/60), s=shipSec%60;
+      document.getElementById("shippingTimer").textContent = m+":"+String(s).padStart(2,"0");
+    }, 1000);
+
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

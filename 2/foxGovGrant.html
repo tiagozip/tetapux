@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breaking: New Government Program Pays Citizens $6,400/Month — Fox Business</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #fff; font-family: "Merriweather", Georgia, serif; color: #222; font-size: 18px; line-height: 1.8; }
+    .fox-nav {
+      background: #003366;
+      padding: 10px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .fox-logo {
+      font-family: "Inter", sans-serif; font-size: 24px; font-weight: 800; color: #fff;
+    }
+    .fox-logo span { color: #cc0000; }
+    .fox-links { display: flex; gap: 16px; }
+    .fox-links a { color: rgba(255,255,255,0.7); font-family: "Inter", sans-serif; font-size: 12px; text-decoration: none; }
+    .ticker {
+      background: #cc0000; color: #fff; padding: 6px 16px;
+      font-family: "Inter", sans-serif; font-size: 12px; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      overflow: hidden;
+    }
+    .ticker .tag { background: #fff; color: #cc0000; padding: 2px 8px; border-radius: 3px; font-size: 10px; letter-spacing: 1px; flex-shrink: 0; }
+    .ticker .scroll { white-space: nowrap; animation: tickerScroll 30s linear infinite; }
+    @keyframes tickerScroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+    .article { max-width: 660px; margin: 0 auto; padding: 30px 20px 50px; }
+    .article .cat { font-family: "Inter", sans-serif; font-size: 12px; font-weight: 700; color: #003366; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .article h1 { font-family: "Inter", sans-serif; font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .article .deck { font-family: "Inter", sans-serif; font-size: 17px; color: #555; line-height: 1.5; margin-bottom: 18px; }
+    .byline { font-family: "Inter", sans-serif; font-size: 13px; color: #888; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e8e8e8; }
+    .byline b { color: #222; }
+    .article p { margin-bottom: 18px; }
+    .article h2 { font-family: "Inter", sans-serif; font-size: 22px; font-weight: 700; margin: 28px 0 12px; }
+    .article-img {
+      width: 100%; height: 240px; background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+      margin: 20px 0; display: flex; align-items: center; justify-content: center; font-size: 64px; position: relative;
+    }
+    .article-img .cap { position: absolute; bottom: 0; left: 0; right: 0; padding: 6px 12px; font-family: "Inter", sans-serif; font-size: 11px; color: #888; background: rgba(255,255,255,0.8); }
+    blockquote { border-left: 4px solid #003366; padding: 10px 20px; margin: 24px 0; background: #f5f7fa; font-style: italic; font-size: 19px; }
+    .check-table {
+      width: 100%; border-collapse: collapse; margin: 20px 0;
+      font-family: "Inter", sans-serif; font-size: 14px;
+    }
+    .check-table th { background: #003366; color: #fff; padding: 10px 14px; text-align: left; }
+    .check-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+    .check-table .green { color: #1a8917; font-weight: 600; }
+    .eligibility {
+      background: #f0f7ff; border: 1px solid #bdd7f0; border-radius: 8px;
+      padding: 18px; margin: 24px 0; font-family: "Inter", sans-serif;
+    }
+    .eligibility h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #003366; }
+    .elig-item {
+      display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 14px;
+    }
+    .elig-check { color: #1a8917; font-weight: 700; }
+    .ad-card {
+      background: linear-gradient(135deg, #003366, #004080, #0055a5);
+      border-radius: 12px; padding: 28px 24px; margin: 32px 0; text-align: center;
+      color: #fff; font-family: "Inter", sans-serif; cursor: pointer;
+    }
+    .ad-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .ad-card p { font-size: 14px; opacity: 0.75; margin-bottom: 14px; }
+    .ad-card .cta {
+      display: inline-block; padding: 14px 36px; background: #cc0000; color: #fff;
+      border-radius: 8px; font-weight: 700; font-size: 16px;
+    }
+    .ad-card .rush { font-size: 12px; color: #ffd54f; margin-top: 10px; font-weight: 600; }
+    .testimonial {
+      background: #fafafa; border: 1px solid #eee; border-radius: 8px;
+      padding: 16px; margin: 20px 0; font-family: "Inter", sans-serif; font-size: 14px;
+    }
+    .testimonial .tname { font-weight: 600; margin-bottom: 4px; }
+    .testimonial .amt { font-size: 24px; font-weight: 800; color: #1a8917; margin: 6px 0; }
+    .fox-footer {
+      background: #1a1a1a; color: #999; padding: 20px; text-align: center;
+      font-family: "Inter", sans-serif; font-size: 11px; margin-top: 40px;
+    }
+    @media (max-width: 600px) {
+      .article h1 { font-size: 24px; }
+      body { font-size: 16px; }
+      .fox-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fox-nav">
+    <div class="fox-logo">FOX <span>BUSINESS</span></div>
+    <div class="fox-links"><a>Markets</a><a>Economy</a><a>Tech</a><a>Real Estate</a><a>Personal Finance</a></div>
+  </div>
+  <div class="ticker">
+    <span class="tag">ALERT</span>
+    <span class="scroll">NEW FEDERAL PROGRAM: Americans in all 50 states may qualify for up to $6,400/month • Applications now open • No credit check required • Limited enrollment period</span>
+  </div>
+
+  <div class="article">
+    <div class="cat">Economy / Personal Finance</div>
+    <h1>Little-Known Government Program Pays Americans Up to $6,400/Month — Most People Have No Idea It Exists</h1>
+    <div class="deck">A federal relief initiative, buried in a 2025 omnibus bill, is sending checks to qualifying Americans — but enrollment closes in 14 days.</div>
+    <div class="byline">By <b>Michael Chen</b>, Fox Business · <span id="date">—</span></div>
+
+    <div class="article-img">
+      🏛️
+      <div class="cap">The program was quietly included in the American Economic Relief Act of 2025. (AP Photo)</div>
+    </div>
+
+    <p><strong>WASHINGTON —</strong> While most Americans were focused on election coverage and inflation reports, Congress quietly passed a provision that could put <strong>up to $6,400 per month</strong> into the bank accounts of millions of qualifying citizens.</p>
+
+    <p>The program, officially called the <strong>"American Opportunity Direct Payment Initiative"</strong> (AODPI), was buried on page 1,847 of the 2025 Consolidated Appropriations Act. It received virtually zero media coverage — until now.</p>
+
+    <blockquote>"This is the largest direct-to-citizen payment program since the COVID stimulus checks — but it's ongoing, not a one-time payment. And almost nobody knows about it."<br><span style="font-size:14px;color:#888;font-style:normal">— Rep. James Holloway (R-TX), Ways and Means Committee</span></blockquote>
+
+    <h2>How Much Can You Receive?</h2>
+
+    <table class="check-table">
+      <tr><th>Household Status</th><th>Monthly Payment</th><th>Annual Total</th></tr>
+      <tr><td>Single, no dependents</td><td class="green">$3,200/month</td><td class="green">$38,400/year</td></tr>
+      <tr><td>Single, with dependents</td><td class="green">$4,800/month</td><td class="green">$57,600/year</td></tr>
+      <tr><td>Married filing jointly</td><td class="green">$6,400/month</td><td class="green">$76,800/year</td></tr>
+      <tr><td>Senior (65+)</td><td class="green">$5,100/month</td><td class="green">$61,200/year</td></tr>
+    </table>
+
+    <h2>Who Qualifies?</h2>
+
+    <div class="eligibility">
+      <h3>Eligibility Requirements</h3>
+      <div class="elig-item"><span class="elig-check">✓</span> U.S. citizen or permanent resident</div>
+      <div class="elig-item"><span class="elig-check">✓</span> Age 18 or older</div>
+      <div class="elig-item"><span class="elig-check">✓</span> Annual household income under $125,000</div>
+      <div class="elig-item"><span class="elig-check">✓</span> Valid Social Security number</div>
+      <div class="elig-item"><span class="elig-check">✓</span> No outstanding federal tax liens</div>
+    </div>
+
+    <p>"Most Americans already qualify and don't even know it," says financial advisor Sandra Mitchell. "The government isn't advertising this because the budget is limited. Once the allocation runs out, it's gone."</p>
+
+    <div class="ad-card" onclick="alert('This is a Tetapux demo. This is a fake Fox Business article promoting a government grant scam. The \'American Opportunity Direct Payment Initiative\' does not exist. There is no program paying $6,400/month. These scams collect your Social Security number, bank details, and personal information. Some charge upfront \'processing fees.\' The government does not advertise benefit programs through news articles with affiliate links.')">
+      <h3>Check Your Eligibility Now</h3>
+      <p>Takes 60 seconds. No credit check. Instant approval notification.</p>
+      <span class="cta">Check If You Qualify →</span>
+      <div class="rush">⏰ Enrollment closes in <span id="daysLeft">14</span> days — <span id="slotsLeft">2,847</span> spots remaining in your state</div>
+    </div>
+
+    <p>Fox Business spoke with three Americans who recently enrolled in the program:</p>
+
+    <div class="testimonial">
+      <div class="tname">Patricia M., 62 — Tampa, FL</div>
+      <div class="amt">$4,800/month</div>
+      <p>"I was barely making it on Social Security. A friend sent me this article and I applied on my phone. Three days later, the first deposit hit my account. I thought it was a scam until I called my bank and they confirmed it."</p>
+    </div>
+
+    <div class="testimonial">
+      <div class="tname">Marcus & Diane T. — Columbus, OH</div>
+      <div class="amt">$6,400/month</div>
+      <p>"We used the first payment to catch up on our mortgage. The second one went straight to our kids' college fund. This program is a blessing."</p>
+    </div>
+
+    <div class="testimonial">
+      <div class="tname">Robert J., 71 — Phoenix, AZ</div>
+      <div class="amt">$5,100/month</div>
+      <p>"At my age, I never expected to get ahead financially. Now I'm getting over $5,000 a month on top of my pension. I can finally stop worrying."</p>
+    </div>
+
+    <h2>Why Isn't This Bigger News?</h2>
+
+    <p>Political analysts suggest the program's low profile is intentional. "Neither party wants to take credit for a program that could blow up the deficit," says Georgetown political science professor Dr. Alan York. "They're hoping it flies under the radar."</p>
+
+    <p>But with word spreading rapidly on social media, the application portal has seen a <strong>12,000% increase in traffic</strong> this week alone. Government officials warn that the current funding allocation could be exhausted within weeks.</p>
+
+    <p><em>Applications can be submitted online. Processing typically takes 2-5 business days. Fox Business will continue to monitor the program and provide updates.</em></p>
+
+    <div class="ad-card" onclick="alert('This is a Tetapux demo of a government grant scam advertorial.')">
+      <h3>🇺🇸 Don't Miss Out — Apply Today</h3>
+      <p>76,800+ Americans have already enrolled. Check your eligibility in 60 seconds.</p>
+      <span class="cta">Start Application →</span>
+      <div class="rush">✅ No fees. No credit check. Results in 2 minutes.</div>
+    </div>
+  </div>
+
+  <div class="fox-footer">
+    © 2026 FOX News Network, LLC. Fox Business is a trademark of Fox News Network, LLC.<br>
+    Terms of Use | Privacy Policy | Cookie Policy | Ad Choices
+  </div>
+
+  <script>
+    document.getElementById("date").textContent = new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+    let slots = 2847;
+    setInterval(() => { if (slots > 200 && Math.random()>0.3) slots -= Math.floor(Math.random()*5+1); document.getElementById("slotsLeft").textContent = slots.toLocaleString(); }, 4000);
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
