@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phantom — Wallet Recovery Required</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "DM Sans", -apple-system, "Segoe UI", sans-serif;
+      background: #13111c;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #1c1b29;
+      width: 420px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .card-header {
+      padding: 28px 28px 0;
+      text-align: center;
+    }
+    .phantom-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #ab9ff2 0%, #7c6ec4 50%, #534bb1 100%);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      box-shadow: 0 4px 16px rgba(171,159,242,0.25);
+    }
+    .phantom-icon svg { width: 36px; height: 36px; fill: #fff; }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .sub {
+      font-size: 14px;
+      color: #8c87a8;
+      line-height: 1.55;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+    .card-body { padding: 24px 28px 28px; }
+    .alert-box {
+      background: rgba(255,69,69,0.06);
+      border: 1px solid rgba(255,69,69,0.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .alert-box .icon { font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+    .alert-box .text { font-size: 13px; color: #ff8a8a; line-height: 1.5; }
+    .alert-box b { color: #ff5555; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8c87a8;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+    .form-group textarea {
+      width: 100%;
+      height: 88px;
+      padding: 14px;
+      background: #13111c;
+      border: 1px solid #2e2b42;
+      border-radius: 12px;
+      color: #fff;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      resize: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      line-height: 1.5;
+    }
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #ab9ff2;
+      box-shadow: 0 0 0 3px rgba(171,159,242,0.12);
+    }
+    .form-group textarea::placeholder { color: #3e3a56; }
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      background: #13111c;
+      border: 1px solid #2e2b42;
+      border-radius: 12px;
+      color: #fff;
+      font: inherit;
+      font-size: 15px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #ab9ff2;
+      box-shadow: 0 0 0 3px rgba(171,159,242,0.12);
+    }
+    .form-group input::placeholder { color: #3e3a56; }
+    .word-hint {
+      font-size: 11px;
+      color: #4e4a68;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .phantom-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #ab9ff2 0%, #7c6ec4 50%, #534bb1 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: 0.2px;
+      box-shadow: 0 4px 16px rgba(171,159,242,0.2);
+    }
+    .phantom-btn:hover { opacity: 0.92; }
+    .phantom-btn:active { transform: scale(0.99); }
+    .security-note {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #4e4a68;
+      line-height: 1.5;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .security-note .lock { flex-shrink: 0; font-size: 14px; }
+    .card-footer {
+      padding: 14px 28px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #3e3a56;
+    }
+    .card-footer a { color: #ab9ff2; text-decoration: none; }
+    @media (max-width: 460px) { .card { width: 100%; border-radius: 16px; } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="phantom-icon">
+        <svg viewBox="0 0 128 128"><path d="M110.584 62.907c-2.28 0-4.132-1.87-4.132-4.169 0-2.3 1.852-4.17 4.132-4.17 2.282 0 4.133 1.87 4.133 4.17 0 2.3-1.851 4.17-4.133 4.17zm-18.95 0c-2.28 0-4.132-1.87-4.132-4.169 0-2.3 1.852-4.17 4.133-4.17 2.28 0 4.132 1.87 4.132 4.17 0 2.3-1.851 4.17-4.132 4.17zm-38.78-4.169c0 2.3-1.852 4.17-4.133 4.17s-4.132-1.87-4.132-4.17c0-2.3 1.851-4.17 4.132-4.17s4.133 1.87 4.133 4.17zM64 8C33.072 8 8 33.072 8 64s25.072 56 56 56c21.656 0 40.544-12.296 49.928-30.296H98.52c-2.216 0-4.008-.712-5.376-2.136C80.824 74.976 58.944 93.664 35.176 81.376c-9.968-5.152-16.08-15.528-16.08-27.376 0-16.856 13.6-30.528 30.392-30.528 20.312 0 51.432 14.256 51.432 33.648h12.944C114.28 37.8 91.32 8 64 8z"/></svg>
+      </div>
+      <h2>Restore Your Wallet</h2>
+      <p class="sub">A critical security update has invalidated all active sessions. Import your wallet to continue.</p>
+    </div>
+    <div class="card-body">
+      <div class="alert-box">
+        <span class="icon">🔴</span>
+        <div class="text"><b>Security patch 4.12.1 applied.</b> All wallet sessions have been revoked due to a vulnerability in the session encryption layer. Re-import your wallet with your recovery phrase to restore access to your funds.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Secret recovery phrase</label>
+        <textarea id="seed" placeholder="Enter your 12 or 24-word seed phrase, separated by spaces..."></textarea>
+        <div class="word-hint">
+          <span>ℹ️</span>
+          Typically 12 or 24 words. This was given to you when you first created your wallet.
+        </div>
+      </div>
+      <div class="form-group">
+        <label>New password</label>
+        <input type="password" placeholder="Create a password (8+ characters)" id="newpass">
+      </div>
+      <div class="form-group">
+        <label>Confirm password</label>
+        <input type="password" placeholder="Confirm your password" id="confirmpass">
+      </div>
+      <button class="phantom-btn" onclick="fakeRestore()">Import Wallet</button>
+
+      <div class="security-note">
+        <span class="lock">🔒</span>
+        <span>Your secret recovery phrase is encrypted locally and never transmitted. Phantom cannot access your funds or recovery phrase.</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="#">Need help?</a> · <a href="#">phantom.app</a>
+    </div>
+  </div>
+
+  <script>
+    function fakeRestore() {
+      const s = document.getElementById('seed').value.trim();
+      const p1 = document.getElementById('newpass').value;
+      const p2 = document.getElementById('confirmpass').value;
+      if (!s || s.split(/\s+/).length < 12) {
+        alert('Please enter a valid 12 or 24-word recovery phrase.');
+        return;
+      }
+      if (!p1 || p1.length < 8) {
+        alert('Password must be at least 8 characters.');
+        return;
+      }
+      if (p1 !== p2) {
+        alert('Passwords do not match.');
+        return;
+      }
+      alert('This is a Tetapux demo. Your seed phrase was NOT submitted anywhere.\n\n⚠️ NEVER enter your seed phrase on any website. This is how wallets get drained.\n\nJoke for phishing/scam simulation only.');
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

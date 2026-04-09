@@ -1,441 +1,2567 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 8200 // SIGINT Terminal</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #060a10;
-      --surface: rgba(8,14,24,0.95);
-      --border: rgba(0,120,255,0.12);
-      --blue: #0078ff;
-      --blue-dim: rgba(0,120,255,0.08);
-      --red: #ff2d55;
-      --red-dim: rgba(255,45,85,0.1);
-      --green: #30d158;
-      --yellow: #ffd60a;
-      --text: #c8d4e8;
-      --text-dim: #3a4a60;
-      --hebrew: "Segoe UI","Arial Hebrew",Arial,sans-serif;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:"JetBrains Mono",monospace;font-size:12px;}
-    .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,120,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,120,255,0.015) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;}
-    .scanline{position:fixed;width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,120,255,0.1),transparent);animation:scanDown 5s linear infinite;pointer-events:none;z-index:200;}
-    @keyframes scanDown{from{top:-1px}to{top:100%}}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNIT 8200 // SIGINT TERMINAL</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #03070d;
+        --bg-2: #060b15;
+        --surface: rgba(8, 14, 24, 0.92);
+        --surface-2: rgba(12, 20, 34, 0.88);
+        --border: rgba(0, 150, 255, 0.14);
+        --border-bright: rgba(0, 180, 255, 0.35);
+        --blue: #00b4ff;
+        --blue-dim: rgba(0, 180, 255, 0.08);
+        --cyan: #00fff0;
+        --red: #ff2d55;
+        --red-dim: rgba(255, 45, 85, 0.12);
+        --green: #00ff88;
+        --green-dim: rgba(0, 255, 136, 0.08);
+        --yellow: #ffd60a;
+        --orange: #ff9500;
+        --purple: #bf5af2;
+        --text: #c8d4e8;
+        --text-dim: #3a4a60;
+        --text-bright: #e8f4ff;
+        --hebrew: "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 180, 255, 0.15);
+        border-radius: 2px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 180, 255, 0.35);
+      }
 
-    .header{background:var(--surface);border-bottom:1px solid var(--border);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(10px);z-index:10;position:relative;}
-    .header-left{display:flex;align-items:center;gap:12px;}
-    .logo-emblem{width:26px;height:26px;border:2px solid var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--blue);font-weight:700;}
-    .logo-text{font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:2px;}
-    .logo-sub{font-size:8px;color:var(--text-dim);letter-spacing:1px;}
-    .hebrew-label{font-family:var(--hebrew);font-size:10px;color:var(--text-dim);direction:rtl;}
-    .classification{background:var(--red-dim);color:var(--red);padding:2px 8px;border-radius:3px;font-size:8px;font-weight:700;letter-spacing:1.5px;animation:blink 2s step-end infinite;}
-    @keyframes blink{50%{opacity:.3}}
-    .header-right{display:flex;gap:14px;color:var(--text-dim);font-size:10px;align-items:center;}
-    .live-dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:pulse 1.5s infinite;display:inline-block;margin-right:4px;}
-    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,45,85,.4)}50%{box-shadow:0 0 0 4px rgba(255,45,85,0)}}
+      /* Background effects */
+      .grid-bg {
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(0, 180, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 180, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+      .scanline {
+        position: fixed;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(0, 180, 255, 0.15), transparent);
+        animation: scanDown 6s linear infinite;
+        pointer-events: none;
+        z-index: 200;
+      }
+      @keyframes scanDown {
+        from {
+          top: -2px;
+        }
+        to {
+          top: 100%;
+        }
+      }
+      .noise {
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+        opacity: 0.03;
+        pointer-events: none;
+        z-index: 3;
+      }
 
-    .dashboard{display:grid;grid-template-columns:220px 1fr 250px;grid-template-rows:1fr auto;gap:1px;height:calc(100vh - 36px);background:rgba(0,120,255,0.03);}
-    .panel{background:var(--surface);padding:7px;overflow:hidden;display:flex;flex-direction:column;backdrop-filter:blur(5px);}
-    .panel-title{font-size:8px;font-weight:700;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-    .panel-title .count{color:var(--text-dim);font-weight:400;}
-    .panel-title .live-badge{color:var(--red);font-weight:700;animation:blink 1s step-end infinite;}
+      /* Boot screen */
+      .boot {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 60px;
+        font-size: 11px;
+        color: var(--green);
+        font-family: "JetBrains Mono", monospace;
+      }
+      .boot-line {
+        opacity: 0;
+        animation: bootLine 0.1s forwards;
+      }
+      @keyframes bootLine {
+        to {
+          opacity: 1;
+        }
+      }
+      .boot.done {
+        animation: bootFade 0.6s forwards 0.3s;
+      }
+      @keyframes bootFade {
+        to {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
 
-    .target-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-    .target-item{padding:5px 6px;border:1px solid var(--border);border-radius:3px;cursor:pointer;transition:all .1s;display:flex;align-items:center;gap:6px;}
-    .target-item:hover,.target-item.active{background:var(--blue-dim);border-color:rgba(0,120,255,.3);}
-    .target-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1a2a40,#0d1520);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
-    .target-info{flex:1;min-width:0;}
-    .target-name{font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .target-meta{font-size:8px;color:var(--text-dim);}
-    .target-status{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-    .status-active{background:var(--green);}
-    .status-idle{background:var(--yellow);}
-    .status-offline{background:var(--text-dim);}
+      /* Header */
+      .header {
+        background: linear-gradient(180deg, var(--surface), rgba(8, 14, 24, 0.8));
+        border-bottom: 1px solid var(--border-bright);
+        padding: 6px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+        position: relative;
+        box-shadow: 0 2px 20px rgba(0, 180, 255, 0.08);
+      }
+      .header::before {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--blue), transparent);
+        opacity: 0.6;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .logo-emblem {
+        width: 32px;
+        height: 32px;
+        border: 2px solid var(--blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        color: var(--blue);
+        font-weight: 700;
+        position: relative;
+        box-shadow:
+          0 0 14px rgba(0, 180, 255, 0.3),
+          inset 0 0 10px rgba(0, 180, 255, 0.1);
+      }
+      .logo-emblem::before {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border: 1px solid rgba(0, 180, 255, 0.2);
+        border-radius: 50%;
+        animation: logoSpin 10s linear infinite;
+        border-left-color: transparent;
+        border-right-color: transparent;
+      }
+      @keyframes logoSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .logo-text {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--blue);
+        letter-spacing: 2.5px;
+        text-shadow: 0 0 8px rgba(0, 180, 255, 0.4);
+      }
+      .logo-sub {
+        font-size: 8px;
+        color: var(--text-dim);
+        letter-spacing: 1.2px;
+      }
+      .hebrew-label {
+        font-family: var(--hebrew);
+        font-size: 11px;
+        color: var(--text-dim);
+        direction: rtl;
+      }
+      .classification {
+        background: var(--red-dim);
+        color: var(--red);
+        padding: 3px 10px;
+        border: 1px solid rgba(255, 45, 85, 0.3);
+        border-radius: 2px;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        animation: blink 2s step-end infinite;
+        text-shadow: 0 0 6px rgba(255, 45, 85, 0.5);
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .header-right {
+        display: flex;
+        gap: 18px;
+        color: var(--text-dim);
+        font-size: 10px;
+        align-items: center;
+      }
+      .header-stat {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .header-stat .val {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .live-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--red);
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        display: inline-block;
+        box-shadow: 0 0 8px var(--red);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 45, 85, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(255, 45, 85, 0);
+        }
+      }
 
-    .center-panel{display:flex;flex-direction:column;gap:1px;background:rgba(0,120,255,.03);}
-    .map-section{flex:1;position:relative;overflow:hidden;}
-    #map{width:100%;height:100%;}
-    .maplibregl-ctrl-logo,.maplibregl-ctrl-attrib{display:none!important;}
-    .map-overlay-top{position:absolute;top:6px;left:6px;z-index:5;display:flex;gap:4px;flex-wrap:wrap;}
-    .map-btn{padding:3px 8px;background:rgba(8,14,24,.85);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:9px;font-family:inherit;cursor:pointer;backdrop-filter:blur(4px);transition:all .1s;}
-    .map-btn:hover{background:var(--blue-dim);border-color:rgba(0,120,255,.3);}
-    .map-btn.active{border-color:var(--blue);color:var(--blue);}
-    .map-overlay-info{position:absolute;bottom:6px;left:6px;z-index:5;font-size:8px;color:var(--text-dim);background:rgba(8,14,24,.8);padding:3px 6px;border-radius:2px;backdrop-filter:blur(4px);}
-    .map-overlay-coords{position:absolute;top:6px;right:6px;z-index:5;font-size:9px;color:var(--text-dim);text-align:right;background:rgba(8,14,24,.8);padding:3px 6px;border-radius:2px;backdrop-filter:blur(4px);font-variant-numeric:tabular-nums;}
+      /* Main dashboard */
+      .dashboard {
+        display: grid;
+        grid-template-columns: 240px 1fr 280px;
+        grid-template-rows: 1fr auto auto;
+        gap: 1px;
+        height: calc(100vh - 44px);
+        background: rgba(0, 180, 255, 0.04);
+        position: relative;
+        z-index: 5;
+      }
+      .panel {
+        background: var(--surface);
+        padding: 8px 9px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(6px);
+        position: relative;
+      }
+      .panel-title {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--blue);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 7px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-shadow: 0 0 6px rgba(0, 180, 255, 0.3);
+      }
+      .panel-title::before {
+        content: "▸ ";
+        color: var(--cyan);
+      }
+      .panel-title .count {
+        color: var(--text-dim);
+        font-weight: 400;
+      }
+      .panel-title .live-badge {
+        color: var(--red);
+        font-weight: 700;
+        animation: blink 1s step-end infinite;
+        font-size: 8px;
+      }
 
-    .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:5px;}
-    .tab{padding:4px 8px;font-size:8px;color:var(--text-dim);cursor:pointer;border-bottom:1px solid transparent;letter-spacing:.5px;text-transform:uppercase;transition:all .1s;}
-    .tab:hover{color:var(--text);}
-    .tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+      /* Left panel: targets */
+      .target-list {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding-right: 3px;
+      }
+      .target-item {
+        padding: 6px 7px;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+      .target-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: transparent;
+        transition: all 0.15s;
+      }
+      .target-item:hover {
+        background: var(--blue-dim);
+        border-color: var(--border-bright);
+      }
+      .target-item.active {
+        background: var(--blue-dim);
+        border-color: var(--blue);
+        box-shadow:
+          0 0 0 1px rgba(0, 180, 255, 0.2),
+          0 0 12px rgba(0, 180, 255, 0.15);
+      }
+      .target-item.active::before {
+        background: var(--blue);
+        box-shadow: 0 0 8px var(--blue);
+      }
+      .target-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 3px;
+        background: linear-gradient(135deg, #1a2a40, #0d1520);
+        border: 1px solid var(--border-bright);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .target-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .target-name {
+        font-size: 10px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--text-bright);
+      }
+      .target-meta {
+        font-size: 8px;
+        color: var(--text-dim);
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .signal-bars {
+        display: inline-flex;
+        gap: 1px;
+        align-items: flex-end;
+        height: 8px;
+      }
+      .signal-bars .bar {
+        width: 2px;
+        background: var(--green);
+      }
+      .signal-bars .bar:nth-child(1) {
+        height: 2px;
+      }
+      .signal-bars .bar:nth-child(2) {
+        height: 4px;
+      }
+      .signal-bars .bar:nth-child(3) {
+        height: 6px;
+      }
+      .signal-bars .bar:nth-child(4) {
+        height: 8px;
+      }
+      .signal-bars .bar.off {
+        background: var(--text-dim);
+        opacity: 0.3;
+      }
+      .target-status {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .status-active {
+        background: var(--green);
+        box-shadow: 0 0 6px var(--green);
+      }
+      .status-idle {
+        background: var(--yellow);
+        box-shadow: 0 0 6px var(--yellow);
+      }
+      .status-offline {
+        background: var(--text-dim);
+      }
 
-    .intercept-section{height:170px;background:var(--surface);padding:7px;display:flex;flex-direction:column;}
-    .intercept-feed{flex:1;overflow:hidden;font-size:10px;line-height:1.5;}
-    .int-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:1px 3px;cursor:pointer;border-radius:2px;}
-    .int-line:hover{background:rgba(255,255,255,.03);}
-    .int-sms{color:var(--green);}.int-call{color:var(--yellow);}.int-data{color:var(--blue);}.int-flag{color:var(--red);font-weight:500;}
+      /* Search box */
+      .search-box {
+        margin-bottom: 6px;
+        position: relative;
+      }
+      .search-box input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 4px 8px 4px 22px;
+        font-family: inherit;
+        font-size: 10px;
+        border-radius: 2px;
+        outline: none;
+        transition: all 0.15s;
+      }
+      .search-box input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 1px rgba(0, 180, 255, 0.2);
+      }
+      .search-box::before {
+        content: "⌕";
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-dim);
+        font-size: 12px;
+      }
 
-    .right-panel{display:flex;flex-direction:column;gap:1px;background:rgba(0,120,255,.03);}
-    .profile-section{background:var(--surface);padding:7px;flex-shrink:0;}
-    .profile-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-    .profile-photo{width:40px;height:40px;border-radius:3px;background:linear-gradient(135deg,#1a2a40,#0d1520);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;}
-    .profile-name{font-size:11px;font-weight:600;}
-    .profile-id{font-size:8px;color:var(--text-dim);}
-    .profile-threat{display:inline-block;padding:1px 5px;border-radius:2px;font-size:8px;font-weight:700;margin-top:2px;}
-    .threat-high{background:var(--red-dim);color:var(--red);}
-    .threat-med{background:rgba(255,214,10,.12);color:var(--yellow);}
-    .data-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.02);font-size:9px;}
-    .data-label{color:var(--text-dim);}.data-value{text-align:right;max-width:55%;word-break:break-all;}
+      /* Center panel: map + intercept */
+      .center-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: rgba(0, 180, 255, 0.03);
+      }
+      .map-section {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        background: #000;
+        min-height: 0;
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+      .maplibregl-ctrl-logo,
+      .maplibregl-ctrl-attrib {
+        display: none !important;
+      }
+      .maplibregl-canvas {
+        outline: none !important;
+      }
 
-    .actions-section{background:var(--surface);padding:7px;display:flex;flex-direction:column;gap:3px;}
-    .action-btn{padding:5px 8px;background:var(--blue-dim);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:9px;font-family:inherit;cursor:pointer;text-align:left;transition:all .1s;}
-    .action-btn:hover{background:rgba(0,120,255,.15);border-color:var(--blue);}
-    .action-btn.danger{border-color:rgba(255,45,85,.2);}
-    .action-btn.danger:hover{background:var(--red-dim);border-color:var(--red);color:var(--red);}
-    .action-btn .label{font-weight:500;}
-    .action-btn .desc{color:var(--text-dim);font-size:8px;}
+      .map-overlay-top {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 5;
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .map-btn {
+        padding: 4px 10px;
+        background: rgba(8, 14, 24, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        color: var(--text);
+        font-size: 9px;
+        font-family: inherit;
+        cursor: pointer;
+        backdrop-filter: blur(6px);
+        transition: all 0.15s;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .map-btn:hover {
+        background: var(--blue-dim);
+        border-color: var(--border-bright);
+        color: var(--cyan);
+      }
+      .map-btn.active {
+        border-color: var(--blue);
+        color: var(--blue);
+        background: rgba(0, 180, 255, 0.12);
+        box-shadow: 0 0 10px rgba(0, 180, 255, 0.2);
+      }
 
-    .network-section{background:var(--surface);padding:7px;flex:1;overflow:hidden;display:flex;flex-direction:column;}
-    .network-graph{flex:1;position:relative;overflow:hidden;}
-    .node{position:absolute;width:24px;height:24px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:8px;cursor:pointer;transition:all .2s;z-index:2;}
-    .node:hover{transform:scale(1.3);z-index:3;border-color:var(--blue);box-shadow:0 0 10px rgba(0,120,255,.3);}
-    .node.center{width:30px;height:30px;border-color:var(--red);background:var(--red-dim);font-size:10px;}
-    .net-line{position:absolute;height:1px;background:var(--border);transform-origin:left center;z-index:1;pointer-events:none;}
+      .map-overlay-info {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        z-index: 5;
+        font-size: 9px;
+        color: var(--cyan);
+        background: rgba(8, 14, 24, 0.85);
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        backdrop-filter: blur(6px);
+        letter-spacing: 0.5px;
+      }
+      .map-overlay-info .label {
+        color: var(--text-dim);
+      }
+      .map-overlay-coords {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 5;
+        font-size: 10px;
+        color: var(--text);
+        text-align: right;
+        background: rgba(8, 14, 24, 0.85);
+        padding: 5px 9px;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        backdrop-filter: blur(6px);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.5;
+      }
+      .map-overlay-coords .label {
+        color: var(--text-dim);
+        font-size: 8px;
+      }
 
-    .bottom-bar{grid-column:1/-1;background:var(--surface);border-top:1px solid var(--border);padding:3px 12px;display:flex;align-items:center;justify-content:space-between;font-size:8px;color:var(--text-dim);}
-    .bottom-stats{display:flex;gap:16px;}
-    .bottom-stat .val{color:var(--text);font-weight:500;}
+      .crosshair {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 4;
+        width: 60px;
+        height: 60px;
+        opacity: 0.4;
+      }
+      .crosshair::before,
+      .crosshair::after {
+        content: "";
+        position: absolute;
+        background: var(--blue);
+      }
+      .crosshair::before {
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        transform: translateX(-50%);
+      }
+      .crosshair::after {
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        transform: translateY(-50%);
+      }
+      .crosshair .ring {
+        position: absolute;
+        inset: 10px;
+        border: 1px solid var(--blue);
+        border-radius: 50%;
+      }
 
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;}
-    .modal{background:#0a0e18;border:1px solid var(--border);border-radius:6px;padding:16px;max-width:420px;width:100%;max-height:80vh;overflow-y:auto;}
-    .modal h3{font-size:12px;color:var(--blue);margin-bottom:8px;font-family:"Space Grotesk",sans-serif;}
-    .modal p{font-size:10px;color:var(--text-dim);line-height:1.5;margin-bottom:8px;}
-    .modal pre{background:rgba(0,0,0,.5);padding:8px;border-radius:3px;font-size:9px;overflow-x:auto;margin-bottom:8px;border:1px solid var(--border);white-space:pre-wrap;word-break:break-all;line-height:1.5;}
-    .modal pre .ok{color:var(--green);}.modal pre .err{color:var(--red);}.modal pre .warn{color:var(--yellow);}
-    .modal-close{padding:5px 14px;background:var(--blue-dim);border:1px solid var(--border);border-radius:3px;color:var(--text);font-size:10px;cursor:pointer;font-family:inherit;}
+      /* Intercept feed section */
+      .intercept-section {
+        height: 200px;
+        background: var(--surface);
+        padding: 8px 9px;
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid var(--border-bright);
+      }
+      .tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 6px;
+      }
+      .tab {
+        padding: 5px 10px;
+        font-size: 9px;
+        color: var(--text-dim);
+        cursor: pointer;
+        border-bottom: 1px solid transparent;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        transition: all 0.15s;
+        position: relative;
+      }
+      .tab:hover {
+        color: var(--text);
+      }
+      .tab.active {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+        text-shadow: 0 0 6px rgba(0, 180, 255, 0.4);
+      }
+      .tab .badge {
+        display: inline-block;
+        margin-left: 4px;
+        padding: 0 4px;
+        background: var(--red-dim);
+        color: var(--red);
+        border-radius: 6px;
+        font-size: 7px;
+      }
+      .intercept-feed {
+        flex: 1;
+        overflow: hidden;
+        font-size: 10px;
+        line-height: 1.55;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .int-line {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 1px 4px;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.1s;
+      }
+      .int-line:hover {
+        background: rgba(0, 180, 255, 0.08);
+        padding-left: 8px;
+      }
+      .int-line .ts {
+        color: var(--text-dim);
+      }
+      .int-line .id {
+        color: var(--cyan);
+      }
+      .int-sms {
+        color: var(--green);
+      }
+      .int-call {
+        color: var(--yellow);
+      }
+      .int-data {
+        color: var(--blue);
+      }
+      .int-flag {
+        color: var(--red);
+        font-weight: 500;
+      }
 
-    .maplibregl-popup-content{background:rgba(8,14,24,.95)!important;border:1px solid var(--border)!important;border-radius:5px!important;padding:8px 10px!important;font-family:"JetBrains Mono",monospace!important;font-size:10px!important;color:var(--text)!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important;max-width:180px!important;}
-    .maplibregl-popup-tip{border-top-color:rgba(8,14,24,.95)!important;}
-    .maplibregl-popup-close-button{color:var(--text-dim)!important;font-size:14px!important;}
-    .popup-name{font-weight:600;margin-bottom:1px;}.popup-id{color:var(--text-dim);font-size:8px;}.popup-status{color:var(--green);font-size:8px;margin-top:3px;}
+      /* Right panel: profile + actions + network */
+      .right-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: rgba(0, 180, 255, 0.03);
+        overflow: hidden;
+      }
+      .profile-section {
+        background: var(--surface);
+        padding: 8px 9px;
+        flex-shrink: 0;
+      }
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 8px;
+      }
+      .profile-photo {
+        width: 48px;
+        height: 48px;
+        border-radius: 3px;
+        background: linear-gradient(135deg, #1a2a40, #0d1520);
+        border: 1px solid var(--border-bright);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        position: relative;
+        box-shadow: 0 0 12px rgba(0, 180, 255, 0.15);
+      }
+      .profile-photo::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 3px;
+        box-shadow: inset 0 0 10px rgba(0, 180, 255, 0.2);
+      }
+      .profile-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-bright);
+      }
+      .profile-id {
+        font-size: 8px;
+        color: var(--text-dim);
+        margin-top: 1px;
+      }
+      .profile-threat {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 2px;
+        font-size: 8px;
+        font-weight: 700;
+        margin-top: 3px;
+        letter-spacing: 0.5px;
+      }
+      .threat-high {
+        background: var(--red-dim);
+        color: var(--red);
+        border: 1px solid rgba(255, 45, 85, 0.3);
+      }
+      .threat-med {
+        background: rgba(255, 214, 10, 0.12);
+        color: var(--yellow);
+        border: 1px solid rgba(255, 214, 10, 0.3);
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 9px;
+      }
+      .data-label {
+        color: var(--text-dim);
+      }
+      .data-value {
+        text-align: right;
+        max-width: 60%;
+        word-break: break-all;
+        color: var(--text-bright);
+      }
+      .data-value.ok {
+        color: var(--green);
+      }
 
-    @media(max-width:900px){.dashboard{grid-template-columns:1fr;grid-template-rows:auto;height:auto;}html,body{overflow:auto;}.panel{min-height:200px;}.map-section{min-height:350px;}}
-  </style>
-</head>
-<body>
-  <div class="grid-bg"></div>
-  <div class="scanline"></div>
+      /* Threat meter */
+      .threat-meter {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+      }
+      .meter-label {
+        font-size: 8px;
+        color: var(--text-dim);
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+        letter-spacing: 0.5px;
+      }
+      .meter-bar {
+        height: 4px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .meter-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+        transition: width 0.5s;
+        box-shadow: 0 0 8px currentColor;
+      }
 
-  <div class="header">
-    <div class="header-left">
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div class="logo-emblem">8200</div>
-        <div><div class="logo-text">UNIT 8200</div><div class="logo-sub">SIGINT / CYBER INTELLIGENCE</div></div>
-      </div>
-      <span class="hebrew-label">יחידה 8200 — אמ"ן</span>
-      <div class="classification">SHAMSHI // NOFORN</div>
-    </div>
-    <div class="header-right">
-      <span><span class="live-dot"></span>LIVE OPS</span>
-      <span id="clock">00:00:00 IST</span>
-    </div>
-  </div>
+      /* Actions */
+      .actions-section {
+        background: var(--surface);
+        padding: 8px 9px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex-shrink: 0;
+      }
+      .action-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+      }
+      .action-btn {
+        padding: 6px 8px;
+        background: rgba(0, 180, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        color: var(--text);
+        font-size: 9px;
+        font-family: inherit;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        letter-spacing: 0.3px;
+      }
+      .action-btn:hover {
+        background: rgba(0, 180, 255, 0.12);
+        border-color: var(--blue);
+        color: var(--cyan);
+        transform: translateX(1px);
+      }
+      .action-btn.danger {
+        border-color: rgba(255, 45, 85, 0.25);
+      }
+      .action-btn.danger:hover {
+        background: var(--red-dim);
+        border-color: var(--red);
+        color: var(--red);
+      }
+      .action-btn .icon {
+        font-size: 11px;
+      }
 
-  <div class="dashboard">
-    <div class="panel">
-      <div class="panel-title">Active Targets <span class="count" id="targetCount">0</span></div>
-      <div class="target-list" id="targetList"></div>
-    </div>
+      /* Network graph */
+      .network-section {
+        background: var(--surface);
+        padding: 8px 9px;
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .network-graph {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+      .node {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1px solid var(--border-bright);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 2;
+        background: rgba(10, 16, 28, 0.9);
+        backdrop-filter: blur(4px);
+      }
+      .node:hover {
+        transform: scale(1.4);
+        z-index: 3;
+        border-color: var(--cyan);
+        box-shadow: 0 0 14px rgba(0, 255, 240, 0.4);
+      }
+      .node.center {
+        width: 34px;
+        height: 34px;
+        border-color: var(--red);
+        background: var(--red-dim);
+        font-size: 12px;
+        box-shadow: 0 0 16px rgba(255, 45, 85, 0.4);
+        animation: centerPulse 2s ease-in-out infinite;
+      }
+      @keyframes centerPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 16px rgba(255, 45, 85, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 24px rgba(255, 45, 85, 0.7);
+        }
+      }
+      .net-line {
+        position: absolute;
+        height: 1px;
+        background: linear-gradient(90deg, var(--blue), transparent);
+        transform-origin: left center;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .net-packet {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--cyan);
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--cyan);
+        z-index: 2;
+        pointer-events: none;
+      }
 
-    <div class="center-panel">
-      <div class="map-section">
-        <div id="map"></div>
-        <div class="map-overlay-top">
-          <button class="map-btn active" onclick="flyTo('region',this)">Region</button>
-          <button class="map-btn" onclick="flyTo('gaza',this)">Gaza</button>
-          <button class="map-btn" onclick="flyTo('beirut',this)">Beirut</button>
-          <button class="map-btn" onclick="flyTo('tehran',this)">Tehran</button>
-          <button class="map-btn" onclick="flyTo('damascus',this)">Damascus</button>
-          <button class="map-btn" onclick="toggleGlobe(this)" id="globeBtn">Globe</button>
-        </div>
-        <div class="map-overlay-info">GEOINT — OFEK-16 / KH-13 COMPOSITE</div>
-        <div class="map-overlay-coords" id="mapCoords">31.77°N 35.21°E</div>
-      </div>
-      <div class="intercept-section">
-        <div class="panel-title">Signal Intercept <span class="live-badge">LIVE</span></div>
-        <div class="tabs">
-          <div class="tab active" onclick="setFeedFilter('all',this)">All</div>
-          <div class="tab" onclick="setFeedFilter('int-sms',this)">SMS</div>
-          <div class="tab" onclick="setFeedFilter('int-call',this)">Calls</div>
-          <div class="tab" onclick="setFeedFilter('int-data',this)">Data</div>
-          <div class="tab" onclick="setFeedFilter('int-flag',this)">Flagged</div>
-        </div>
-        <div class="intercept-feed" id="interceptFeed"></div>
-      </div>
-    </div>
+      /* Command console */
+      .console-section {
+        grid-column: 1 / -1;
+        background: var(--surface);
+        border-top: 1px solid var(--border-bright);
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+      }
+      .console-prompt {
+        color: var(--cyan);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .console-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 11px;
+        caret-color: var(--cyan);
+      }
+      .console-cursor {
+        display: inline-block;
+        width: 7px;
+        height: 12px;
+        background: var(--cyan);
+        animation: cursorBlink 1s step-end infinite;
+        box-shadow: 0 0 6px var(--cyan);
+      }
+      @keyframes cursorBlink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .console-hint {
+        color: var(--text-dim);
+        font-size: 9px;
+        white-space: nowrap;
+      }
 
-    <div class="right-panel">
-      <div class="profile-section">
-        <div class="panel-title">Subject Profile</div>
-        <div class="profile-header">
-          <div class="profile-photo">👤</div>
+      /* Bottom status bar */
+      .bottom-bar {
+        grid-column: 1 / -1;
+        background: linear-gradient(180deg, rgba(8, 14, 24, 0.8), var(--surface));
+        border-top: 1px solid var(--border);
+        padding: 4px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 9px;
+        color: var(--text-dim);
+        letter-spacing: 0.3px;
+      }
+      .bottom-stats {
+        display: flex;
+        gap: 18px;
+      }
+      .bottom-stat .val {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .bottom-stat.active .val {
+        color: var(--green);
+      }
+
+      /* Terminal modal */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 4, 10, 0.85);
+        backdrop-filter: blur(6px);
+        z-index: 300;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-overlay.active {
+        display: flex;
+        animation: modalFade 0.2s;
+      }
+      @keyframes modalFade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .terminal-window {
+        background: rgba(3, 7, 13, 0.98);
+        border: 1px solid var(--border-bright);
+        border-radius: 4px;
+        max-width: 580px;
+        width: 100%;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 0 0 1px rgba(0, 180, 255, 0.1),
+          0 20px 60px rgba(0, 0, 0, 0.8),
+          0 0 80px rgba(0, 180, 255, 0.15);
+        overflow: hidden;
+        animation: modalSlide 0.25s ease-out;
+      }
+      @keyframes modalSlide {
+        from {
+          transform: translateY(20px) scale(0.97);
+          opacity: 0;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      .terminal-header {
+        background: linear-gradient(180deg, rgba(0, 180, 255, 0.08), transparent);
+        border-bottom: 1px solid var(--border);
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .terminal-title {
+        font-size: 10px;
+        color: var(--blue);
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-shadow: 0 0 6px rgba(0, 180, 255, 0.4);
+      }
+      .terminal-title::before {
+        content: "● ";
+        color: var(--green);
+      }
+      .terminal-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .terminal-dots div {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--text-dim);
+        cursor: pointer;
+      }
+      .terminal-dots div:hover {
+        opacity: 0.7;
+      }
+      .terminal-dots .red {
+        background: #ff5f56;
+      }
+      .terminal-dots .yellow {
+        background: #ffbd2e;
+      }
+      .terminal-dots .green {
+        background: #27c93f;
+      }
+      .terminal-body {
+        padding: 14px 16px;
+        font-size: 10px;
+        line-height: 1.6;
+        overflow-y: auto;
+        flex: 1;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .terminal-body .cmd {
+        color: var(--cyan);
+        margin-bottom: 6px;
+      }
+      .terminal-body .cmd::before {
+        content: "$ ";
+        color: var(--green);
+      }
+      .terminal-body .desc {
+        color: var(--text-dim);
+        font-size: 9px;
+        margin-bottom: 10px;
+        line-height: 1.5;
+      }
+      .terminal-body pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 10px;
+        line-height: 1.6;
+      }
+      .terminal-body .ok {
+        color: var(--green);
+      }
+      .terminal-body .err {
+        color: var(--red);
+      }
+      .terminal-body .warn {
+        color: var(--yellow);
+      }
+      .terminal-body .info {
+        color: var(--blue);
+      }
+      .terminal-body .dim {
+        color: var(--text-dim);
+      }
+      .terminal-body .hl {
+        color: var(--cyan);
+      }
+      .terminal-footer {
+        border-top: 1px solid var(--border);
+        padding: 8px 14px;
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .term-btn {
+        padding: 5px 14px;
+        background: var(--blue-dim);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        color: var(--text);
+        font-size: 10px;
+        cursor: pointer;
+        font-family: inherit;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        transition: all 0.15s;
+      }
+      .term-btn:hover {
+        background: rgba(0, 180, 255, 0.15);
+        border-color: var(--blue);
+        color: var(--cyan);
+      }
+      .term-btn.danger:hover {
+        background: var(--red-dim);
+        border-color: var(--red);
+        color: var(--red);
+      }
+
+      /* Waveform canvas for hot mic */
+      .waveform {
+        width: 100%;
+        height: 50px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        margin: 8px 0;
+        display: block;
+      }
+      .hex-dump {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--border);
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 9px;
+        line-height: 1.5;
+        overflow-x: auto;
+        color: var(--text);
+      }
+      .hex-dump .offset {
+        color: var(--text-dim);
+      }
+      .hex-dump .hex {
+        color: var(--cyan);
+      }
+      .hex-dump .ascii {
+        color: var(--green);
+      }
+
+      /* Map popup */
+      .maplibregl-popup-content {
+        background: rgba(3, 7, 13, 0.95) !important;
+        border: 1px solid var(--border-bright) !important;
+        border-radius: 3px !important;
+        padding: 10px 12px !important;
+        font-family: "JetBrains Mono", monospace !important;
+        font-size: 10px !important;
+        color: var(--text) !important;
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.7),
+          0 0 20px rgba(0, 180, 255, 0.15) !important;
+        max-width: 200px !important;
+      }
+      .maplibregl-popup-tip {
+        border-top-color: rgba(3, 7, 13, 0.95) !important;
+        border-bottom-color: rgba(3, 7, 13, 0.95) !important;
+      }
+      .maplibregl-popup-close-button {
+        color: var(--text-dim) !important;
+        font-size: 16px !important;
+        padding: 2px 6px !important;
+      }
+      .popup-name {
+        font-weight: 600;
+        color: var(--text-bright);
+        margin-bottom: 2px;
+      }
+      .popup-id {
+        color: var(--text-dim);
+        font-size: 8px;
+      }
+      .popup-status {
+        color: var(--green);
+        font-size: 8px;
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px solid var(--border);
+      }
+
+      /* Toast */
+      .toast-container {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        z-index: 250;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        pointer-events: none;
+      }
+      .toast {
+        background: var(--surface);
+        border: 1px solid var(--border-bright);
+        border-left: 3px solid var(--blue);
+        padding: 7px 12px;
+        font-size: 10px;
+        color: var(--text);
+        backdrop-filter: blur(8px);
+        box-shadow:
+          0 4px 16px rgba(0, 0, 0, 0.5),
+          0 0 16px rgba(0, 180, 255, 0.1);
+        animation:
+          toastIn 0.3s,
+          toastOut 0.3s 3.7s forwards;
+        max-width: 300px;
+        border-radius: 2px;
+      }
+      .toast.success {
+        border-left-color: var(--green);
+      }
+      .toast.warn {
+        border-left-color: var(--yellow);
+      }
+      .toast.error {
+        border-left-color: var(--red);
+      }
+      @keyframes toastIn {
+        from {
+          transform: translateX(20px);
+          opacity: 0;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      @keyframes toastOut {
+        to {
+          transform: translateX(20px);
+          opacity: 0;
+        }
+      }
+      .toast .t-title {
+        font-weight: 600;
+        color: var(--cyan);
+        font-size: 9px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+
+      @media (max-width: 1000px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+          height: auto;
+        }
+        html,
+        body {
+          overflow: auto;
+        }
+        .panel {
+          min-height: 220px;
+        }
+        .map-section {
+          min-height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-bg"></div>
+    <div class="vignette"></div>
+    <div class="noise"></div>
+    <div class="scanline"></div>
+
+    <!-- Boot sequence -->
+    <div class="boot" id="boot"></div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <div class="logo-emblem">8200</div>
           <div>
-            <div class="profile-name" id="profileName">—</div>
-            <div class="profile-id" id="profileId">TGT-0000</div>
-            <div class="profile-threat threat-high" id="profileThreat">HIGH</div>
+            <div class="logo-text">UNIT 8200</div>
+            <div class="logo-sub">SIGINT / CYBER INTELLIGENCE DIVISION</div>
           </div>
         </div>
-        <div id="profileData"></div>
+        <span class="hebrew-label">יחידה 8200 — אגף המודיעין</span>
+        <div class="classification">SHAMSHI // NOFORN // TOP SECRET</div>
       </div>
-      <div class="actions-section">
-        <div class="panel-title">Pegasus Operations</div>
-        <button class="action-btn" onclick="showModal('intercept')"><span class="label">Intercept Comms</span></button>
-        <button class="action-btn" onclick="showModal('camera')"><span class="label">Activate Camera</span></button>
-        <button class="action-btn" onclick="showModal('mic')"><span class="label">Hot Mic</span></button>
-        <button class="action-btn" onclick="showModal('exfil')"><span class="label">Exfiltrate Data</span></button>
-        <button class="action-btn" onclick="showModal('location')"><span class="label">GPS Track</span></button>
-        <button class="action-btn" onclick="showModal('inject')"><span class="label">Inject Payload</span></button>
-        <button class="action-btn danger" onclick="showModal('kill')"><span class="label">Brick Device</span></button>
-      </div>
-      <div class="network-section">
-        <div class="panel-title">Contact Network</div>
-        <div class="network-graph" id="networkGraph"></div>
+      <div class="header-right">
+        <div class="header-stat"><span class="live-dot"></span>LIVE OPS</div>
+        <div class="header-stat">SAT: <span class="val" id="satStat">OFEK-16</span></div>
+        <div class="header-stat">LAT: <span class="val" id="latencyStat">14ms</span></div>
+        <div class="header-stat" id="clockStat">00:00:00 IST</div>
       </div>
     </div>
 
-    <div class="bottom-bar">
-      <span>PEGASUS v4.1 — NSO GROUP | AMAN DIRECTORATE — IDF</span>
-      <div class="bottom-stats">
-        <span class="bottom-stat">INTERCEPTS: <span class="val" id="statIntercepts">0</span></span>
-        <span class="bottom-stat">DATA: <span class="val" id="statData">0 MB</span></span>
-        <span class="bottom-stat">UPTIME: <span class="val" id="statUptime">00:00:00</span></span>
+    <!-- Main grid -->
+    <div class="dashboard">
+      <!-- Left: targets -->
+      <div class="panel">
+        <div class="panel-title">Active Targets <span class="count" id="targetCount">0</span></div>
+        <div class="search-box"><input id="searchInput" placeholder="Filter targets..." /></div>
+        <div class="target-list" id="targetList"></div>
       </div>
-      <span id="sessionId">OP: —</span>
+
+      <!-- Center: map + intercept -->
+      <div class="center-panel">
+        <div class="map-section">
+          <div id="map"></div>
+          <div class="crosshair"><div class="ring"></div></div>
+
+          <div class="map-overlay-top">
+            <button class="map-btn active" data-view="globe">Globe</button>
+            <button class="map-btn" data-view="region">Region</button>
+            <button class="map-btn" data-view="gaza">Gaza</button>
+            <button class="map-btn" data-view="beirut">Beirut</button>
+            <button class="map-btn" data-view="tehran">Tehran</button>
+            <button class="map-btn" data-view="damascus">Damascus</button>
+            <button class="map-btn" id="arcsBtn">Arcs</button>
+            <button class="map-btn" id="heatBtn">Heat</button>
+          </div>
+
+          <div class="map-overlay-coords">
+            <div><span class="label">LAT</span> <span id="coordLat">31.7683°</span></div>
+            <div><span class="label">LON</span> <span id="coordLon">35.2137°</span></div>
+            <div><span class="label">ALT</span> <span id="coordAlt">782m</span></div>
+          </div>
+
+          <div class="map-overlay-info">
+            <span class="label">GEOINT:</span> OFEK-16 / KH-13 COMPOSITE
+            <span class="label"> · FEED:</span> <span style="color: var(--green)">LIVE</span>
+          </div>
+        </div>
+
+        <div class="intercept-section">
+          <div class="panel-title">Signal Intercept <span class="live-badge">● REC</span></div>
+          <div class="tabs">
+            <div class="tab active" data-filter="all">All</div>
+            <div class="tab" data-filter="int-sms">SMS</div>
+            <div class="tab" data-filter="int-call">Calls</div>
+            <div class="tab" data-filter="int-data">Data</div>
+            <div class="tab" data-filter="int-flag">
+              Flagged <span class="badge" id="flagCount">0</span>
+            </div>
+          </div>
+          <div class="intercept-feed" id="interceptFeed"></div>
+        </div>
+      </div>
+
+      <!-- Right: profile + actions + network -->
+      <div class="right-panel">
+        <div class="profile-section">
+          <div class="panel-title">Subject Profile</div>
+          <div class="profile-header">
+            <div class="profile-photo">👤</div>
+            <div>
+              <div class="profile-name" id="profileName">—</div>
+              <div class="profile-id" id="profileId">TGT-0000</div>
+              <div class="profile-threat threat-high" id="profileThreat">HIGH</div>
+            </div>
+          </div>
+          <div id="profileData"></div>
+          <div class="threat-meter">
+            <div class="meter-label">
+              <span>THREAT SCORE</span><span id="threatScore">0</span>/100
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" id="threatFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-section">
+          <div class="panel-title">Pegasus Operations</div>
+          <div class="action-grid">
+            <button class="action-btn" data-op="intercept">
+              <span class="icon">📡</span>Intercept
+            </button>
+            <button class="action-btn" data-op="camera"><span class="icon">📷</span>Camera</button>
+            <button class="action-btn" data-op="mic"><span class="icon">🎙</span>Hot Mic</button>
+            <button class="action-btn" data-op="exfil"><span class="icon">💾</span>Exfil</button>
+            <button class="action-btn" data-op="location"><span class="icon">📍</span>GPS</button>
+            <button class="action-btn" data-op="inject"><span class="icon">💉</span>Inject</button>
+            <button class="action-btn" data-op="keylog"><span class="icon">⌨</span>Keylog</button>
+            <button class="action-btn danger" data-op="kill">
+              <span class="icon">☠</span>Brick
+            </button>
+          </div>
+        </div>
+
+        <div class="network-section">
+          <div class="panel-title">Contact Network</div>
+          <div class="network-graph" id="networkGraph"></div>
+        </div>
+      </div>
+
+      <!-- Command console -->
+      <div class="console-section">
+        <span class="console-prompt">root@aman-8200:~#</span>
+        <input
+          type="text"
+          class="console-input"
+          id="consoleInput"
+          placeholder="type 'help' for commands..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span class="console-cursor"></span>
+        <span class="console-hint">↑↓ history · TAB complete · ESC close</span>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <span
+          >PEGASUS v4.1.7 — NSO GROUP // AMAN DIRECTORATE — IDF //
+          <span id="sessionId">OP: —</span></span
+        >
+        <div class="bottom-stats">
+          <span class="bottom-stat active"
+            >INTERCEPTS: <span class="val" id="statIntercepts">0</span></span
+          >
+          <span class="bottom-stat">DATA: <span class="val" id="statData">0 MB</span></span>
+          <span class="bottom-stat">PACKETS: <span class="val" id="statPackets">0</span></span>
+          <span class="bottom-stat">UPTIME: <span class="val" id="statUptime">00:00:00</span></span>
+        </div>
+        <span>© אגף המודיעין</span>
+      </div>
     </div>
-  </div>
 
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <h3 id="modalTitle">—</h3>
-      <p id="modalDesc">—</p>
-      <pre id="modalLog">—</pre>
-      <button class="modal-close" onclick="closeModal()">Close</button>
+    <!-- Terminal modal -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="terminal-window">
+        <div class="terminal-header">
+          <div class="terminal-title" id="modalTitle">OPERATION</div>
+          <div class="terminal-dots">
+            <div class="yellow"></div>
+            <div class="green"></div>
+            <div class="red" onclick="closeModal()"></div>
+          </div>
+        </div>
+        <div class="terminal-body">
+          <div class="cmd" id="modalCmd"></div>
+          <div class="desc" id="modalDesc"></div>
+          <pre id="modalLog"></pre>
+        </div>
+        <div class="terminal-footer">
+          <button class="term-btn" onclick="closeModal()">Close</button>
+          <button class="term-btn" id="modalConfirm">Confirm</button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script>
-    function updateClock(){const n=new Date();document.getElementById("clock").textContent=new Date(n.getTime()+3*3600000).toUTCString().split(" ")[4]+" IST";}
-    setInterval(updateClock,1000);updateClock();
-    const opNames=["IRON WALL","BLUE FLAG","STONE PILLAR","CEDAR SHADOW","NIGHT OWL","DESERT EAGLE"];
-    document.getElementById("sessionId").textContent="OP: "+opNames[Math.floor(Math.random()*opNames.length)]+" // "+Math.random().toString(36).slice(2,10).toUpperCase();
+    <!-- Toasts -->
+    <div class="toast-container" id="toastContainer"></div>
 
-    let interceptCount=0,dataSize=0,startTime=Date.now();
-    setInterval(()=>{
-      document.getElementById("statIntercepts").textContent=interceptCount;
-      document.getElementById("statData").textContent=dataSize.toFixed(1)+" MB";
-      const elapsed=Math.floor((Date.now()-startTime)/1000);
-      const h=Math.floor(elapsed/3600),m=Math.floor((elapsed%3600)/60),s=elapsed%60;
-      document.getElementById("statUptime").textContent=[h,m,s].map(v=>String(v).padStart(2,"0")).join(":");
-    },1000);
-
-    const firstNames=["Ahmad","Mahmoud","Hassan","Omar","Yusuf","Ibrahim","Khalid","Tariq","Fadi","Nabil","Samir","Waleed","Rashid","Jamal","Bilal","Khaled","Ayman","Ziad","Bassem","Murad"];
-    const lastNames=["Al-Rashid","Haddad","Mansour","Nasser","Bakri","Khoury","Saleh","Habib","Issa","Darwish","Sabbagh","Hamdan","Qasim","Awad","Al-Din","Barakat","Shaheen","Najjar","Masri","Younis"];
-    const cities=["Gaza City","Ramallah","Beirut","Damascus","Tehran","Jenin","Nablus","Hebron","Khan Yunis","Rafah","Sidon","Aleppo","Baghdad"];
-    const carriers=["Jawwal","Wataniya","Alfa","MTC Touch","Irancell","MTN Syria","Zain","Orange JO"];
-    const deviceModels=["iPhone 15 Pro","Samsung Galaxy S24","Huawei P60","Xiaomi 14","Google Pixel 8","OnePlus 12"];
-    const statusList=["status-active","status-active","status-active","status-idle","status-idle","status-offline"];
-    const cityCoords={"Gaza City":[34.47,31.50],"Ramallah":[35.20,31.90],"Beirut":[35.50,33.89],"Damascus":[36.29,33.51],"Tehran":[51.39,35.69],"Jenin":[35.30,32.46],"Nablus":[35.26,32.22],"Hebron":[35.10,31.53],"Khan Yunis":[34.30,31.35],"Rafah":[34.25,31.30],"Sidon":[35.37,33.56],"Aleppo":[37.15,36.20],"Baghdad":[44.37,33.31]};
-
-    const targets=[];
-    for(let i=0;i<28;i++){
-      const city=cities[Math.floor(Math.random()*cities.length)];
-      const c=cityCoords[city];
-      targets.push({
-        name:firstNames[Math.floor(Math.random()*firstNames.length)]+" "+lastNames[Math.floor(Math.random()*lastNames.length)],
-        city,status:statusList[Math.floor(Math.random()*statusList.length)],
-        id:"TGT-"+String(Math.floor(Math.random()*9000+1000)),
-        carrier:carriers[Math.floor(Math.random()*carriers.length)],
-        device:deviceModels[Math.floor(Math.random()*deviceModels.length)],
-        phone:"+97"+Math.floor(Math.random()*9+1)+"-"+String(Math.floor(Math.random()*900+100))+"-"+String(Math.floor(Math.random()*9000+1000)),
-        imei:Array.from({length:15},()=>Math.floor(Math.random()*10)).join(""),
-        lng:c[0]+(Math.random()-.5)*.15,lat:c[1]+(Math.random()-.5)*.15,
-        threat:Math.random()>.4?"HIGH":"MEDIUM",
-        contacts:Math.floor(Math.random()*12+3)
+    <script>
+      // ============================================================
+      // BOOT SEQUENCE
+      // ============================================================
+      const bootLines = [
+        "UNIT 8200 SIGINT TERMINAL v4.1.7",
+        "Copyright (c) AMAN Directorate — IDF",
+        "",
+        "[  OK  ] Initializing secure uplink...",
+        "[  OK  ] Loading cryptographic modules (AES-256, ChaCha20)",
+        "[  OK  ] Establishing OFEK-16 satellite link",
+        "[  OK  ] Authenticating with PEGASUS command infrastructure",
+        "[  OK  ] Loading target database (28 active)",
+        "[  OK  ] Spinning up COMINT collection services",
+        "[  OK  ] Mounting encrypted storage (/dev/sda1)",
+        "[  OK  ] Starting intercept daemons",
+        "[ WARN ] Tor exit node detected on uplink 3 — rerouting",
+        "[  OK  ] Deep packet inspection online",
+        "[  OK  ] Voice biometric engine ready",
+        "[  OK  ] SIGINT terminal ready",
+        "",
+        "Welcome, OPERATOR. Classification: TOP SECRET // NOFORN",
+      ];
+      const bootEl = document.getElementById("boot");
+      bootLines.forEach((line, i) => {
+        const div = document.createElement("div");
+        div.className = "boot-line";
+        div.style.animationDelay = i * 0.08 + "s";
+        div.textContent = line;
+        if (line.includes("[  OK  ]")) div.style.color = "var(--green)";
+        else if (line.includes("[ WARN ]")) div.style.color = "var(--yellow)";
+        else if (line.includes("[ FAIL ]")) div.style.color = "var(--red)";
+        else if (line.startsWith("UNIT") || line.startsWith("Copyright"))
+          div.style.color = "var(--blue)";
+        bootEl.appendChild(div);
       });
-    }
-    document.getElementById("targetCount").textContent=targets.length;
+      setTimeout(
+        () => {
+          bootEl.classList.add("done");
+          setTimeout(() => bootEl.remove(), 1000);
+        },
+        bootLines.length * 80 + 400,
+      );
 
-    const targetListEl=document.getElementById("targetList");
-    targets.forEach((t,i)=>{
-      const div=document.createElement("div");
-      div.className="target-item"+(i===0?" active":"");
-      div.innerHTML=`<div class="target-avatar">👤</div><div class="target-info"><div class="target-name">${t.name}</div><div class="target-meta">${t.city} — ${t.id}</div></div><div class="target-status ${t.status}"></div>`;
-      div.addEventListener("click",()=>selectTarget(i));
-      targetListEl.appendChild(div);
-    });
-
-    let currentTarget=0,map,isGlobe=false;
-
-    function selectTarget(idx){
-      currentTarget=idx;
-      document.querySelectorAll(".target-item").forEach((el,i)=>el.classList.toggle("active",i===idx));
-      const t=targets[idx];
-      document.getElementById("profileName").textContent=t.name;
-      document.getElementById("profileId").textContent=t.id;
-      const te=document.getElementById("profileThreat");
-      te.textContent=t.threat;te.className="profile-threat "+(t.threat==="HIGH"?"threat-high":"threat-med");
-      const data=document.getElementById("profileData");
-      data.innerHTML="";
-      [["Location",t.city],["Phone",t.phone],["IMEI",t.imei],["Carrier",t.carrier],["Device",t.device],["Pegasus","IMPLANTED"],["Coords",t.lat.toFixed(4)+"°N "+t.lng.toFixed(4)+"°E"],["Contacts",t.contacts+" known"],["Last Ping",Math.floor(Math.random()*30+1)+"s ago"]].forEach(([l,v])=>{
-        const r=document.createElement("div");r.className="data-row";
-        r.innerHTML=`<span class="data-label">${l}</span><span class="data-value">${v}</span>`;
-        data.appendChild(r);
-      });
-      drawNetwork(t);
-      if(map)map.flyTo({center:[t.lng,t.lat],zoom:13,duration:1500});
-    }
-
-    function drawNetwork(t){
-      const g=document.getElementById("networkGraph");
-      g.innerHTML="";
-      const w=g.offsetWidth,h=g.offsetHeight;
-      const cx=w/2,cy=h/2;
-      const center=document.createElement("div");
-      center.className="node center";
-      center.style.cssText=`left:${cx-15}px;top:${cy-15}px;`;
-      center.textContent="👤";
-      center.title=t.name;
-      g.appendChild(center);
-      const count=Math.min(t.contacts,10);
-      const radius=Math.min(w,h)*0.35;
-      for(let i=0;i<count;i++){
-        const angle=(2*Math.PI/count)*i - Math.PI/2;
-        const nx=cx+Math.cos(angle)*radius;
-        const ny=cy+Math.sin(angle)*radius;
-        const line=document.createElement("div");
-        line.className="net-line";
-        const dx=nx-cx,dy=ny-cy;
-        const dist=Math.sqrt(dx*dx+dy*dy);
-        const deg=Math.atan2(dy,dx)*180/Math.PI;
-        line.style.cssText=`left:${cx}px;top:${cy}px;width:${dist}px;transform:rotate(${deg}deg);opacity:${.15+Math.random()*.2};`;
-        g.appendChild(line);
-        const node=document.createElement("div");
-        node.className="node";
-        node.style.cssText=`left:${nx-12}px;top:${ny-12}px;background:${Math.random()>.7?'var(--red-dim)':'rgba(10,16,28,.9)'};`;
-        node.textContent="👤";
-        const contactName=firstNames[Math.floor(Math.random()*firstNames.length)];
-        node.title=contactName+" ("+cities[Math.floor(Math.random()*cities.length)]+")";
-        node.addEventListener("click",()=>{
-          showModal("contact",contactName);
-        });
-        g.appendChild(node);
+      // ============================================================
+      // CLOCK & STATS
+      // ============================================================
+      function updateClock() {
+        const n = new Date();
+        const ist = new Date(n.getTime() + 3 * 3600000);
+        document.getElementById("clockStat").textContent = ist.toUTCString().split(" ")[4] + " IST";
       }
-    }
+      setInterval(updateClock, 1000);
+      updateClock();
 
-    map=new maplibregl.Map({
-      container:"map",
-      style:{version:8,sources:{"carto-dark":{type:"raster",tiles:["https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png","https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png","https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"],tileSize:256,maxzoom:18}},layers:[{id:"carto-dark",type:"raster",source:"carto-dark"}]},
-      center:[36,32],zoom:5.5,attributionControl:false,maxPitch:85
-    });
+      const opNames = [
+        "IRON WALL",
+        "BLUE FLAG",
+        "STONE PILLAR",
+        "CEDAR SHADOW",
+        "NIGHT OWL",
+        "DESERT EAGLE",
+        "BLACK SWAN",
+        "SILENT HAMMER",
+      ];
+      document.getElementById("sessionId").textContent =
+        "OP: " +
+        opNames[Math.floor(Math.random() * opNames.length)] +
+        " // " +
+        Math.random().toString(36).slice(2, 10).toUpperCase();
 
-    map.on("load",()=>{
-      targets.forEach((t,i)=>{
-        const el=document.createElement("div");
-        const color=t.status==="status-active"?"#30d158":t.status==="status-idle"?"#ffd60a":"#3a4a60";
-        el.style.cssText=`width:10px;height:10px;border-radius:50%;background:${color};border:2px solid rgba(0,0,0,.6);cursor:pointer;box-shadow:0 0 8px ${color}80;transition:transform .15s;`;
-        el.addEventListener("mouseenter",()=>el.style.transform="scale(1.5)");
-        el.addEventListener("mouseleave",()=>el.style.transform="scale(1)");
-        const marker=new maplibregl.Marker({element:el}).setLngLat([t.lng,t.lat])
-          .setPopup(new maplibregl.Popup({offset:8,closeButton:true}).setHTML(`<div class="popup-name">${t.name}</div><div class="popup-id">${t.id} — ${t.city}</div><div class="popup-status">PEGASUS: ACTIVE | ${t.threat}</div>`))
-          .addTo(map);
-        el.addEventListener("click",()=>selectTarget(i));
-      });
-    });
+      let interceptCount = 0,
+        dataSize = 0,
+        packetCount = 0,
+        startTime = Date.now();
+      setInterval(() => {
+        packetCount += Math.floor(Math.random() * 40 + 20);
+        document.getElementById("statIntercepts").textContent = interceptCount.toLocaleString();
+        document.getElementById("statData").textContent = dataSize.toFixed(1) + " MB";
+        document.getElementById("statPackets").textContent = packetCount.toLocaleString();
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const h = Math.floor(elapsed / 3600),
+          m = Math.floor((elapsed % 3600) / 60),
+          s = elapsed % 60;
+        document.getElementById("statUptime").textContent = [h, m, s]
+          .map((v) => String(v).padStart(2, "0"))
+          .join(":");
+        document.getElementById("latencyStat").textContent =
+          10 + Math.floor(Math.random() * 12) + "ms";
+      }, 1000);
 
-    map.on("mousemove",e=>{
-      document.getElementById("mapCoords").textContent=`${e.lngLat.lat.toFixed(4)}°N ${e.lngLat.lng.toFixed(4)}°E`;
-    });
-
-    const views={region:{center:[36,32],zoom:5.5},gaza:{center:[34.45,31.42],zoom:12},beirut:{center:[35.50,33.89],zoom:12},tehran:{center:[51.39,35.69],zoom:11},damascus:{center:[36.29,33.51],zoom:12}};
-    function flyTo(view,btn){
-      document.querySelectorAll(".map-btn").forEach(b=>{if(b.id!=="globeBtn")b.classList.remove("active");});
-      btn.classList.add("active");
-      map.flyTo({...views[view],duration:2000});
-    }
-    function toggleGlobe(btn){
-      isGlobe=!isGlobe;
-      btn.classList.toggle("active",isGlobe);
-      map.setProjection(isGlobe?{type:"globe"}:{type:"mercator"});
-    }
-
-    let feedFilter="all";
-    function setFeedFilter(f,el){
-      feedFilter=f;
-      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-      el.classList.add("active");
-      document.querySelectorAll(".int-line").forEach(l=>{
-        l.style.display=(f==="all"||l.classList.contains(f))?"":"none";
-      });
-    }
-
-    const interceptTypes=[
-      {cls:"int-sms",prefix:"[SMS]",msgs:["Meeting confirmed for tomorrow","Package arriving Thursday","Transfer complete. Confirm receipt.","Delete this after reading","Location changed — check Signal","New phone, same number","Pick up at the border crossing","Documents ready for collection","Coordinates received, proceeding"]},
-      {cls:"int-call",prefix:"[CALL]",msgs:["3m42s — Voice match: 94.2% — FLAGGED","0m18s — Encrypted (Signal) — Metadata only","7m11s — Keyword: 'delivery' — Recorded","12m33s — Cross-ref with TGT-1847","2m05s — Burner detected — New IMSI logged","5m22s — Arabic/Hebrew code-switch detected"]},
-      {cls:"int-data",prefix:"[DATA]",msgs:["WhatsApp intercepted via keylog","Location: moving south at 40km/h","Camera: 3 images captured silently","Telegram joined: [REDACTED]","WiFi: AL-QUDS_NET — sniffing","Browser: route to [CLASSIFIED]","Contacts synced — 847 entries","App install: VPN — flagged","File download: 2.4MB encrypted PDF"]},
-      {cls:"int-flag",prefix:"[FLAG]",msgs:["KEYWORD: 'tunnel' — escalated to AMAN","SIM CHANGE — new IMSI captured","GEO-FENCE: entered restricted zone","ENCRYPTED transfer: 4.2MB to unknown","VOICE MATCH: SIGINT database hit","PRIORITY: known associate of TGT network","DEVICE: new device paired via Bluetooth","PATTERN: unusual movement — 3am activity"]}
-    ];
-
-    const feed=document.getElementById("interceptFeed");
-    function addIntercept(){
-      const type=interceptTypes[Math.floor(Math.random()*interceptTypes.length)];
-      const msg=type.msgs[Math.floor(Math.random()*type.msgs.length)];
-      const target=targets[Math.floor(Math.random()*targets.length)];
-      const time=new Date().toLocaleTimeString([],{hour12:false});
-      const line=document.createElement("div");
-      line.className="int-line "+type.cls;
-      line.textContent=`[${time}] ${type.prefix} ${target.id}: ${msg}`;
-      line.style.display=(feedFilter==="all"||type.cls===feedFilter)?"":"none";
-      line.addEventListener("click",()=>{const idx=targets.indexOf(target);if(idx>=0)selectTarget(idx);});
-      feed.appendChild(line);
-      if(feed.children.length>50)feed.firstChild.remove();
-      feed.scrollTop=feed.scrollHeight;
-      interceptCount++;
-      dataSize+=Math.random()*0.3;
-    }
-    for(let i=0;i<12;i++)addIntercept();
-    setInterval(addIntercept,1200+Math.random()*1800);
-
-    function showModal(action,extra){
-      const t=targets[currentTarget];
-      const overlay=document.getElementById("modalOverlay");
-      const title=document.getElementById("modalTitle");
-      const desc=document.getElementById("modalDesc");
-      const log=document.getElementById("modalLog");
-      const actions={
-        intercept:{title:"COMINT — "+t.name,desc:"Full communications interception via Pegasus implant.",log:`<span class="ok">[OK]</span> SMS intercept: ACTIVE\n<span class="ok">[OK]</span> Call recording: ACTIVE\n<span class="ok">[OK]</span> WhatsApp: DECRYPTED\n<span class="ok">[OK]</span> Signal: METADATA ONLY\n<span class="ok">[OK]</span> Telegram: DECRYPTED\n[SYS] Routed to AMAN collection\n[SYS] Target: ${t.id} — ${t.name}\n[SYS] Device: ${t.device} (${t.imei})`},
-        camera:{title:"Camera — "+t.name,desc:"Silent front/rear camera activation. No indicator light.",log:`<span class="ok">[OK]</span> Front camera: ACTIVATED\n<span class="ok">[OK]</span> Rear camera: ACTIVATED\n<span class="ok">[OK]</span> LED suppressed\n<span class="ok">[OK]</span> Shutter muted\n[CAPTURE] 1 FPS continuous\n[UPLOAD] → sigint-collect.8200.mil.il`},
-        mic:{title:"Hot Mic — "+t.name,desc:"Ambient recording. Active even with screen off.",log:`<span class="ok">[OK]</span> Ambient recording: ON\n<span class="ok">[OK]</span> Voice detection: ENABLED\n<span class="ok">[OK]</span> Upload: 60s chunks\n[SYS] ~2.4MB/hour | ~3% battery`},
-        exfil:{title:"Exfiltrate — "+t.name,desc:"Full device data extraction.",log:`[SCAN] Contacts: ${Math.floor(Math.random()*800+200)}\n[SCAN] SMS: ${Math.floor(Math.random()*15000+5000)} msgs\n[SCAN] Photos: ${Math.floor(Math.random()*5000+1000)} files\n[SCAN] Passwords: ${Math.floor(Math.random()*80+20)} entries\n[SCAN] Location: 180 days\n[SCAN] Browser: ${Math.floor(Math.random()*20000+5000)} URLs\n<span class="warn">[COMPRESS]</span> ${(Math.random()*3+1).toFixed(1)}GB archive\n<span class="ok">[ENCRYPT]</span> AES-256\n<span class="ok">[UPLOAD]</span> Transmitting...`},
-        location:{title:"GPS Track — "+t.name,desc:"Continuous tracking every 30 seconds.",log:`<span class="ok">[OK]</span> GPS: 3m accuracy\n<span class="ok">[OK]</span> Cell triangulation: ON\n<span class="ok">[OK]</span> WiFi positioning: ON\n[CURRENT] ${t.lat.toFixed(6)}°N, ${t.lng.toFixed(6)}°E\n[SPEED] 0 km/h (stationary)\n[GEOFENCE] Alerts: ENABLED`},
-        inject:{title:"Payload Injection — "+t.name,desc:"Deploy secondary implant or update existing Pegasus module.",log:`[INIT] Checking implant version...\n<span class="ok">[OK]</span> Current: Pegasus v4.1.3\n[SYS] Available update: v4.1.7\n[PAYLOAD] Size: 847KB\n[METHOD] Zero-click via iMessage\n<span class="warn">[STAGE 1]</span> CVE-2024-XXXX exploit\n<span class="warn">[STAGE 2]</span> Kernel privilege escalation\n<span class="warn">[STAGE 3]</span> Persistence module install\n<span class="ok">[COMPLETE]</span> Implant updated successfully`},
-        kill:{title:"BRICK DEVICE — DESTRUCTIVE",desc:"Permanently disable target device. Cannot be undone.",log:`<span class="err">[WARN] DESTRUCTIVE OPERATION</span>\n<span class="err">[WARN] Target: ${t.id} — ${t.name}</span>\n[STEP 1] Exfiltrate remaining data...\n[STEP 2] Wipe Pegasus traces...\n[STEP 3] Corrupt bootloader...\n[STEP 4] Overwrite NVRAM...\n\n<span class="err">[AWAITING] Commander authorization</span>\n[STATUS] Code: SCORCHED-EARTH`},
-        contact:{title:"Contact Intel — "+(extra||"Unknown"),desc:"Known associate of "+t.name+". Cross-referencing SIGINT database.",log:`[QUERY] Searching AMAN database...\n<span class="ok">[MATCH]</span> Found in ${Math.floor(Math.random()*5+1)} intercept records\n[ASSOC] Primary contact of ${t.id}\n[CALLS] ${Math.floor(Math.random()*50+5)} calls in last 30 days\n[SMS] ${Math.floor(Math.random()*200+20)} messages exchanged\n[RISK] ${Math.random()>.5?"HIGH — recommend surveillance":"MEDIUM — monitor"}\n[NOTE] Appears in TGT-${Math.floor(Math.random()*9000+1000)} network also`}
+      // ============================================================
+      // TARGET DATA
+      // ============================================================
+      const firstNames = [
+        "Ahmad",
+        "Mahmoud",
+        "Hassan",
+        "Omar",
+        "Yusuf",
+        "Ibrahim",
+        "Khalid",
+        "Tariq",
+        "Fadi",
+        "Nabil",
+        "Samir",
+        "Waleed",
+        "Rashid",
+        "Jamal",
+        "Bilal",
+        "Khaled",
+        "Ayman",
+        "Ziad",
+        "Bassem",
+        "Murad",
+        "Rami",
+        "Said",
+        "Walid",
+        "Adel",
+      ];
+      const lastNames = [
+        "Al-Rashid",
+        "Haddad",
+        "Mansour",
+        "Nasser",
+        "Bakri",
+        "Khoury",
+        "Saleh",
+        "Habib",
+        "Issa",
+        "Darwish",
+        "Sabbagh",
+        "Hamdan",
+        "Qasim",
+        "Awad",
+        "Al-Din",
+        "Barakat",
+        "Shaheen",
+        "Najjar",
+        "Masri",
+        "Younis",
+        "Zoabi",
+        "Taha",
+      ];
+      const cities = [
+        "Gaza City",
+        "Ramallah",
+        "Beirut",
+        "Damascus",
+        "Tehran",
+        "Jenin",
+        "Nablus",
+        "Hebron",
+        "Khan Yunis",
+        "Rafah",
+        "Sidon",
+        "Aleppo",
+        "Baghdad",
+        "Sanaa",
+        "Mosul",
+      ];
+      const carriers = [
+        "Jawwal",
+        "Wataniya",
+        "Alfa",
+        "MTC Touch",
+        "Irancell",
+        "MTN Syria",
+        "Zain",
+        "Orange JO",
+        "Asiacell",
+      ];
+      const deviceModels = [
+        "iPhone 15 Pro",
+        "iPhone 14",
+        "Samsung Galaxy S24",
+        "Huawei P60",
+        "Xiaomi 14",
+        "Google Pixel 8",
+        "OnePlus 12",
+        "Samsung A54",
+      ];
+      const statusList = [
+        "status-active",
+        "status-active",
+        "status-active",
+        "status-idle",
+        "status-idle",
+        "status-offline",
+      ];
+      const cityCoords = {
+        "Gaza City": [34.47, 31.5],
+        Ramallah: [35.2, 31.9],
+        Beirut: [35.5, 33.89],
+        Damascus: [36.29, 33.51],
+        Tehran: [51.39, 35.69],
+        Jenin: [35.3, 32.46],
+        Nablus: [35.26, 32.22],
+        Hebron: [35.1, 31.53],
+        "Khan Yunis": [34.3, 31.35],
+        Rafah: [34.25, 31.3],
+        Sidon: [35.37, 33.56],
+        Aleppo: [37.15, 36.2],
+        Baghdad: [44.37, 33.31],
+        Sanaa: [44.19, 15.37],
+        Mosul: [43.13, 36.34],
       };
-      const a=actions[action];
-      title.textContent=a.title;desc.textContent=a.desc;log.innerHTML=a.log;
-      overlay.style.display="flex";
-    }
-    function closeModal(){document.getElementById("modalOverlay").style.display="none";}
-    document.getElementById("modalOverlay").addEventListener("click",e=>{if(e.target===document.getElementById("modalOverlay"))closeModal();});
 
-    selectTarget(0);
-    document.addEventListener("contextmenu",e=>e.preventDefault());
-  </script>
-  <script src="/tetapux/disclaimer.js" async></script>
-</body>
+      const targets = [];
+      for (let i = 0; i < 32; i++) {
+        const city = cities[Math.floor(Math.random() * cities.length)];
+        const c = cityCoords[city];
+        const signal = Math.floor(Math.random() * 4) + 1;
+        targets.push({
+          name:
+            firstNames[Math.floor(Math.random() * firstNames.length)] +
+            " " +
+            lastNames[Math.floor(Math.random() * lastNames.length)],
+          city,
+          status: statusList[Math.floor(Math.random() * statusList.length)],
+          id: "TGT-" + String(Math.floor(Math.random() * 9000 + 1000)),
+          carrier: carriers[Math.floor(Math.random() * carriers.length)],
+          device: deviceModels[Math.floor(Math.random() * deviceModels.length)],
+          phone:
+            "+97" +
+            Math.floor(Math.random() * 9 + 1) +
+            "-" +
+            String(Math.floor(Math.random() * 900 + 100)) +
+            "-" +
+            String(Math.floor(Math.random() * 9000 + 1000)),
+          imei: Array.from({ length: 15 }, () => Math.floor(Math.random() * 10)).join(""),
+          imsi: "42" + Array.from({ length: 13 }, () => Math.floor(Math.random() * 10)).join(""),
+          lng: c[0] + (Math.random() - 0.5) * 0.2,
+          lat: c[1] + (Math.random() - 0.5) * 0.2,
+          threat: Math.random() > 0.35 ? "HIGH" : "MEDIUM",
+          threatScore: Math.floor(Math.random() * 40 + 55),
+          signal,
+          contacts: Math.floor(Math.random() * 12 + 3),
+          battery: Math.floor(Math.random() * 80 + 20),
+          implanted: new Date(Date.now() - Math.random() * 30 * 86400000)
+            .toISOString()
+            .slice(0, 10),
+        });
+      }
+      document.getElementById("targetCount").textContent = targets.length;
+
+      // ============================================================
+      // TARGET LIST
+      // ============================================================
+      const targetListEl = document.getElementById("targetList");
+      function renderTargetList(filter = "") {
+        targetListEl.innerHTML = "";
+        targets.forEach((t, i) => {
+          if (
+            filter &&
+            !(
+              t.name.toLowerCase().includes(filter) ||
+              t.city.toLowerCase().includes(filter) ||
+              t.id.toLowerCase().includes(filter)
+            )
+          )
+            return;
+          const div = document.createElement("div");
+          div.className = "target-item" + (i === currentTarget ? " active" : "");
+          const bars = Array.from(
+            { length: 4 },
+            (_, b) => `<div class="bar${b < t.signal ? "" : " off"}"></div>`,
+          ).join("");
+          div.innerHTML = `
+      <div class="target-avatar">👤</div>
+      <div class="target-info">
+        <div class="target-name">${t.name}</div>
+        <div class="target-meta">
+          ${t.city} · ${t.id}
+          <span class="signal-bars">${bars}</span>
+        </div>
+      </div>
+      <div class="target-status ${t.status}"></div>`;
+          div.addEventListener("click", () => selectTarget(i));
+          targetListEl.appendChild(div);
+        });
+      }
+
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        renderTargetList(e.target.value.toLowerCase());
+      });
+
+      // ============================================================
+      // PROFILE + NETWORK
+      // ============================================================
+      let currentTarget = 0;
+
+      function selectTarget(idx) {
+        currentTarget = idx;
+        renderTargetList(document.getElementById("searchInput").value.toLowerCase());
+        const t = targets[idx];
+        document.getElementById("profileName").textContent = t.name;
+        document.getElementById("profileId").textContent = t.id;
+        const te = document.getElementById("profileThreat");
+        te.textContent = t.threat;
+        te.className = "profile-threat " + (t.threat === "HIGH" ? "threat-high" : "threat-med");
+
+        const data = document.getElementById("profileData");
+        data.innerHTML = "";
+        const rows = [
+          ["Location", t.city],
+          ["Phone", t.phone],
+          ["IMEI", t.imei],
+          ["IMSI", t.imsi],
+          ["Carrier", t.carrier],
+          ["Device", t.device],
+          ["Battery", t.battery + "%"],
+          ["Pegasus", '<span style="color:var(--green)">IMPLANTED ' + t.implanted + "</span>"],
+          ["Coords", t.lat.toFixed(4) + "°N " + t.lng.toFixed(4) + "°E"],
+          ["Contacts", t.contacts + " known"],
+          ["Last Ping", Math.floor(Math.random() * 30 + 1) + "s ago"],
+        ];
+        rows.forEach(([l, v]) => {
+          const r = document.createElement("div");
+          r.className = "data-row";
+          r.innerHTML = `<span class="data-label">${l}</span><span class="data-value">${v}</span>`;
+          data.appendChild(r);
+        });
+
+        document.getElementById("threatScore").textContent = t.threatScore;
+        document.getElementById("threatFill").style.width = t.threatScore + "%";
+
+        drawNetwork(t);
+        if (map && map.loaded()) {
+          map.flyTo({ center: [t.lng, t.lat], zoom: 13, duration: 1800, essential: true });
+        }
+      }
+
+      function drawNetwork(t) {
+        const g = document.getElementById("networkGraph");
+        g.innerHTML = "";
+        const w = g.offsetWidth,
+          h = g.offsetHeight;
+        if (w === 0 || h === 0) return;
+        const cx = w / 2,
+          cy = h / 2;
+
+        const center = document.createElement("div");
+        center.className = "node center";
+        center.style.left = cx - 17 + "px";
+        center.style.top = cy - 17 + "px";
+        center.textContent = "👤";
+        center.title = t.name;
+        g.appendChild(center);
+
+        const count = Math.min(t.contacts, 10);
+        const radius = Math.min(w, h) * 0.36;
+
+        for (let i = 0; i < count; i++) {
+          const angle = ((2 * Math.PI) / count) * i - Math.PI / 2;
+          const nx = cx + Math.cos(angle) * radius;
+          const ny = cy + Math.sin(angle) * radius;
+
+          const line = document.createElement("div");
+          line.className = "net-line";
+          const dx = nx - cx,
+            dy = ny - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
+          line.style.left = cx + "px";
+          line.style.top = cy + "px";
+          line.style.width = dist + "px";
+          line.style.transform = "rotate(" + deg + "deg)";
+          line.style.opacity = 0.2 + Math.random() * 0.3;
+          g.appendChild(line);
+
+          const node = document.createElement("div");
+          node.className = "node";
+          node.style.left = nx - 12 + "px";
+          node.style.top = ny - 12 + "px";
+          if (Math.random() > 0.7) node.style.background = "var(--red-dim)";
+          node.textContent = "👤";
+          const contactName = firstNames[Math.floor(Math.random() * firstNames.length)];
+          node.title = contactName;
+          node.addEventListener("click", () => openModal("contact", contactName));
+          g.appendChild(node);
+
+          // Animated packet
+          if (Math.random() > 0.4) {
+            const packet = document.createElement("div");
+            packet.className = "net-packet";
+            g.appendChild(packet);
+            const duration = 1500 + Math.random() * 1500;
+            const delay = Math.random() * 2000;
+            packet.animate(
+              [
+                { left: cx + "px", top: cy + "px", opacity: 1 },
+                { left: nx + "px", top: ny + "px", opacity: 0 },
+              ],
+              { duration, delay, iterations: Infinity },
+            );
+          }
+        }
+      }
+
+      // ============================================================
+      // MAP with GLOBE + ARCS
+      // ============================================================
+      let map,
+        arcsEnabled = false,
+        heatEnabled = false,
+        arcsSource = null;
+
+      map = new maplibregl.Map({
+        container: "map",
+        style: {
+          version: 8,
+          sources: {
+            dark: {
+              type: "raster",
+              tiles: [
+                "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+                "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+                "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+              ],
+              tileSize: 256,
+              maxzoom: 18,
+              attribution: "",
+            },
+          },
+          layers: [{ id: "dark", type: "raster", source: "dark" }],
+        },
+        center: [36, 32],
+        zoom: 2.8,
+        projection: { type: "globe" },
+        attributionControl: false,
+        maxPitch: 85,
+      });
+
+      map.on("load", () => {
+        // Atmosphere / fog for globe
+        try {
+          map.setFog({
+            color: "rgb(5, 15, 30)",
+            "high-color": "rgb(10, 30, 60)",
+            "horizon-blend": 0.2,
+            "space-color": "rgb(0, 2, 8)",
+            "star-intensity": 0.6,
+          });
+        } catch (e) {}
+
+        // Add markers
+        targets.forEach((t, i) => {
+          const el = document.createElement("div");
+          const color =
+            t.status === "status-active"
+              ? "#00ff88"
+              : t.status === "status-idle"
+                ? "#ffd60a"
+                : "#3a4a60";
+          el.style.cssText = `
+      width:12px;height:12px;border-radius:50%;
+      background:${color};
+      border:2px solid rgba(0,0,0,0.7);
+      cursor:pointer;
+      box-shadow:0 0 10px ${color},0 0 20px ${color}40;
+      transition:transform .15s;
+    `;
+          el.addEventListener("mouseenter", () => (el.style.transform = "scale(1.6)"));
+          el.addEventListener("mouseleave", () => (el.style.transform = "scale(1)"));
+          new maplibregl.Marker({ element: el })
+            .setLngLat([t.lng, t.lat])
+            .setPopup(
+              new maplibregl.Popup({ offset: 10, closeButton: true }).setHTML(`
+        <div class="popup-name">${t.name}</div>
+        <div class="popup-id">${t.id} · ${t.city}</div>
+        <div class="popup-status">PEGASUS: ACTIVE<br>THREAT: ${t.threat}</div>
+      `),
+            )
+            .addTo(map);
+          el.addEventListener("click", () => selectTarget(i));
+        });
+
+        // Arcs source
+        map.addSource("arcs", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+        map.addLayer({
+          id: "arcs-line",
+          type: "line",
+          source: "arcs",
+          paint: {
+            "line-color": "#00b4ff",
+            "line-width": 1.2,
+            "line-opacity": 0.6,
+            "line-blur": 0.5,
+          },
+        });
+
+        // Heat layer
+        map.addSource("heat", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: targets.map((t) => ({
+              type: "Feature",
+              geometry: { type: "Point", coordinates: [t.lng, t.lat] },
+              properties: { weight: t.threatScore / 100 },
+            })),
+          },
+        });
+        map.addLayer({
+          id: "heat-layer",
+          type: "heatmap",
+          source: "heat",
+          layout: { visibility: "none" },
+          paint: {
+            "heatmap-weight": ["get", "weight"],
+            "heatmap-intensity": 1.5,
+            "heatmap-radius": 40,
+            "heatmap-color": [
+              "interpolate",
+              ["linear"],
+              ["heatmap-density"],
+              0,
+              "rgba(0,0,0,0)",
+              0.2,
+              "rgba(0,180,255,0.4)",
+              0.5,
+              "rgba(255,214,10,0.6)",
+              0.8,
+              "rgba(255,149,0,0.8)",
+              1,
+              "rgba(255,45,85,1)",
+            ],
+            "heatmap-opacity": 0.7,
+          },
+        });
+
+        // Kick off arc animation
+        startArcAnimation();
+        selectTarget(0);
+      });
+
+      map.on("mousemove", (e) => {
+        document.getElementById("coordLat").textContent = e.lngLat.lat.toFixed(4) + "°";
+        document.getElementById("coordLon").textContent = e.lngLat.lng.toFixed(4) + "°";
+      });
+
+      // Generate great-circle arc points
+      function greatCircle(from, to, steps = 64) {
+        const [lon1, lat1] = from.map((d) => (d * Math.PI) / 180);
+        const [lon2, lat2] = to.map((d) => (d * Math.PI) / 180);
+        const d =
+          2 *
+          Math.asin(
+            Math.sqrt(
+              Math.pow(Math.sin((lat2 - lat1) / 2), 2) +
+                Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon2 - lon1) / 2), 2),
+            ),
+          );
+        const coords = [];
+        for (let i = 0; i <= steps; i++) {
+          const f = i / steps;
+          const A = Math.sin((1 - f) * d) / Math.sin(d);
+          const B = Math.sin(f * d) / Math.sin(d);
+          const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+          const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+          const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+          const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+          const lon = Math.atan2(y, x);
+          coords.push([(lon * 180) / Math.PI, (lat * 180) / Math.PI]);
+        }
+        return coords;
+      }
+
+      function updateArcs() {
+        if (!map.getSource("arcs")) return;
+        if (!arcsEnabled) {
+          map.getSource("arcs").setData({ type: "FeatureCollection", features: [] });
+          return;
+        }
+        const features = [];
+        for (let i = 0; i < 14; i++) {
+          const a = targets[Math.floor(Math.random() * targets.length)];
+          const b = targets[Math.floor(Math.random() * targets.length)];
+          if (a === b) continue;
+          features.push({
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: greatCircle([a.lng, a.lat], [b.lng, b.lat]),
+            },
+          });
+        }
+        map.getSource("arcs").setData({ type: "FeatureCollection", features });
+      }
+
+      function startArcAnimation() {
+        setInterval(() => {
+          if (arcsEnabled) updateArcs();
+        }, 2500);
+      }
+
+      // Map controls
+      const views = {
+        globe: { center: [36, 32], zoom: 2.8, pitch: 0 },
+        region: { center: [36, 32], zoom: 5.5, pitch: 30 },
+        gaza: { center: [34.45, 31.42], zoom: 12, pitch: 45 },
+        beirut: { center: [35.5, 33.89], zoom: 12, pitch: 45 },
+        tehran: { center: [51.39, 35.69], zoom: 11, pitch: 45 },
+        damascus: { center: [36.29, 33.51], zoom: 12, pitch: 45 },
+      };
+      document.querySelectorAll(".map-btn[data-view]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".map-btn[data-view]")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          map.flyTo({ ...views[btn.dataset.view], duration: 2000, essential: true });
+        });
+      });
+
+      document.getElementById("arcsBtn").addEventListener("click", function () {
+        arcsEnabled = !arcsEnabled;
+        this.classList.toggle("active", arcsEnabled);
+        updateArcs();
+        toast(
+          "ARCS",
+          arcsEnabled ? "Data-flow visualization enabled" : "Arcs disabled",
+          arcsEnabled ? "success" : "",
+        );
+      });
+
+      document.getElementById("heatBtn").addEventListener("click", function () {
+        heatEnabled = !heatEnabled;
+        this.classList.toggle("active", heatEnabled);
+        if (map.getLayer("heat-layer")) {
+          map.setLayoutProperty("heat-layer", "visibility", heatEnabled ? "visible" : "none");
+        }
+        toast(
+          "HEATMAP",
+          heatEnabled ? "Threat density overlay active" : "Heatmap disabled",
+          heatEnabled ? "success" : "",
+        );
+      });
+
+      // ============================================================
+      // INTERCEPT FEED
+      // ============================================================
+      let feedFilter = "all",
+        flaggedCount = 0;
+
+      const interceptTypes = [
+        {
+          cls: "int-sms",
+          prefix: "[SMS]",
+          msgs: [
+            "Meeting confirmed for tomorrow",
+            "Package arriving Thursday",
+            "Transfer complete — confirm receipt",
+            "Delete this after reading",
+            "Location changed — check Signal",
+            "New phone, same number",
+            "Documents ready for collection",
+            "Coordinates received, proceeding",
+          ],
+        },
+        {
+          cls: "int-call",
+          prefix: "[CALL]",
+          msgs: [
+            "3m42s — Voice match 94.2% — FLAGGED",
+            "0m18s — Encrypted (Signal) — metadata only",
+            "7m11s — Keyword 'delivery' — recorded",
+            "12m33s — Cross-ref with TGT-1847",
+            "2m05s — Burner detected — new IMSI logged",
+            "5m22s — Arabic/Hebrew code-switch detected",
+          ],
+        },
+        {
+          cls: "int-data",
+          prefix: "[DATA]",
+          msgs: [
+            "WhatsApp intercepted via keylog",
+            "Location moving south at 40km/h",
+            "Camera: 3 images captured silently",
+            "Telegram joined: [REDACTED]",
+            "WiFi AL-QUDS_NET — sniffing",
+            "Contacts synced — 847 entries",
+            "App install: VPN — flagged",
+            "File download: 2.4MB encrypted PDF",
+          ],
+        },
+        {
+          cls: "int-flag",
+          prefix: "[FLAG]",
+          msgs: [
+            "KEYWORD 'tunnel' — escalated to AMAN",
+            "SIM CHANGE — new IMSI captured",
+            "GEO-FENCE: entered restricted zone",
+            "ENCRYPTED transfer: 4.2MB to unknown",
+            "VOICE MATCH: SIGINT database hit",
+            "PRIORITY: known associate of TGT",
+            "DEVICE: new device paired via Bluetooth",
+            "PATTERN: unusual 3am activity",
+          ],
+        },
+      ];
+
+      const feed = document.getElementById("interceptFeed");
+      function addIntercept() {
+        const type = interceptTypes[Math.floor(Math.random() * interceptTypes.length)];
+        const msg = type.msgs[Math.floor(Math.random() * type.msgs.length)];
+        const target = targets[Math.floor(Math.random() * targets.length)];
+        const time = new Date().toLocaleTimeString([], { hour12: false });
+        const line = document.createElement("div");
+        line.className = "int-line " + type.cls;
+        line.innerHTML = `<span class="ts">[${time}]</span> ${type.prefix} <span class="id">${target.id}</span>: ${msg}`;
+        line.style.display = feedFilter === "all" || type.cls === feedFilter ? "" : "none";
+        line.addEventListener("click", () => {
+          const idx = targets.indexOf(target);
+          if (idx >= 0) selectTarget(idx);
+        });
+        feed.appendChild(line);
+        if (feed.children.length > 60) feed.firstChild.remove();
+        feed.scrollTop = feed.scrollHeight;
+        interceptCount++;
+        dataSize += Math.random() * 0.3;
+        if (type.cls === "int-flag") {
+          flaggedCount++;
+          document.getElementById("flagCount").textContent = flaggedCount;
+          if (Math.random() > 0.6) {
+            toast("FLAG RAISED", target.id + " — " + msg.slice(0, 40), "warn");
+          }
+        }
+      }
+
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          feedFilter = tab.dataset.filter;
+          document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          document.querySelectorAll(".int-line").forEach((l) => {
+            l.style.display =
+              feedFilter === "all" || l.classList.contains(feedFilter) ? "" : "none";
+          });
+        });
+      });
+
+      for (let i = 0; i < 15; i++) addIntercept();
+      setInterval(addIntercept, 900 + Math.random() * 1400);
+
+      // ============================================================
+      // TERMINAL MODAL with typewriter
+      // ============================================================
+      let typewriterInterval = null;
+
+      function openModal(action, extra) {
+        const t = targets[currentTarget];
+        const overlay = document.getElementById("modalOverlay");
+        const title = document.getElementById("modalTitle");
+        const cmd = document.getElementById("modalCmd");
+        const desc = document.getElementById("modalDesc");
+        const log = document.getElementById("modalLog");
+        const confirmBtn = document.getElementById("modalConfirm");
+
+        const actions = {
+          intercept: {
+            title: "COMINT INTERCEPTION",
+            cmd: "pegasus --target " + t.id + " --op intercept --full",
+            desc:
+              "Full communications interception via Pegasus implant on " +
+              t.name +
+              "'s " +
+              t.device +
+              ".",
+            log: `<span class="ok">[ OK ]</span> Establishing C2 channel... <span class="hl">OK</span>
+<span class="ok">[ OK ]</span> SMS intercept daemon started
+<span class="ok">[ OK ]</span> Call recording engine ready
+<span class="ok">[ OK ]</span> WhatsApp decrypted (${Math.floor(Math.random() * 900 + 100)} keys)
+<span class="warn">[WARN]</span> Signal: metadata only (E2EE active)
+<span class="ok">[ OK ]</span> Telegram secret chats: <span class="hl">DECRYPTED</span>
+<span class="ok">[ OK ]</span> iMessage keychain: dumped
+<span class="info">[SYS ]</span> Target: ${t.id} — ${t.name}
+<span class="info">[SYS ]</span> Device: ${t.device}
+<span class="info">[SYS ]</span> IMEI: ${t.imei}
+<span class="info">[SYS ]</span> Routing to AMAN collection node-07
+<span class="ok">[DONE]</span> Interception active. Data streaming...`,
+            confirmText: "Escalate",
+          },
+          camera: {
+            title: "SILENT CAMERA ACTIVATION",
+            cmd: "pegasus --target " + t.id + " --camera both --stealth",
+            desc: "Activate front and rear camera silently. LED indicator suppressed at driver level.",
+            log: `<span class="ok">[ OK ]</span> Injecting camera shim...
+<span class="ok">[ OK ]</span> LED driver patched (indicator disabled)
+<span class="ok">[ OK ]</span> Shutter sound muted
+<span class="ok">[ OK ]</span> Front camera: <span class="hl">ACTIVE</span>
+<span class="ok">[ OK ]</span> Rear camera: <span class="hl">ACTIVE</span>
+<span class="info">[CAP ]</span> Capturing 1 FPS continuous
+<span class="info">[CAP ]</span> Frame 1: 2.1MB (saved)
+<span class="info">[CAP ]</span> Frame 2: 2.3MB (saved)
+<span class="info">[CAP ]</span> Frame 3: 2.0MB (saved)
+<span class="info">[UPL ]</span> → sigint-collect.8200.mil.il
+<span class="ok">[DONE]</span> Live feed at https://pegasus.int/${t.id.toLowerCase()}`,
+            confirmText: "View Feed",
+          },
+          mic: {
+            title: "AMBIENT AUDIO CAPTURE",
+            cmd: "pegasus --target " + t.id + " --mic --ambient --60s-chunks",
+            desc: "Continuous microphone capture. Active even with screen off. Voice activity detection enabled.",
+            log: `<span class="ok">[ OK ]</span> Microphone access acquired
+<span class="ok">[ OK ]</span> VAD (voice activity detection): ON
+<span class="ok">[ OK ]</span> Codec: Opus 32kbps
+<span class="ok">[ OK ]</span> Chunking: 60s rolling
+<span class="info">[AUD ]</span> Recording...`,
+            waveform: true,
+            confirmText: "Record",
+          },
+          exfil: {
+            title: "DEVICE DATA EXFILTRATION",
+            cmd: "pegasus --target " + t.id + " --exfil all --encrypt aes256",
+            desc: "Full device data extraction. Compressed, encrypted, uploaded to secure bucket.",
+            log: `<span class="info">[SCAN]</span> Enumerating device storage...
+<span class="ok">[ OK ]</span> Contacts: <span class="hl">${Math.floor(Math.random() * 800 + 200)}</span>
+<span class="ok">[ OK ]</span> SMS: <span class="hl">${Math.floor(Math.random() * 15000 + 5000)}</span> msgs
+<span class="ok">[ OK ]</span> Photos: <span class="hl">${Math.floor(Math.random() * 5000 + 1000)}</span> files
+<span class="ok">[ OK ]</span> Videos: <span class="hl">${Math.floor(Math.random() * 400 + 100)}</span> files
+<span class="ok">[ OK ]</span> Passwords (keychain): <span class="hl">${Math.floor(Math.random() * 80 + 20)}</span>
+<span class="ok">[ OK ]</span> Location history: 180 days
+<span class="ok">[ OK ]</span> Browser history: <span class="hl">${Math.floor(Math.random() * 20000 + 5000)}</span> URLs
+<span class="warn">[COMP]</span> Compressing to tar.gz...
+<span class="ok">[ OK ]</span> Encryption via AES-256...
+<span class="info">[UPL ]</span> Uploading chunk 1/48...
+<span class="info">[UPL ]</span> Uploading chunk 12/48...
+<span class="info">[UPL ]</span> Uploading chunk 48/48...
+<span class="ok">[DONE]</span> Exfiltration complete. Data size: 4.8 GB.`,
+            confirmText: "Download",
+          },
+          location: {
+            title: "GPS TRACKING",
+            cmd: "pegasus --target " + t.id + " --gps --realtime",
+            desc: "Force GPS activation and stream live coordinates. Overrides OS permissions.",
+            log: `<span class="ok">[ OK ]</span> GPS daemon restarted (root)
+<span class="ok">[ OK ]</span> Location spoofing protections bypassed
+<span class="info">[TRK ]</span> Acquiring satellite fix...
+<span class="ok">[ OK ]</span> Fix acquired (12 satellites)
+<span class="info">[TRK ]</span> LAT: ${t.lat.toFixed(6)}°
+<span class="info">[TRK ]</span> LON: ${t.lng.toFixed(6)}°
+<span class="info">[TRK ]</span> ALT: ${Math.floor(Math.random() * 50 + 700)}m
+<span class="info">[TRK ]</span> VEL: ${Math.floor(Math.random() * 40)} km/h
+<span class="ok">[DONE]</span> Live tracking active.`,
+            confirmText: "Track",
+          },
+          inject: {
+            title: "PAYLOAD INJECTION",
+            cmd: "pegasus --target " + t.id + " --inject /modules/rootkit.bin",
+            desc: "Inject secondary persistent payload into system partition.",
+            log: `<span class="info">[SYS ]</span> Mounting /system as rw...
+<span class="ok">[ OK ]</span> SELinux context bypassed
+<span class="info">[INJ ]</span> Writing rootkit.bin (1.2MB)...
+<span class="ok">[ OK ]</span> Write successful
+<span class="ok">[ OK ]</span> Modifying init.rc for persistence...
+<span class="ok">[ OK ]</span> Hiding injected files from system APIs...
+<span class="info">[SYS ]</span> Remounting /system as ro...
+<span class="ok">[DONE]</span> Payload injected successfully.`,
+            confirmText: "Deploy",
+          },
+          keylog: {
+            title: "KEYLOGGER ACTIVATION",
+            cmd: "pegasus --target " + t.id + " --keylog --system-wide",
+            desc: "Hook into touch events and software keyboard to capture all keystrokes.",
+            log: `<span class="ok">[ OK ]</span> Input subsystem hooked
+<span class="ok">[ OK ]</span> Keyboard driver patched
+<span class="info">[LOG ]</span> Capturing...
+<span class="dim">[09:41:12]</span> [WhatsApp] "Where are " [BKSP] "we meeting tomorrow?"
+<span class="dim">[09:42:05]</span> [Chrome] "secure drop point beirut"
+<span class="dim">[09:45:30]</span> [System] PIN entered: ****
+<span class="ok">[DONE]</span> Keylogger active and streaming.`,
+            confirmText: "Monitor",
+          },
+          kill: {
+            title: "DEVICE BRICK / WIPE",
+            cmd: "pegasus --target " + t.id + " --kill --wipe-all",
+            desc: "Irreversibly destroy device functionality and wipe all data. WARNING: Action is permanent.",
+            log: `<span class="warn">[WARN]</span> THIS ACTION IS DESTRUCTIVE
+<span class="info">[SYS ]</span> Initiating cryptographic wipe...
+<span class="ok">[ OK ]</span> Encryption keys destroyed
+<span class="info">[SYS ]</span> Overwriting bootloader...
+<span class="ok">[ OK ]</span> Bootloader corrupted
+<span class="info">[SYS ]</span> Triggering kernel panic...
+<span class="warn">[OFF ]</span> Connection lost. Device destroyed.`,
+            confirmText: "Execute",
+          },
+          contact: {
+            title: "NETWORK ANALYSIS",
+            cmd: "graph --target " + t.id + " --node " + extra,
+            desc: "Analyze connection between target and contact.",
+            log: `<span class="info">[ANA ]</span> Analyzing link: ${t.name} ↔ ${extra}
+<span class="ok">[ OK ]</span> 47 calls in last 30 days
+<span class="ok">[ OK ]</span> 142 encrypted messages
+<span class="ok">[ OK ]</span> Co-location detected: 3 times
+<span class="info">[ANA ]</span> Link strength: <span class="hl">STRONG</span>
+<span class="ok">[DONE]</span> Network map updated.`,
+            confirmText: "Close",
+          },
+        };
+
+        const a = actions[action];
+        if (!a) return;
+
+        title.textContent = a.title;
+        cmd.textContent = a.cmd;
+        desc.textContent = a.desc;
+        log.innerHTML = "";
+
+        if (action === "kill") confirmBtn.className = "term-btn danger";
+        else confirmBtn.className = "term-btn";
+        confirmBtn.textContent = a.confirmText;
+        confirmBtn.onclick = () => {
+          toast("COMMAND SENT", a.cmd, action === "kill" ? "error" : "success");
+          closeModal();
+        };
+
+        overlay.classList.add("active");
+
+        // Typewriter effect
+        if (typewriterInterval) clearInterval(typewriterInterval);
+
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = a.log;
+        const nodes = Array.from(tempDiv.childNodes);
+        let currentIndex = 0;
+
+        function typeNextNode() {
+          if (currentIndex >= nodes.length) {
+            if (a.waveform) {
+              const canvas = document.createElement("canvas");
+              canvas.className = "waveform";
+              canvas.width = 540;
+              canvas.height = 50;
+              log.appendChild(canvas);
+              drawWaveform(canvas);
+            }
+            return;
+          }
+
+          const node = nodes[currentIndex];
+          if (node.nodeType === 3) {
+            // Text node
+            const span = document.createElement("span");
+            log.appendChild(span);
+            let charIndex = 0;
+            const text = node.textContent;
+
+            typewriterInterval = setInterval(() => {
+              span.textContent += text[charIndex];
+              charIndex++;
+              log.parentElement.scrollTop = log.parentElement.scrollHeight;
+              if (charIndex >= text.length) {
+                clearInterval(typewriterInterval);
+                currentIndex++;
+                typeNextNode();
+              }
+            }, 10);
+          } else {
+            // Element node
+            log.appendChild(node.cloneNode(true));
+            log.parentElement.scrollTop = log.parentElement.scrollHeight;
+            currentIndex++;
+            setTimeout(typeNextNode, 150); // Pause between lines
+          }
+        }
+
+        typeNextNode();
+      }
+
+      function closeModal() {
+        document.getElementById("modalOverlay").classList.remove("active");
+        if (typewriterInterval) clearInterval(typewriterInterval);
+      }
+
+      // Draw fake waveform
+      function drawWaveform(canvas) {
+        const ctx = canvas.getContext("2d");
+        let t = 0;
+        function render() {
+          if (!document.getElementById("modalOverlay").classList.contains("active")) return;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(0, 255, 136, 0.8)";
+          ctx.lineWidth = 1;
+          for (let x = 0; x < canvas.width; x++) {
+            const y =
+              canvas.height / 2 + Math.sin(x * 0.05 + t) * Math.sin(x * 0.01) * 20 * Math.random();
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+          t += 0.2;
+          requestAnimationFrame(render);
+        }
+        render();
+      }
+
+      // Event Listeners for Action Buttons
+      document.querySelectorAll(".action-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          openModal(btn.dataset.op);
+        });
+      });
+
+      // ============================================================
+      // CONSOLE LOGIC
+      // ============================================================
+      const consoleInput = document.getElementById("consoleInput");
+      consoleInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && consoleInput.value.trim() !== "") {
+          const val = consoleInput.value.trim();
+          consoleInput.value = "";
+
+          if (val === "clear") {
+            // nothing
+          } else if (val === "help") {
+            toast("SYSTEM", "Available cmds: pegasus, nmap, graph, clear", "");
+          } else {
+            toast("BASH", "Command executed: " + val, "success");
+          }
+        } else if (e.key === "Escape") {
+          consoleInput.blur();
+        }
+      });
+
+      // ============================================================
+      // TOAST NOTIFICATIONS
+      // ============================================================
+      function toast(title, msg, type) {
+        const c = document.getElementById("toastContainer");
+        const t = document.createElement("div");
+        t.className = "toast " + type;
+        t.innerHTML = `<div class="t-title">${title}</div><div>${msg}</div>`;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+      }
+
+      // Initial toasts
+      setTimeout(() => toast("SECURE UPLINK", "Connected to AMAN C2 Server", "success"), 2000);
+      setTimeout(
+        () => toast("TARGET UPDATE", "3 new targets ingested from regional nodes", "info"),
+        4500,
+      );
+    </script>
+  </body>
 </html>

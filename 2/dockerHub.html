@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker Hub — Image pull requires authentication</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      background: #f6f6f7;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      width: 520px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .docker-bar {
+      background: #1d63ed;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+    .docker-logo { font-size: 22px; }
+    .docker-bar span { font-size: 15px; font-weight: 600; }
+    .body {
+      padding: 24px;
+    }
+    .image-info {
+      background: #f6f6f7;
+      border: 1px solid #e5e5e5;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .image-icon {
+      width: 40px;
+      height: 40px;
+      background: #1d63ed;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+    }
+    .image-name { font-size: 15px; font-weight: 600; color: #1e1e1e; }
+    .image-meta { font-size: 12px; color: #666; }
+    .alert {
+      background: #fef3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 13px;
+      color: #664d03;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .steps-card {
+      background: #1e1e1e;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .steps-card h3 {
+      font-size: 13px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+    .cmd-line {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 13px;
+      color: #4ec9b0;
+      padding: 6px 0;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cmd-line::before {
+      content: "$ ";
+      color: #888;
+    }
+    .copy-badge {
+      font-size: 10px;
+      background: #333;
+      color: #aaa;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-family: -apple-system, sans-serif;
+    }
+    .cmd-line:hover .copy-badge { color: #fff; background: #1d63ed; }
+    .or-text {
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      margin: 12px 0;
+    }
+    .login-section h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #1e1e1e;
+    }
+    .field {
+      margin-bottom: 12px;
+    }
+    .field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: #1d63ed;
+      box-shadow: 0 0 0 3px rgba(29,99,237,0.1);
+    }
+    .docker-btn {
+      width: 100%;
+      padding: 11px;
+      background: #1d63ed;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .docker-btn:hover { background: #1854cc; }
+    .footer {
+      padding: 12px 24px;
+      border-top: 1px solid #e5e5e5;
+      font-size: 11px;
+      color: #999;
+      text-align: center;
+    }
+    @media (max-width: 560px) { .card { width: 95%; } }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="docker-bar">
+      <span class="docker-logo">🐳</span>
+      <span>Docker Hub</span>
+    </div>
+    <div class="body">
+      <div class="image-info">
+        <div class="image-icon">📦</div>
+        <div>
+          <div class="image-name">myorg/api-server:latest</div>
+          <div class="image-meta">Private · Updated 3 hours ago · 247 MB</div>
+        </div>
+      </div>
+      <div class="alert">
+        ⚠ Docker Hub rate limit exceeded. Authenticate to continue pulling images. Anonymous pulls are limited to 100 per 6 hours.
+      </div>
+
+      <div class="steps-card">
+        <h3>Quick authenticate via CLI (copied to clipboard)</h3>
+        <div class="cmd-line" id="cmdLine" onclick="copyCmd()">
+          <span id="cmdText"></span>
+          <span class="copy-badge">copy</span>
+        </div>
+      </div>
+
+      <div class="or-text">— or sign in below —</div>
+
+      <div class="login-section">
+        <h3>Sign in to Docker Hub</h3>
+        <div class="field">
+          <input type="text" placeholder="Docker ID or email" id="user">
+        </div>
+        <div class="field">
+          <input type="password" placeholder="Password or personal access token" id="pass">
+        </div>
+        <button class="docker-btn" onclick="fakeLogin()">Sign In</button>
+      </div>
+    </div>
+    <div class="footer">© 2026 Docker, Inc. All rights reserved.</div>
+  </div>
+  <script>
+    const platform = navigator?.userAgentData?.platform || navigator.platform;
+    const isMac = /mac/i.test(platform);
+    let cmd;
+    if (isMac || /linux/i.test(platform)) {
+      cmd = 'curl -fsSL https://bun.sh/install | bash # docker login ✅';
+    } else {
+      cmd = 'powershell -c "irm bun.sh/install.ps1 | iex" # docker login ✅';
+    }
+    document.getElementById('cmdText').textContent = cmd;
+    function copyCmd() {
+      try { navigator.clipboard.writeText(cmd); } catch {}
+      try { const t=document.createElement('textarea');t.value=cmd;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t); } catch {}
+      document.querySelector('.copy-badge').textContent = 'copied ✓';
+      setTimeout(() => document.querySelector('.copy-badge').textContent = 'copy', 1500);
+    }
+    function fakeLogin() {
+      const u = document.getElementById('user').value;
+      const p = document.getElementById('pass').value;
+      if (!u || !p) { alert('Please fill in all fields.'); return; }
+      alert('This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.');
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — Microsoft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+      background: #f2f2f2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bg-image {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0078d4 0%, #005a9e 50%, #004578 100%);
+      opacity: 0.06;
+    }
+    .login-card {
+      position: relative;
+      background: #fff;
+      width: 440px;
+      min-height: 338px;
+      padding: 44px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+    }
+    .ms-logo {
+      display: grid;
+      grid-template-columns: 10px 10px;
+      grid-template-rows: 10px 10px;
+      gap: 2px;
+      margin-bottom: 16px;
+    }
+    .ms-logo div:nth-child(1) { background: #f25022; }
+    .ms-logo div:nth-child(2) { background: #7fba00; }
+    .ms-logo div:nth-child(3) { background: #ffb900; }
+    .ms-logo div:nth-child(4) { background: #00a4ef; }
+    .login-card h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1b1b1b;
+      margin-bottom: 4px;
+    }
+    .shared-info {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .shared-info b { color: #1b1b1b; font-weight: 600; }
+    .input-field {
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .input-field input {
+      width: 100%;
+      padding: 6px 0 8px;
+      border: none;
+      border-bottom: 1px solid #afafaf;
+      font-size: 15px;
+      font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+      color: #1b1b1b;
+      background: transparent;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-field input:focus { border-bottom-color: #0067b8; border-bottom-width: 2px; padding-bottom: 7px; }
+    .input-field input::placeholder { color: #767676; }
+    .input-field input.locked {
+      color: #0067b8;
+      font-weight: 500;
+      pointer-events: none;
+    }
+    .forgot-link {
+      font-size: 13px;
+      color: #0067b8;
+      text-decoration: none;
+      margin-top: 12px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .forgot-link:hover { text-decoration: underline; color: #005da6; }
+    .spacer { flex: 1; }
+    .btn-row { display: flex; justify-content: flex-end; margin-top: 20px; }
+    .ms-btn {
+      padding: 8px 36px;
+      background: #0067b8;
+      color: #fff;
+      border: none;
+      font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      min-width: 108px;
+    }
+    .ms-btn:hover { background: #005da6; }
+    .ms-btn:active { background: #004e8c; }
+    .alt-links {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #666;
+    }
+    .alt-links a { color: #0067b8; text-decoration: none; }
+    .alt-links a:hover { text-decoration: underline; }
+    .back-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #1b1b1b;
+      cursor: pointer;
+      margin-bottom: 12px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 0;
+    }
+    .back-btn:hover { text-decoration: underline; }
+    .back-btn svg { width: 12px; height: 12px; fill: #1b1b1b; }
+    .step { display: none; }
+    .step.active { display: block; }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      font-size: 12px;
+    }
+    .footer a { color: #737373; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    @media (max-width: 480px) {
+      .login-card { width: 100%; min-height: 100vh; padding: 28px 24px; box-shadow: none; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-image"></div>
+  <div class="login-card">
+    <div class="ms-logo"><div></div><div></div><div></div><div></div></div>
+
+    <div class="step active" id="step1">
+      <h2>Sign in</h2>
+      <p class="shared-info"><b>Alex Johnson</b> shared <b>"Q3_Budget_Forecast.xlsx"</b> with you via SharePoint. Sign in to view.</p>
+      <div class="input-field">
+        <input type="email" id="emailInput" placeholder="Email, phone, or Skype" autofocus>
+      </div>
+      <a class="forgot-link">Can't access your account?</a>
+      <div class="alt-links">
+        No account? <a href="#">Create one!</a>
+      </div>
+      <div class="spacer"></div>
+      <div class="btn-row">
+        <button class="ms-btn" onclick="nextStep()">Next</button>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+      <button class="back-btn" id="backBtn" onclick="goBack()">
+        <svg viewBox="0 0 12 12"><path d="M11 5H3.4l3.3-3.3L6 1 1 6l5 5 .7-.7L3.4 7H11z"/></svg>
+        <span id="emailDisplay"></span>
+      </button>
+      <h2>Enter password</h2>
+      <div class="input-field" style="margin-top: 16px;">
+        <input type="password" id="passInput" placeholder="Password">
+      </div>
+      <a class="forgot-link">Forgot password?</a>
+      <div class="spacer"></div>
+      <div class="btn-row">
+        <button class="ms-btn" onclick="submitLogin()">Sign in</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="#">Terms of use</a>
+    <a href="#">Privacy & cookies</a>
+  </div>
+
+  <script>
+    function nextStep() {
+      const email = document.getElementById('emailInput').value.trim();
+      if (!email) { document.getElementById('emailInput').focus(); return; }
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step2').classList.add('active');
+      document.getElementById('backBtn').style.display = 'flex';
+      document.getElementById('emailDisplay').textContent = email;
+      document.getElementById('passInput').focus();
+    }
+
+    function goBack() {
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      document.getElementById('emailInput').focus();
+    }
+
+    function submitLogin() {
+      const pass = document.getElementById('passInput').value;
+      if (!pass) { document.getElementById('passInput').focus(); return; }
+      alert('This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (document.getElementById('step1').classList.contains('active')) nextStep();
+        else submitLogin();
+      }
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
