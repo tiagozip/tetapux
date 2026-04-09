@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuSign — Review and Sign</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ds-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+    .ds-logo span { color: #0072ce; }
+    .topbar-right {
+      font-size: 13px;
+      color: #666;
+    }
+    .main {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .envelope-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .envelope-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .envelope-header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .envelope-header p {
+      font-size: 14px;
+      color: #888;
+    }
+    .sender-row {
+      display: flex;
+      align-items: center;
+      padding: 18px 28px;
+      gap: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .sender-avatar {
+      width: 44px;
+      height: 44px;
+      background: #0072ce;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .sender-info { flex: 1; }
+    .sender-name { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .sender-email { font-size: 13px; color: #888; }
+    .sender-msg {
+      font-size: 13px;
+      color: #555;
+      background: #f8f8f8;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .doc-preview {
+      padding: 28px;
+      text-align: center;
+    }
+    .fake-doc {
+      background: #fafafa;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 40px 30px;
+      max-width: 400px;
+      margin: 0 auto 20px;
+    }
+    .fake-doc h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .fake-line {
+      height: 10px;
+      background: #e8e8e8;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .fake-line:nth-child(3) { width: 80%; }
+    .fake-line:nth-child(4) { width: 65%; }
+    .fake-line:nth-child(5) { width: 90%; }
+    .fake-line:nth-child(6) { width: 45%; }
+    .sign-here {
+      margin-top: 20px;
+      border: 2px dashed #ffce00;
+      background: #fffde7;
+      padding: 16px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #b8860b;
+      font-weight: 600;
+    }
+    .action-bar {
+      padding: 20px 28px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .decline-link {
+      font-size: 13px;
+      color: #888;
+      cursor: pointer;
+    }
+    .decline-link:hover { color: #e74c3c; }
+    .sign-btn {
+      padding: 12px 32px;
+      background: #ffce00;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .sign-btn:hover { background: #ffc200; }
+    .sign-btn:active { transform: scale(0.98); }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: white;
+      width: 420px;
+      border-radius: 10px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal h3 { font-size: 18px; margin-bottom: 6px; color: #1a1a1a; }
+    .modal p { font-size: 13px; color: #888; margin-bottom: 18px; line-height: 1.5; }
+    .modal input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .modal input:focus { outline: none; border-color: #0072ce; }
+    .modal button {
+      width: 100%;
+      padding: 12px;
+      background: #ffce00;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: #bbb;
+    }
+    @media (max-width: 740px) {
+      .main { margin: 16px auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="ds-logo">Docu<span>Sign</span></div>
+    <div class="topbar-right">Envelope ID: DSE-7291-4F3A</div>
+  </div>
+
+  <div class="main">
+    <div class="envelope-card">
+      <div class="envelope-header">
+        <h1>Please review & sign this document</h1>
+        <p>Sent via DocuSign Electronic Signature</p>
+      </div>
+
+      <div class="sender-row">
+        <div class="sender-avatar">LR</div>
+        <div class="sender-info">
+          <div class="sender-name">Lisa Rodriguez — VP of Operations</div>
+          <div class="sender-email">lisa.rodriguez@globex-corp.com</div>
+          <div class="sender-msg">"Hi — please sign this employment agreement by end of day. HR needs it processed before your start date."</div>
+        </div>
+      </div>
+
+      <div class="doc-preview">
+        <div class="fake-doc">
+          <h3>Employment Agreement</h3>
+          <div class="fake-line"></div>
+          <div class="fake-line"></div>
+          <div class="fake-line"></div>
+          <div class="fake-line"></div>
+          <div class="fake-line"></div>
+          <div class="fake-line"></div>
+          <div class="sign-here">✍️ SIGN HERE</div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <span class="decline-link">Decline to sign</span>
+        <button class="sign-btn" onclick="openModal()">Continue to Sign</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h3>Confirm your identity</h3>
+      <p>DocuSign requires identity verification before you can sign this document. Please enter your email and create an access code.</p>
+      <input type="email" placeholder="Email address">
+      <input type="password" placeholder="Create access code">
+      <button onclick="fakeSign()">Verify & Sign</button>
+    </div>
+  </div>
+
+  <div class="footer">DocuSign, Inc. · 221 Main St, San Francisco, CA 94105</div>
+
+  <script>
+    function openModal() {
+      document.getElementById("modal").style.display = "flex";
+    }
+    function fakeSign() {
+      alert("This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.");
+    }
+    document.getElementById("modal").addEventListener("click", function(e) {
+      if (e.target === this) this.style.display = "none";
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

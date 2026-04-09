@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaDEX — Decentralized Exchange</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0e11;
+      --surface: #1e2329;
+      --surface2: #2b3139;
+      --border: #363c45;
+      --accent: #f0b90b;
+      --green: #0ecb81;
+      --red: #f6465d;
+      --text: #eaecef;
+      --dim: #848e9c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .topnav {
+      background: var(--surface);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav-brand {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topnav-brand span { color: var(--accent); }
+    .topnav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .topnav-links a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .topnav-links a:hover { color: var(--text); }
+    .topnav-right { display: flex; gap: 12px; align-items: center; }
+    .connect-btn {
+      padding: 7px 16px;
+      background: var(--accent);
+      color: #0b0e11;
+      border: none;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .main {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .swap-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .swap-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .swap-title span { color: var(--dim); font-size: 13px; cursor: pointer; }
+    .token-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 6px;
+    }
+    .token-box-label {
+      font-size: 12px;
+      color: var(--dim);
+      margin-bottom: 8px;
+    }
+    .token-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .token-input {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 28px;
+      font-weight: 600;
+      width: 60%;
+      font-family: inherit;
+    }
+    .token-input:focus { outline: none; }
+    .token-input::placeholder { color: #363c45; }
+    .token-select {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .token-emoji { font-size: 20px; }
+    .balance-row {
+      font-size: 12px;
+      color: var(--dim);
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .balance-row span { color: var(--accent); cursor: pointer; }
+    .swap-arrow {
+      text-align: center;
+      margin: -2px 0;
+      position: relative;
+      z-index: 1;
+    }
+    .swap-arrow button {
+      width: 36px;
+      height: 36px;
+      background: var(--surface);
+      border: 3px solid var(--bg);
+      border-radius: 10px;
+      color: var(--dim);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .rate-info {
+      font-size: 12px;
+      color: var(--dim);
+      margin: 14px 0;
+      padding: 10px 14px;
+      background: var(--bg);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .swap-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #0b0e11;
+      border: none;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .swap-btn:hover { opacity: 0.9; }
+    .approval-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .approval-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      width: 380px;
+    }
+    .approval-box h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    .approval-detail {
+      font-size: 13px;
+      color: var(--dim);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .approval-detail b { color: var(--text); }
+    .approval-warning {
+      background: rgba(246,70,93,0.1);
+      border: 1px solid rgba(246,70,93,0.2);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--red);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .approval-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .approval-actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .reject-btn { background: var(--surface2); color: var(--text); }
+    .approve-btn { background: var(--accent); color: #0b0e11; }
+    .ticker-bar {
+      margin-top: 24px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .ticker-item { display: flex; align-items: center; gap: 4px; }
+    .ticker-item .up { color: var(--green); }
+    .ticker-item .down { color: var(--red); }
+    @media (max-width: 500px) { .main { margin: 20px auto; } }
+  </style>
+</head>
+<body>
+  <div class="topnav">
+    <div class="topnav-brand">⚡ Nova<span>DEX</span></div>
+    <div class="topnav-links">
+      <a>Swap</a>
+      <a>Pool</a>
+      <a>Farm</a>
+      <a>Bridge</a>
+    </div>
+    <div class="topnav-right">
+      <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="swap-card">
+      <div class="swap-title">Swap <span>⚙️</span></div>
+
+      <div class="token-box">
+        <div class="token-box-label">You pay</div>
+        <div class="token-row">
+          <input class="token-input" type="text" placeholder="0.0" id="fromAmount" value="1.5">
+          <div class="token-select"><span class="token-emoji">Ξ</span> ETH ▾</div>
+        </div>
+        <div class="balance-row">
+          <span>~$5,238.00</span>
+          <span>Balance: 4.28 MAX</span>
+        </div>
+      </div>
+
+      <div class="swap-arrow"><button>↕</button></div>
+
+      <div class="token-box">
+        <div class="token-box-label">You receive</div>
+        <div class="token-row">
+          <input class="token-input" type="text" placeholder="0.0" id="toAmount" value="5,214.73" readonly>
+          <div class="token-select"><span class="token-emoji">💲</span> USDC ▾</div>
+        </div>
+        <div class="balance-row">
+          <span>~$5,214.73</span>
+          <span>Balance: 12,450.00</span>
+        </div>
+      </div>
+
+      <div class="rate-info">
+        <span>1 ETH = 3,476.49 USDC</span>
+        <span>Fee: 0.3%</span>
+      </div>
+
+      <button class="swap-btn" onclick="initiateSwap()">Swap</button>
+    </div>
+
+    <div class="ticker-bar">
+      <div class="ticker-item">BTC <span class="up">+2.4%</span></div>
+      <div class="ticker-item">ETH <span class="up">+1.8%</span></div>
+      <div class="ticker-item">SOL <span class="down">-0.7%</span></div>
+      <div class="ticker-item">BNB <span class="up">+3.1%</span></div>
+    </div>
+  </div>
+
+  <div class="approval-modal" id="approvalModal">
+    <div class="approval-box">
+      <h3>Approve Token Spending</h3>
+      <div class="approval-detail">
+        Allow <b>NovaDEX Router v3</b> to spend your tokens:<br><br>
+        Token: <b>ETH (Wrapped)</b><br>
+        Amount: <b>Unlimited</b><br>
+        Spender: <b>0x7a25...3f91</b>
+      </div>
+      <div class="approval-warning">
+        ⚠ This approval grants unlimited spending access to your tokens. A malicious contract could drain your entire balance.
+      </div>
+      <div class="approval-actions">
+        <button class="reject-btn" onclick="document.getElementById('approvalModal').style.display='none'">Reject</button>
+        <button class="approve-btn" onclick="fakeApprove()">Approve</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function connectWallet() {
+      document.getElementById("connectBtn").textContent = "0x742d...F4e2";
+      document.getElementById("connectBtn").style.background = "#2b3139";
+      document.getElementById("connectBtn").style.color = "#eaecef";
+    }
+
+    function initiateSwap() {
+      if (document.getElementById("connectBtn").textContent === "Connect Wallet") {
+        connectWallet();
+        return;
+      }
+      document.getElementById("approvalModal").style.display = "flex";
+    }
+
+    function fakeApprove() {
+      alert("This is a Tetapux demo. No wallet interaction occurred.\n\nIn a real scenario, approving unlimited spending on a malicious DEX could drain your wallet.");
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

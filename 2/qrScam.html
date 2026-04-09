@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Scanner — Redirect Warning</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone {
+      width: 375px;
+      background: #fff;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      border: 8px solid #1a1a1a;
+    }
+    .status-bar {
+      padding: 14px 24px 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .notch {
+      width: 120px;
+      height: 28px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      margin: 0 auto;
+      position: relative;
+      top: -14px;
+      margin-bottom: -14px;
+    }
+    .scanner-ui {
+      padding: 20px;
+    }
+    .scan-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .scan-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .scan-header p {
+      font-size: 13px;
+      color: #999;
+      margin-top: 4px;
+    }
+    .qr-result {
+      background: #f8f8f8;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .result-icon {
+      width: 48px;
+      height: 48px;
+      background: #fff3e0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 12px;
+    }
+    .result-label {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .result-url {
+      text-align: center;
+      font-size: 12px;
+      color: #007aff;
+      word-break: break-all;
+      font-family: monospace;
+      padding: 8px;
+      background: #fff;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+    .warning-box {
+      background: #fff5f5;
+      border: 1px solid #fed7d7;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .warning-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e53e3e;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .warning-text {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+    }
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .open-btn {
+      width: 100%;
+      padding: 14px;
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .open-btn:active { opacity: 0.8; }
+    .copy-btn {
+      width: 100%;
+      padding: 12px;
+      background: #f0f0f0;
+      color: #333;
+      border: none;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .scan-again {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #007aff;
+      cursor: pointer;
+    }
+    .home-bar {
+      width: 134px;
+      height: 5px;
+      background: #1a1a1a;
+      border-radius: 3px;
+      margin: 16px auto;
+    }
+    @media (max-width: 400px) {
+      .phone { width: 100%; border-radius: 0; border: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>📶 🔋</span>
+    </div>
+    <div class="notch"></div>
+
+    <div class="scanner-ui">
+      <div class="scan-header">
+        <h2>QR Code Scanned</h2>
+        <p>The following link was detected</p>
+      </div>
+
+      <div class="qr-result">
+        <div class="result-icon">🔗</div>
+        <div class="result-label">Website Link Detected</div>
+        <div class="result-url" id="fakeUrl">https://secure-bankofamerica.verify-login.com/auth</div>
+      </div>
+
+      <div class="warning-box">
+        <div class="warning-title">⚠️ Suspicious URL Detected</div>
+        <div class="warning-text">
+          This link may be attempting to impersonate a legitimate website. The domain <b>verify-login.com</b> is not affiliated with Bank of America. Proceed with extreme caution.
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="open-btn" onclick="fakeOpen()">Open Anyway</button>
+        <button class="copy-btn" onclick="fakeCopy()">Copy Link</button>
+      </div>
+      <div class="scan-again" onclick="location.reload()">Scan Another Code</div>
+    </div>
+
+    <div class="home-bar"></div>
+  </div>
+
+  <script>
+    function fakeOpen() {
+      alert("This is a Tetapux demo. This link does not go anywhere.\n\nIn a real scenario, this could lead to a phishing page that steals banking credentials.");
+    }
+    function fakeCopy() {
+      navigator.clipboard.writeText(document.getElementById("fakeUrl").textContent);
+      document.querySelector(".copy-btn").textContent = "Copied ✓";
+      setTimeout(() => document.querySelector(".copy-btn").textContent = "Copy Link", 1500);
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

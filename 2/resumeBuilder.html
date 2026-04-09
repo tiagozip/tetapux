@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResumeAI — Free Professional Resume Builder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      background: #f9fafb;
+      min-height: 100vh;
+    }
+    .navbar {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .navbar h1 span { color: #6366f1; }
+    .navbar .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: #eef2ff;
+      color: #6366f1;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .main {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .step-indicator {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .step {
+      flex: 1;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 2px;
+    }
+    .step.active { background: #6366f1; }
+    .step.done { background: #22c55e; }
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+    .form-card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .form-card .sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    .field label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14px;
+      color: #111827;
+    }
+    .field textarea { height: 80px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
+    .row { display: flex; gap: 12px; }
+    .row .field { flex: 1; }
+    .next-btn {
+      width: 100%;
+      padding: 13px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .next-btn:hover { background: #4f46e5; }
+    .template-grid {
+      display: none;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .template {
+      aspect-ratio: 0.7;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      cursor: pointer;
+      padding: 12px;
+      transition: border-color 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .template:hover { border-color: #6366f1; }
+    .template.selected { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+    .tpl-line {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+    }
+    .tpl-line.header { height: 10px; background: #6366f1; width: 60%; }
+    .tpl-line.short { width: 40%; }
+    .tpl-line.med { width: 70%; }
+    .tpl-name {
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: auto;
+    }
+    .download-section {
+      display: none;
+      text-align: center;
+      padding: 40px 0;
+    }
+    .check-circle {
+      width: 64px;
+      height: 64px;
+      background: #ecfdf5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 16px;
+    }
+    .download-section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .download-section p {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+    .dl-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 6px;
+    }
+    .dl-btn.outline {
+      background: white;
+      color: #6366f1;
+      border: 1px solid #6366f1;
+    }
+    .paywall {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .paywall-box {
+      background: white;
+      width: 420px;
+      border-radius: 16px;
+      padding: 36px;
+      text-align: center;
+    }
+    .paywall-box h3 { font-size: 22px; margin-bottom: 8px; }
+    .paywall-box h3 span { color: #6366f1; }
+    .paywall-box p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .price-display {
+      font-size: 36px;
+      font-weight: 800;
+      color: #111827;
+      margin: 8px 0 4px;
+    }
+    .price-display .orig {
+      font-size: 18px;
+      text-decoration: line-through;
+      color: #d1d5db;
+    }
+    .price-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+    .paywall-box input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .paywall-box button {
+      width: 100%;
+      padding: 12px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    @media (max-width: 640px) {
+      .row { flex-direction: column; gap: 0; }
+      .template-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <h1>Resume<span>AI</span></h1>
+    <span class="tag">Free</span>
+  </div>
+
+  <div class="main">
+    <div class="step-indicator">
+      <div class="step active" id="s1"></div>
+      <div class="step" id="s2"></div>
+      <div class="step" id="s3"></div>
+      <div class="step" id="s4"></div>
+    </div>
+
+    <div class="form-card" id="step1">
+      <h2>Personal Details</h2>
+      <p class="sub">Tell us about yourself to get started</p>
+      <div class="row">
+        <div class="field"><label>First Name</label><input type="text" placeholder="John"></div>
+        <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+      </div>
+      <div class="field"><label>Email</label><input type="email" placeholder="john@example.com"></div>
+      <div class="field"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000"></div>
+      <div class="field"><label>LinkedIn URL</label><input type="text" placeholder="linkedin.com/in/johndoe"></div>
+      <button class="next-btn" onclick="nextStep(2)">Continue</button>
+    </div>
+
+    <div class="form-card" id="step2" style="display:none">
+      <h2>Work Experience</h2>
+      <p class="sub">Add your most recent position</p>
+      <div class="field"><label>Job Title</label><input type="text" placeholder="Software Engineer"></div>
+      <div class="field"><label>Company</label><input type="text" placeholder="Google"></div>
+      <div class="row">
+        <div class="field"><label>Start Date</label><input type="text" placeholder="Jan 2023"></div>
+        <div class="field"><label>End Date</label><input type="text" placeholder="Present"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea placeholder="Describe your key responsibilities and achievements..."></textarea></div>
+      <button class="next-btn" onclick="nextStep(3)">Continue</button>
+    </div>
+
+    <div class="form-card" id="step3" style="display:none">
+      <h2>Choose a Template</h2>
+      <p class="sub">Select a professional template for your resume</p>
+      <div class="template-grid" id="templateGrid">
+        <div class="template selected" onclick="selectTpl(this)">
+          <div class="tpl-line header"></div>
+          <div class="tpl-line"></div>
+          <div class="tpl-line med"></div>
+          <div class="tpl-line short"></div>
+          <div class="tpl-line"></div>
+          <div class="tpl-name">Modern</div>
+        </div>
+        <div class="template" onclick="selectTpl(this)">
+          <div class="tpl-line header" style="background:#111827"></div>
+          <div class="tpl-line"></div>
+          <div class="tpl-line"></div>
+          <div class="tpl-line med"></div>
+          <div class="tpl-line short"></div>
+          <div class="tpl-name">Classic</div>
+        </div>
+        <div class="template" onclick="selectTpl(this)">
+          <div class="tpl-line header" style="background:#059669"></div>
+          <div class="tpl-line short"></div>
+          <div class="tpl-line"></div>
+          <div class="tpl-line med"></div>
+          <div class="tpl-line"></div>
+          <div class="tpl-name">Creative</div>
+        </div>
+      </div>
+      <button class="next-btn" onclick="nextStep(4)">Generate Resume</button>
+    </div>
+
+    <div class="form-card" id="step4" style="display:none">
+      <div class="download-section" id="downloadSection">
+        <div class="check-circle">✅</div>
+        <h2>Your resume is ready!</h2>
+        <p>AI-enhanced and professionally formatted</p>
+        <button class="dl-btn" onclick="showPaywall()">Download PDF</button>
+        <button class="dl-btn outline" onclick="showPaywall()">Download DOCX</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="paywall" id="paywall">
+    <div class="paywall-box">
+      <h3>Unlock <span>Pro</span> Download</h3>
+      <p>Your resume has been generated! Unlock the full PDF/DOCX download with no watermarks.</p>
+      <div class="price-display"><span class="orig">$29.99</span> $2.99</div>
+      <p class="price-sub">One-time payment · Limited offer</p>
+      <input type="email" placeholder="Email address">
+      <input type="text" placeholder="Card number">
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="text" placeholder="MM/YY" style="flex:1">
+        <input type="text" placeholder="CVC" style="flex:1">
+      </div>
+      <button onclick="fakePay()">Pay $2.99 & Download</button>
+    </div>
+  </div>
+
+  <script>
+    function nextStep(n) {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById("step" + i);
+        if (el) el.style.display = i === n ? "block" : "none";
+        const s = document.getElementById("s" + i);
+        s.className = "step" + (i < n ? " done" : i === n ? " active" : "");
+      }
+      if (n === 3) {
+        document.getElementById("templateGrid").style.display = "grid";
+      }
+      if (n === 4) {
+        document.getElementById("downloadSection").style.display = "block";
+      }
+    }
+    function selectTpl(el) {
+      document.querySelectorAll(".template").forEach(t => t.classList.remove("selected"));
+      el.classList.add("selected");
+    }
+    function showPaywall() {
+      document.getElementById("paywall").style.display = "flex";
+    }
+    function fakePay() {
+      alert("This is a Tetapux demo. No payment is processed.\n\nJoke for phishing/scam simulation only.");
+    }
+    document.getElementById("paywall").addEventListener("click", function(e) {
+      if (e.target === this) this.style.display = "none";
+    });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
