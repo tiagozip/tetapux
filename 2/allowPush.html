@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm your age to continue</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", -apple-system, "Segoe UI", sans-serif;
+      background: #0f0f0f;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 6px;
+      padding: 12px;
+      filter: blur(16px);
+      opacity: 0.18;
+    }
+    .bg-thumb {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #1a1a2e, #222);
+      border-radius: 8px;
+    }
+    .bg-thumb:nth-child(odd) { background: linear-gradient(135deg, #2a1520, #1a1020); }
+    .bg-thumb:nth-child(3n) { background: linear-gradient(135deg, #15202a, #0f1a20); }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: 20px;
+    }
+    .modal {
+      background: #1a1a24;
+      width: 400px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .modal-header {
+      padding: 24px 24px 0;
+      text-align: center;
+    }
+    .age-badge {
+      width: 72px;
+      height: 72px;
+      background: rgba(230,57,70,0.08);
+      border: 2px solid rgba(230,57,70,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .age-badge svg { width: 36px; height: 36px; }
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .sub {
+      font-size: 14px;
+      color: #6b6f80;
+      line-height: 1.55;
+    }
+    .modal-body { padding: 24px; }
+    .prompt-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .arrow-anim {
+      font-size: 28px;
+      animation: bounce 1.5s ease-in-out infinite;
+      margin-bottom: 8px;
+    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .prompt-card p {
+      font-size: 13px;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+    .prompt-card b { color: #fff; }
+    .allow-btn {
+      width: 100%;
+      padding: 15px;
+      background: #e63946;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .allow-btn:hover { background: #c1121f; }
+    .allow-btn:active { transform: scale(0.98); }
+    .deny-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: #4b4f5e;
+      border: 1px solid #2a2a36;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+    .deny-btn:hover { background: rgba(255,255,255,0.02); }
+    .modal-footer {
+      padding: 14px 24px 20px;
+      text-align: center;
+    }
+    .trust-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      font-size: 11px;
+      color: #3a3d4a;
+    }
+    .trust-row span { display: flex; align-items: center; gap: 4px; }
+    @media (max-width: 440px) { .modal { width: 100%; border-radius: 14px; } }
+  </style>
+</head>
+<body>
+  <div class="bg-grid">
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+    <div class="bg-thumb"></div><div class="bg-thumb"></div><div class="bg-thumb"></div>
+  </div>
+  <div class="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="age-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <h2>Age Verification Required</h2>
+        <p class="sub">This content is restricted to users aged 18 and over under applicable regulations.</p>
+      </div>
+      <div class="modal-body">
+        <div class="prompt-card">
+          <div class="arrow-anim">⬆️</div>
+          <p>When the browser prompt appears, click <b>"Allow"</b> to confirm you are at least 18 years old and access the content.</p>
+        </div>
+        <button class="allow-btn" onclick="requestPush()">I am 18 or older — Verify</button>
+        <button class="deny-btn" onclick="window.history.back()">I am under 18 — Leave</button>
+      </div>
+      <div class="modal-footer">
+        <div class="trust-row">
+          <span>🔒 Privacy protected</span>
+          <span>✓ No data stored</span>
+          <span>🛡 GDPR compliant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function requestPush() {
+      if ('Notification' in window) Notification.requestPermission();
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('/tetapux/sw.js').catch(() => {});
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

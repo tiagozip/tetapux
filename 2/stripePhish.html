@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Action Required] Verify your Stripe identity</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f6f9fc;
+      font-family: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #1a1f36;
+    }
+    .email-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    .email-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid #e3e8ee;
+    }
+    .stripe-logo {
+      font-size: 30px;
+      font-weight: 700;
+      color: #635bff;
+      letter-spacing: -1px;
+    }
+    .email-body { padding: 28px; }
+    .email-body h2 { font-size: 20px; font-weight: 600; margin-bottom: 14px; }
+    .email-body p { font-size: 14px; line-height: 1.65; color: #525f7f; margin-bottom: 14px; }
+    .alert-box {
+      background: #fef6f0;
+      border-left: 4px solid #ed6704;
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .alert-box p { font-size: 13px; color: #a85502; margin: 0; line-height: 1.55; }
+    .alert-box b { color: #c44a00; }
+    .details-table {
+      width: 100%;
+      border: 1px solid #e3e8ee;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      font-size: 13px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .details-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #e3e8ee;
+    }
+    .details-table tr:last-child td { border-bottom: none; }
+    .details-table td:first-child {
+      font-weight: 500;
+      color: #1a1f36;
+      width: 140px;
+      background: #f7fafc;
+    }
+    .details-table td:last-child { color: #525f7f; }
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #635bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 12px;
+      transition: background 0.15s;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary:hover { background: #5148e6; }
+    .btn-outline {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #e3e8ee;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      color: #525f7f;
+      margin-bottom: 14px;
+    }
+    .btn-outline:hover { background: #f7fafc; }
+    hr { border: none; border-top: 1px solid #e3e8ee; margin: 20px 0; }
+    .small { font-size: 12px; color: #8792a2; line-height: 1.6; }
+    .email-footer {
+      padding: 18px 28px;
+      background: #f7fafc;
+      border-top: 1px solid #e3e8ee;
+      font-size: 12px;
+      color: #8792a2;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .email-footer a { color: #635bff; text-decoration: none; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,31,54,0.55);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 20px 24px 0;
+    }
+    .modal-header .stripe-logo { font-size: 24px; margin-bottom: 16px; }
+    .modal-header h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+    .modal-header .sub { font-size: 13px; color: #525f7f; margin-bottom: 0; }
+    .modal-body { padding: 20px 24px 24px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1a1f36;
+      margin-bottom: 5px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e3e8ee;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      color: #1a1f36;
+      background: #f7fafc;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #635bff;
+      box-shadow: 0 0 0 3px rgba(99,91,255,0.1);
+      background: #fff;
+    }
+    .form-group input::placeholder { color: #a3acb9; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal .btn-primary { margin-top: 4px; margin-bottom: 0; }
+    .modal-footer {
+      padding: 14px 24px;
+      border-top: 1px solid #e3e8ee;
+      text-align: center;
+    }
+    .modal-footer a { font-size: 12px; color: #635bff; text-decoration: none; cursor: pointer; }
+    @media (max-width: 600px) { body { padding: 16px 10px; } .email-body, .email-footer, .email-header { padding-left: 18px; padding-right: 18px; } }
+  </style>
+</head>
+<body>
+  <div class="email-wrap">
+    <div class="email-header">
+      <div class="stripe-logo">stripe</div>
+    </div>
+    <div class="email-body">
+      <h2>Unusual activity on your account</h2>
+      <p>Hi there,</p>
+      <p>We've detected login attempts to your Stripe dashboard from an unrecognized location. As a precaution, we've temporarily limited your account's payout functionality.</p>
+
+      <div class="alert-box">
+        <p><b>Payouts paused.</b> To resume payouts and restore full dashboard access, please verify your identity within 48 hours. Failure to do so may result in permanent restrictions.</p>
+      </div>
+
+      <table class="details-table">
+        <tr><td>Date</td><td id="dateCell">—</td></tr>
+        <tr><td>Location</td><td>🇳🇬 Lagos, Nigeria</td></tr>
+        <tr><td>IP Address</td><td id="ipCell">—</td></tr>
+        <tr><td>Browser</td><td>Chrome 128 / Windows 10</td></tr>
+        <tr><td>Accessed</td><td>Dashboard, API keys, payout settings</td></tr>
+      </table>
+
+      <button class="btn-primary" onclick="openModal()">Verify your identity</button>
+      <button class="btn-outline" onclick="openModal()">Review recent activity</button>
+
+      <hr>
+      <p class="small">If this was you, you can ignore this email. Otherwise, we recommend verifying your identity and resetting your password immediately.</p>
+      <p class="small">You received this email because security monitoring detected unusual access to your Stripe account.</p>
+    </div>
+    <div class="email-footer">
+      Stripe, Inc. · 354 Oyster Point Blvd · South San Francisco, CA 94080<br>
+      <a href="#">Unsubscribe</a> · <a href="#">Email settings</a> · <a href="#">Support</a>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="stripe-logo">stripe</div>
+        <h3>Verify your identity</h3>
+        <p class="sub">Confirm your credentials to restore full account access.</p>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" placeholder="you@company.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="Enter your Stripe password">
+        </div>
+        <div class="form-group">
+          <label>Last 4 digits of linked bank account</label>
+          <input type="text" placeholder="e.g. 4829" maxlength="4" inputmode="numeric">
+        </div>
+        <button class="btn-primary" onclick="alert('This is a Tetapux demo. Your credentials were not sent anywhere.\n\nJoke for phishing/scam simulation only.')">Verify & restore access</button>
+      </div>
+      <div class="modal-footer">
+        <a onclick="document.getElementById('modal').style.display='none'">Cancel</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - Math.floor(Math.random() * 45 + 5));
+    document.getElementById('dateCell').textContent = now.toLocaleString('en-US', {
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit', hour12: true
+    });
+    document.getElementById('ipCell').textContent = `${Math.floor(Math.random()*223+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+
+    function openModal() { document.getElementById('modal').style.display = 'flex'; }
+    document.getElementById('modal').addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

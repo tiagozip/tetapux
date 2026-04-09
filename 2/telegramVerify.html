@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Urgent] Telegram Account Verification</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #17212b;
+      font-family: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #f5f5f5;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .email-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #232e3c;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    .email-header {
+      background: #1c2733;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #2b3945;
+    }
+    .tg-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2aabee, #229ed9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tg-logo svg { width: 22px; height: 22px; }
+    .tg-text { font-size: 17px; font-weight: 600; }
+    .email-body { padding: 28px 24px; }
+    .email-body h2 { font-size: 20px; font-weight: 600; margin-bottom: 14px; }
+    .email-body p { font-size: 14px; line-height: 1.6; color: #8e9bab; margin-bottom: 14px; }
+    .alert-box {
+      background: rgba(255,85,85,0.06);
+      border: 1px solid rgba(255,85,85,0.18);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .alert-box .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alert-box .text { font-size: 13px; color: #ff7b7b; line-height: 1.55; }
+    .alert-box b { color: #ff5555; }
+    .details-table {
+      width: 100%;
+      border: 1px solid #2b3945;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      font-size: 13px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .details-table td { padding: 10px 16px; border-bottom: 1px solid #2b3945; }
+    .details-table tr:last-child td { border-bottom: none; }
+    .details-table td:first-child { font-weight: 500; color: #e0e6ed; width: 110px; background: rgba(255,255,255,0.02); }
+    .details-table td:last-child { color: #8e9bab; }
+    .form-section {
+      background: #1c2733;
+      border: 1px solid #2b3945;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+    .form-section h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .form-section .sub {
+      font-size: 13px;
+      color: #8e9bab;
+      margin-bottom: 16px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: #8e9bab; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #17212b;
+      border: 1px solid #2b3945;
+      border-radius: 8px;
+      color: #f5f5f5;
+      font: inherit;
+      font-size: 15px;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus { outline: none; border-color: #2aabee; box-shadow: 0 0 0 3px rgba(42,171,238,0.12); }
+    .form-group input::placeholder { color: #4a5a6a; }
+    .tg-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #2aabee, #229ed9);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      letter-spacing: 0.2px;
+    }
+    .tg-btn:hover { opacity: 0.9; }
+    hr { border: none; border-top: 1px solid #2b3945; margin: 18px 0; }
+    .small { font-size: 12px; color: #5d6d7e; line-height: 1.6; }
+    .email-footer {
+      padding: 16px 24px;
+      background: #1c2733;
+      border-top: 1px solid #2b3945;
+      font-size: 12px;
+      color: #5d6d7e;
+      text-align: center;
+      line-height: 1.6;
+    }
+    @media (max-width: 560px) { body { padding: 16px 10px; } }
+  </style>
+</head>
+<body>
+  <div class="email-wrap">
+    <div class="email-header">
+      <div class="tg-logo">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </div>
+      <div class="tg-text">Telegram</div>
+    </div>
+    <div class="email-body">
+      <h2>Suspicious login attempt blocked</h2>
+      <p>Hello,</p>
+      <p>We blocked a login attempt to your Telegram account from an unrecognized device. If this wasn't you, verify your account immediately to prevent unauthorized access.</p>
+
+      <div class="alert-box">
+        <span class="icon">🚨</span>
+        <div class="text"><b>Immediate action required.</b> Someone attempted to access your account using your phone number. If you don't verify within 24 hours, your account will be temporarily restricted for safety.</div>
+      </div>
+
+      <table class="details-table">
+        <tr><td>When</td><td id="dateCell">—</td></tr>
+        <tr><td>Device</td><td>Samsung Galaxy S24 / Telegram Android 10.8</td></tr>
+        <tr><td>Location</td><td>🇧🇷 São Paulo, Brazil</td></tr>
+        <tr><td>IP Address</td><td id="ipCell">—</td></tr>
+        <tr><td>Status</td><td style="color:#ff5555;font-weight:500;">Blocked — verification needed</td></tr>
+      </table>
+
+      <div class="form-section">
+        <h3>Verify your account</h3>
+        <p class="sub">Confirm your phone number and two-step verification password to secure your account.</p>
+        <div class="form-group">
+          <label>Phone number</label>
+          <input type="tel" placeholder="+1 (555) 000-0000" id="phone">
+        </div>
+        <div class="form-group">
+          <label>Two-step verification password</label>
+          <input type="password" placeholder="Enter your 2FA password" id="pass">
+        </div>
+        <button class="tg-btn" onclick="fakeVerify()">Verify & secure account</button>
+      </div>
+
+      <hr>
+      <p class="small">If this login attempt was made by you, no action is needed. We recommend keeping two-step verification enabled on your account.</p>
+    </div>
+    <div class="email-footer">
+      Telegram Messenger LLP · Dubai, UAE<br>
+      You received this because a sign-in attempt was blocked on your account.
+    </div>
+  </div>
+
+  <script>
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - Math.floor(Math.random() * 20 + 3));
+    document.getElementById('dateCell').textContent = now.toLocaleString('en-US', {
+      weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit', hour12: true
+    });
+    document.getElementById('ipCell').textContent = `${Math.floor(Math.random()*223+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+
+    function fakeVerify() {
+      const p = document.getElementById('phone').value;
+      const pw = document.getElementById('pass').value;
+      if (!p || !pw) { alert('Please fill in all fields.'); return; }
+      alert('This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.');
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
