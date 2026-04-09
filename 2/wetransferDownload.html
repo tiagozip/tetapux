@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeTransfer — Download your files</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Helvetica Neue", sans-serif;
+      background: #409fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      width: 460px;
+      border-radius: 16px;
+      padding: 40px 36px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 28px;
+      color: #333;
+    }
+    .logo span { color: #409fff; }
+    .sender {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .sender b { color: #333; }
+    .message {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      margin: 12px 0 20px;
+      font-style: italic;
+    }
+    .files {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .file {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .file:last-child { border-bottom: none; }
+    .file-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .file-icon.zip { background: #fff3e0; }
+    .file-icon.pdf { background: #fce4ec; }
+    .file-icon.img { background: #e8f5e9; }
+    .file-name {
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+    }
+    .file-size {
+      font-size: 12px;
+      color: #999;
+      margin-left: 10px;
+    }
+    .total {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+    .expire {
+      font-size: 12px;
+      color: #e74c3c;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .download-btn {
+      width: 100%;
+      padding: 14px;
+      background: #409fff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .download-btn:hover { background: #2d8ce8; }
+    .download-btn:active { transform: scale(0.98); }
+    .progress {
+      display: none;
+      margin-top: 16px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: #eee;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #409fff;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: #999;
+      margin-top: 6px;
+      text-align: center;
+    }
+    .footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: #bbb;
+      text-align: center;
+    }
+    @media (max-width: 500px) {
+      body { padding: 16px; }
+      .container { width: 100%; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">We<span>Transfer</span></div>
+    <div class="sender"><b>mark.williams@enterprise.io</b> sent you some files</div>
+    <div class="message">"Here are the documents you requested. Please review and sign ASAP — deadline is tomorrow."</div>
+
+    <div class="files">
+      <div class="file">
+        <div class="file-icon zip">📦</div>
+        <div class="file-name">Contract_Documents_2026.zip</div>
+        <div class="file-size">18.7 MB</div>
+      </div>
+      <div class="file">
+        <div class="file-icon pdf">📕</div>
+        <div class="file-name">NDA_Signature_Required.pdf</div>
+        <div class="file-size">1.2 MB</div>
+      </div>
+      <div class="file">
+        <div class="file-icon img">🖼️</div>
+        <div class="file-name">Company_Logo_Assets.png</div>
+        <div class="file-size">4.5 MB</div>
+      </div>
+    </div>
+
+    <div class="total">3 files · 24.4 MB total</div>
+    <div class="expire">⏰ Expires in <span id="expiry">23 hours, 41 minutes</span></div>
+
+    <button class="download-btn" id="dlBtn" onclick="startDownload()">Download</button>
+
+    <div class="progress" id="progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="fill"></div>
+      </div>
+      <div class="progress-text" id="progText">Preparing download...</div>
+    </div>
+
+    <div class="footer">WeTransfer B.V. · Oostelijke Handelskade 28, Amsterdam</div>
+  </div>
+
+  <script>
+    function startDownload() {
+      const btn = document.getElementById("dlBtn");
+      const progress = document.getElementById("progress");
+      const fill = document.getElementById("fill");
+      const progText = document.getElementById("progText");
+
+      btn.style.display = "none";
+      progress.style.display = "block";
+
+      let pct = 0;
+      const interval = setInterval(() => {
+        pct += Math.random() * 8 + 2;
+        if (pct > 92) pct = 92;
+        fill.style.width = pct + "%";
+        progText.textContent = `Downloading... ${Math.floor(pct)}%`;
+      }, 300);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        fill.style.width = "100%";
+        progText.textContent = "Verifying archive integrity...";
+        setTimeout(() => {
+          progText.innerHTML = '⚠️ Archive password protected. Password: <b>DOC2026</b>';
+          alert("This is a Tetapux demo. No real file was downloaded.");
+        }, 2000);
+      }, 4000);
+    }
+
+    let mins = 41;
+    setInterval(() => {
+      mins--;
+      if (mins < 0) mins = 59;
+      document.getElementById("expiry").textContent = `23 hours, ${mins} minutes`;
+    }, 60000);
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

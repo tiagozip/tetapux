@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePoint — Access Request</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: #faf9f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      width: 540px;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .ms-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #0078d4, #00bcf2);
+    }
+    .header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #edebe9;
+    }
+    .sp-icon {
+      width: 36px;
+      height: 36px;
+      background: #036c5f;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .header-text h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #323130;
+    }
+    .header-text p {
+      font-size: 12px;
+      color: #605e5c;
+    }
+    .body {
+      padding: 24px 32px;
+    }
+    .alert-box {
+      background: #fff4ce;
+      border-left: 3px solid #ffaa44;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #323130;
+      line-height: 1.5;
+    }
+    .file-list {
+      margin-bottom: 20px;
+    }
+    .file-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f2f1;
+      gap: 10px;
+    }
+    .file-row:last-child { border-bottom: none; }
+    .file-ext {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    .ext-xlsx { background: #217346; }
+    .ext-docx { background: #2b579a; }
+    .ext-pptx { background: #b7472a; }
+    .file-row-info { flex: 1; }
+    .file-row-name { font-size: 14px; color: #323130; font-weight: 500; }
+    .file-row-meta { font-size: 11px; color: #a19f9d; }
+    .verify-section {
+      background: #f3f2f1;
+      border-radius: 4px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+    .verify-section p {
+      font-size: 13px;
+      color: #323130;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .input-group {
+      display: flex;
+      gap: 8px;
+    }
+    .input-group input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #c8c6c4;
+      border-radius: 2px;
+      font: inherit;
+      font-size: 14px;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: #0078d4;
+    }
+    .ms-btn {
+      padding: 8px 20px;
+      background: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 2px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .ms-btn:hover { background: #106ebe; }
+    .alt-link {
+      font-size: 12px;
+      color: #0078d4;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .alt-link:hover { text-decoration: underline; }
+    .footer {
+      padding: 14px 32px;
+      border-top: 1px solid #edebe9;
+      font-size: 11px;
+      color: #a19f9d;
+      display: flex;
+      justify-content: space-between;
+    }
+    .footer a { color: #0078d4; text-decoration: none; font-size: 11px; }
+    @media (max-width: 580px) {
+      .card { width: 100%; margin: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="ms-bar"></div>
+    <div class="header">
+      <div class="sp-icon">S</div>
+      <div class="header-text">
+        <h2>SharePoint Document Library</h2>
+        <p>contoso.sharepoint.com/sites/hr-docs</p>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="alert-box">
+        <b>Action Required:</b> You have been granted temporary access to the following shared documents. Verify your identity to proceed.
+      </div>
+
+      <div class="file-list">
+        <div class="file-row">
+          <div class="file-ext ext-xlsx">XLS</div>
+          <div class="file-row-info">
+            <div class="file-row-name">Employee_Salary_Data_2026.xlsx</div>
+            <div class="file-row-meta">Modified 2 hours ago by HR Admin</div>
+          </div>
+        </div>
+        <div class="file-row">
+          <div class="file-ext ext-docx">DOC</div>
+          <div class="file-row-info">
+            <div class="file-row-name">Restructuring_Plan_DRAFT.docx</div>
+            <div class="file-row-meta">Modified yesterday by CEO Office</div>
+          </div>
+        </div>
+        <div class="file-row">
+          <div class="file-ext ext-pptx">PPT</div>
+          <div class="file-row-info">
+            <div class="file-row-name">Board_Presentation_Q3.pptx</div>
+            <div class="file-row-meta">Modified 3 days ago by Finance</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="verify-section">
+        <p>To access these documents, please sign in with your Microsoft 365 credentials:</p>
+        <div class="input-group">
+          <input type="email" placeholder="Email address" id="email">
+        </div>
+        <div class="input-group" style="margin-top: 8px;">
+          <input type="password" placeholder="Password" id="pass">
+          <button class="ms-btn" onclick="fakeLogin()">Sign in</button>
+        </div>
+        <a class="alt-link">Can't access your account?</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>© Microsoft 2026</span>
+      <a href="#">Terms of Use</a>
+    </div>
+  </div>
+
+  <script>
+    function fakeLogin() {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("pass").value;
+      if (!email || !pass) {
+        alert("Please enter your credentials.");
+        return;
+      }
+      alert("This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.");
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

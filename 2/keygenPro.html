@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeyGen Pro — Software License Generator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      color: #ddd;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      width: 500px;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .header h1 span { color: #00d2ff; }
+    .header p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 4px;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    label {
+      font-size: 13px;
+      color: #aaa;
+      display: block;
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+    label:first-of-type { margin-top: 0; }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: #eee;
+      font: inherit;
+      font-size: 14px;
+      -webkit-appearance: none;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: #00d2ff;
+    }
+    select option { background: #1a1a2e; }
+    .gen-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .gen-btn:hover { opacity: 0.9; }
+    .gen-btn:active { transform: scale(0.98); }
+    .output {
+      display: none;
+      margin-top: 20px;
+    }
+    .key-display {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,210,255,0.3);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .key-display .label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .key-value {
+      font-family: "Courier New", monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: #00d2ff;
+      letter-spacing: 2px;
+      word-break: break-all;
+      user-select: all;
+    }
+    .copy-key {
+      margin-top: 10px;
+      padding: 8px 18px;
+      background: rgba(0,210,255,0.15);
+      border: 1px solid rgba(0,210,255,0.3);
+      border-radius: 6px;
+      color: #00d2ff;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .copy-key:hover { background: rgba(0,210,255,0.25); }
+    .warning-strip {
+      background: rgba(255,165,0,0.1);
+      border: 1px solid rgba(255,165,0,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #ffaa44;
+      line-height: 1.5;
+    }
+    .survey-gate {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .survey-box {
+      background: #1a1a2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 32px;
+      width: 400px;
+      text-align: center;
+    }
+    .survey-box h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .survey-box p {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .survey-option {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #ddd;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .survey-option:hover { background: rgba(0,210,255,0.1); border-color: #00d2ff; }
+    .timer {
+      font-family: monospace;
+      font-size: 24px;
+      color: #00d2ff;
+      margin: 12px 0;
+    }
+    .counter {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #555;
+    }
+    @media (max-width: 540px) {
+      .container { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Key<span>Gen</span> Pro</h1>
+      <p>Generate license keys for any software — 100% free</p>
+    </div>
+
+    <div class="card">
+      <label>Software</label>
+      <select id="software">
+        <option>Adobe Photoshop 2026</option>
+        <option>Microsoft Office 365</option>
+        <option>Windows 11 Pro</option>
+        <option>Adobe Premiere Pro 2026</option>
+        <option>AutoCAD 2026</option>
+        <option>Final Cut Pro X</option>
+        <option>FL Studio 21</option>
+        <option>Ableton Live 12</option>
+        <option>VMware Workstation Pro</option>
+        <option>IDM (Internet Download Manager)</option>
+      </select>
+
+      <label>Edition</label>
+      <select>
+        <option>Ultimate / Full</option>
+        <option>Professional</option>
+        <option>Enterprise</option>
+        <option>Student</option>
+      </select>
+
+      <label>Your Name (for license)</label>
+      <input type="text" placeholder="Enter your name" id="nameInput">
+
+      <button class="gen-btn" onclick="generateKey()">Generate License Key</button>
+
+      <div class="output" id="output">
+        <div class="key-display">
+          <div class="label">Your License Key</div>
+          <div class="key-value" id="keyValue"></div>
+          <button class="copy-key" onclick="copyKey()">Copy Key</button>
+        </div>
+        <div class="warning-strip">
+          ⚠ Activate within 24 hours. To download the activation patch, complete a quick human verification below.
+        </div>
+      </div>
+    </div>
+
+    <div class="counter" id="counter"></div>
+  </div>
+
+  <div class="survey-gate" id="surveyGate">
+    <div class="survey-box">
+      <h3>Human Verification Required</h3>
+      <p>Complete one offer to prove you're not a bot and unlock your activation patch.</p>
+      <div class="timer" id="surveyTimer">02:00</div>
+      <button class="survey-option" onclick="fakeSurvey()">📱 Install App & Run 30s</button>
+      <button class="survey-option" onclick="fakeSurvey()">📋 Complete Short Survey</button>
+      <button class="survey-option" onclick="fakeSurvey()">🎮 Play Game for 60s</button>
+    </div>
+  </div>
+
+  <script>
+    let genCount = Math.floor(Math.random() * 50000) + 180000;
+    document.getElementById("counter").textContent = genCount.toLocaleString() + " keys generated today";
+
+    function randomKey() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      const groups = [];
+      for (let g = 0; g < 5; g++) {
+        let s = "";
+        for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
+        groups.push(s);
+      }
+      return groups.join("-");
+    }
+
+    function generateKey() {
+      const key = randomKey();
+      document.getElementById("keyValue").textContent = key;
+      document.getElementById("output").style.display = "block";
+
+      setTimeout(() => {
+        document.getElementById("surveyGate").style.display = "flex";
+        let secs = 120;
+        const iv = setInterval(() => {
+          secs--;
+          if (secs <= 0) { clearInterval(iv); secs = 0; }
+          const m = Math.floor(secs / 60).toString().padStart(2, "0");
+          const s = (secs % 60).toString().padStart(2, "0");
+          document.getElementById("surveyTimer").textContent = m + ":" + s;
+        }, 1000);
+      }, 2000);
+    }
+
+    function copyKey() {
+      navigator.clipboard.writeText(document.getElementById("keyValue").textContent);
+      document.querySelector(".copy-key").textContent = "Copied ✓";
+      setTimeout(() => document.querySelector(".copy-key").textContent = "Copy Key", 1500);
+    }
+
+    function fakeSurvey() {
+      alert("This is a Tetapux demo. This is a CPA content-locker scam simulation.\n\nJoke for phishing/scam simulation only.");
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

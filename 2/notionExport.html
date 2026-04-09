@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion — Workspace Export Ready</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      background: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      width: 500px;
+      padding: 40px;
+    }
+    .notion-logo {
+      width: 36px;
+      height: 36px;
+      background: #000;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 22px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #191919;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 15px;
+      color: #787774;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .export-card {
+      border: 1px solid #e3e2e0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .export-header {
+      padding: 14px 18px;
+      background: #fbfbfa;
+      border-bottom: 1px solid #e3e2e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .export-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #191919;
+    }
+    .status-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      background: #dff4e4;
+      color: #0f7b3f;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .export-row {
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0efee;
+      font-size: 14px;
+      color: #37352f;
+    }
+    .export-row:last-child { border-bottom: none; }
+    .export-row .label { color: #787774; }
+    .expire-warning {
+      background: #fef3e2;
+      border: 1px solid #f9deb4;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #915b0e;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .countdown {
+      font-weight: 700;
+      font-family: monospace;
+    }
+    .download-btn {
+      width: 100%;
+      padding: 12px;
+      background: #2383e2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-bottom: 12px;
+    }
+    .download-btn:hover { background: #1b6ec2; }
+    .secondary-link {
+      display: block;
+      text-align: center;
+      font-size: 13px;
+      color: #787774;
+      cursor: pointer;
+    }
+    .secondary-link:hover { color: #37352f; }
+    .progress-area {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e3e2e0;
+      border-top-color: #2383e2;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .progress-text {
+      font-size: 13px;
+      color: #787774;
+    }
+    .verify-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .verify-box {
+      background: white;
+      width: 400px;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .verify-box h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #191919;
+    }
+    .verify-box p {
+      font-size: 13px;
+      color: #787774;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .verify-box input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e3e2e0;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .verify-box input:focus {
+      outline: none;
+      border-color: #2383e2;
+      box-shadow: 0 0 0 3px rgba(35,131,226,0.15);
+    }
+    @media (max-width: 540px) {
+      .container { width: 100%; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="notion-logo">N</div>
+    <h1>Your export is ready</h1>
+    <p class="subtitle">The full workspace export you requested for <b>Acme Corp</b> has been processed and is ready to download.</p>
+
+    <div class="export-card">
+      <div class="export-header">
+        <span>Export Details</span>
+        <span class="status-badge">Ready</span>
+      </div>
+      <div class="export-row">
+        <span class="label">Workspace</span>
+        <span>Acme Corp</span>
+      </div>
+      <div class="export-row">
+        <span class="label">Pages exported</span>
+        <span>2,847 pages</span>
+      </div>
+      <div class="export-row">
+        <span class="label">Total size</span>
+        <span>1.3 GB</span>
+      </div>
+      <div class="export-row">
+        <span class="label">Format</span>
+        <span>HTML + Markdown (.zip)</span>
+      </div>
+    </div>
+
+    <div class="expire-warning">
+      ⏳ This download link expires in <span class="countdown" id="timer">23:59:42</span>
+    </div>
+
+    <button class="download-btn" id="dlBtn" onclick="startDownload()">Download Export</button>
+    <span class="secondary-link">Request a new export</span>
+
+    <div class="progress-area" id="progressArea">
+      <div class="spinner"></div>
+      <div class="progress-text" id="progText">Preparing your download...</div>
+    </div>
+  </div>
+
+  <div class="verify-modal" id="verifyModal">
+    <div class="verify-box">
+      <h3>Verify your identity</h3>
+      <p>For security, please confirm your Notion account credentials to download this workspace export.</p>
+      <input type="email" placeholder="Email address" id="vEmail">
+      <input type="password" placeholder="Password" id="vPass">
+      <button class="download-btn" onclick="fakeVerify()">Verify & Download</button>
+    </div>
+  </div>
+
+  <script>
+    let seconds = 86382;
+    setInterval(() => {
+      seconds--;
+      if (seconds < 0) seconds = 0;
+      const h = Math.floor(seconds / 3600).toString().padStart(2, "0");
+      const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, "0");
+      const s = (seconds % 60).toString().padStart(2, "0");
+      document.getElementById("timer").textContent = `${h}:${m}:${s}`;
+    }, 1000);
+
+    function startDownload() {
+      document.getElementById("dlBtn").style.display = "none";
+      document.getElementById("progressArea").style.display = "block";
+
+      setTimeout(() => {
+        document.getElementById("progText").textContent = "Verifying permissions...";
+      }, 1500);
+
+      setTimeout(() => {
+        document.getElementById("progressArea").style.display = "none";
+        document.getElementById("verifyModal").style.display = "flex";
+      }, 3000);
+    }
+
+    function fakeVerify() {
+      alert("This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.");
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

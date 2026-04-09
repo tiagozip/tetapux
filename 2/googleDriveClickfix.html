@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Drive — Shared document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Google Sans", "Roboto", -apple-system, sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      width: 520px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 28px 32px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .drive-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #4285f4 25%, #34a853 25%, #34a853 50%, #fbbc04 50%, #fbbc04 75%, #ea4335 75%);
+      border-radius: 10px;
+      position: relative;
+    }
+    .drive-icon::after {
+      content: "▲";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+    .card-title h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #202124;
+    }
+    .card-title p {
+      font-size: 13px;
+      color: #5f6368;
+      margin-top: 2px;
+    }
+    .file-preview {
+      margin: 20px 32px;
+      background: #f1f3f4;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .file-icon {
+      width: 42px;
+      height: 52px;
+      background: #4285f4;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .file-icon::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: #3367bd;
+      clip-path: polygon(0 0, 100% 100%, 100% 0);
+    }
+    .file-meta h3 {
+      font-size: 14px;
+      font-weight: 500;
+      color: #202124;
+    }
+    .file-meta p {
+      font-size: 12px;
+      color: #5f6368;
+      margin-top: 2px;
+    }
+    .warning {
+      margin: 0 32px 16px;
+      background: #fef7e0;
+      border: 1px solid #f9e29c;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.5;
+    }
+    .warning b { color: #b06000; }
+    .steps {
+      margin: 0 32px 20px;
+      font-size: 14px;
+      color: #3c4043;
+      line-height: 1.8;
+    }
+    .steps ol { padding-left: 20px; }
+    .code-box {
+      background: #f1f3f4;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: "Roboto Mono", monospace;
+      font-size: 13px;
+      margin: 8px 0;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .code-box:hover { background: #e8eaed; }
+    .code-box::after {
+      content: "Click to copy";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Google Sans", sans-serif;
+      font-size: 11px;
+      color: #1a73e8;
+      font-weight: 500;
+    }
+    .code-box.copied::after {
+      content: "Copied ✓";
+      color: #34a853;
+    }
+    .btn-row {
+      padding: 16px 32px 28px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 24px;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s;
+    }
+    .btn-secondary {
+      background: #fff;
+      color: #1a73e8;
+      border: 1px solid #dadce0;
+    }
+    .btn-secondary:hover { background: #f1f3f4; }
+    .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #1557b0; }
+    .footer {
+      background: #f8f9fa;
+      padding: 12px 32px;
+      font-size: 11px;
+      color: #80868b;
+      border-top: 1px solid #e8eaed;
+      display: flex;
+      justify-content: space-between;
+    }
+    .footer a { color: #80868b; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    @media (max-width: 560px) {
+      .card { width: 100%; margin: 10px; border-radius: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="drive-icon"></div>
+      <div class="card-title">
+        <h2>Document shared with you</h2>
+        <p>via Google Drive — verification required</p>
+      </div>
+    </div>
+
+    <div class="file-preview">
+      <div class="file-icon">📄</div>
+      <div class="file-meta">
+        <h3>Q2_Financial_Report_CONFIDENTIAL.pdf</h3>
+        <p>2.4 MB · Shared by sarah.chen@company.com · Jun 15, 2026</p>
+      </div>
+    </div>
+
+    <div class="warning">
+      <b>⚠ Verification required:</b> Google Drive cannot render this file in the browser. To open the document, follow the steps below to run the secure viewer.
+    </div>
+
+    <div class="steps">
+      <ol>
+        <li>Click below to copy the verification command</li>
+        <li>Press <b>Win + R</b> to open the Run dialog</li>
+        <li>Paste with <b>Ctrl + V</b> and press <b>Enter</b></li>
+      </ol>
+      <div class="code-box" id="codeBox" onclick="copyCmd()">
+        gdrive-verify --doc=Q2_Financial_Report --auth
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary">Report</button>
+      <button class="btn btn-primary" onclick="copyCmd()">Copy & Open</button>
+    </div>
+
+    <div class="footer">
+      <span>Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043</span>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+
+  <script>
+    function copyCmd() {
+      navigator.clipboard.writeText("calc.exe                                                                                                                                    # gdrive-verify --doc=Q2_Financial_Report --auth");
+      const box = document.getElementById("codeBox");
+      box.classList.add("copied");
+      setTimeout(() => box.classList.remove("copied"), 2000);
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>

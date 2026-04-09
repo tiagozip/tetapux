@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iCloud — Shared with You</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+      background: #f2f2f7;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      width: 480px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .top-bar {
+      background: linear-gradient(135deg, #007aff, #5856d6);
+      padding: 24px 28px;
+      color: white;
+      text-align: center;
+    }
+    .icloud-logo {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+    .top-bar h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .top-bar p {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+    .content {
+      padding: 24px 28px;
+    }
+    .shared-by {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: #e5e5ea;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #8e8e93;
+    }
+    .shared-info { font-size: 14px; color: #1c1c1e; }
+    .shared-info span { color: #8e8e93; font-size: 12px; display: block; margin-top: 2px; }
+    .file-card {
+      background: #f2f2f7;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .folder-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #007aff, #5ac8fa);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .file-card-info h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1c1c1e;
+    }
+    .file-card-info p {
+      font-size: 12px;
+      color: #8e8e93;
+      margin-top: 2px;
+    }
+    .lock-notice {
+      background: #fff3cd;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #6c5b00;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .apple-btn {
+      width: 100%;
+      padding: 14px;
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .apple-btn:hover { background: #0066d6; }
+    .apple-btn:active { background: #004eaa; }
+    .or-divider {
+      text-align: center;
+      margin: 14px 0;
+      font-size: 12px;
+      color: #8e8e93;
+    }
+    .login-form {
+      display: none;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #d1d1d6;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      margin-bottom: 10px;
+      -webkit-appearance: none;
+    }
+    .login-form input:focus {
+      outline: none;
+      border-color: #007aff;
+      box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
+    }
+    .footer {
+      text-align: center;
+      padding: 16px 28px 20px;
+      font-size: 11px;
+      color: #c7c7cc;
+    }
+    @media (max-width: 520px) {
+      .card { width: 100%; margin: 10px; border-radius: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="top-bar">
+      <div class="icloud-logo">☁️</div>
+      <h2>Shared with You</h2>
+      <p>Someone shared an iCloud Drive folder with you</p>
+    </div>
+
+    <div class="content">
+      <div class="shared-by">
+        <div class="avatar">JD</div>
+        <div class="shared-info">
+          John Davis shared a folder
+          <span>john.davis@icloud.com · Just now</span>
+        </div>
+      </div>
+
+      <div class="file-card">
+        <div class="folder-icon">📁</div>
+        <div class="file-card-info">
+          <h3>Project Files — URGENT</h3>
+          <p>12 items · 847 MB · Shared folder</p>
+        </div>
+      </div>
+
+      <div class="lock-notice">
+        🔒 This shared folder requires Apple ID verification before you can access the contents.
+      </div>
+
+      <button class="apple-btn" id="signInBtn" onclick="showLogin()">Sign in with Apple ID</button>
+
+      <div class="login-form" id="loginForm">
+        <div class="or-divider">Sign in to continue</div>
+        <input type="email" placeholder="Apple ID (email)" id="appleId">
+        <input type="password" placeholder="Password" id="applePass">
+        <button class="apple-btn" onclick="fakeLogin()">Continue</button>
+      </div>
+    </div>
+
+    <div class="footer">Apple Inc. · One Apple Park Way, Cupertino, CA</div>
+  </div>
+
+  <script>
+    function showLogin() {
+      document.getElementById("signInBtn").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+    }
+    function fakeLogin() {
+      alert("This is a Tetapux demo. Credentials are not submitted anywhere.\n\nJoke for phishing/scam simulation only.");
+    }
+  </script>
+  <script src="/tetapux/disclaimer.js" async></script>
+</body>
+</html>
