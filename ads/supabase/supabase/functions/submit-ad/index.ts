@@ -5,7 +5,6 @@ Deno.serve(async (req) => {
   const allowedOrigins = [
     "http://localhost:3000",
     "https://tetapux.pages.dev",
-    "https://tetapux.tiagorangel.com",
     "https://tetapux.glitch.me",
     "https://tiagozip.github.io",
   ];
